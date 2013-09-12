@@ -1,0 +1,86 @@
+.timeline{
+	@extend .ulreset;
+	margin-left:30px !important;
+
+	&>li{
+		position: relative;
+		border-bottom:2px dotted #ddd;
+		padding:30px 0;
+
+		&:hover{
+			background: #f6f6f6;
+		}
+
+		&:last-child{
+			border-bottom:0;
+		}
+
+		.line{
+			width:4px;
+			background: #eee;
+			height:100%;
+			display: block;
+			position: absolute;
+			top:0;
+			bottom:0;
+		}
+
+		.timeline-content{
+			position: relative;
+			z-index:99;
+
+			.left{
+				position: relative;
+
+				.icon{
+					background: $blue;
+					float:left;
+					padding:6px;
+					font-size:24px;
+					color:#fff;
+					position: absolute;
+					left:-18px;
+					top:5px;
+				}
+
+				.date{
+					position: absolute;
+					top:48px;
+					left:-20px;
+					background: #eee;
+					padding:0 5px;
+					font-size:11px;
+				}
+			}
+
+			.activity{
+				margin-left:50px;
+
+				.user{
+					font-size:14px;
+					margin-bottom: 10px;
+
+					span{
+						color:#777;
+					}
+				}
+
+				.timeline-images{
+					@extend .ulreset;
+					@include pie-clearfix;
+
+					&>li{
+						float:left;
+						margin-right:5px;
+						
+						&>a{
+							img{
+								max-width:100px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

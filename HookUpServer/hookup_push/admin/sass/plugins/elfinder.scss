@@ -1,0 +1,73 @@
+.elfinder{
+	@include border-radius(0);
+	border:0;
+	
+	.elfinder-toolbar{
+		@include border-radius(0);
+		background: #fff;
+		border-color:#ccc;
+
+		.elfinder-buttonset{
+			border:0;
+
+			.elfinder-toolbar-button-separator{
+				border-color:#eee;
+			}
+		}
+
+		.elfinder-button{
+			border:0;
+			@include border-radius(0);
+			background: #fff;
+
+			&:hover{
+				background: #ddd;
+				cursor:pointer;
+
+				&.elfinder-button-search{
+					background: none;
+				}
+			}
+
+			&.ui-state-disabled{
+				background: #fff;
+				cursor:default;
+
+				.elfinder-button-icon{
+					@include opacity(0.2);
+				}
+			}
+		}
+	}
+
+	.elfinder-button-search{
+		input{
+			margin-bottom: 0;
+			border-color:#ccc;
+		}
+	}
+
+	.elfinder-statusbar{
+		@include border-radius(0);
+		background: #eee;
+		padding:10px 12px;
+		border-color:#ccc;
+	}
+
+	.elfinder-navbar{
+		background: #eee;
+
+		.elfinder-navbar-dir{
+			@include border-radius(0);
+			padding:5px 12px 5px 40px;
+		}
+	}
+
+	.elfinder-cwd-filename, .elfinder-cwd-file, .elfinder-cwd-file-wrapper{
+		@include border-radius(0);
+	}
+
+	.elfinder-cwd-file:hover{
+		background: #eee;
+	}
+}

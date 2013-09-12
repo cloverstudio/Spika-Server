@@ -1,0 +1,88 @@
+.calendar{
+	margin-top: 10px;
+	.fc-header{
+		.fc-header-title{
+			h2{
+				font-size:18px;
+				font-weight:300;
+				margin-bottom: 0;
+				line-height:25px;
+			}
+		}
+
+		.fc-header-right{
+			.fc-button{
+				position:relative;
+				top:-45px;
+			}
+		}
+	}
+
+	.fc-content{
+		.fc-event{
+			font-size:12px;
+			border:0 !important;
+			.fc-event-inner{
+				background: $blue;
+				border:0 !important;
+				margin:0;
+
+				.fc-event-title{
+					padding:2px 5px;
+				}
+				.fc-event-time{
+					padding:2px 2px 2px 5px;
+				}
+			}
+		}
+	}
+	.fc-button{
+		background: none;
+		border:0 !important;
+		margin-right: 5px;
+
+		&.fc-state-active{
+			background: $blue;
+			color:#fff;
+
+			&:hover{
+				background: $blue;
+				color:#fff;
+			}
+		}
+
+		&:hover{
+			background: #ddd;
+		}
+
+		&.fc-button-next,&.fc-button-prev{
+			margin-left: 10px;
+
+			.fc-button-content{
+				padding:0 9px;
+
+				i{
+					color:#666;
+				}
+			}
+
+			&:hover{
+				.fc-button-content{
+					i{
+						color:#333;
+					}
+				}
+			}
+		}
+
+		&.fc-button-prev{
+			margin-right: 10px;
+			margin-left: 0;
+		}
+
+		.fc-button-inner{
+			background: none;
+			border:0 !important;
+		}
+	}
+}

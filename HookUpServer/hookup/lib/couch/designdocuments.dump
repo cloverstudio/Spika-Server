@@ -1,0 +1,116 @@
+{
+   "_id": "_design/app",
+   "language": "javascript",
+   "views": {
+       "temp_message_list": {
+           "map": "function(doc) {\n  if(doc.type == \"message\")\n    emit(doc.modified, doc);\n}\n"
+       },
+       "find_group_message": {
+           "map": "function(doc) {\n  if(doc.type == 'message' && doc. message_target_type == 'group'){\n    emit([doc.to_group_id,doc.modified], doc);\n  }\n}\n"
+       },
+       "find_user_message": {
+           "map": "function(doc) {\n  if(doc.type == 'message' && doc.message_target_type == 'user'){\n    emit([doc.from_user_id,doc.to_user_id,doc.modified], doc);\n    emit([doc.to_user_id,doc.from_user_id,doc.modified], doc);\n  }\n}\n"
+       },
+       "find_group_by_name": {
+           "map": "function(doc) {\n  if(doc.type===\"group\")\n    emit(doc.name, doc);\n}\n"
+       },
+       "find_user_by_email": {
+           "map": "function(doc) {\n  if(doc.type===\"user\")\n    emit(doc.email, doc);\n}\n"
+       },
+       "find_user_by_id": {
+           "map": "function(doc) {\n  if(doc.type===\"user\")\n    emit(doc._id, doc);\n}\n"
+       },
+       "find_group_by_id": {
+           "map": "function(doc) {\n  if(doc.type===\"group\")\n    emit(doc._id, doc);\n}\n"
+       },
+       "find_user_by_name": {
+           "map": "function(doc) {\n  if(doc.type===\"user\")\n    emit(doc.name, doc);\n}\n"
+       },
+       "find_all_emoticons": {
+           "map": "function(doc) {\n  if(doc.type===\"master_emoticon\")\n    emit(doc.identifier, doc);\n}\n"
+       },
+       "find_contacts": {
+           "map": "function(doc) {\n  if (doc.type===\"user\") {\n      for (var i in doc.contacts) {\n        emit(doc._id, {_id: doc.contacts[i]});\n      }\n  }\n}\n"
+       },
+       "find_favorite_groups": {
+           "map": "function(doc) {\n  if (doc.type===\"user\") {\n      for (var i in doc.favorite_groups) {\n        emit(doc._id, {_id: doc.favorite_groups[i]});\n      }\n  }\n}\n"
+       },
+       "chat_activity": {
+           "map": "function(doc) {\n  if(doc.type == 'message' && doc.message_target_type == 'user' \n     && doc.to_user_id != doc.from_user_id){\n    emit([doc.to_user_id,doc.modified], doc);\n  }\n}"
+       },
+       "find_user_by_name_gender_age": {
+           "map": "function(doc) {\n  if(doc.type===\"user\"){\n     emit([doc.name, doc.gender], doc);\n  }\n}"
+       },
+       "usere_activity": {
+           "map": "function(doc) {\n  if(doc.type == 'message' && doc.message_target_type == 'user' \n     && doc.to_user_id != doc.from_user_id){\n    emit([doc.from_user_id,doc.modified], doc);\n  }\n}"
+       },
+       "users_activity": {
+           "map": "function(doc) {\n  if(doc.type == 'message' && doc.message_target_type == 'user' \n     && doc.to_user_id != doc.from_user_id){\n    emit([doc.from_user_id,doc.modified], doc);\n  }\n}"
+       },
+       "find_recent_messages_and_users": {
+           "map": "function(doc) {\n  if(doc.type == 'message' && doc.message_target_type == 'user' \n     && doc.to_user_id != doc.from_user_id){\n    emit(eval(uneval(doc._id)), doc);\n    emit(eval(uneval(doc._id)), {_id: doc.to_user_id});\n  }\n}"
+       },
+       "find_users_by_groupid": {
+           "map": "function(doc) {\n  if(doc.type===\"user_group\")\n    emit(doc.group_id, doc);\n}\n"
+       },
+       "find_users_group": {
+           "map": "function(doc) {\n  if(doc.type===\"user_group\")\n    emit([doc.group_id,doc.user_id], doc);\n}\n"
+       },
+       "usere_activity_summary": {
+           "map": "function(doc) {\n  if(doc.type == 'activity_summary'){\n    emit(doc.user_id, doc);\n  }\n}"
+       },
+       "user_activity_summary": {
+           "map": "function(doc) {\n  if(doc.type == 'activity_summary'){\n    emit(doc.user_id, doc);\n  }\n}"
+       },
+       "searchuser": {
+           "map": "function(doc) {\n  if(doc.type == 'user'){\n    emit(doc.name, doc);\n  }\n}"
+       },
+       "searchuser_name": {
+           "map": "function(doc) {\n  if(doc.type == 'user'){\n    emit(doc.name, doc);\n  }\n}"
+       },
+       "searchuser_age": {
+           "map": "function(doc) {\n  if(doc.type == 'user' && doc.birthday != null && doc.birthday != 0){\n    \n    var birthDate = new Date(doc.birthday*1000);\n\n    var today=new Date();\n    var age=today.getFullYear()-(birthDate.getYear() + 1900);\n\n    emit(age, doc);\n  }\n}"
+       },
+       "searchuser_gender": {
+           "map": "function(doc) {\n  if(doc.type == 'user' && doc.gender != null && doc.gender != \"\"){\n    emit(doc.gender, doc);\n  }\n}"
+       },
+       "searchgroup_name": {
+           "map": "function(doc) {\n  if(doc.type == 'group' && ( doc.deleted == null || doc.deleted == false)){\n    emit(doc.name, doc);\n  }\n}"
+       },
+       "find_avatar_name_by_id": {
+           "map": "function(doc) {\n  if(doc.type===\"user\")\n    emit(doc._id, doc.avatar_name);\n}"
+       },
+       "find_comments": {
+           "map": "function(doc) {\n  if (doc.type===\"message\") {\n      for (var i in doc.comments) {\n        emit(doc._id, {_id: doc.comments[i]});\n      }\n  }\n}"
+       },
+       "find_message_comments": {
+           "map": "function(doc) {\n  if (doc.type===\"message\") {\n      for (var i in doc.comments) {\n        emit(doc._id, {_id: doc.comments[i]});\n      }\n  }\n}"
+       },
+       "find_comments_by_message_id": {
+           "map": "function(doc) {\n  if(doc.type===\"comment\")\n    emit(doc.message_id, doc);\n}"
+       },
+       "find_avatar_file_id": {
+           "map": "function(doc) {\n  if(doc.type===\"user\" || doc.type===\"group\")\n    emit(doc._id, doc.avatar_thumb_file_id);\n}"
+       },
+       "get_comment_count": {
+           "map": "function(doc) {\n  if(doc.type===\"comment\")\n    emit(doc.message_id, 1);\n}",
+           "reduce": "_count"
+       },
+       "get_comment_count2": {
+           "map": "function(doc) {\n  if(doc.type===\"message\")\n    emit(doc._id, 1);\n}",
+           "reduce": "_count"
+       },
+       "find_group_categories": {
+           "map": "function(doc) {\n  if(doc.type===\"group_category\")\n    emit(doc._id, doc);\n}\n"
+       },
+       "find_group_by_category_id": {
+           "map": "function(doc) {\n  if(doc.type===\"group\")\n    emit(doc.category_id, doc);\n}\n"
+       },
+       "find_lastwatching_group_by_user_id": {
+           "map": "function(doc) {\n  if(doc.type===\"watching_group_log\")\n    emit(doc.user_id, doc);\n}\n"
+       },
+       "find_lastwatching_group_by_group_id": {
+           "map": "function(doc) {\n  if(doc.type===\"watching_group_log\")\n    emit(doc.group_id, doc);\n}\n"
+       }
+   }
+}

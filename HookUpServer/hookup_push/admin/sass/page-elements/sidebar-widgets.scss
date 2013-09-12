@@ -1,0 +1,349 @@
+.widget-placeholder{
+	background: lighten($blue, 30%);
+	border:1px dotted #666;
+	margin:10px;
+}
+
+.widget-placeholder-2{
+	background: lighten($blue, 30%);
+}
+
+#ui-datepicker-div{
+	@include border-radius(0);
+	display: none;
+
+	&.ui-widget-content{
+		border:0;
+		background: none;
+	}
+}
+
+.jq-datepicker{
+	.ui-datepicker{
+		background: #fafafa;
+		border:1px solid #ccc;
+		font-size:11px;
+		position: relative;
+		padding:0;
+		@include border-radius(0);
+
+		.ui-widget-header{
+			background: none;
+			@include border-radius(0);
+			border:0;
+			padding:0;
+		}
+
+		.ui-datepicker-title{
+			text-align:center;
+			font-weight:bold;
+			margin:12px 0;
+		}
+
+		.ui-datepicker-prev{
+			float:left;
+			display: block;
+			width:15px;
+			height:15px;
+			cursor:pointer;
+			margin-left:2px;
+			background: none!important;
+			border:0 !important;
+			margin-top: 14px;
+			position: relative;
+			@include border-radius(0);
+
+			&.ui-state-hover{
+				font-weight:bold;
+			}
+
+			.ui-icon{
+				display: none;
+			}
+
+			&:hover{
+				background: #ddd !important;
+				&:before{
+					color:#000
+				}
+			}
+
+			&:before{
+				content:"\f104";
+				font-family: "FontAwesome";
+				display: block;
+				position: absolute;
+				left:5px;
+				top:-2px;
+				color:#444;
+			}
+		}
+
+		.ui-datepicker-next{
+			float:right;
+			display: block;
+			width:15px;
+			height:15px;
+			cursor:pointer;
+			background: none!important;
+			border:0 !important;
+			margin-top: 14px;
+			margin-right:2px;
+			position: relative;
+
+			@include border-radius(0);
+
+			&.ui-state-hover{
+				font-weight:bold;
+			}
+
+			.ui-icon{
+				display: none;
+			}
+
+			&:hover{
+				background: #ddd !important;
+				&:before{
+					color:#000
+				}
+			}
+
+			&:before{
+				content:"\f105";
+				font-family: "FontAwesome";
+				display: block;
+				position: absolute;
+				right:5px;
+				top:-2px;
+				color:#444;
+			}
+		}
+
+		.ui-datepicker-calendar{
+			margin-bottom: 2px;
+			margin-left: 2px;
+			th,td{
+				text-align:center;
+			}
+			th{
+				color:#777;
+				padding:0;
+
+				span{
+					display: block;
+					padding:0;
+				}
+			}
+			td{
+				padding:0;
+
+				&:hover{
+					&>a{
+						background: $blue;
+						text-decoration: none;
+						color:#fff;
+					}
+				}
+				&.ui-datepicker-current-day{
+					&>a{
+						background: $blue;
+						color:#fff;
+					}
+				}
+				&.ui-datepicker-other-month{
+					&:hover{
+						&>a{
+							background: lighten($blue, 10%);
+							text-decoration: none;
+							color:#fff;
+						}
+					}
+					&>a{
+						color:#999;
+					}
+				}
+				&>a{
+					padding:3px 5px;
+					display: block;
+					border:0;
+					background: none;
+					text-align:center;
+				}
+			}
+		}
+	}
+}
+
+.userlist{
+	@extend .ulreset;
+
+	&>li{
+		@include pie-clearfix;
+		border-top:1px dotted #bbb;
+		padding:5px 0;
+
+		&:first-child{
+			border-top:0;
+		}
+
+		&>a{
+			float:left;
+
+			img{
+				max-width:40px;
+			}
+		}
+
+		.user{
+			float:left;
+			margin-left: 10px;
+
+			.name{
+				font-weight:bold;
+				display: block;
+				line-height:20px;
+			}
+
+			.position{
+				display: block;
+				font-weight:300;
+				font-size:12px;
+				margin-top: 3px;
+			}
+		}
+
+		.status{
+			float:right;
+			font-size:8px;
+			color:darken($red, 10%);
+			line-height:40px;
+
+			&.active{
+				color:darken($green, 10%);
+			}
+
+			&.afk{
+				color: #f4a64b;
+			}
+		}
+	}
+}
+
+.progress{
+	background: #fff;
+	filter:none;
+	@include box-shadow(none);
+
+	&.small{
+		height:8px;
+		margin-bottom: 10px;
+
+		.bar{
+			height:8px;
+			background: $blue;
+			filter:none;
+		}
+	}
+}
+
+.quickstats{
+	@extend .ulreset;
+
+	&>li{
+		float:left;
+		margin:5px 15px;
+		text-align:center;
+		width:50px;
+
+		.value{
+			font-size:20px;
+			display: block;
+		}
+
+		.name{
+			display: block;
+			font-size: 12px;
+			color:#888;
+		}
+	}
+}
+
+.tags{
+	@extend .ulreset;
+
+	&>li{
+		display: inline;
+		margin:0 3px 3px 0;
+		line-height:22px;
+
+		&>a{
+			line-height:22px;
+
+			&.big-1{
+				font-size:14px;
+			}
+			&.big-2{
+				font-size:16px;
+			}
+			&.big-3{
+				font-size:18px;
+			}
+			&.big-4{
+				font-size:20px;
+			}
+			&.big-5{
+				font-size:22px;
+			}
+		}
+	}
+}
+
+.bestseller{
+	@extend .ulreset;
+
+	&>li{
+		margin-top:20px;
+
+		&:first-child{
+			margin-top: 0;
+		}
+
+		&>a{
+			display: block;
+			@include pie-clearfix;
+
+			img{
+				max-width:50px;
+				float:left;
+			}
+
+			.details{
+				float:left;
+				margin-left: 5px;
+
+				.name{
+					font-size:14px;
+				}
+
+				.price{
+					margin-top: 2px;
+
+					.cross{
+						display: block;
+						text-decoration: line-through;
+						font-size:12px;
+						line-height:14px;
+					}
+
+					.discount{
+						display: block;
+						color:$red;
+						font-size:13px;
+						line-height:14px;
+
+					}
+				}
+			}
+		}
+	}
+}

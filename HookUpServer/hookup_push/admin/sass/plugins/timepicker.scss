@@ -1,0 +1,8 @@
+.bootstrap-timepicker-widget,.colorpicker{
+	&.dropdown-menu{
+		@include border-radius(0);
+		&:before, &:after{
+			border:0 !important;
+		}
+	}
+}

@@ -18,6 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo ln -s /vagrant_data /var/www
     sudo mysql -u root -e "create database spika"
     curl -X PUT http://127.0.0.1:5984/spikademo
+    curl -X PUT http://127.0.0.1:5984/spikademo/_design/app --data-binary @/vagrant_data/HookUpServer/hookup/lib/couch/designdocuments.dump
     sudo /etc/init.d/apache2 restart
     sudo mkdir -p /vagrant_data/HookUpServer/hookup_push/tmp/log
   EOS

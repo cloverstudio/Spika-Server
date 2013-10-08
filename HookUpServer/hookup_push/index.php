@@ -1,3 +1,3 @@
 <?php
-	header("Location: admin/");
+header("Location: admin/");
 ?>

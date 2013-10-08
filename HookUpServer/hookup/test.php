@@ -1,7 +1,7 @@
 <?php
-	
-	include("./lib/startup.php");
 
-	print_r('OK');
-	
+include("./lib/startup.php");
+
+print_r('OK');
+
 ?>

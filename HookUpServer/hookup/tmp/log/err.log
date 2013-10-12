@@ -1,0 +1,5 @@
+Notice: Undefined index: user_id in /var/www/HookUpServer/hookup/hookup-api.php on line 81
+Notice: Undefined index: token in /var/www/HookUpServer/hookup/hookup-api.php on line 82
+Notice: Undefined offset: 0 in /var/www/HookUpServer/hookup/hookup-api.php on line 106
+Notice: Undefined offset: 0 in /var/www/HookUpServer/hookup/hookup-api.php on line 107
+Notice: Undefined offset: 0 in /var/www/HookUpServer/hookup/hookup-api.php on line 108

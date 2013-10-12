@@ -1,0 +1,33 @@
+#map1,#map2,#map3,#map4{
+	height:400px;
+
+	img{
+		max-width:none;
+	}
+}
+
+.cluster{
+	text-align:center;
+	font-weight:bold;
+	color:#fff;
+	cursor:pointer;
+
+	&.cluster-1{
+		background: url(http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png);
+		width: 53px;
+		height: 52px;
+		line-height:52px;
+	}
+	&.cluster-2{
+		background: url(http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m2.png);
+		width: 56px;
+		height: 55px;
+		line-height:55px;
+	}
+	&.cluster-5{
+		background: url(http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m3.png);
+		width: 66px;
+		height: 65px;
+		line-height:65px;
+	}
+}

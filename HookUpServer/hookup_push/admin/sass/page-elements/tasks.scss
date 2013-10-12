@@ -1,0 +1,102 @@
+.tasklist{
+	list-style-type:none;
+	margin:0;
+
+	@include clearfix;
+
+	li{
+		padding:0;
+		cursor:pointer;
+		@include pie-clearfix;
+		border-bottom:1px solid #ccc;
+		position: relative;
+
+		&:last-child{
+			border-bottom:0;
+		}
+
+		&:hover{
+			.task-delete{
+				display: inline-block !important;
+			}
+		}
+
+
+		&.bookmarked{
+			background:lighten($lightRed, 35%);
+			.task-actions{
+				.task-bookmark{
+					color:darken($lightRed, 0%);
+					i:before{
+						content:"\f02e";
+					}
+				}
+			}
+		}
+
+		&.done{
+			background:lighten($blue, 40%);
+
+			.task{
+				span{
+					text-decoration: line-through;
+				}
+			}
+
+			.task-actions{
+				display: none;
+			}
+		}
+
+		label,.check{
+			float:left;
+			padding:10px 10px 10px 10px;
+			margin:0;
+			cursor:pointer;
+			border-right:1px solid #fec5bd;
+		}
+
+		.task{
+			float:left;
+			padding:11px 5px 3px 5px;
+			text-overflow: ellipsis;
+			white-space:nowrap;
+			max-width:100%;
+			position: absolute;
+			left:43px;
+			right:50px;
+			overflow:hidden;
+
+			i{
+				margin-right:5px;
+			}
+		}
+
+		.task-actions{
+			float:right;
+			padding:10px 10px 0 10px;
+
+			&>a{
+				text-decoration: none;
+			}
+
+			.task-delete{
+				display: none;
+				color:#888;
+				font-size:16px;
+			}
+
+			.task-bookmark{
+				color:#aaa;
+				font-size:16px;
+
+				&:hover{
+					color:#fd6e58;
+					i:before{
+						content:"\f02e";
+					}
+				}
+			}
+		}
+	}
+}

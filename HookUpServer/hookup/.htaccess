@@ -1,0 +1,9 @@
+RewriteEngine on
+RewriteBase /HookUpServer/hookup/
+
+# only rewrite if the requested file doesn't exist
+RewriteCond %{REQUEST_FILENAME} !-s 
+
+
+# pass the rest of the request into index.php to handle     
+RewriteRule ^(.*)$ /HookUpServer/hookup/hookup-api.php?$1 [L]

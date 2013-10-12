@@ -1,0 +1,215 @@
+.table{
+	&.table-hover{
+		tr{
+			&:hover{
+				&>td{
+					background: #f8f8f8;
+				}
+			}
+		}
+	}
+	.with-checkbox{
+		width:10px;
+
+		input{
+			margin-left:4px;
+			margin-top: 0;
+		}
+	}
+	&.dataTable{
+		margin-bottom:10px;
+		clear:both;
+
+		&.dataTable-columnfilter{
+			.filter_column{
+				input{
+					margin-bottom: 0;
+					width:100%;
+					padding:4px 0;
+					text-indent:8px;
+				}
+			}
+
+			.thefilter{
+				th{
+					background: #e1e1e1;
+				}
+			}
+		}
+
+		.sorting_asc{
+			background:url("../img/sorting-asc.png") no-repeat right center #eee;
+		}
+
+		.sorting_desc{
+			background:url("../img/sorting-desc.png") no-repeat right center #eee;
+		}
+
+		.sorting{
+			background:url("../img/sorting.png") no-repeat right center #eee;
+		}
+
+		.sorting,.sorting_desc, .sorting_asc{
+			padding-right:30px;
+			white-space:nowrap;
+		}
+
+		&.dataTable-scroll-x{
+			border-collapse:separate;
+			max-width:none;
+
+			td{
+				white-space:nowrap;
+			}
+		}
+
+		th:focus{
+			outline:none;
+		}
+
+		&.dataTable-reorder{
+			th{
+				&:hover{
+					cursor:move;
+				}
+			}
+		}
+	}
+
+	&.table-colored-header{
+		thead{
+			th,td{
+				background:$blue;
+				color:#fff;
+			}
+		}
+	}
+
+	&.table-nohead{
+		thead{
+			display: none;
+
+			th,td{
+				display: none;
+			}
+		}
+
+		tr{
+			&:first-child{
+				td{
+					border:0;
+				}
+			}
+		}
+	}
+
+	tr{
+		td{
+			.label{
+				margin-right: 3px;
+			}
+		}
+
+		th{
+			background:#eee;
+		}
+	}
+
+	&.table-user{
+		tr{
+			&.alpha{
+				td{
+					&.alpha-val{
+						span{
+							background: $blue;
+							color:#fff;
+							display: block;
+							padding:10px 0 ;
+							text-align:center;
+							font-size:18px;
+						}
+					}
+				}
+
+				&:hover{
+					td{
+						background: white;
+						cursor:pointer;
+					}
+				}
+			}
+
+			&:first-child{
+				td{
+					border:0;
+				}
+			}
+
+			td{
+				border-top:1px dotted #ccc;
+
+				&.img{
+					width:40px;
+					img{
+						width:40px;
+					}
+				}
+				&.user{
+					text-align:left;
+					vertical-align: middle;
+				}
+
+				&.icon{
+					width:20px;
+					vertical-align: middle;
+
+					.online{
+						font-size:10px;
+						color:#4fa828;
+					}
+				}
+
+				.btn{
+				}
+			}
+		}
+	}
+}
+
+.table-mail{
+	tbody tr{
+		&>td{
+			cursor:pointer;
+		}
+		&.warning{
+			&>td{
+				background-color:lighten($blue,38%);
+			}
+		}
+	}
+	.table-checkbox{
+		width:15px;
+	}
+	.table-icon{
+		width:20px;
+
+		.sel-star{
+			color:#aaa;
+			text-decoration: none;
+
+			&:hover{
+				color:$orange;
+			}
+
+			&.active{
+				color:$orange;
+			}
+		}
+	}
+	.table-date{
+		width:100px;
+	}
+	.table-fixed-medium{
+		width:200px;
+	}
+}

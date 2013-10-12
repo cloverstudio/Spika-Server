@@ -1,0 +1,26 @@
+.datepicker{
+	&.datepicker-dropdown{
+		@include border-radius(0);
+
+		&:before, &:after{
+			border:0;
+		}
+
+		.datepicker-days,.datepicker-years,.datepicker-months{
+			td,th,span{
+				@include border-radius(0);
+			}
+
+			.active{
+				background:$blue;
+				@include border-radius(0);
+
+				&:hover{
+					background: darken($blue, 10%);
+					@include border-radius(0);
+				}
+			}
+		}
+
+	}
+}

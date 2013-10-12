@@ -1,0 +1,202 @@
+.highlight-toolbar{
+	@include pie-clearfix;
+	padding:0 10px;
+	.dropdown{
+		.btn{
+			.caret{
+				margin-left: 5px;
+			}
+		}
+	}
+}
+
+.sortable-box{
+	.box-title{
+		&:hover{
+			cursor:move;
+		}
+	}
+}
+
+.box{
+	&.box-color{
+
+		.box-title{
+			background: $blue;
+			h3{
+				color:#fff;
+			}
+
+			.tabs{
+				&>li{
+					&.active{
+						&>a{
+							background:#fff;
+							color:$blue;
+						}
+					}
+
+					&>a{
+						color:#fff;
+
+						&:hover{
+							color:$blue;
+						}
+					}
+				}
+			}
+
+			.actions{
+				&>a{
+					color:#fff;
+
+					&:hover{
+						background:#fff;
+						color:$blue;
+					}
+				}
+			}
+		}
+	}
+
+	&.box-bordered{
+		.table{
+			margin-bottom: 0;
+
+			&.dataTable-fixedcolumn{
+				&.DTFC_Cloned{
+					border-right:2px solid #ddd;
+
+					th{
+						border-right:2px solid #333;
+					}
+
+					td{
+						text-align:center;
+					}
+				}
+			}
+
+			&.table-bordered{
+				border-right:0;
+
+				th,td{
+					&:first-child{
+						border-left:0;
+					}
+					&:last-child{
+						border-right:0;
+					}
+				}
+			}
+		}
+
+		.form-bordered{
+			margin-bottom: 0;
+		}
+		.slimScrollDiv{
+			border-bottom:2px solid #ddd;
+		}
+		&.box-color{
+			.slimScrollDiv{
+				border-bottom:2px solid $blue;
+			}
+			
+			.box-title{
+				border-color:$blue;
+			}
+			.box-content{
+				border-color:$blue;
+			}
+		}
+		.box-title{
+			border:2px solid #ddd;
+		}
+		.box-content{
+			border:2px solid #ddd;
+			border-top:0;
+		}
+	}
+
+	.box-title{
+		@include pie-clearfix;
+		border-bottom:1px solid #ddd;
+		padding:7px 0 7px 10px;
+		margin-top:20px;
+
+		h3{
+			float:left;
+			margin: 3px 0 3px 0;
+			line-height:24px;
+			font-weight:400;
+			color:#444;
+			font-size:20px;
+
+			i{
+				margin:0 10px;
+			}
+		}
+
+		.tabs{
+			float:right;
+			@include pie-clearfix;
+			margin: 5px 10px 0 0;
+			padding: 0;
+			list-style-type: none;
+
+			&.tabs-left{
+				float:left;
+			}
+
+			&>li{
+				float:left;
+				margin-right:5px;
+
+				&:last-child{
+					margin-right: 0;
+				}
+
+				&>a{
+					padding:4px 8px;
+					&:hover{
+						text-decoration: none;
+						background:#eee;
+					}
+				}
+
+				&.active{
+					&>a{
+						background: $blue;
+						color:#fff;
+					}
+				}
+			}
+		}
+
+		.actions{
+			margin-top:0px;
+			float:right;
+			margin-right: 10px;
+
+			.btn{
+				background:none;
+				color:#333;
+				padding:5px 9px;
+
+				&:hover{
+					background:$blue;
+					color:#fff;
+				}
+			}
+
+			.content-move{
+				cursor:move;
+			}
+		}
+	}
+	.box-content{
+		@include pie-clearfix;
+		padding:20px;
+		background: #fff;
+	}
+}

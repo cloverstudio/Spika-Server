@@ -1,0 +1,331 @@
+@mixin breakpoint($width) {
+	@media (max-width : $width){
+		@content;
+	}
+}
+
+@include breakpoint(1250px){
+	#main .page-header .minitiles{
+		display: none;
+	}
+}
+
+@include breakpoint(1200px){
+	.stats-overview{
+		&>li{
+			padding:5px 10px !important;
+		}
+	}
+
+	.form-horizontal{
+		&.form-column{
+			[class*="span"] {
+				border-top:1px solid #ddd;
+				border-left:0 !important;
+				width:100% !important;
+
+				&:first-child{
+					border-top:0;
+				}
+			}
+
+			.form-actions{
+				border-top:0 !important;
+			}
+		}
+	}
+}
+
+@include breakpoint(1100px){
+	.stats-overview{
+		&>li{
+			padding:5px 10px !important;
+			border-right:1px dotted #ddd !important;
+
+			.name{
+				font-size:11px !important;
+			}
+
+			.value{
+				font-size:13px !important;
+			}
+		}
+	}
+}
+
+@include breakpoint(1170px){
+	.icon-nav{
+		display: none!important;
+	}
+}
+
+@include breakpoint(1024px){
+	#main .page-header .stats{
+		display: none;
+	}
+	
+	.search-form{
+		&>.search-pane{
+			&>input{
+				width:135px !important;
+			}
+		}
+	}
+
+	.hidden-1024{
+		display: none !important;
+	}
+
+	.form-wizard{
+		.single-step{
+			.title{
+				padding:1px 5px !important;
+			}
+
+			.description{
+				font-size:12px !important;
+				margin-left: 0 !important;
+			}
+		}
+	}
+}
+
+@include breakpoint(890px){
+	#navigation{
+		.user{
+			.dropdown{
+				&>a{
+					padding:7px 6px 6px 6px !important;  
+				}
+			}
+		}
+		.main-nav{
+			&>li{
+				&>a{
+					font-size:12px;
+					padding:10px 8px !important;
+				}
+			}
+		}
+	}
+}
+
+@include breakpoint(767px){
+	body{
+		padding:0 !important;
+	}
+
+	.pricing-tables{
+		.pricing{
+			&.highlighted{
+				margin-top: 30px !important;
+			}
+		}
+	}
+
+	.hidden-768{
+		display: none !important;
+	}
+
+	.navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{
+		margin: 0 !important;
+	}
+
+	.container-fluid, .container{
+		padding:0 20px;
+	}
+
+	#navigation{
+		#brand{
+			padding-right:0 !important;
+		}
+		.main-nav{
+			display: none;
+		}
+		.toggle-nav{
+			display: none !important;
+		}
+	}
+
+	.form-wizard{
+		&.wizard-vertical{
+			.wizard-steps{
+				width:160px !important;
+			}
+
+			.form-content{
+				margin-left: 160px !important;
+			}
+
+			.form-actions{
+				padding-left: 180px !important;
+			}
+		}
+	}
+}
+
+@include breakpoint(480px){
+	.table-mail{
+		.table-fixed-medium{
+			width:120px !important;
+		}
+	}
+
+	.mobile-sidebar-toggle{
+		display: block !important;
+	}
+
+	.form-wizard{
+		&.wizard-vertical{
+			.wizard-steps{
+				width:40px !important;
+			}
+
+			.form-content{
+				margin-left: 40px !important;
+			}
+
+			.form-actions{
+				padding-left: 60px !important;
+			}
+			.wizard-steps{
+				
+				.description{
+					display: none !important;
+				}
+			}
+		}
+	}
+	.tabs{
+		&.tabs-inline{
+			&.tabs-top{
+				&>li{
+					&>a{
+						padding:8px 10px !important;
+					}
+				}
+			}
+
+			&.tabs-left{
+				position: static !important;
+				background: none!important;
+				width:auto !important;
+
+				&>li{
+					float:left;
+					margin-right: 1px;
+
+					&>a{
+						border-top:0 !important;
+						border-bottom:0 !important;
+						padding:8px 10px !important;
+					}
+				}
+			}
+		}
+	}
+
+	.tab-content{
+		&.tab-content-inline{
+			margin-left: 0!important;
+			border-left:0!important;
+		}
+	}
+
+	.hidden-480{
+		display: none !important;
+	}
+
+	.visible-480{
+		display: inline-block !important;
+	}
+
+	.form-horizontal{
+		.controls{
+			margin-left: 0!important;
+		}
+	}
+	.calendar{
+		.fc-button{
+			&.fc-button-next, &.fc-button-prev{
+				.fc-button-content{
+					padding:0 4px !important;
+					margin-top: 3px;
+				}
+			}
+
+			.fc-button-content{
+				font-size:12px !important;
+				margin-right: 2px !important;
+			}
+		}
+		.fc-header{
+			.fc-header-left{
+				width: 0 !important;
+				display: none;
+			}
+			.fc-header-right{
+				.fc-button{
+					position: static !important;
+					top:auto !important;
+				}
+			}
+
+			.fc-header-title{
+				h2{
+					font-size:14px !important;
+				}
+			}
+		}
+	}
+
+	body.login{
+		.wrapper{
+			width:300px;
+			margin: 20px -150px !important;
+			top:0;
+		}
+	}
+
+	.user-list{
+		display: none !important;
+	}
+
+	.messages.withlist{
+		margin-right: 0 !important;
+	}
+}
+
+@include breakpoint(350px){
+	.hidden-350{
+		display: none !important;
+	}
+	.calendar{
+		.fc-header-right{
+			display: none !important;
+		}
+	}
+
+	#main{
+		.box{
+			.box-title{
+				h3{
+					font-size:16px !important;
+				}
+				.actions{
+					.btn{
+						i{
+							font-size:12px !important;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.table{
+		.table-fixed-medium{
+			width:100px !important;
+		}
+	}
+}

@@ -1,0 +1,28 @@
+.grids{
+	.row-fluid{
+		margin-top: 10px;
+		margin-bottom: 20px;
+
+		[class*="span"]{
+			background: #ccc;
+			text-align:center;
+			line-height:30px;
+
+			&:hover{
+				background: #aaa;
+			}
+		}
+	}
+}
+
+.the-icons{
+	list-style-type: none;
+
+	li{
+		margin: 5px 0;
+	}
+}
+
+#updateInterval{
+	margin-bottom: 0;
+}

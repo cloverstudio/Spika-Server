@@ -1,0 +1,25 @@
+#footer{
+	text-align:center;
+	background: #eee;
+	width:100%;
+	position: relative;
+	
+	p{
+		padding:10px 0;
+	}
+
+	.gototop{
+		padding:10px 15px;
+		text-decoration: none;
+		color:#333;
+		font-size:16px;
+		position: absolute;
+		display: block;
+		top:0;
+		right:0;
+
+		&:hover{
+			background: #aaa;
+		}
+	}
+}

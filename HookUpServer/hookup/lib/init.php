@@ -1,8 +1,8 @@
 <?php
 
 define('SERVER_HOST', 'spikademo.clover-studio.com');
-define('ROOT_URL', 'http://spikademo.clover-studio.com/HookUpServer/hookup');
-define("API_URL", "http://spikademo.clover-studio.com/HookUpServer/hookup/");
+define('ROOT_URL', 'http://spikademo.clover-studio.com/Spika-Server/HookUpServer/hookup/');
+define("API_URL", "http://spikademo.clover-studio.com/Spika-Server/HookUpServer/hookup/");
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 ini_set('display_errors', '1');
@@ -17,7 +17,7 @@ define('PHP_COMMAND', "php"); // apsolute path for php command
 /////////////////////////////////////////////////////////////////////////////////////
 
 define('ShowErr', false);
-define('LogAccess', false);
+define('LogAccess', true);
 define('LogErr', true);
 define('LogQuery', false);
 

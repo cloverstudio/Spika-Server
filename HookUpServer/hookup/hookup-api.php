@@ -6,7 +6,7 @@ $current_user = null;
 include("./lib/startup.php");
 
 if (!preg_match("/hookup-api.php/", $_SERVER['REQUEST_URI'])) {
-    $_SERVER['QUERY_STRING'] = str_replace("/HookUpServer/hookup/", "", $_SERVER['REQUEST_URI']);
+    $_SERVER['QUERY_STRING'] = str_replace("/Spika-Server/HookUpServer/hookup/", "", $_SERVER['REQUEST_URI']);
 }
 
 if (preg_match("/checkhookupserver/", $_SERVER['REQUEST_URI'])) {

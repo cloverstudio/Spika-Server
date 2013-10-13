@@ -228,6 +228,7 @@ class SpikaDBHandler
 		
 	}
 	
+
     public function doPostRequest($requestBody)
     {
     	
@@ -289,5 +290,62 @@ class SpikaDBHandler
     
 	}
 	
+    public function doPutRequest($id,$requestBody)
+    {
+    	
+    	if(isset($this->app['monolog']))
+			$this->app['monolog']->addDebug("Receive Put Request : \n {$requestBody} \n");
+	
+		
+		$curl = curl_init();
+
+	    curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/{$id}");
+	    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt(
+	        $curl,
+	        CURLOPT_HTTPHEADER,
+	        array("Content-Type: application/json", 'Content-Length: ' . strlen($requestBody))
+	    );
+	    curl_setopt($curl, CURLOPT_POSTFIELDS, $requestBody);
+	    curl_setopt($curl, CURLOPT_HEADER, 1);
+	
+	    $response = curl_exec($curl);
+
+    	$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+		$header = substr($response, 0, $header_size);
+		$body = substr($response, $header_size);
+
+	    return $body;
+
+    }
+    
+    public function doDeleteRequest($id)
+    {
+		
+		$curl = curl_init();
+
+	    curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/{$id}");
+	    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt(
+	        $curl,
+	        CURLOPT_HTTPHEADER,
+	        array("Content-Type: application/json", 'Content-Length: ' . strlen($requestBody))
+	    );
+
+	    curl_setopt($curl, CURLOPT_HEADER, 1);
+	
+	    $response = curl_exec($curl);
+
+    	$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+		$header = substr($response, 0, $header_size);
+		$body = substr($response, $header_size);
+
+	    return $body;
+
+    }
+
+
 }
 ?>

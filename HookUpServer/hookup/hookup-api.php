@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (!$skipToken) {
         checkToken();
     }
-
+    
     getRequest($getRequest);
 
 } else {

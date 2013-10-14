@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 
-class AuthController implements ControllerProviderInterface
+class FileController implements ControllerProviderInterface
 {
 
     public function connect(Application $app)
@@ -25,13 +25,14 @@ class AuthController implements ControllerProviderInterface
         $controllers = $app['controllers_factory'];
 
 		$controllers->post('/filedownloader.php', function (Request $request) use ($app) {
-
+			
+			
 			
 		});
         
 		$controllers->post('/fileuploader.php', function (Request $request) use ($app) {
 			
-
+			
 					
 		});
         

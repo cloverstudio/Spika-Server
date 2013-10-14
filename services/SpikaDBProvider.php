@@ -84,20 +84,10 @@ class SpikaDBHandler
 	    unset($dic['android_push_token']);
 	
 	    $dic['online_status'] = "offline";
-	
 	    $jsonToSave = json_encode($dic);
+	    
+	    $result = $this->doPutRequest($userId,$jsonToSave);
 
-	    $curl = curl_init();
-	
-	    curl_setopt($curl, CURLOPT_URL, $this->couchDBURL);
-	    curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-	    curl_setopt($curl, CURLOPT_POST, true);
-	    curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonToSave);
-	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	    curl_setopt($curl, CURLOPT_HEADER, 1);
-	
-	    $response = curl_exec($curl);
-	
 	    return "OK";
 		
 	}
@@ -170,7 +160,9 @@ class SpikaDBHandler
 		$result = curl_exec($curl);
 		curl_close($curl);
 		
+		$this->app['monolog']->addDebug("Receive Auth Request : \n {$result} \n");
 		$json = json_decode($result, true);
+		
 		
 		if (empty($json['rows'][0]['value']['email'])) {
 		    $arr = array('message' => 'User not found!', 'error' => 'logout');
@@ -199,6 +191,10 @@ class SpikaDBHandler
 	function saveUserToken($userJson, $id)
 	{
 	
+    	if(isset($this->app['monolog']))
+    		$this->app['monolog']->addDebug("Token saved : \n {$userJson} \n");
+
+
 		$curl = curl_init();
 		
 		curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/" . $id);
@@ -286,7 +282,7 @@ class SpikaDBHandler
 		
 		curl_close($curl);
 		
-		return $body;
+		return $this->stripParamsFromJson($body);
     
 	}
 	
@@ -296,7 +292,27 @@ class SpikaDBHandler
     	if(isset($this->app['monolog']))
 			$this->app['monolog']->addDebug("Receive Put Request : \n {$requestBody} \n");
 	
+		// merge with original json
+		// put request is update in couchdb. for all get requests backend cuts off password and email
+		// so I have to merge with original data here. Other wise password will gone.
 		
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/{$id}");
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_HEADER, 1);
+		$response = curl_exec($curl);		
+		$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+		$header = substr($response, 0, $header_size);
+		$body = substr($response, $header_size);
+		$originalJSON = $body;
+		
+		$originalData = json_decode($originalJSON,true);
+		$newData = json_decode($requestBody,true);
+		
+		$mergedData = array_merge($originalData,$newData);
+		
+		$jsonToSave = json_encode($mergedData,true);
+				
 		$curl = curl_init();
 
 	    curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/{$id}");
@@ -305,17 +321,20 @@ class SpikaDBHandler
 	    curl_setopt(
 	        $curl,
 	        CURLOPT_HTTPHEADER,
-	        array("Content-Type: application/json", 'Content-Length: ' . strlen($requestBody))
+	        array("Content-Type: application/json", 'Content-Length: ' . strlen($jsonToSave))
 	    );
-	    curl_setopt($curl, CURLOPT_POSTFIELDS, $requestBody);
+	    curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonToSave);
 	    curl_setopt($curl, CURLOPT_HEADER, 1);
-	
+	    
 	    $response = curl_exec($curl);
 
     	$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 		$header = substr($response, 0, $header_size);
 		$body = substr($response, $header_size);
-
+		
+		$this->app['monolog']->addDebug("JSON to save : \n {$jsonToSave} \n");
+		$this->app['monolog']->addDebug("JSON original : \n {$jsonToSave} \n");
+		
 	    return $body;
 
     }

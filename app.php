@@ -17,6 +17,7 @@ require_once __DIR__.'/controllers/CheckUniqueController.php';
 require_once __DIR__.'/controllers/AuthController.php';
 require_once __DIR__.'/controllers/SignoutController.php';
 require_once __DIR__.'/controllers/SearchUserController.php';
+require_once __DIR__.'/controllers/SearchGroupController.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -39,12 +40,12 @@ $app->register(new Spika\SpikaDBProvider(), array(
 ));
 
 
+$app->mount('/apihandler/', new Spika\SearchGroupController());
 $app->mount('/apihandler/', new Spika\SearchUserController());
 $app->mount('/apihandler/', new Spika\SignoutController());
 $app->mount('/apihandler/', new Spika\CheckUniqueController());
 $app->mount('/apihandler/', new Spika\AuthController());
 $app->mount('/apihandler/', new Spika\GeneralAPIHandlerController());
-
 
 $app->run();
 

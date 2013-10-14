@@ -3479,3 +3479,136 @@
  http://localhost:5984/spikademo//_design/app/_view/searchuser_age?endkey=100 
  [] []
 [2013-10-14 15:29:24] myapp.INFO: < 200 [] []
+[2013-10-14 15:36:20] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "searchgroup.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:36:20] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n=test [] []
+[2013-10-14 15:36:20] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/searchgroup.php?n=test 
+ [] []
+[2013-10-14 15:36:20] myapp.INFO: < 200 [] []
+[2013-10-14 15:36:37] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "searchgroup.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:36:37] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n= [] []
+[2013-10-14 15:36:37] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/searchgroup.php?n= 
+ [] []
+[2013-10-14 15:36:37] myapp.INFO: < 200 [] []
+[2013-10-14 15:36:53] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "searchgroup.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:36:53] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n= [] []
+[2013-10-14 15:36:53] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/searchgroup.php?n= 
+ [] []
+[2013-10-14 15:36:53] myapp.INFO: < 200 [] []
+[2013-10-14 15:37:16] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "searchgroup.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:37:16] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n= [] []
+[2013-10-14 15:37:16] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/searchgroup.php?n= 
+ [] []
+[2013-10-14 15:37:16] myapp.INFO: < 200 [] []
+[2013-10-14 15:37:29] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "searchgroup.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:37:29] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n=sss [] []
+[2013-10-14 15:37:29] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/searchgroup.php?n=sss 
+ [] []
+[2013-10-14 15:37:29] myapp.INFO: < 200 [] []
+[2013-10-14 15:37:32] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "searchgroup.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:37:32] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n=ssssss [] []
+[2013-10-14 15:37:32] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/searchgroup.php?n=ssssss 
+ [] []
+[2013-10-14 15:37:32] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:06] myapp.INFO: Matched route "_apihandler_GET_searchgroup.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_searchgroup.php") [] []
+[2013-10-14 15:38:06] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n=ssssss [] []
+[2013-10-14 15:38:17] myapp.INFO: Matched route "_apihandler_GET_searchgroup.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_searchgroup.php") [] []
+[2013-10-14 15:38:17] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n=ssssss [] []
+[2013-10-14 15:38:17] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/searchgroup_name?startkey="ssssss"&endkey="ssssssZZZZ" 
+ [] []
+[2013-10-14 15:38:24] myapp.INFO: Matched route "_apihandler_GET_searchgroup.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_searchgroup.php") [] []
+[2013-10-14 15:38:24] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n=ssssss [] []
+[2013-10-14 15:38:24] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/searchgroup_name?startkey="ssssss"&endkey="ssssssZZZZ" 
+ [] []
+[2013-10-14 15:38:24] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:27] myapp.INFO: Matched route "_apihandler_GET_searchgroup.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_searchgroup.php") [] []
+[2013-10-14 15:38:27] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n=s [] []
+[2013-10-14 15:38:27] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/searchgroup_name?startkey="s"&endkey="sZZZZ" 
+ [] []
+[2013-10-14 15:38:27] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:29] myapp.INFO: Matched route "_apihandler_GET_searchgroup.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_searchgroup.php") [] []
+[2013-10-14 15:38:29] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n=t [] []
+[2013-10-14 15:38:29] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/searchgroup_name?startkey="t"&endkey="tZZZZ" 
+ [] []
+[2013-10-14 15:38:29] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:36] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:36] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee22638807c2d2%22 [] []
+[2013-10-14 15:38:36] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee22638807c2d2%22 
+ [] []
+[2013-10-14 15:38:36] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:37] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "null", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:37] myapp.INFO: > GET /Spika-Server/apihandler/null [] []
+[2013-10-14 15:38:37] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/null? 
+ [] []
+[2013-10-14 15:38:37] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:37] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "9b396ef6f2ea68ff9eee22638808572a", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:37] myapp.INFO: > GET /Spika-Server/apihandler/9b396ef6f2ea68ff9eee22638808572a [] []
+[2013-10-14 15:38:37] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/9b396ef6f2ea68ff9eee22638808572a? 
+ [] []
+[2013-10-14 15:38:37] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:40] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/find_group_categories", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:40] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/find_group_categories [] []
+[2013-10-14 15:38:40] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/find_group_categories? 
+ [] []
+[2013-10-14 15:38:40] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:41] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "9b396ef6f2ea68ff9eee22638807e358/picture.png", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:41] myapp.INFO: > GET /Spika-Server/apihandler/9b396ef6f2ea68ff9eee22638807e358/picture.png [] []
+[2013-10-14 15:38:41] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/9b396ef6f2ea68ff9eee22638807e358/picture.png? 
+ [] []
+[2013-10-14 15:38:41] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:41] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "9b396ef6f2ea68ff9eee22638807e891/picture.png", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:41] myapp.INFO: > GET /Spika-Server/apihandler/9b396ef6f2ea68ff9eee22638807e891/picture.png [] []
+[2013-10-14 15:38:41] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/9b396ef6f2ea68ff9eee22638807e891/picture.png? 
+ [] []
+[2013-10-14 15:38:41] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:41] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/find_group_by_category_id", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:41] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/find_group_by_category_id?key=%229b396ef6f2ea68ff9eee22638807e358%22 [] []
+[2013-10-14 15:38:41] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/find_group_by_category_id?key=%229b396ef6f2ea68ff9eee22638807e358%22 
+ [] []
+[2013-10-14 15:38:41] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:42] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "filedownloader.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:42] myapp.INFO: > GET /Spika-Server/apihandler/filedownloader.php?file=MM6Duj8sBDrUJoODfxzw1379866947 [] []
+[2013-10-14 15:38:42] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/filedownloader.php?file=MM6Duj8sBDrUJoODfxzw1379866947 
+ [] []
+[2013-10-14 15:38:42] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:48] myapp.INFO: Matched route "_apihandler_GET_searchgroup.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_searchgroup.php") [] []
+[2013-10-14 15:38:48] myapp.INFO: > GET /Spika-Server/apihandler/searchgroup.php?n=T& [] []
+[2013-10-14 15:38:48] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/searchgroup_name?startkey="T"&endkey="TZZZZ" 
+ [] []
+[2013-10-14 15:38:48] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:49] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "9b396ef6f2ea68ff9eee22638807c2d2", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:49] myapp.INFO: > GET /Spika-Server/apihandler/9b396ef6f2ea68ff9eee22638807c2d2 [] []
+[2013-10-14 15:38:49] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/9b396ef6f2ea68ff9eee22638807c2d2? 
+ [] []
+[2013-10-14 15:38:49] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:49] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/find_group_categories", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:49] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/find_group_categories [] []
+[2013-10-14 15:38:49] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/find_group_categories? 
+ [] []
+[2013-10-14 15:38:49] myapp.INFO: < 200 [] []
+[2013-10-14 15:38:50] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "9b396ef6f2ea68ff9eee22638807e358/picture.png", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 15:38:50] myapp.INFO: > GET /Spika-Server/apihandler/9b396ef6f2ea68ff9eee22638807e358/picture.png [] []
+[2013-10-14 15:38:50] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/9b396ef6f2ea68ff9eee22638807e358/picture.png? 
+ [] []
+[2013-10-14 15:38:50] myapp.INFO: < 200 [] []

@@ -4709,3 +4709,318 @@
  http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191618%22 
  [] []
 [2013-10-14 16:35:51] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:27] myapp.INFO: Matched route "_apihandler_GET_checkUnique.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_checkUnique.php") [] []
+[2013-10-14 19:07:27] myapp.INFO: > GET /Spika-Server/apihandler/checkUnique.php?email=test11%40yasue.us&db=spikademo [] []
+[2013-10-14 19:07:27] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/find_user_by_email?key="test11@yasue.us" 
+ [] []
+[2013-10-14 19:07:27] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:27] myapp.INFO: Matched route "_apihandler_GET_checkUnique.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_checkUnique.php") [] []
+[2013-10-14 19:07:27] myapp.INFO: > GET /Spika-Server/apihandler/checkUnique.php?username=test11&db=spikademo [] []
+[2013-10-14 19:07:27] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/find_user_by_name?key="" 
+ [] []
+[2013-10-14 19:07:27] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:27] myapp.INFO: Matched route "_apihandler_POST_" (parameters: "_controller": "{}", "_route": "_apihandler_POST_") [] []
+[2013-10-14 19:07:27] myapp.INFO: > POST /Spika-Server/apihandler/ [] []
+[2013-10-14 19:07:27] myapp.DEBUG: Receive Post Request : 
+ {"online_status":"online","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20} 
+ [] []
+[2013-10-14 19:07:27] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:28] myapp.INFO: Matched route "_apihandler_POST_hookup_auth.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_hookup_auth.php") [] []
+[2013-10-14 19:07:28] myapp.INFO: > POST /Spika-Server/apihandler/hookup-auth.php [] []
+[2013-10-14 19:07:28] myapp.DEBUG: Receive Auth Request : 
+ {"password":"yumiko","email":"test11@yasue.us"} 
+ [] []
+[2013-10-14 19:07:29] myapp.DEBUG: Receive Auth Request : 
+ {"total_rows":181,"offset":146,"rows":[
+{"id":"9b396ef6f2ea68ff9eee226388191be1","key":"test11@yasue.us","value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"1-4a0573b2effa15476d5f9a43779d5dad","online_status":"online","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20}}
+]}
+ 
+ [] []
+[2013-10-14 19:07:29] myapp.DEBUG: Token saved : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"1-4a0573b2effa15476d5f9a43779d5dad","online_status":"online","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"P60hXBBL6uTX7KDfqAHOBVY5qzoXTbxIhx0f8B1f","token_timestamp":1381777649,"last_login":1381777649} 
+ [] []
+[2013-10-14 19:07:29] myapp.DEBUG: Auth Response : 
+ {"rows":[{"value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"2-9c14e8ffec07f4674c2f8dbd54d7a412","online_status":"online","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"P60hXBBL6uTX7KDfqAHOBVY5qzoXTbxIhx0f8B1f","token_timestamp":1381777649,"last_login":1381777649}}]} 
+ [] []
+[2013-10-14 19:07:29] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:29] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:07:29] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:07:29] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:07:29] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:30] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:07:30] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:07:30] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:07:30] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:37] myapp.INFO: Matched route "_apihandler_GET_searchuser.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_searchuser.php") [] []
+[2013-10-14 19:07:37] myapp.INFO: > GET /Spika-Server/apihandler/searchuser.php?af=0&at=0&n=t&g=& [] []
+[2013-10-14 19:07:37] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/searchuser_name?startkey="t"&endkey="tZZZZ" 
+ [] []
+[2013-10-14 19:07:37] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:38] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:07:38] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:07:38] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:07:38] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:41] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:07:41] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:07:41] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:07:41] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:42] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:07:42] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:07:42] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:07:42] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:43] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:07:43] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:07:43] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:07:43] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:46] myapp.INFO: Matched route "_apihandler_GET_searchuser.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_searchuser.php") [] []
+[2013-10-14 19:07:46] myapp.INFO: > GET /Spika-Server/apihandler/searchuser.php?af=0&at=100&n=&g=& [] []
+[2013-10-14 19:07:46] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/searchuser_age?endkey=100 
+ [] []
+[2013-10-14 19:07:46] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:48] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:07:48] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:07:48] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:07:48] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:54] myapp.INFO: Matched route "_apihandler_GET_checkUnique.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_checkUnique.php") [] []
+[2013-10-14 19:07:54] myapp.INFO: > GET /Spika-Server/apihandler/checkUnique.php?username=test11&db=spikademo [] []
+[2013-10-14 19:07:54] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//_design/app/_view/find_user_by_name?key="" 
+ [] []
+[2013-10-14 19:07:54] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:54] myapp.INFO: Matched route "_apihandler_PUT_id" (parameters: "_controller": "{}", "id": "9b396ef6f2ea68ff9eee226388191be1", "_route": "_apihandler_PUT_id") [] []
+[2013-10-14 19:07:54] myapp.INFO: > PUT /Spika-Server/apihandler/9b396ef6f2ea68ff9eee226388191be1 [] []
+[2013-10-14 19:07:54] myapp.DEBUG: Receive Put Request : 
+ {"about":"hhh","password":"yumiko","favorite_groups":[],"token":"P60hXBBL6uTX7KDfqAHOBVY5qzoXTbxIhx0f8B1f","type":"user","contacts":[],"_id":"9b396ef6f2ea68ff9eee226388191be1","email":"test11@yasue.us","online_status":"online","birthday":0,"token_timestamp":1381777649,"max_favorite_count":10,"ios_push_token":"","_rev":"2-9c14e8ffec07f4674c2f8dbd54d7a412","gender":"","name":"test11","avatar_file_id":"","max_contact_count":20,"avatar_thumb_file_id":""} 
+ [] []
+[2013-10-14 19:07:54] myapp.DEBUG: JSON to save : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"2-9c14e8ffec07f4674c2f8dbd54d7a412","online_status":"online","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"P60hXBBL6uTX7KDfqAHOBVY5qzoXTbxIhx0f8B1f","token_timestamp":1381777649,"last_login":1381777649,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""} 
+ [] []
+[2013-10-14 19:07:54] myapp.DEBUG: JSON original : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"2-9c14e8ffec07f4674c2f8dbd54d7a412","online_status":"online","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"P60hXBBL6uTX7KDfqAHOBVY5qzoXTbxIhx0f8B1f","token_timestamp":1381777649,"last_login":1381777649,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""} 
+ [] []
+[2013-10-14 19:07:54] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:55] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "9b396ef6f2ea68ff9eee226388191be1", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:07:55] myapp.INFO: > GET /Spika-Server/apihandler/9b396ef6f2ea68ff9eee226388191be1 [] []
+[2013-10-14 19:07:55] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/9b396ef6f2ea68ff9eee226388191be1? 
+ [] []
+[2013-10-14 19:07:55] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:56] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:07:56] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:07:56] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:07:56] myapp.INFO: < 200 [] []
+[2013-10-14 19:07:57] myapp.INFO: Matched route "_apihandler_GET_unregistToken.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_unregistToken.php") [] []
+[2013-10-14 19:07:57] myapp.INFO: > GET /Spika-Server/apihandler/unregistToken.php?user_id=9b396ef6f2ea68ff9eee226388191be1& [] []
+[2013-10-14 19:07:57] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo//9b396ef6f2ea68ff9eee226388191be1 
+ [] []
+[2013-10-14 19:07:57] myapp.DEBUG: Receive Put Request : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"3-8c00c08657b39fd377060b78f4b78abe","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","email":"test11@yasue.us","max_contact_count":20,"token_timestamp":1381777649,"last_login":1381777649,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"gender":"","avatar_file_id":"","avatar_thumb_file_id":""} 
+ [] []
+[2013-10-14 19:07:57] myapp.DEBUG: JSON to save : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"3-8c00c08657b39fd377060b78f4b78abe","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"P60hXBBL6uTX7KDfqAHOBVY5qzoXTbxIhx0f8B1f","token_timestamp":1381777649,"last_login":1381777649,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""} 
+ [] []
+[2013-10-14 19:07:57] myapp.DEBUG: JSON original : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"3-8c00c08657b39fd377060b78f4b78abe","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"P60hXBBL6uTX7KDfqAHOBVY5qzoXTbxIhx0f8B1f","token_timestamp":1381777649,"last_login":1381777649,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""} 
+ [] []
+[2013-10-14 19:07:57] myapp.INFO: < 200 [] []
+[2013-10-14 19:08:10] myapp.INFO: Matched route "_apihandler_POST_hookup_auth.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_hookup_auth.php") [] []
+[2013-10-14 19:08:10] myapp.INFO: > POST /Spika-Server/apihandler/hookup-auth.php [] []
+[2013-10-14 19:08:10] myapp.DEBUG: Receive Auth Request : 
+ {"password":"yumiko","email":"test11@yasue.us"} 
+ [] []
+[2013-10-14 19:08:10] myapp.DEBUG: Receive Auth Request : 
+ {"total_rows":181,"offset":146,"rows":[
+{"id":"9b396ef6f2ea68ff9eee226388191be1","key":"test11@yasue.us","value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"4-cc3ce15f298593326459eb52df628270","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"P60hXBBL6uTX7KDfqAHOBVY5qzoXTbxIhx0f8B1f","token_timestamp":1381777649,"last_login":1381777649,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""}}
+]}
+ 
+ [] []
+[2013-10-14 19:08:10] myapp.DEBUG: Token saved : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"4-cc3ce15f298593326459eb52df628270","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"0D5ZziEANIQhsQlbfEX18DCqarJtPPrPsxP2PuDC","token_timestamp":1381777690,"last_login":1381777690,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""} 
+ [] []
+[2013-10-14 19:08:10] myapp.DEBUG: Auth Response : 
+ {"rows":[{"value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"5-d3c249b6b910c6d5de2d5ece7b61eb9e","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"0D5ZziEANIQhsQlbfEX18DCqarJtPPrPsxP2PuDC","token_timestamp":1381777690,"last_login":1381777690,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""}}]} 
+ [] []
+[2013-10-14 19:08:10] myapp.INFO: < 200 [] []
+[2013-10-14 19:08:10] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:08:10] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:08:10] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:08:10] myapp.INFO: < 200 [] []
+[2013-10-14 19:08:11] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:08:11] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:08:11] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:08:11] myapp.INFO: < 200 [] []
+[2013-10-14 19:08:24] myapp.INFO: Matched route "_apihandler_POST_fileuploader.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_fileuploader.php") [] []
+[2013-10-14 19:08:24] myapp.INFO: > POST /Spika-Server/apihandler/fileuploader.php [] []
+[2013-10-14 19:08:24] myapp.INFO: Matched route "_apihandler_POST_fileuploader.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_fileuploader.php") [] []
+[2013-10-14 19:08:24] myapp.INFO: > POST /Spika-Server/apihandler/fileuploader.php [] []
+[2013-10-14 19:09:13] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "fileuploader.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:09:13] myapp.INFO: > GET /Spika-Server/apihandler/fileuploader.php [] []
+[2013-10-14 19:09:13] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/fileuploader.php? 
+ [] []
+[2013-10-14 19:09:13] myapp.INFO: < 200 [] []
+[2013-10-14 19:09:22] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "fileuploader.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:09:22] myapp.INFO: > GET /Spika-Server/apihandler/fileuploader.php [] []
+[2013-10-14 19:09:22] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/fileuploader.php? 
+ [] []
+[2013-10-14 19:09:22] myapp.INFO: < 200 [] []
+[2013-10-14 19:10:20] myapp.INFO: Matched route "_apihandler_POST_hookup_auth.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_hookup_auth.php") [] []
+[2013-10-14 19:10:20] myapp.INFO: > POST /Spika-Server/apihandler/hookup-auth.php [] []
+[2013-10-14 19:10:20] myapp.DEBUG: Receive Auth Request : 
+ {"password":"yumiko","email":"test11@yasue.us"} 
+ [] []
+[2013-10-14 19:10:20] myapp.DEBUG: Receive Auth Request : 
+ {"total_rows":181,"offset":146,"rows":[
+{"id":"9b396ef6f2ea68ff9eee226388191be1","key":"test11@yasue.us","value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"5-d3c249b6b910c6d5de2d5ece7b61eb9e","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"0D5ZziEANIQhsQlbfEX18DCqarJtPPrPsxP2PuDC","token_timestamp":1381777690,"last_login":1381777690,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""}}
+]}
+ 
+ [] []
+[2013-10-14 19:10:20] myapp.DEBUG: Token saved : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"5-d3c249b6b910c6d5de2d5ece7b61eb9e","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"19kkssvgvhb27Tt5zAGPkE8cPBbHvA6xJrSbTnsp","token_timestamp":1381777820,"last_login":1381777820,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""} 
+ [] []
+[2013-10-14 19:10:20] myapp.DEBUG: Auth Response : 
+ {"rows":[{"value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"6-ab4f8878ee3e10803f3d325f107fd7d1","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"19kkssvgvhb27Tt5zAGPkE8cPBbHvA6xJrSbTnsp","token_timestamp":1381777820,"last_login":1381777820,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""}}]} 
+ [] []
+[2013-10-14 19:10:20] myapp.INFO: < 200 [] []
+[2013-10-14 19:10:21] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:10:21] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:10:21] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:10:21] myapp.INFO: < 200 [] []
+[2013-10-14 19:10:27] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:10:27] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:10:27] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:10:27] myapp.INFO: < 200 [] []
+[2013-10-14 19:10:29] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:10:29] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:10:29] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:10:29] myapp.INFO: < 200 [] []
+[2013-10-14 19:10:54] myapp.INFO: Matched route "_apihandler_POST_fileuploader.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_fileuploader.php") [] []
+[2013-10-14 19:10:54] myapp.INFO: > POST /Spika-Server/apihandler/fileuploader.php [] []
+[2013-10-14 19:11:37] myapp.INFO: Matched route "_apihandler_POST_hookup_auth.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_hookup_auth.php") [] []
+[2013-10-14 19:11:37] myapp.INFO: > POST /Spika-Server/apihandler/hookup-auth.php [] []
+[2013-10-14 19:11:37] myapp.DEBUG: Receive Auth Request : 
+ {"password":"yumiko","email":"test11@yasue.us"} 
+ [] []
+[2013-10-14 19:11:37] myapp.DEBUG: Receive Auth Request : 
+ {"total_rows":181,"offset":146,"rows":[
+{"id":"9b396ef6f2ea68ff9eee226388191be1","key":"test11@yasue.us","value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"6-ab4f8878ee3e10803f3d325f107fd7d1","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"19kkssvgvhb27Tt5zAGPkE8cPBbHvA6xJrSbTnsp","token_timestamp":1381777820,"last_login":1381777820,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""}}
+]}
+ 
+ [] []
+[2013-10-14 19:11:37] myapp.DEBUG: Token saved : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"6-ab4f8878ee3e10803f3d325f107fd7d1","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"UcdEPs5qaT15R6wruukG13Xz4dHFeWL89ZNZrTpB","token_timestamp":1381777897,"last_login":1381777897,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""} 
+ [] []
+[2013-10-14 19:11:37] myapp.DEBUG: Auth Response : 
+ {"rows":[{"value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"7-bea86be7beeaeaef8f6d095d3c436866","online_status":"offline","max_favorite_count":10,"type":"user","name":"test11","password":"yumiko","email":"test11@yasue.us","max_contact_count":20,"token":"UcdEPs5qaT15R6wruukG13Xz4dHFeWL89ZNZrTpB","token_timestamp":1381777897,"last_login":1381777897,"about":"hhh","favorite_groups":[],"contacts":[],"birthday":0,"ios_push_token":"","gender":"","avatar_file_id":"","avatar_thumb_file_id":""}}]} 
+ [] []
+[2013-10-14 19:11:37] myapp.INFO: < 200 [] []
+[2013-10-14 19:11:37] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:11:37] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:11:37] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:11:37] myapp.INFO: < 200 [] []
+[2013-10-14 19:11:39] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:11:39] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:11:39] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:11:39] myapp.INFO: < 200 [] []
+[2013-10-14 19:11:58] myapp.INFO: Matched route "_apihandler_POST_fileuploader.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_fileuploader.php") [] []
+[2013-10-14 19:11:58] myapp.INFO: > POST /Spika-Server/apihandler/fileuploader.php [] []
+[2013-10-14 19:11:58] myapp.INFO: < 200 [] []
+[2013-10-14 19:12:05] myapp.INFO: Matched route "_apihandler_POST_fileuploader.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_fileuploader.php") [] []
+[2013-10-14 19:12:05] myapp.INFO: > POST /Spika-Server/apihandler/fileuploader.php [] []
+[2013-10-14 19:12:05] myapp.INFO: < 200 [] []
+[2013-10-14 19:12:08] myapp.INFO: Matched route "_apihandler_POST_" (parameters: "_controller": "{}", "_route": "_apihandler_POST_") [] []
+[2013-10-14 19:12:08] myapp.INFO: > POST /Spika-Server/apihandler/ [] []
+[2013-10-14 19:12:08] myapp.DEBUG: Receive Post Request : 
+ {"about":"hhh","password":"yumiko","favorite_groups":[],"token":"UcdEPs5qaT15R6wruukG13Xz4dHFeWL89ZNZrTpB","type":"user","contacts":[],"_id":"9b396ef6f2ea68ff9eee226388191be1","email":"test11@yasue.us","online_status":"offline","birthday":0,"token_timestamp":1381777897,"max_favorite_count":10,"ios_push_token":"","_rev":"7-bea86be7beeaeaef8f6d095d3c436866","gender":"","name":"test11","avatar_file_id":"BjFGjzjYIbMb9mnm5CEd1381777918","max_contact_count":20,"avatar_thumb_file_id":"1Cs00VD693rqhV7qu0IQ1381777925"} 
+ [] []
+[2013-10-14 19:12:08] myapp.INFO: < 200 [] []
+[2013-10-14 19:12:08] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "9b396ef6f2ea68ff9eee226388191be1", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:12:08] myapp.INFO: > GET /Spika-Server/apihandler/9b396ef6f2ea68ff9eee226388191be1 [] []
+[2013-10-14 19:12:08] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/9b396ef6f2ea68ff9eee226388191be1? 
+ [] []
+[2013-10-14 19:12:08] myapp.INFO: < 200 [] []
+[2013-10-14 19:12:09] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "filedownloader.php", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:12:09] myapp.INFO: > GET /Spika-Server/apihandler/filedownloader.php?file=BjFGjzjYIbMb9mnm5CEd1381777918 [] []
+[2013-10-14 19:12:09] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/filedownloader.php?file=BjFGjzjYIbMb9mnm5CEd1381777918 
+ [] []
+[2013-10-14 19:12:09] myapp.INFO: < 200 [] []
+[2013-10-14 19:16:56] myapp.INFO: Matched route "_apihandler_POST_hookup_auth.php" (parameters: "_controller": "{}", "_route": "_apihandler_POST_hookup_auth.php") [] []
+[2013-10-14 19:16:56] myapp.INFO: > POST /Spika-Server/apihandler/hookup-auth.php [] []
+[2013-10-14 19:16:56] myapp.DEBUG: Receive Auth Request : 
+ {"password":"yumiko","email":"test11@yasue.us"} 
+ [] []
+[2013-10-14 19:16:56] myapp.DEBUG: Receive Auth Request : 
+ {"total_rows":181,"offset":146,"rows":[
+{"id":"9b396ef6f2ea68ff9eee226388191be1","key":"test11@yasue.us","value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"8-d70309094f2bdca7114630aceb01e700","about":"hhh","password":"yumiko","favorite_groups":[],"token":"UcdEPs5qaT15R6wruukG13Xz4dHFeWL89ZNZrTpB","type":"user","contacts":[],"email":"test11@yasue.us","online_status":"offline","birthday":0,"token_timestamp":1381777897,"max_favorite_count":10,"ios_push_token":"","gender":"","name":"test11","avatar_file_id":"BjFGjzjYIbMb9mnm5CEd1381777918","max_contact_count":20,"avatar_thumb_file_id":"1Cs00VD693rqhV7qu0IQ1381777925"}}
+]}
+ 
+ [] []
+[2013-10-14 19:16:56] myapp.DEBUG: Token saved : 
+ {"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"8-d70309094f2bdca7114630aceb01e700","about":"hhh","password":"yumiko","favorite_groups":[],"token":"tUEjfQzTNB2rdsBEb4u1wkt49vTD8wQCruVGlvA8","type":"user","contacts":[],"email":"test11@yasue.us","online_status":"offline","birthday":0,"token_timestamp":1381778216,"max_favorite_count":10,"ios_push_token":"","gender":"","name":"test11","avatar_file_id":"BjFGjzjYIbMb9mnm5CEd1381777918","max_contact_count":20,"avatar_thumb_file_id":"1Cs00VD693rqhV7qu0IQ1381777925","last_login":1381778216} 
+ [] []
+[2013-10-14 19:16:56] myapp.DEBUG: Auth Response : 
+ {"rows":[{"value":{"_id":"9b396ef6f2ea68ff9eee226388191be1","_rev":"9-7fa0a9eace5d55b43a5e890be37eb931","about":"hhh","password":"yumiko","favorite_groups":[],"token":"tUEjfQzTNB2rdsBEb4u1wkt49vTD8wQCruVGlvA8","type":"user","contacts":[],"email":"test11@yasue.us","online_status":"offline","birthday":0,"token_timestamp":1381778216,"max_favorite_count":10,"ios_push_token":"","gender":"","name":"test11","avatar_file_id":"BjFGjzjYIbMb9mnm5CEd1381777918","max_contact_count":20,"avatar_thumb_file_id":"1Cs00VD693rqhV7qu0IQ1381777925","last_login":1381778216}}]} 
+ [] []
+[2013-10-14 19:16:56] myapp.INFO: < 200 [] []
+[2013-10-14 19:16:57] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:16:57] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:16:57] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:16:57] myapp.INFO: < 200 [] []
+[2013-10-14 19:16:58] myapp.INFO: Matched route "_apihandler_GET_filedownloader.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_filedownloader.php") [] []
+[2013-10-14 19:16:58] myapp.INFO: > GET /Spika-Server/apihandler/filedownloader.php [] []
+[2013-10-14 19:16:58] myapp.INFO: < 200 [] []
+[2013-10-14 19:17:15] myapp.INFO: Matched route "_apihandler_GET_filedownloader.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_filedownloader.php") [] []
+[2013-10-14 19:17:15] myapp.INFO: > GET /Spika-Server/apihandler/filedownloader.php?file=BjFGjzjYIbMb9mnm5CEd1381777918 [] []
+[2013-10-14 19:17:15] myapp.INFO: < 200 [] []
+[2013-10-14 19:17:32] myapp.INFO: Matched route "_apihandler_GET_filedownloader.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_filedownloader.php") [] []
+[2013-10-14 19:17:32] myapp.INFO: > GET /Spika-Server/apihandler/filedownloader.php?file=BjFGjzjYIbMb9mnm5CEd1381777918 [] []
+[2013-10-14 19:17:32] myapp.INFO: < 200 [] []
+[2013-10-14 19:17:36] myapp.INFO: Matched route "_apihandler_GET_args" (parameters: "_controller": "{}", "args": "_design/app/_view/user_activity_summary", "_route": "_apihandler_GET_args") [] []
+[2013-10-14 19:17:36] myapp.INFO: > GET /Spika-Server/apihandler/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 [] []
+[2013-10-14 19:17:36] myapp.DEBUG: Receive Get Request : 
+ http://localhost:5984/spikademo/_design/app/_view/user_activity_summary?key=%229b396ef6f2ea68ff9eee226388191be1%22 
+ [] []
+[2013-10-14 19:17:36] myapp.INFO: < 200 [] []
+[2013-10-14 19:17:37] myapp.INFO: Matched route "_apihandler_GET_filedownloader.php" (parameters: "_controller": "{}", "_route": "_apihandler_GET_filedownloader.php") [] []
+[2013-10-14 19:17:37] myapp.INFO: > GET /Spika-Server/apihandler/filedownloader.php?file=BjFGjzjYIbMb9mnm5CEd1381777918 [] []
+[2013-10-14 19:17:37] myapp.INFO: < 200 [] []

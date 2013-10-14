@@ -20,19 +20,32 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class FileController implements ControllerProviderInterface
 {
 
+	var $paramName = 'file';
+	var $fileDirName = 'uploads';
+	
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
 
-		$controllers->post('/filedownloader.php', function (Request $request) use ($app) {
+		$controllers->get('/filedownloader.php', function (Request $request) use ($app) {
 			
+			$fileID = $request->get('file');
+			$filePath = __DIR__.'/../'.$this->fileDirName."/".$fileID;
 			
+			if(file_exists($filePath)){
+				return $app->sendFile($filePath);
+			}else{
+				return "";
+			}
 			
 		});
         
 		$controllers->post('/fileuploader.php', function (Request $request) use ($app) {
 			
-			
+			$file = $request->files->get($this->paramName); 
+			$fineName = $this->generateRandomString() . time();
+			$file->move(__DIR__.'/../'.$this->fileDirName, $fineName); 
+			return $fineName; 
 					
 		});
         

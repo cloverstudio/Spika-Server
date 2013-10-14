@@ -50,7 +50,7 @@ class SearchGroupController implements ControllerProviderInterface
 		
 		    return json_encode($result, true);
 
-		});
+		})->before($app['beforeTokenChecker']);
         
         return $controllers;
     }

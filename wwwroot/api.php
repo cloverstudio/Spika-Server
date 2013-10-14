@@ -11,6 +11,7 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../init.php';
+require_once __DIR__.'/../etc/tokenCheker.php';
 require_once __DIR__.'/../services/SpikaDBProvider.php';
 require_once __DIR__.'/../controllers/GeneralAPIHandlerController.php';
 require_once __DIR__.'/../controllers/CheckUniqueController.php';
@@ -30,6 +31,8 @@ use Monolog\Logger;
 $app = new Silex\Application();
 $app['debug'] = true;
 
+
+$app['beforeTokenChecker'] = $app->protect($beforeTokenCheker);
 
 // register providers
 

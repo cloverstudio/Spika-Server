@@ -36,7 +36,7 @@ class GeneralAPIHandlerController implements ControllerProviderInterface
 	    
 			return $app['spikadb']->doPostRequest($requestBody);
 
-        });
+        })->before($app['beforeTokenChecker']);
 
 		$controllers->get('/{args}', function (Request $request,$args) use ($app){
 			
@@ -44,6 +44,7 @@ class GeneralAPIHandlerController implements ControllerProviderInterface
 			return $app['spikadb']->doGetRequest($couchDBQuery);
 		
 		})
+		->before($app['beforeTokenChecker'])
 		->assert('args', '.*')
 		->convert('args', function ($args) {
 			return $args;
@@ -54,13 +55,13 @@ class GeneralAPIHandlerController implements ControllerProviderInterface
 			$requestBody = $request->getContent();
 			return $app['spikadb']->doPutRequest($id,$requestBody);
 
-        });
+        })->before($app['beforeTokenChecker']);
         
         $controllers->delete('/{id}',  function (Request $request,$id) use ($app) {
 
 			return $app['spikadb']->doDeleteRequest($id);
 
-        });
+        })->before($app['beforeTokenChecker']);
 
 
         return $controllers;

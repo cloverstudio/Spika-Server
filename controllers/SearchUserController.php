@@ -54,7 +54,7 @@ class SearchUserController implements ControllerProviderInterface
             
             return json_encode($resultAnd);
             
-		});
+		})->before($app['beforeTokenChecker']);
         
         return $controllers;
     }

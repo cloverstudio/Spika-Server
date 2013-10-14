@@ -28,7 +28,7 @@ class ReportController implements ControllerProviderInterface
 			$documentId = $request->get('docment_id');
 			mail(AdministratorEmail, "SpilaViolationReport", $documentId);
 			return 'OK';
-		});
+		})->before($app['beforeTokenChecker']);
         
         return $controllers;
     }

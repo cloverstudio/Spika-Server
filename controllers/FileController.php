@@ -25,6 +25,8 @@ class FileController implements ControllerProviderInterface
 	
     public function connect(Application $app)
     {
+    	global $beforeTokenCheker;
+    	
         $controllers = $app['controllers_factory'];
 
 		$controllers->get('/filedownloader.php', function (Request $request) use ($app) {
@@ -38,7 +40,7 @@ class FileController implements ControllerProviderInterface
 				return "";
 			}
 			
-		});
+		})->before($app['beforeTokenChecker']);
         
 		$controllers->post('/fileuploader.php', function (Request $request) use ($app) {
 			
@@ -47,7 +49,7 @@ class FileController implements ControllerProviderInterface
 			$file->move(__DIR__.'/../'.$this->fileDirName, $fineName); 
 			return $fineName; 
 					
-		});
+		})->before($app['beforeTokenChecker']);
         
         return $controllers;
     }

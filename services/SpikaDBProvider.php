@@ -150,15 +150,9 @@ class SpikaDBHandler
     	
     	$email = $reqJson['email'];
     	$password = $reqJson['password'];
-    	
-		$curl = curl_init();
 		
 		$emailQuery = '"' . $email . '"';
-		curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/_design/app/_view/find_user_by_email?key=" . $emailQuery);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		
-		$result = curl_exec($curl);
-		curl_close($curl);
+		$result = $this->execCurl("GET",$this->couchDBURL . "/_design/app/_view/find_user_by_email?key=" . $emailQuery);
 		
 		$this->app['monolog']->addDebug("Receive Auth Request : \n {$result} \n");
 		$json = json_decode($result, true);
@@ -194,23 +188,10 @@ class SpikaDBHandler
     	if(isset($this->app['monolog']))
     		$this->app['monolog']->addDebug("Token saved : \n {$userJson} \n");
 
+    	
+    	$result = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
+    		$userJson,array("Content-Type: application/json"));
 
-		$curl = curl_init();
-		
-		curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/" . $id);
-		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt(
-		    $curl,
-		    CURLOPT_HTTPHEADER,
-		    array("Content-Type: application/json", 'Content-Length: ' . strlen($userJson))
-		);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $userJson);
-		
-		$result = curl_exec($curl);
-		
-		curl_close($curl);
-		
 		$userJson = json_decode($userJson, true);
 		$json = json_decode($result, true);
 		
@@ -225,55 +206,28 @@ class SpikaDBHandler
 	}
 	
 
-    public function doPostRequest($requestBody)
-    {
-    	
-    	if(isset($this->app['monolog']))
-    		$this->app['monolog']->addDebug("Receive Post Request : \n {$requestBody} \n");
-    	
-    	$curl = curl_init();
-    	
-	    curl_setopt($curl, CURLOPT_URL, $this->couchDBURL);
-	    
-	    // ADD this line if couchdb uses basic authorization
-	    //curl_setopt($curl, CURLOPT_USERPWD, $db_username . ':' . $db_password);
-	    
-	    curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-	    curl_setopt($curl, CURLOPT_POST, true);
-	    curl_setopt($curl, CURLOPT_POSTFIELDS, $requestBody);
-	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	    curl_setopt($curl, CURLOPT_HEADER, 1);
-	
-	    $response = curl_exec($curl);
-	
-	    $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-	    $header = substr($response, 0, $header_size);
-	    $body = substr($response, $header_size);
-	
-	    curl_close($curl);
-
-	    return $body;
-
-    }
+    private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     
-    public function doGetRequest($queryString)
-    {
-    	
-    	$couchDBQuery = $this->couchDBURL . "/" . $queryString;
-    	
-    	if(isset($this->app['monolog']))
-    		$this->app['monolog']->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
-    	
 		$curl = curl_init();
 		
-		curl_setopt($curl, CURLOPT_URL, $couchDBQuery);
-
-	    // ADD this line if couchdb uses basic authorization
-	    //curl_setopt($curl, CURLOPT_USERPWD, $db_username . ':' . $db_password);
-
+		curl_setopt($curl, CURLOPT_URL, $URL);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $httpheaders);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_HEADER, 1);
 		
+		if($method == "POST")
+			curl_setopt($curl, CURLOPT_POST, true);
+			
+		if($method == "PUT")
+			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+			
+		if($method == "DELETE")
+			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+			
+			
+		if(!empty($postBody))
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $postBody);
+			
 		$response = curl_exec($curl);
 		
 		$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
@@ -282,7 +236,37 @@ class SpikaDBHandler
 		
 		curl_close($curl);
 		
-		return $this->stripParamsFromJson($body);
+		return $body;
+		
+    }
+    
+
+    public function doPostRequest($requestBody)
+    {
+    	
+    	if(isset($this->app['monolog']))
+    		$this->app['monolog']->addDebug("Receive Post Request : \n {$requestBody} \n");
+    	
+    	$body = $this->execCurl("POST",$this->couchDBURL,$requestBody,array("Content-Type: application/json"));
+    	
+	    return $body;
+
+    }
+    
+    public function doGetRequest($queryString,$stripCredentials = true)
+    {
+    	
+    	$couchDBQuery = $this->couchDBURL . "/" . $queryString;
+    	
+    	if(isset($this->app['monolog']))
+    		$this->app['monolog']->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
+    	
+		$body = $this->execCurl("GET",$couchDBQuery);
+		
+		if($stripCredentials)
+			return $this->stripParamsFromJson($body);
+		else
+			return $body;
     
 	}
 	
@@ -295,76 +279,27 @@ class SpikaDBHandler
 		// merge with original json
 		// put request is update in couchdb. for all get requests backend cuts off password and email
 		// so I have to merge with original data here. Other wise password will gone.
-		
-		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/{$id}");
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_HEADER, 1);
-		$response = curl_exec($curl);		
-		$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-		$header = substr($response, 0, $header_size);
-		$body = substr($response, $header_size);
-		$originalJSON = $body;
+		$originalJSON = $this->execCurl("GET",$this->couchDBURL . "/{$id}");
 		
 		$originalData = json_decode($originalJSON,true);
 		$newData = json_decode($requestBody,true);
 		
 		$mergedData = array_merge($originalData,$newData);
-		
 		$jsonToSave = json_encode($mergedData,true);
-				
-		$curl = curl_init();
-
-	    curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/{$id}");
-	    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	    curl_setopt(
-	        $curl,
-	        CURLOPT_HTTPHEADER,
-	        array("Content-Type: application/json", 'Content-Length: ' . strlen($jsonToSave))
-	    );
-	    curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonToSave);
-	    curl_setopt($curl, CURLOPT_HEADER, 1);
 	    
-	    $response = curl_exec($curl);
+	    // save
+	    $body = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",$jsonToSave,array("Content-Type: application/json"));
 
-    	$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-		$header = substr($response, 0, $header_size);
-		$body = substr($response, $header_size);
-		
-		$this->app['monolog']->addDebug("JSON to save : \n {$jsonToSave} \n");
-		$this->app['monolog']->addDebug("JSON original : \n {$jsonToSave} \n");
-		
 	    return $body;
 
     }
     
     public function doDeleteRequest($id)
     {
-		
-		$curl = curl_init();
-
-	    curl_setopt($curl, CURLOPT_URL, $this->couchDBURL . "/{$id}");
-	    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	    curl_setopt(
-	        $curl,
-	        CURLOPT_HTTPHEADER,
-	        array("Content-Type: application/json", 'Content-Length: ' . strlen($requestBody))
-	    );
-
-	    curl_setopt($curl, CURLOPT_HEADER, 1);
-	
-	    $response = curl_exec($curl);
-
-    	$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-		$header = substr($response, 0, $header_size);
-		$body = substr($response, $header_size);
-
+    
+		$body = $originalJSON = $this->execCurl("DELETE",$this->couchDBURL . "/{$id}");
 	    return $body;
 
     }
-
-
 }
 ?>

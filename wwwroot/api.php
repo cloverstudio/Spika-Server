@@ -19,6 +19,8 @@ require_once __DIR__.'/../controllers/SignoutController.php';
 require_once __DIR__.'/../controllers/SearchUserController.php';
 require_once __DIR__.'/../controllers/SearchGroupController.php';
 require_once __DIR__.'/../controllers/FileController.php';
+require_once __DIR__.'/../controllers/ReportController.php';
+require_once __DIR__.'/../controllers/SendPasswordController.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -41,6 +43,8 @@ $app->register(new Spika\SpikaDBProvider(), array(
 ));
 
 
+$app->mount('/api/', new Spika\SendPasswordController());
+$app->mount('/api/', new Spika\ReportController());
 $app->mount('/api/', new Spika\FileController());
 $app->mount('/api/', new Spika\SearchGroupController());
 $app->mount('/api/', new Spika\SearchUserController());

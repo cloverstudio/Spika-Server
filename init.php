@@ -11,6 +11,6 @@
  
  
 define('CouchDBURL', "http://localhost:5984/spikademo");
+define('AdministratorEmail', "ken.yasue@clover-studio.com");
 
- 
- ?>
+?>

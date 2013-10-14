@@ -1,0 +1,65 @@
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/hookup-api.php on line 94
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 27
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined variable: userDataFrom in /var/www/Spika-Server/HookUpServer/hookup/lib/util.php on line 126
+Notice: Undefined index: REQUEST_METHOD in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 20
+Notice: Undefined index: name in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 351
+Notice: Undefined index: _attachments in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Warning: Invalid argument supplied for foreach() in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined index: _attachments in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Warning: Invalid argument supplied for foreach() in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/hookup-api.php on line 94
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 27
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined variable: userDataFrom in /var/www/Spika-Server/HookUpServer/hookup/lib/util.php on line 126
+Notice: Undefined index: REQUEST_METHOD in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 20
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined index: name in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 351
+Notice: Undefined index: _attachments in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Warning: Invalid argument supplied for foreach() in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/hookup-api.php on line 94
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 27
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined variable: userDataFrom in /var/www/Spika-Server/HookUpServer/hookup/lib/util.php on line 126
+Notice: Undefined index: REQUEST_METHOD in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 20
+Notice: Undefined index: name in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 351
+Notice: Undefined index: _attachments in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Warning: Invalid argument supplied for foreach() in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/hookup-api.php on line 94
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 27
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined variable: userDataFrom in /var/www/Spika-Server/HookUpServer/hookup/lib/util.php on line 126
+Notice: Undefined index: REQUEST_METHOD in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 20
+Notice: Undefined index: name in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 351
+Notice: Undefined index: _attachments in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Warning: Invalid argument supplied for foreach() in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/hookup-api.php on line 94
+Notice: Undefined index: token in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 27
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 76
+Notice: Undefined variable: userDataFrom in /var/www/Spika-Server/HookUpServer/hookup/lib/util.php on line 126
+Notice: Undefined index: REQUEST_METHOD in /var/www/Spika-Server/HookUpServer/hookup/app_specific/spikademo/createUserHandler.php on line 20
+Notice: Undefined offset: 0 in /var/www/Spika-Server/HookUpServer/hookup/lib/hu_client.php on line 103
+Notice: Undefined index: name in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 351
+Notice: Undefined index: _attachments in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383
+Warning: Invalid argument supplied for foreach() in /var/www/Spika-Server/HookUpServer/hookup/lib/notificationsHandler.php on line 383

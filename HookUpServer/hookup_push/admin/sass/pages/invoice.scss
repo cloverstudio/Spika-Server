@@ -1,0 +1,70 @@
+.invoice-info{
+	.invoice-name{
+		font-size:24px;
+		margin-bottom:40px;
+	}
+
+	.invoice-from, .invoice-to{
+		float:left;
+		margin-bottom:30px;
+
+		span{
+			color:#888;
+			display: block;
+		}
+	}
+
+	.invoice-to{
+		margin-left: 50px;
+	}
+
+	.invoice-infos{
+		float:right;
+		margin-right:20px;
+	}
+}
+.table-invoice{
+	.price{
+		width:100px;
+	}
+
+	.qty{
+		width:50px;
+	}
+	.total{
+		text-align:right;
+		width:150px;
+	}
+
+	.taxes{
+		p{
+			text-align:right;
+
+			.light{
+				margin-right:20px;
+				color:#888;
+			}
+
+			.totalprice{
+				font-weight:bold;
+			}
+		}
+	}
+}
+
+.invoice-payment{
+	span{
+		color:#888;
+		display: block;
+	}
+	ul{
+		list-style-type: none;
+		margin: 10px;
+		padding: 0;
+
+		li{
+			float:left;
+			margin-right:10px;
+		}
+	}
+}

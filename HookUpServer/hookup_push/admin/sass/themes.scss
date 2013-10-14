@@ -1,0 +1,420 @@
+@import "colors.scss";
+@for $i from 1 through length($colornames){
+	$currentColorName: nth($colornames,$i);
+	$currentColor: nth($colors,$i);
+	.font-#{$currentColorName}{
+		color: $currentColor;
+	}
+	ul>li.#{$currentColorName},.label-#{$currentColorName}{
+		background: $currentColor;
+	}
+	.progress{
+		.bar{
+			&.bar-#{$currentColorName}{
+				background:$currentColor;
+			}
+		}
+	}
+	.pricing-tables{
+		.pricing.#{$currentColorName}{
+			&>li{
+				&.head{
+					background: $currentColor;
+					.info{
+						background: lighten($currentColor, 5%);
+					}
+					.name{
+						background: darken($currentColor, 10%);
+					}
+				}
+			}
+		}
+	}
+	.btn{
+		&.btn-#{$currentColorName}{
+			background: $currentColor;
+			color:#fff !important;
+
+			&:hover{
+				background: darken($currentColor, 10%);
+			}
+		}
+	}
+	.box{
+		&.box-color{
+			&.#{$currentColorName}{
+				.box-title{
+					background: $currentColor !important;
+					
+					@if lightness($currentColor) > lightness(#999){
+						h3{
+							color:#333;
+						}
+					}
+
+					.actions{
+						&>a{
+							&:hover{
+								color:$currentColor;
+							}
+						}
+					}
+				}
+
+				.form-wizard{
+					.wizard-steps{
+						li{
+							&.active{
+								.single-step{
+									.title{
+										background:$currentColor;
+									}
+								}
+							}
+						}
+					}
+				}
+				.btn{
+					&.btn-primary{
+						background: $currentColor;
+					}
+				}
+			}
+		}
+
+		&.box-bordered{
+			&.box-color{
+				&.#{$currentColorName}{
+					.box-title{
+						border-color:$currentColor !important;
+					}
+					.box-content{
+						border-color:$currentColor !important;
+					}
+					.slimScrollDiv{
+						border-bottom:2px solid $currentColor;
+					}
+				}
+			}
+		}
+	}
+	.timeline{
+		&>li{
+			.timeline-content{
+				.left{
+					.icon.#{$currentColorName}{
+						background: $currentColor;
+					}
+				}
+			}
+		}
+	}
+	.theme-#{$currentColorName}{
+		#navigation{
+			.dropdown-menu{
+				border-color:$currentColor;
+				&>li{
+					&.dropdown-submenu{
+						.dropdown-menu{
+							border-top:2px solid $currentColor;
+						}
+						&:hover,&:focus{
+							&>a{
+								background: $currentColor;
+							}
+						}
+					}
+					&>a{
+						&:hover{
+							background:$currentColor;
+						}
+					}
+				}
+			}
+		}
+		.datepicker{
+			&.datepicker-dropdown{
+				.datepicker-days,.datepicker-years,.datepicker-months{
+					.active{
+						background:$currentColor;
+						&:hover{
+							background: darken($currentColor, 10%);
+						}
+					}
+				}
+
+			}
+		}
+		.form-wizard{
+			.wizard-steps{
+				li{
+					&.active{
+						.single-step{
+							.title{
+								background:$currentColor;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.btn{
+			&.btn-primary{
+				background: $currentColor;
+			}
+		}
+		&.login{
+			background: $currentColor;
+		}
+		a{
+			color:$currentColor;
+		}
+		.btn{
+			color:#333;
+
+			&.btn-primary{
+				background: $currentColor;
+				color:#fff;
+			}
+			&.btn-inverse, &.btn-success, &.btn-danger{
+				color:#fff;
+			}
+		}
+		&.locked{
+			background: $currentColor !important;
+
+			.pull-left{
+				a{
+					background:darken($currentColor, 15%);
+					&:hover{
+						background: darken($currentColor, 25%);
+					}
+				}
+			}
+		}
+		#navigation{
+			background: $currentColor;
+			.toggle-mobile{
+				background: darken($currentColor, 15%);
+			}
+			.mobile-nav{
+				&.open{
+					background: $currentColor;
+
+					&>li{
+						&.active{
+							&>a{
+								background:darken($currentColor, 25%);
+							}
+
+							&>ul{
+								background: darken($currentColor, 25%);
+							}
+						}
+
+						&>a{
+							background: darken($currentColor, 15%);
+						}
+
+						&>ul{
+							background: darken($currentColor,15%);
+						}
+					}	
+				}
+			}
+			.main-nav{
+				&>li{
+					&.active{
+						&>a{
+							&:hover{
+								background: #fff;
+							}
+						}
+
+						&.open{
+							&>a{
+								background: #fff;
+							}
+						}
+					}
+					&.open{
+						&>a{
+							background: darken($currentColor, 15%);
+						}
+					}
+					&>a{
+						&:hover{
+							background: darken($currentColor, 15%);
+						}
+					}
+				}
+			}
+
+			.user{
+				.icon-nav{
+					&>li{
+						&>a{
+							&:hover{
+								background:darken($currentColor, 15%);
+							}
+						}
+					}
+				}
+				.dropdown{
+					&.open{
+						background: darken($currentColor, 15%);
+					}
+					&>a{
+						&:hover{
+							background: darken($currentColor, 15%);
+						}
+					}
+				}
+			}
+
+			.dropdown-menu{
+				border-color:$currentColor;
+				&>li{
+					&>a{
+						&:hover{
+							background: $currentColor;
+						}
+					}
+				}
+			}
+		}
+
+		.search-form{
+			.search-pane{
+				button[type="submit"]{
+					background: $currentColor;
+				}
+			}
+		}
+
+		.messages{
+			&>li{
+				&.insert{
+					.submit{
+						button{
+							background: $currentColor;
+						}
+					}
+				}
+				&.right{
+					.name{
+						color:darken($currentColor, 40%);
+					}
+					.message{
+						background: lighten($currentColor, 40%);
+						p{
+							color:darken($currentColor, 30%);
+						}
+						.time{
+							color:darken($currentColor, 30%);
+						}
+						.caret{
+							border-left:7px solid lighten($currentColor,40%); 
+						}
+					}
+				}
+			}
+		}
+
+		.letterbox{
+			.letter{
+				&>li{
+					&.active{
+						background: $currentColor;
+					}
+				}
+			}
+		}
+
+		.calendar{
+			.fc-content{
+				.fc-event{
+					.fc-event-inner{
+						background: $currentColor;
+					}
+				}
+			}
+			.fc-button{
+				&.fc-state-active{
+					background: $currentColor;
+
+					&:hover{
+						background: $currentColor;
+					}
+				}
+			}
+		}
+
+		.table{
+			&.table-user{
+				tr{
+					&.alpha{
+						td{
+							&.alpha-val{
+								span{
+									background: $currentColor;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.tagsinput#textfield_tagsinput .tag,.ms-container .multi-custom-header,.slider .ui-slider-handle,.form-wizard .wizard-steps li.active .single-step .title,.user-list h4,.nav.nav-pills>li.active>a, .nav.nav-list>li.active>a,.table.table-colored-header thead th, .table.table-colored-header thead td,.dataTables_wrapper .dataTables_paginate>span>a.paginate_active,.elfinder-navbar .ui-state-active,.pagination.pagination-custom li.active a:hover,.pagination.pagination-custom li.active a{
+			background: $currentColor;
+		}
+
+		.elfinder-navbar .ui-state-active{
+			border-color:$currentColor;
+		}
+
+		#main{
+			.box{
+				.box-title{
+					.tabs{
+						&>li.active{
+							&>a{
+								background: $currentColor;
+							}
+						}
+					}
+				}
+
+				&.box-color{
+					.box-title{
+						background:$currentColor;
+
+						.tabs{
+							&>li{
+								&.active{
+									&>a{
+										background: #fff;
+										color:$currentColor;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				&.box-bordered{
+					&.box-color{
+						.box-title{
+							border-color:$currentColor;
+						}
+						.box-content{
+							border-color:$currentColor;
+						}
+					}
+				}
+			}
+		}
+	}
+}

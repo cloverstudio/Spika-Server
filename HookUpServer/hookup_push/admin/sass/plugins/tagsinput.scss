@@ -1,0 +1,16 @@
+.tagsinput{
+	&#textfield_tagsinput{
+		padding-bottom: 0;
+
+		.tag{
+			background:$blue;
+			@include border-radius(0);
+			color:#fff;
+			border:0;
+
+			a{
+				color:#fff;
+			}
+		}
+	}
+}

@@ -1,0 +1,33 @@
+.slider{
+	margin: 10px 0 20px 0;
+	@include border-radius(0);
+	height:6px;
+	position: relative;
+	@include pie-clearfix;
+
+	.amount{
+		position: absolute;
+		left:0;
+		top:-20px;
+	}
+
+	.amount_min{
+		position: absolute;
+		left:0;
+		bottom:-25px;
+	}
+
+	.amount_max{
+		position: absolute;
+		right:0;
+		bottom:-25px;
+	}
+
+	.ui-slider-handle{
+		border:0;
+		@include border-radius(0);
+		background:$blue;
+		width: 14px;
+		height: 14px;
+	}
+}

@@ -1,0 +1,102 @@
+.plupload{
+	.plupload_container{
+		padding: 0;
+
+		.plupload_filelist_header{
+			display: none;
+		}
+
+		.plupload_filelist{
+			background: #fff;
+
+			&>li{
+				background: #fff;
+			}
+		}
+
+		.plupload_filelist_footer{
+			height:30px;
+			background:#fff;
+
+			.pl_add{
+				margin-right:5px;
+			}
+		}
+	}
+}
+.plupload{
+	&.pl-sidebar{
+		.plupload_filelist_footer{
+			border-top:0;
+			height:auto;
+			padding: 0;
+			.plupload_add{
+				border:1px solid #ccc;
+				border-top:0;
+				padding:4px;
+				margin: 0;
+				text-align:center;
+				background:#ddd;
+				display: block;
+				@include border-radius(0);
+
+				&:hover{
+					background: #bbb;
+				}
+			}
+			.plupload_file_name{
+				float:none;
+			}
+			.plupload_total_status, .plupload_file_status, .plupload_file_action,.plupload_progress,.plupload_file_size{
+				display: none;
+			}
+		}
+		.plupload_content{
+			.plupload_filelist{
+				overflow-y:auto;
+				border:1px solid #ccc;
+
+				.plupload_delete,.plupload_failed{
+					.plupload_file_status{
+						display: none;
+					}
+
+					.plupload_file_name{
+						width:100px;
+						line-height:18px;
+						font-size:11px;
+					}
+
+					.plupload_file_size{
+						display: none;
+					}
+				}
+
+				.plupload_droptext{
+					position: relative;
+					color:#333;
+					
+					span{
+						z-index:99;
+						position: absolute;
+						left:0;
+						right:0;
+						text-align:center;
+						font-weight:bold;
+					}
+
+					&:after{
+						content:"\f0ee";
+						font-size:128px;
+						color:#e6e6e6;
+						position: absolute;
+						font-family:"FontAwesome";
+						top:10px;
+						z-index:98;
+						left:13px;
+					}
+				}
+			}
+		}
+	}
+}

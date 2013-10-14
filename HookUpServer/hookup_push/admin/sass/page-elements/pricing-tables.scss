@@ -1,0 +1,73 @@
+.pricing-tables{
+	@include pie-clearfix;
+
+	.pricing{
+		list-style-type:none;
+		margin-top:30px;
+		float:left;
+
+		&.highlighted{
+			margin-top: 0;
+			&>li{
+				background: #f6f6f6;
+
+				&:nth-child(odd){
+					background: #fff;
+				}
+			}
+		}
+
+		&>li{
+			background: #ddd;
+			border-top:1px solid #bbb;
+			padding:8px 12px;
+			text-align:center;
+
+			&:first-child{
+				border-top:0;
+			}
+
+			&:nth-child(odd){
+				background: #e3e3e3;
+			}
+
+			&.head{
+				background: #888;
+				color:#fff;
+				padding: 0;
+				position: relative;
+
+				.info{
+					background: lighten($blue, 5%);
+					padding:5px 0;
+				}
+
+				.name{
+					background: #666;
+					padding:8px 0;
+					font-size:16px;
+				}
+				.price{
+					font-size:28px;
+					padding:15px 0;
+
+					span{
+						display: block;
+						margin-top: 5px;
+						font-size:12px;
+					}
+				}
+			}
+
+			&.button{
+				background: #fff;
+
+				.help-text{
+					font-size:11px;
+					margin-top: 5px;
+					color:#888;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,63 @@
+.locked{
+	background: $blue;
+
+	.wrapper{
+		width:500px;
+		height:500px;
+		margin:200px -250px;
+		position: absolute;
+		left:50%;;
+	}
+
+	.pull-left{
+		width:200px;
+
+		a{
+			color:#fff;
+			display: block;
+			background:darken($blue, 15%);
+			text-align:center;
+			padding:4px 8px;
+			text-decoration: none;
+
+			&:hover{
+				background: darken($blue, 25%);
+			}
+		}
+	}
+
+	.right{
+		float:left;
+		margin-left:15px;
+
+		.upper{
+			h2{
+				color:#fff;
+				font-weight:300;
+				margin: 0;
+			}
+
+			span{
+				display: block;
+				color:#fff;
+			}
+		}
+
+		form{
+			margin-top: 30px;
+
+			input{
+				border:0;
+				margin-bottom: 0;
+
+				&[type=password]{
+					width:260px;
+				}
+			}
+
+			div{
+				margin-top: 5px;
+			}
+		}
+	}
+}

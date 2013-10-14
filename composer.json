@@ -1,0 +1,6 @@
+{
+    "require": {
+        "silex/silex": "~1.1",
+        "monolog/monolog": ">=1.0.0"
+    }
+}

@@ -5,3 +5,4 @@
 .HookUpServer/hookup_push/tmp/log/
 .logs/
 .uploads/
+.vendor/

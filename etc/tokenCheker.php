@@ -26,7 +26,7 @@ $beforeTokenCheker = function (Request $request, Application $app) {
     $useridReceived = $request->headers->get('user_id');
     
     if(empty($tokenReceived) || empty($useridReceived)){
-     	abortManually();
+     	abortManually("No token sent");
     }
     
     $query = "?key=" . urlencode('"' . $useridReceived . '"');

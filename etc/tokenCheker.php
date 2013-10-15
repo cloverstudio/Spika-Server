@@ -24,6 +24,16 @@ $beforeTokenCheker = function (Request $request, Application $app) {
     
     $tokenReceived = $request->headers->get('token');
     $useridReceived = $request->headers->get('user_id');
+    $isCreateUserRequest = false;
+    
+    $app['monolog']->addDebug("token : {$tokenReceived}");
+    $app['monolog']->addDebug("medhod : " . $request->getMethod());
+    $app['monolog']->addDebug("user id : {$useridReceived}");
+
+    if($request->getMethod() == "POST" && $useridReceived == "create_user"){
+	    $isCreateUserRequest = true;
+	    return;
+    }
     
     if(empty($tokenReceived) || empty($useridReceived)){
      	abortManually("No token sent");

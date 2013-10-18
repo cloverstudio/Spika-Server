@@ -1,0 +1,10 @@
+git clone https://github.com/cloverstudio/Spika-Server.git
+git checkout develop
+cd Spika-Server
+cd install
+curl -X POST http://localhost:5984/spikademo -d@designdocuments.dump -H "Content-Type: application/json"
+php composer.phar install
+mkdir logs
+chmod 777 logs
+mkdir uploads
+chmod 777 uploads

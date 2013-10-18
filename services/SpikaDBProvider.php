@@ -64,17 +64,6 @@ class SpikaDBHandler
 	
 	}
 
-	private function randString($min = 5, $max = 8)
-	{
-	    $length = rand($min, $max);
-	    $string = '';
-	    $index = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	    for ($i = 0; $i < $length; $i++) {
-	        $string .= $index[rand(0, strlen($index) - 1)];
-	    }
-	    return $string;
-	}
-
 	public function unregistToken($userId){
 	
 	    $result = $this->doGetRequest("/{$userId}");
@@ -157,6 +146,7 @@ class SpikaDBHandler
 		$this->app['monolog']->addDebug("Receive Auth Request : \n {$result} \n");
 		$json = json_decode($result, true);
 		
+		$this->app['monolog']->addDebug($result);
 		
 		if (empty($json['rows'][0]['value']['email'])) {
 		    $arr = array('message' => 'User not found!', 'error' => 'logout');
@@ -170,7 +160,7 @@ class SpikaDBHandler
 		    return json_encode($arr);
 		}
 		
-		$token = $this->randString(40, 40);
+		$token = Utils::randString(40, 40);
 		
 		$json['rows'][0]['value']['token'] = $token;
 		$json['rows'][0]['value']['token_timestamp'] = time();
@@ -294,10 +284,10 @@ class SpikaDBHandler
 
     }
     
-    public function doDeleteRequest($id)
+    public function doDeleteRequest($id,$rev)
     {
     
-		$body = $originalJSON = $this->execCurl("DELETE",$this->couchDBURL . "/{$id}");
+		$body = $this->execCurl("DELETE",$this->couchDBURL . "/{$id}?rev={$rev}");
 	    return $body;
 
     }

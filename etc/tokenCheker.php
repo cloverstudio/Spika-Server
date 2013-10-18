@@ -22,13 +22,16 @@ function abortManually($errMessage){
 
 $beforeTokenCheker = function (Request $request, Application $app) {
     
-    $tokenReceived = $request->headers->get('token');
-    $useridReceived = $request->headers->get('user_id');
+    $headers = getallheaders();
+    $tokenReceived = $headers['token'];
+    $useridReceived = $headers['user_id'];
     $isCreateUserRequest = false;
+    
     
     $app['monolog']->addDebug("token : {$tokenReceived}");
     $app['monolog']->addDebug("medhod : " . $request->getMethod());
     $app['monolog']->addDebug("user id : {$useridReceived}");
+    $app['monolog']->addDebug(print_r($_SERVER,true));
 
     if($request->getMethod() == "POST" && $useridReceived == "create_user"){
 	    $isCreateUserRequest = true;

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+date_default_timezone_set("GMT");
+
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../init.php';
 require_once __DIR__.'/../etc/tokenCheker.php';
@@ -22,6 +24,9 @@ require_once __DIR__.'/../controllers/SearchGroupController.php';
 require_once __DIR__.'/../controllers/FileController.php';
 require_once __DIR__.'/../controllers/ReportController.php';
 require_once __DIR__.'/../controllers/SendPasswordController.php';
+require_once __DIR__.'/../controllers/InstallerController.php';
+require_once __DIR__.'/../etc/utils.php';
+
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -46,6 +51,7 @@ $app->register(new Spika\SpikaDBProvider(), array(
 ));
 
 
+$app->mount('/', new Spika\InstallerController());
 $app->mount('/api/', new Spika\SendPasswordController());
 $app->mount('/api/', new Spika\ReportController());
 $app->mount('/api/', new Spika\FileController());

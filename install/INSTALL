@@ -1,3 +1,7 @@
+# generate database in couchdb ex) spikademo
+# chenge init.php
+
+# run this commands
 git clone https://github.com/cloverstudio/Spika-Server.git
 git checkout develop
 cd Spika-Server
@@ -8,3 +12,5 @@ mkdir logs
 chmod 777 logs
 mkdir uploads
 chmod 777 uploads
+
+# open "docroot"/install in browser

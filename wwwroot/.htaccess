@@ -1,1 +1,7 @@
-FallbackResource /api.php
+<IfModule mod_rewrite.c>
+    Options -MultiViews
+
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ api.php [QSA,L]
+</IfModule>

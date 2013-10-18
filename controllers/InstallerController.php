@@ -67,7 +67,7 @@ class InstallerController implements ControllerProviderInterface
 			    die("Failed to create user. \n");
 			}
 			
-			$result .= "Create User OK: email is '{$randomEmail}',password is '{$password}', support user id {$resultCreateUserDic['id']}is <br />";
+			$result .= "Create User OK: email is '{$randomEmail}',password is '{$password}', support user id {$resultCreateUserDic['id']} <br />";
 			
 			
 			// create stickers

@@ -141,7 +141,7 @@ class SpikaDBHandler
     	$password = $reqJson['password'];
 		
 		$emailQuery = '"' . $email . '"';
-		$result = $this->execCurl("GET",$this->couchDBURL . "/_design/app/_view/find_user_by_email?key=" . $emailQuery);
+		list($header,$result) = $this->execCurl("GET",$this->couchDBURL . "/_design/app/_view/find_user_by_email?key=" . $emailQuery);
 		
 		$this->app['monolog']->addDebug("Receive Auth Request : \n {$result} \n");
 		$json = json_decode($result, true);
@@ -179,7 +179,7 @@ class SpikaDBHandler
     		$this->app['monolog']->addDebug("Token saved : \n {$userJson} \n");
 
     	
-    	$result = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
+    	list($header,$body) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
     		$userJson,array("Content-Type: application/json"));
 
 		$userJson = json_decode($userJson, true);
@@ -226,23 +226,40 @@ class SpikaDBHandler
 		
 		curl_close($curl);
 		
-		return $body;
+		return array($header,$body);
 		
     }
     
-
     public function doPostRequest($requestBody)
     {
     	
     	if(isset($this->app['monolog']))
     		$this->app['monolog']->addDebug("Receive Post Request : \n {$requestBody} \n");
     	
-    	$body = $this->execCurl("POST",$this->couchDBURL,$requestBody,array("Content-Type: application/json"));
+    	list($header,$body) = $this->execCurl("POST",$this->couchDBURL,$requestBody,array("Content-Type: application/json"));
     	
 	    return $body;
 
     }
+ 
+    public function doGetRequestGetHeader($queryString,$stripCredentials = true)
+    {
+    	
+    	$couchDBQuery = $this->couchDBURL . "/" . $queryString;
+    	
+    	if(isset($this->app['monolog']))
+    		$this->app['monolog']->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
+    	
+		list($header,$body) = $this->execCurl("GET",$couchDBQuery);
+		
+		if($stripCredentials)
+			return array($header,$this->stripParamsFromJson($body));
+		else
+			return array($header,$body);
     
+	}
+	
+	
     public function doGetRequest($queryString,$stripCredentials = true)
     {
     	
@@ -251,7 +268,7 @@ class SpikaDBHandler
     	if(isset($this->app['monolog']))
     		$this->app['monolog']->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
     	
-		$body = $this->execCurl("GET",$couchDBQuery);
+		list($header,$body) = $this->execCurl("GET",$couchDBQuery);
 		
 		if($stripCredentials)
 			return $this->stripParamsFromJson($body);
@@ -269,7 +286,7 @@ class SpikaDBHandler
 		// merge with original json
 		// put request is update in couchdb. for all get requests backend cuts off password and email
 		// so I have to merge with original data here. Other wise password will gone.
-		$originalJSON = $this->execCurl("GET",$this->couchDBURL . "/{$id}");
+		list($header,$originalJSON) = $this->execCurl("GET",$this->couchDBURL . "/{$id}");
 		
 		$originalData = json_decode($originalJSON,true);
 		$newData = json_decode($requestBody,true);
@@ -278,7 +295,8 @@ class SpikaDBHandler
 		$jsonToSave = json_encode($mergedData,true);
 	    
 	    // save
-	    $body = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",$jsonToSave,array("Content-Type: application/json"));
+	    list($header,$body) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",$jsonToSave,array("Content-Type: application/json"));
+    	$this->outputHeader($header);
 
 	    return $body;
 
@@ -287,7 +305,8 @@ class SpikaDBHandler
     public function doDeleteRequest($id,$rev)
     {
     
-		$body = $this->execCurl("DELETE",$this->couchDBURL . "/{$id}?rev={$rev}");
+		list($header,$body) = $this->execCurl("DELETE",$this->couchDBURL . "/{$id}?rev={$rev}");
+
 	    return $body;
 
     }

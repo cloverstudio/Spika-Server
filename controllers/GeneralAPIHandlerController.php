@@ -15,6 +15,7 @@ namespace Spika;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 
@@ -41,7 +42,30 @@ class GeneralAPIHandlerController implements ControllerProviderInterface
 		$controllers->get('/{args}', function (Request $request,$args) use ($app){
 			
 			$couchDBQuery = $args . "?" . $request->getQueryString();
-			return $app['spikadb']->doGetRequest($couchDBQuery);
+			
+			list($header,$body) = $app['spikadb']->doGetRequestGetHeader($couchDBQuery,true);
+			
+			$additionalHeader = array();
+			
+			
+			
+			$headers = explode("\n",$header);
+		    foreach($headers as $row){
+		    	
+			    if(preg_match("/Content-Type/", $row)){
+			    	
+			    	$tmp = explode(":",$row);
+			    	
+			    	$key = trim($tmp[0]);
+			    	$value = trim($tmp[1]);
+			    	
+			    	$additionalHeader[$key] = $value;
+			    }
+			    
+		    }
+		    
+		    
+			return new Response($body, 200, $additionalHeader);
 		
 		})
 		->before($app['beforeTokenChecker'])

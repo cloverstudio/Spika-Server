@@ -27,6 +27,7 @@ $beforeTokenCheker = function (Request $request, Application $app) {
     $useridReceived = $headers['user_id'];
     $isCreateUserRequest = false;
     
+    return;
     
     $app['monolog']->addDebug("token : {$tokenReceived}");
     $app['monolog']->addDebug("medhod : " . $request->getMethod());

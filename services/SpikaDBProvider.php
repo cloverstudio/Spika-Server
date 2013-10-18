@@ -290,14 +290,16 @@ class SpikaDBHandler
 		
 		$originalData = json_decode($originalJSON,true);
 		$newData = json_decode($requestBody,true);
+		$newData["_rev"] = $originalData["_rev"];
 		
 		$mergedData = array_merge($originalData,$newData);
 		$jsonToSave = json_encode($mergedData,true);
-	    
+	    	    
 	    // save
 	    list($header,$body) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",$jsonToSave,array("Content-Type: application/json"));
-    	$this->outputHeader($header);
 
+	    $this->app['monolog']->addDebug($jsonToSave);
+	    
 	    return $body;
 
     }

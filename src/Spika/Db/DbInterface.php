@@ -3,7 +3,7 @@ namespace Spika\Db;
 
 interface DbInterface
 {
-	public function unregistToken($userId);
+    public function unregistToken($userId);
 
     public function checkEmailIsUnique($email);
 

@@ -6,7 +6,7 @@ class AuthControllerTest extends WebTestCase
 {
     public function createApplication()
     {
-        require realpath(__DIR__ . '/../../../') . '/wwwroot/api.php';
+        require realpath(__DIR__ . '/../../../') . '/etc/app.php';
 
         $spikadb = $this->getMockBuilder('\Spika\SpikaDBHandler')
             ->setMethods(array('doSpikaAuth'))

@@ -6,6 +6,7 @@
 .logs/
 .uploads/
 .vendor/
+build/
 vendor/
 logs/
 !logs/.gitkeep

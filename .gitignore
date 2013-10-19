@@ -7,3 +7,5 @@
 .uploads/
 .vendor/
 vendor/
+logs/
+!logs/.gitkeep

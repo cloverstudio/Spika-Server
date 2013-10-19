@@ -23,13 +23,15 @@ function abortManually($errMessage){
 function makeBeforeTokenChecker()
 {
     return function (Request $request, Application $app) {
-
+	    
+	    // pass token check when unit testing
+	    if(!function_exists("getallheaders"))
+	    	return;
+	    	
         $headers = getallheaders();
         $tokenReceived = $headers['token'];
         $useridReceived = $headers['user_id'];
         $isCreateUserRequest = false;
-
-        return;
 
         $app['monolog']->addDebug("token : {$tokenReceived}");
         $app['monolog']->addDebug("medhod : " . $request->getMethod());

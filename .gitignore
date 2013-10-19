@@ -1,3 +1,4 @@
+*.swp
 .idea/
 .vagrant/
 .HookUpServer/hookup/files/

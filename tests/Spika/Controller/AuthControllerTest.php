@@ -1,5 +1,7 @@
 <?php
+
 namespace Spika\Controller;
+
 use Silex\WebTestCase;
 
 class AuthControllerTest extends WebTestCase
@@ -24,8 +26,7 @@ class AuthControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('POST', '/api/hookup-auth.php');
-        $this->assertTrue($client->getResponse()->isOk());
-        $this->assertSame('auth result', $client->getResponse()->getContent());
+        assertSame(true, $client->getResponse()->isOk());
+        assertSame('auth result', $client->getResponse()->getContent());
     }
 }
-

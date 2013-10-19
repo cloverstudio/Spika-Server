@@ -20,51 +20,45 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class FileController implements ControllerProviderInterface
 {
 
-	var $paramName = 'file';
-	var $fileDirName = 'uploads';
+	static $paramName = 'file';
+	static $fileDirName = 'uploads';
 	
     public function connect(Application $app)
     {
     	global $beforeTokenCheker;
     	
         $controllers = $app['controllers_factory'];
-
+        
+        // ToDo: Add token check
 		$controllers->get('/filedownloader.php', function (Request $request) use ($app) {
 			
 			$fileID = $request->get('file');
-			$filePath = __DIR__.'/../'.$this->fileDirName."/".$fileID;
+			$filePath = __DIR__.'/../'.FileController::$fileDirName."/".$fileID;
 			
 			if(file_exists($filePath)){
 				return $app->sendFile($filePath);
 			}else{
 				return "";
 			}
+		});
 			
-		})->before($app['beforeTokenChecker']);
+		//})->before($app['beforeTokenChecker']);
         
+        // ToDo: Add token check
 		$controllers->post('/fileuploader.php', function (Request $request) use ($app) {
 			
-			$file = $request->files->get($this->paramName); 
-			$fineName = $this->generateRandomString() . time();
-			$file->move(__DIR__.'/../'.$this->fileDirName, $fineName); 
+			$file = $request->files->get(FileController::$paramName); 
+			$fineName = \Spika\Utils::randString(20, 20) . time();
+			$file->move(__DIR__.'/../'.FileController::$fileDirName, $fineName); 
 			return $fineName; 
 					
-		})->before($app['beforeTokenChecker']);
+		});
+		
+		//})->before($app['beforeTokenChecker']);
         
         return $controllers;
     }
-    
-    private function generateRandomString($length = 20)
-	{
-	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	    $randomString = '';
-	    for ($i = 0; $i < $length; $i++) {
-	        $randomString .= $characters[rand(0, strlen($characters) - 1)];
-	    }
-	    return $randomString;
-	}
 
-    
 }
 
 ?>

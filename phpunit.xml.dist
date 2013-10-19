@@ -24,6 +24,12 @@
       <env name="SPIKA_ADMIN_EMAIL" value="admin@example.com"/>
     </php>
 
+    <filter>
+      <blacklist>
+        <directory suffix=".php">./vendor</directory>
+      </blacklist>
+    </filter>
+
     <logging>
       <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>

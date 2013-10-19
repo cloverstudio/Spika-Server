@@ -20,5 +20,7 @@
     <php>
       <includePath>./</includePath>
       <includePath>./vendor/phpunit/phpunit/</includePath>
+      <env name="SPIKA_COUCH_DB_URL" value="http://localhost:5984/spikatest"/>
+      <env name="SPIKA_ADMIN_EMAIL" value="admin@example.com"/>
     </php>
 </phpunit>

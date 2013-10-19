@@ -12,7 +12,7 @@ class SpikaDbServiceProvider implements ServiceProviderInterface
         $app['spikadb'] = $app->share(function () use ($app) {
             return new CouchDb(
                 $app['couchdb.couchDBURL'],
-                $app
+                $app['logger']
             );
         });
     }

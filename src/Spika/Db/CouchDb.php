@@ -133,7 +133,7 @@ class CouchDb
 		    return json_encode($arr);
 		}
 		
-		$token = Utils::randString(40, 40);
+		$token = \Spika\Utils::randString(40, 40);
 		
 		$json['rows'][0]['value']['token'] = $token;
 		$json['rows'][0]['value']['token_timestamp'] = time();

@@ -6,4 +6,5 @@
 .logs/
 .uploads/
 .vendor/
+build/
 vendor/

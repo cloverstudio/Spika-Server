@@ -6,7 +6,7 @@ class PsrTest extends \PHPUnit_Framework_TestCase
 {
     protected static $PHP_CS;
     protected static $TARGET_DIR;
-    protected static $RESULT_SUCCESS_RE = '/^Time: \\d+ [^,]+, Memory: [^\\n]+\\n$/';
+    protected static $RESULT_SUCCESS_RE = '/^Time: [\\d\.]+ [^,]+, Memory: [^\\n]+\\n$/';
 
     public function setUp()
     {

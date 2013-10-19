@@ -16,7 +16,6 @@ use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-
 class CheckUniqueControllerTest extends WebTestCase
 {
     public function createApplication()
@@ -28,20 +27,20 @@ class CheckUniqueControllerTest extends WebTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $spikadb->expects($this->any())
+        $spikadb->expects(any())
             ->method('checkEmailIsUnique')
             ->with('ken.yasue@clover-studio.com')
-            ->will($this->returnValue('check by email'));
+            ->will(returnValue('check by email'));
 
-        $spikadb->expects($this->any())
+        $spikadb->expects(any())
             ->method('checkUserNameIsUnique')
             ->with('spikauser')
-            ->will($this->returnValue('check by username'));
+            ->will(returnValue('check by username'));
 
-        $spikadb->expects($this->any())
+        $spikadb->expects(any())
             ->method('checkGroupNameIsUnique')
             ->with('spikagroup')
-            ->will($this->returnValue('check by groupname'));
+            ->will(returnValue('check by groupname'));
 
         $app['spikadb'] = $spikadb;
 
@@ -49,30 +48,33 @@ class CheckUniqueControllerTest extends WebTestCase
     }
 
     /** @test */
-    public function checkUnique_checks_by_email_when_passed_email()
+    public function checkUniqueChecksByEmailWhenPassedEmail()
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/checkUnique.php', array('email' => 'ken.yasue@clover-studio.com'));
-        $this->assertTrue($client->getResponse()->isOk());
-        $this->assertSame('check by email', $client->getResponse()->getContent());
+        assertSame(true, $client->getResponse()->isOk());
+        assertSame('check by email', $client->getResponse()->getContent());
     }
 
     /** @test */
-    public function checkUnique_checks_by_username_when_passed_username()
+    public function checkUniqueChecksByUsernameWhenPassedUsername()
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/checkUnique.php', array('email' => '', 'username' => 'spikauser'));
-        $this->assertTrue($client->getResponse()->isOk());
-        $this->assertSame('check by username', $client->getResponse()->getContent());
+        assertSame(true, $client->getResponse()->isOk());
+        assertSame('check by username', $client->getResponse()->getContent());
     }
 
     /** @test */
-    public function checkUnique_checks_by_groupname_when_passed_username()
+    public function checkUniqueChecksByGroupnameWhenPassedUsername()
     {
         $client = $this->createClient();
-        $crawler = $client->request('GET', '/api/checkUnique.php', array('email' => '', 'username' => '', 'groupname' => 'spikagroup'));
-        $this->assertTrue($client->getResponse()->isOk());
-        $this->assertSame('check by groupname', $client->getResponse()->getContent());
+        $crawler = $client->request(
+            'GET',
+            '/api/checkUnique.php',
+            array('email' => '', 'username' => '', 'groupname' => 'spikagroup')
+        );
+        assertSame(true, $client->getResponse()->isOk());
+        assertSame('check by groupname', $client->getResponse()->getContent());
     }
 }
-

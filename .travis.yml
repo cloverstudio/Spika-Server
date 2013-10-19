@@ -8,3 +8,6 @@ before_script:
   - composer install --dev
 
 script: vendor/bin/phpunit
+
+notifications:
+  irc: "irc.freenode.org#spika_hackathon"

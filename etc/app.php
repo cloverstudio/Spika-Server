@@ -16,7 +16,6 @@ date_default_timezone_set("GMT");
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../init.php';
 require_once __DIR__.'/../etc/tokenCheker.php';
-require_once __DIR__.'/../services/SpikaDBProvider.php';
 require_once __DIR__.'/../etc/utils.php';
 
 
@@ -38,7 +37,7 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/debug.log',
 ));
 
-$app->register(new Spika\SpikaDBProvider(), array(
+$app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
     'couchdb.couchDBURL' => CouchDBURL,
 ));
 

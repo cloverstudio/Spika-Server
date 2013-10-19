@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Silex framework.
  *
@@ -8,35 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Spika\Db;
 
-
-namespace Spika;
-
-use Silex\Application;
-use Silex\ServiceProviderInterface;
-
-class SpikaDBProvider implements ServiceProviderInterface
-{
-
-    public function register(\Silex\Application $app)
-    {
-    
-        $app['spikadb'] = $app->share(function () use ($app) {
-            return new SpikaDBHandler(
-                $app['couchdb.couchDBURL'],
-                $app
-            );
-        });
-
-    }
-
-    public function boot(Application $app)
-    {
-    }
-
-}
-
-class SpikaDBHandler
+class CouchDb
 {
 	private $couchDBURL = "";
 	private $app;
@@ -313,4 +286,3 @@ class SpikaDBHandler
 
     }
 }
-?>

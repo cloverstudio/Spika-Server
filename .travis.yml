@@ -13,7 +13,7 @@ env:
 before_script:
   - composer install --dev
   - curl -X PUT $SPIKA_COUCH_DB_URL
-  - curl -X PUT $SPIKA_COUCH_DB_URL/_design/app --data-binary @/vagrant_data/install/designdocuments.dump
+  - curl -X PUT $SPIKA_COUCH_DB_URL/_design/app --data-binary @install/designdocuments.dump
 
 script: vendor/bin/phpunit
 

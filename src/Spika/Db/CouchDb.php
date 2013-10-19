@@ -10,16 +10,18 @@
 namespace Spika\Db;
 
 use Spika\Db\DbInterface;
+use Psr\Log\LoggerInterface;
 
 class CouchDb implements DbInterface
+
 {
 	private $couchDBURL = "";
-	private $app;
+	private $logger;
 
 
-	public function __construct($URL,$app){
+	public function __construct($URL, LoggerInterface $logger){
 		$this->couchDBURL = $URL;
-		$this->app = $app;
+		$this->logger     = $logger;
 	}
 	
 	private function stripParamsFromJson($json)
@@ -107,8 +109,7 @@ class CouchDb implements DbInterface
     public function doSpikaAuth($requestBody)
     {
     	
-    	if(isset($this->app['monolog']))
-    		$this->app['monolog']->addDebug("Receive Auth Request : \n {$requestBody} \n");
+   		$this->logger->addDebug("Receive Auth Request : \n {$requestBody} \n");
     	
     	$reqJson = json_decode($requestBody, true);
     	
@@ -118,10 +119,10 @@ class CouchDb implements DbInterface
 		$emailQuery = '"' . $email . '"';
 		list($header,$result) = $this->execCurl("GET",$this->couchDBURL . "/_design/app/_view/find_user_by_email?key=" . $emailQuery);
 		
-		$this->app['monolog']->addDebug("Receive Auth Request : \n {$result} \n");
+		$this->logger->addDebug("Receive Auth Request : \n {$result} \n");
 		$json = json_decode($result, true);
 		
-		$this->app['monolog']->addDebug($result);
+		$this->logger->addDebug($result);
 		
 		if (empty($json['rows'][0]['value']['email'])) {
 		    $arr = array('message' => 'User not found!', 'error' => 'logout');
@@ -150,8 +151,7 @@ class CouchDb implements DbInterface
 	function saveUserToken($userJson, $id)
 	{
 	
-    	if(isset($this->app['monolog']))
-    		$this->app['monolog']->addDebug("Token saved : \n {$userJson} \n");
+    	$this->logger->addDebug("Token saved : \n {$userJson} \n");
 
     	
     	list($header,$body) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
@@ -208,8 +208,7 @@ class CouchDb implements DbInterface
     public function doPostRequest($requestBody)
     {
     	
-    	if(isset($this->app['monolog']))
-    		$this->app['monolog']->addDebug("Receive Post Request : \n {$requestBody} \n");
+    	$this->logger->addDebug("Receive Post Request : \n {$requestBody} \n");
     	
     	list($header,$body) = $this->execCurl("POST",$this->couchDBURL,$requestBody,array("Content-Type: application/json"));
     	
@@ -222,8 +221,7 @@ class CouchDb implements DbInterface
     	
     	$couchDBQuery = $this->couchDBURL . "/" . $queryString;
     	
-    	if(isset($this->app['monolog']))
-    		$this->app['monolog']->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
+    	$this->logger->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
     	
 		list($header,$body) = $this->execCurl("GET",$couchDBQuery);
 		
@@ -240,8 +238,7 @@ class CouchDb implements DbInterface
     	
     	$couchDBQuery = $this->couchDBURL . "/" . $queryString;
     	
-    	if(isset($this->app['monolog']))
-    		$this->app['monolog']->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
+    	$this->logger->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
     	
 		list($header,$body) = $this->execCurl("GET",$couchDBQuery);
 		
@@ -255,8 +252,7 @@ class CouchDb implements DbInterface
     public function doPutRequest($id,$requestBody)
     {
     	
-    	if(isset($this->app['monolog']))
-			$this->app['monolog']->addDebug("Receive Put Request : \n {$requestBody} \n");
+		$this->logger->addDebug("Receive Put Request : \n {$requestBody} \n");
 	
 		// merge with original json
 		// put request is update in couchdb. for all get requests backend cuts off password and email
@@ -273,7 +269,7 @@ class CouchDb implements DbInterface
 	    // save
 	    list($header,$body) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",$jsonToSave,array("Content-Type: application/json"));
 
-	    $this->app['monolog']->addDebug($jsonToSave);
+	    $this->logger->addDebug($jsonToSave);
 	    
 	    return $body;
 

@@ -1,0 +1,24 @@
+language: php
+
+php:
+  - 5.4
+  - 5.5
+
+services:
+  - couchdb
+
+env:
+  - SPIKA_COUCH_DB_URL=http://localhost:5984/spikatest SPIKA_ADMIN_EMAIL=admin@example.com
+
+before_script:
+  - composer install --dev
+  - curl -X PUT $SPIKA_COUCH_DB_URL
+  - curl -X PUT $SPIKA_COUCH_DB_URL/_design/app --data-binary @install/designdocuments.dump
+
+script: vendor/bin/phpunit
+
+after_script:
+  - vendor/bin/coveralls -v
+
+notifications:
+  irc: "irc.freenode.org#spika_hackathon"

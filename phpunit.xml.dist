@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="false"
+         bootstrap="tests/bootstrap.php"
+>
+    <testsuites>
+        <testsuite name="Spika Test Suite">
+            <directory>./tests/Spika/</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+      <includePath>./</includePath>
+      <includePath>./vendor/phpunit/phpunit/</includePath>
+      <env name="SPIKA_COUCH_DB_URL" value="http://localhost:5984/spikatest"/>
+      <env name="SPIKA_ADMIN_EMAIL" value="admin@example.com"/>
+    </php>
+
+    <filter>
+      <blacklist>
+        <directory suffix=".php">./vendor</directory>
+      </blacklist>
+    </filter>
+
+    <logging>
+      <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
+</phpunit>

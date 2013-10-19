@@ -28,7 +28,7 @@ $app = new Silex\Application();
 $app['debug'] = true;
 
 
-$app['beforeTokenChecker'] = $app->protect($beforeTokenCheker);
+$app['beforeTokenChecker'] = $app->protect(makeBeforeTokenChecker());
 
 // register providers
 

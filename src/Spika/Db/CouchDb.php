@@ -9,7 +9,9 @@
  */
 namespace Spika\Db;
 
-class CouchDb
+use Spika\Db\DbInterface;
+
+class CouchDb implements DbInterface
 {
 	private $couchDBURL = "";
 	private $app;

@@ -10,10 +10,7 @@ class AuthControllerTest extends WebTestCase
     {
         require realpath(__DIR__ . '/../../../') . '/etc/app.php';
 
-        $spikadb = $this->getMockBuilder('\Spika\SpikaDBHandler')
-            ->setMethods(array('doSpikaAuth'))
-            ->disableOriginalConstructor()
-            ->getMock();
+        $spikadb = $this->getMock('\Spika\Db\DbInterface');
         $spikadb->expects($this->once())
             ->method('doSpikaAuth')
             ->will($this->returnValue('auth result'));

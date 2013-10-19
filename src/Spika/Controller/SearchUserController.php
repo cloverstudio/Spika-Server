@@ -26,40 +26,41 @@ class SearchUserController implements ControllerProviderInterface
     {
         $controllers = $app['controllers_factory'];
         $this->app = $app;
+        $self = $this;
         
 		// check unique controller
-		$controllers->get('/searchuser.php', function (Request $request) use ($app) {
+		$controllers->get('/searchuser.php', function (Request $request) use ($app,$self) {
     
-            $this->name = $request->get('n');
-            $this->ageFrom = $request->get('af');
-            $this->ageTo = $request->get('at');
-            $this->gender = $request->get('g');
+            $self->name = $request->get('n');
+            $self->ageFrom = $request->get('af');
+            $self->ageTo = $request->get('at');
+            $self->gender = $request->get('g');
             
             // returns all users if nothing decleard
-            if(empty($this->name) && empty($this->ageFrom) && empty($this->ageTo) && empty($this->gender)){
+            if(empty($self->name) && empty($self->ageFrom) && empty($self->ageTo) && empty($self->gender)){
             	return $this->getDefaultResult();
 			}
             
             // set default values
             //$this->setDefaultValues();
-            $nameResult = $this->searchByName();
-            $ageResult = $this->searchByAge();
-            $genderResult = $this->searchByGender();
+            $nameResult = $self->searchByName();
+            $ageResult = $self->searchByAge();
+            $genderResult = $self->searchByGender();
             
             // you can use this result if you want search in "or" criteria
-            $resultAll = $this->mergeOrResults($nameResult,$ageResult,$genderResult);
+            $resultAll = $self->mergeOrResults($nameResult,$ageResult,$genderResult);
             
             // this is for "and"
-            $resultAnd = $this->mergeAndResults($resultAll,$nameResult,$ageResult,$genderResult);
+            $resultAnd = $self->mergeAndResults($resultAll,$nameResult,$ageResult,$genderResult);
             
             return json_encode($resultAnd);
-            
-		})->before($app['beforeTokenChecker']);
+          
+        })->before($app['beforeTokenChecker']);
         
         return $controllers;
     }
 
-    private function mergeAndResults(){
+    public function mergeAndResults(){
     
     	$results = func_get_args();
     	
@@ -100,7 +101,7 @@ class SearchUserController implements ControllerProviderInterface
     }
     
         
-    private function mergeOrResults(){
+    public function mergeOrResults(){
     
     	$results = func_get_args();
     	
@@ -122,7 +123,7 @@ class SearchUserController implements ControllerProviderInterface
 	    return $uniqueAry;
     }
     
-    private function searchByName(){
+    public function searchByName(){
     	
     	if(empty($this->name))
     		return array();
@@ -140,7 +141,7 @@ class SearchUserController implements ControllerProviderInterface
 
     }
     
-    private function searchByGender(){
+    public function searchByGender(){
     	
     	if(empty($this->gender))
     		return array();
@@ -155,7 +156,7 @@ class SearchUserController implements ControllerProviderInterface
 
     }
 
-    private function searchByAge(){
+    public function searchByAge(){
 
 		$ageQuery = "";
 		
@@ -182,7 +183,7 @@ class SearchUserController implements ControllerProviderInterface
 		
     }
     
-    private function setDefaultValues(){
+    public function setDefaultValues(){
 	    
 	    if(empty($this->ageFrom)){
 		    $this->ageFrom = 0;
@@ -194,7 +195,7 @@ class SearchUserController implements ControllerProviderInterface
  
     }
     
-    private function getDefaultResult(){	    
+    public function getDefaultResult(){	    
 	    return $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_name");
     }
 }

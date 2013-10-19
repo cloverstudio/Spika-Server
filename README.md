@@ -19,8 +19,6 @@ install required software.
 - VirtualBox
 - Vagrant 1.3.x+
 
-
-
 ## boot VM
 
 boot a virtual machine on your workstation.
@@ -31,38 +29,19 @@ cd #{this_repo}
 vagrant up
 </pre>
 
-## pushSrv install
+## Setup Database
 
-Access to instller for pushSrv.
+Access to instller for Spika server.
 
-[http://127.0.0.1:8080/HookUpServer/hookup_push/installer/](http://127.0.0.1:8080/HookUpServer/hookup_push/installer/)
+[http://localhost:8080/wwwroot/install](http://localhost:8080/wwwroot/install)
 
-Complete form with default info.
+## confirm database is working
 
-- database setting
-	- Host: localhost
-	- Database name: spika
-	- Database user name: root
-	- Password: leave blank 
+Open this url.
+[http://localhost:8080/wwwroot/api/](http://localhost:8080/wwwroot/api/)
 
-- lib/init.php
-
-## create test user
-
-keep email and password in the result
-
-[http://127.0.0.1:8080/HookUpServer/hookup/app_specific/spikademo/setup.php](http://127.0.0.1:8080/HookUpServer/hookup/app_specific/spikademo/setup.php)
+You will see something like this.
 
 <pre>
-User for auto generate content is generated. Please change createUserHander.php with this information. AP_USER = '9rVooVDi@clover-studio.com' AP_PASS = 'HNg543QC' Failed to login.
-</pre>
-
-## test search user API
-
-[http://127.0.0.1:8080/HookUpServer/hookup/searchuser.php?db=spikademo](http://127.0.0.1:8080/HookUpServer/hookup/searchuser.php?db=spikademo)
-
-You will see something like this. if you created more user, result will contain those info as well.
-
-<pre>
-[{"_id":"3b5e45fcb4d696e39b4f5f232b0005f5","_rev":"1-47be4969ba99ad00edc6a97f873f1c49","about":"Auto pilot user","favorite_groups":[],"type":"user","contacts":[],"email":"9rVooVDi@clover-studio.com","online_status":"online","birthday":1377554400,"token_timestamp":1378467097,"max_favorite_count":10,"gender":"female","name":"Create User Test","avatar_file_id":"","max_contact_count":20,"avatar_thumb_file_id":""},{"_id":"3b5e45fcb4d696e39b4f5f232b002410","_rev":"1-f88c32f2638a50869437afe93e1fe721","about":"Auto pilot user","favorite_groups":[],"type":"user","contacts":[],"email":"sAZKdA1t@clover-studio.com","online_status":"online","birthday":1377554400,"token_timestamp":1378467097,"max_favorite_count":10,"gender":"female","name":"Create User Test","avatar_file_id":"","max_contact_count":20,"avatar_thumb_file_id":""},{"_id":"3b5e45fcb4d696e39b4f5f232b002da2","_rev":"1-8552fc69e5182b96cf17f96171efd239","about":"Auto pilot user","favorite_groups":[],"type":"user","contacts":[],"email":"WA1h51fv@clover-studio.com","online_status":"online","birthday":1377554400,"token_timestamp":1378467097,"max_favorite_count":10,"gender":"female","name":"Create User Test","avatar_file_id":"","max_contact_count":20,"avatar_thumb_file_id":""}]
+{"db_name":"spikademo","doc_count":56,"doc_del_count":0,"update_seq":56,"purge_seq":0,"compact_running":false,"disk_size":745561,"instance_start_time":"1382202784749403","disk_format_version":5,"committed_update_seq":56}
 </pre>

@@ -1,6 +1,8 @@
 Spika-Server
 ============
 
+[![Build Status](https://api.travis-ci.org/kuzuha/Spika-Server.png?branch=master,develop)](https://travis-ci.org/kuzuha/Spika-Server)
+
 Spika is a full-fledged messenger app under MIT license.  
 For any detail please refer our web site.
 

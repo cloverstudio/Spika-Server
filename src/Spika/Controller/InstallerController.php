@@ -26,8 +26,8 @@ class InstallerController implements ControllerProviderInterface
 		// check unique controller
 		$controllers->get('/install', function (Request $request) use ($app) {
 			
-			$randomEmail = Utils::randString(8, 8) . '@clover-studio.com';
-			$password = Utils::randString(8, 8);
+			$randomEmail = \Spika\Utils::randString(8, 8) . '@clover-studio.com';
+			$password = \Spika\Utils::randString(8, 8);
 			
 			$result = "";
 			
@@ -75,7 +75,7 @@ class InstallerController implements ControllerProviderInterface
 			// delete first
 			$resAllStickers = $app['spikadb']->doGetRequest("_design/app/_view/find_all_emoticons");
 			$resAllStickersDic = json_decode($resAllStickers, true);
-			
+
 			foreach ($resAllStickersDic['rows'] as $data) {
 			
 			    $id = $data['value']['_id'];
@@ -87,7 +87,7 @@ class InstallerController implements ControllerProviderInterface
 			
 			
 			$files = array();
-			$filesPath = __DIR__.'/../install/resouces/emoticons';
+			$filesPath = __DIR__.'/../../../install/resouces/emoticons';
 			
 			if ($handle = opendir($filesPath)) {
 			

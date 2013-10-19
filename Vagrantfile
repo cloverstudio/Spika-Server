@@ -13,13 +13,28 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, :inline => <<-EOS
     sudo apt-get update
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php5 php5-curl php5-mysql mysql-server couchdb curl
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php5 php5-curl phpunit couchdb curl git-core php5-xdebug
+
+    #http://www.giocc.com/installing-phpunit-on-ubuntu-11-04-natty-narwhal.html
+    sudo pear upgrade pear
+	sudo pear channel-discover pear.phpunit.de
+	sudo pear channel-discover components.ez.no
+	sudo pear channel-discover pear.symfony.com
+	sudo pear install --alldeps phpunit/PHPUnit 
+	
+    a2enmod rewrite
+    sed -i '/AllowOverride None/c AllowOverride All' /etc/apache2/sites-available/default    
+
     sudo rm -rf /var/www
     sudo ln -s /vagrant_data /var/www
-    sudo mysql -u root -e "create database spika"
     curl -X PUT http://127.0.0.1:5984/spikademo
     curl -X PUT http://127.0.0.1:5984/spikademo/_design/app --data-binary @/vagrant_data/install/designdocuments.dump
     sudo /etc/init.d/apache2 restart
-    sudo mkdir -p /vagrant_data/HookUpServer/hookup_push/tmp/log
+    sudo mkdir -p /vagrant_data/logs
+    sudo mkdir -p /vagrant_data/uploads
+    sudo chmod 777 /vagrant_data/logs
+    sudo chmod 777 /vagrant_data/uploads
+    sudo php /vagrant_data/composer.phar install -d /vagrant_data/
+    
   EOS
 end

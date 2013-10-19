@@ -35,6 +35,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo chmod 777 /vagrant_data/logs
     sudo chmod 777 /vagrant_data/uploads
     sudo php /vagrant_data/composer.phar install -d /vagrant_data/
+
+    echo 'please open http://localhost:8080/wwwroot/install to finish setup'
     
   EOS
 end

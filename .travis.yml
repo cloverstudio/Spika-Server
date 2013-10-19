@@ -17,5 +17,8 @@ before_script:
 
 script: vendor/bin/phpunit
 
+after_script:
+  - vendor/bin/coveralls -v
+
 notifications:
   irc: "irc.freenode.org#spika_hackathon"

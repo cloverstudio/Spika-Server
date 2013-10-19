@@ -10,8 +10,8 @@
  */
  
  
-define('CouchDBURL', "http://localhost:5984/spikademo");
-define('AdministratorEmail', "ken.yasue@clover-studio.com");
-define('TokenValidTime',60*60*24);
+define('CouchDBURL', isset($_ENV['SPIKA_COUCH_DB_URL']) ? $_ENV['SPIKA_COUCH_DB_URL'] : "http://localhost:5984/spikademo");
+define('AdministratorEmail', isset($_ENV['SPIKA_ADMIN_EMAIL']) ? $_ENV['SPIKA_ADMIN_EMAIL'] : "ken.yasue@clover-studio.com");
+define('TokenValidTime', isset($_ENV['SPIKA_TOKEN_VALID_TIME']) ? $_ENV['SPIKA_TOKEN_VALID_TIME'] : 60*60*24);
 
 ?>

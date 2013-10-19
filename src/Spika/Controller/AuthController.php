@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spika\Controllers;
+namespace Spika\Controller;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -17,22 +17,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 
-class SignoutController implements ControllerProviderInterface
+class AuthController implements ControllerProviderInterface
 {
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
 
-		// logout controller
-		$controllers->get('/unregistToken.php', function (Request $request) use ($app) {
+		// Auth controller
+		$controllers->post('/hookup-auth.php', function (Request $request) use ($app) {
 			
-			$userId = $request->get('user_id');
-			return $app['spikadb']->unregistToken($userId);
+			$requestBody = $request->getContent();
+			$authResult = $app['spikadb']->doSpikaAuth($requestBody);
+			
+			$app['monolog']->addDebug("Auth Response : \n {$authResult} \n");
+		
+		    return $authResult;
 		
 		});
-
-        return $controllers;
         
+        return $controllers;
     }
     
 }

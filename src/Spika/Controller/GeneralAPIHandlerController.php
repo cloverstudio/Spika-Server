@@ -10,7 +10,7 @@
  */
 
 
-namespace Spika\Controllers;
+namespace Spika\Controller;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;

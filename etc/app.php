@@ -42,13 +42,13 @@ $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
 ));
 
 
-$app->mount('/', new Spika\Controllers\InstallerController());
-$app->mount('/api/', new Spika\Controllers\SendPasswordController());
-$app->mount('/api/', new Spika\Controllers\ReportController());
-$app->mount('/api/', new Spika\Controllers\FileController());
-$app->mount('/api/', new Spika\Controllers\SearchGroupController());
-$app->mount('/api/', new Spika\Controllers\SearchUserController());
-$app->mount('/api/', new Spika\Controllers\SignoutController());
-$app->mount('/api/', new Spika\Controllers\CheckUniqueController());
-$app->mount('/api/', new Spika\Controllers\AuthController());
-$app->mount('/api/', new Spika\Controllers\GeneralAPIHandlerController());
+$app->mount('/', new Spika\Controller\InstallerController());
+$app->mount('/api/', new Spika\Controller\SendPasswordController());
+$app->mount('/api/', new Spika\Controller\ReportController());
+$app->mount('/api/', new Spika\Controller\FileController());
+$app->mount('/api/', new Spika\Controller\SearchGroupController());
+$app->mount('/api/', new Spika\Controller\SearchUserController());
+$app->mount('/api/', new Spika\Controller\SignoutController());
+$app->mount('/api/', new Spika\Controller\CheckUniqueController());
+$app->mount('/api/', new Spika\Controller\AuthController());
+$app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());

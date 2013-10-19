@@ -1,5 +1,5 @@
 <?php
-namespace Spika\Controllers;
+namespace Spika\Controller;
 use Silex\WebTestCase;
 
 class AuthControllerTest extends WebTestCase

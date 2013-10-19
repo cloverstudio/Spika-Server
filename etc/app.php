@@ -16,17 +16,6 @@ date_default_timezone_set("GMT");
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../init.php';
 require_once __DIR__.'/../etc/tokenCheker.php';
-require_once __DIR__.'/../services/SpikaDBProvider.php';
-require_once __DIR__.'/../controllers/GeneralAPIHandlerController.php';
-require_once __DIR__.'/../controllers/CheckUniqueController.php';
-require_once __DIR__.'/../controllers/AuthController.php';
-require_once __DIR__.'/../controllers/SignoutController.php';
-require_once __DIR__.'/../controllers/SearchUserController.php';
-require_once __DIR__.'/../controllers/SearchGroupController.php';
-require_once __DIR__.'/../controllers/FileController.php';
-require_once __DIR__.'/../controllers/ReportController.php';
-require_once __DIR__.'/../controllers/SendPasswordController.php';
-require_once __DIR__.'/../controllers/InstallerController.php';
 require_once __DIR__.'/../etc/utils.php';
 
 
@@ -48,18 +37,18 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/debug.log',
 ));
 
-$app->register(new Spika\SpikaDBProvider(), array(
+$app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
     'couchdb.couchDBURL' => CouchDBURL,
 ));
 
 
-$app->mount('/', new Spika\InstallerController());
-$app->mount('/api/', new Spika\SendPasswordController());
-$app->mount('/api/', new Spika\ReportController());
-$app->mount('/api/', new Spika\FileController());
-$app->mount('/api/', new Spika\SearchGroupController());
-$app->mount('/api/', new Spika\SearchUserController());
-$app->mount('/api/', new Spika\SignoutController());
-$app->mount('/api/', new Spika\CheckUniqueController());
-$app->mount('/api/', new Spika\AuthController());
-$app->mount('/api/', new Spika\GeneralAPIHandlerController());
+$app->mount('/', new Spika\Controller\InstallerController());
+$app->mount('/api/', new Spika\Controller\SendPasswordController());
+$app->mount('/api/', new Spika\Controller\ReportController());
+$app->mount('/api/', new Spika\Controller\FileController());
+$app->mount('/api/', new Spika\Controller\SearchGroupController());
+$app->mount('/api/', new Spika\Controller\SearchUserController());
+$app->mount('/api/', new Spika\Controller\SignoutController());
+$app->mount('/api/', new Spika\Controller\CheckUniqueController());
+$app->mount('/api/', new Spika\Controller\AuthController());
+$app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());

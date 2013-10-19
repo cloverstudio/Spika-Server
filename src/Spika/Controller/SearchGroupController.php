@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spika;
+namespace Spika\Controller;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;

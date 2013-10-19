@@ -7,5 +7,8 @@
         "phpunit/phpunit": "3.7",
         "symfony/browser-kit": ">=2.3",
         "satooshi/php-coveralls": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {"Spika\\": "src/"}
     }
 }

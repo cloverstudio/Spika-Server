@@ -22,7 +22,6 @@ require_once __DIR__.'/../etc/utils.php';
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Silex\Provider\MonologServiceProvider;
-use Monolog\Logger;
 
 $app = new Silex\Application();
 $app['debug'] = true;
@@ -33,7 +32,7 @@ $app['beforeTokenChecker'] = $app->protect($beforeTokenCheker);
 // register providers
 
 // logging
-$app->register(new Silex\Provider\MonologServiceProvider(), array(
+$app->register(new MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/debug.log',
 ));
 

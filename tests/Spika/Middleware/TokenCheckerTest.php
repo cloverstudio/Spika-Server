@@ -28,6 +28,21 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($checker($request));
     }
 
+    /**
+     * @test
+     */
+    public function whenCreateUserRequestIsGiven()
+    {
+        $db      = $this->createMockDb();
+        $checker = $this->createTokenChecker($db);
+        $request = $this->createValidRequest();
+
+        $request->server->set('REQUEST_METHOD', 'POST');
+        $request->headers->set('user_id', 'create_user');
+
+        $this->assertNull($checker($request));
+    }
+
     private function createTokenChecker(DbInterface $db)
     {
         return new TokenChecker(

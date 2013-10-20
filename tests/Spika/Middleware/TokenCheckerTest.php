@@ -77,6 +77,31 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @test
+     */
+    public function whenTokenIsNotMatched()
+    {
+        $db   = $this->createMockDb();
+        $user = array_merge(
+            $this->createFixtureUser(),
+            array('token' => 'token_not_matched')
+        );
+
+        $db->expects(any())
+            ->method('findUserById')
+            ->will(returnValue($user));
+
+        $checker = $this->createTokenChecker($db);
+        $request = $this->createValidRequest();
+
+        $this->assertErrorResponse(
+            403,
+            'Invalid token',
+            $checker($request)
+        );
+    }
+
     private function createTokenChecker(DbInterface $db)
     {
         return new TokenChecker(

@@ -169,7 +169,24 @@ class CouchDb implements DbInterface
 		return json_encode($responseJson);
 		
 	}
-	
+
+    /**
+     * Finds a user by User ID
+     *
+     * @param  string $id
+     * @return array
+     */
+    public function findUserById($id)
+    {
+        $query  = "?key=" . urlencode('"' . $id . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_id{$query}", false);
+        $result = json_decode($json, true);
+
+        return isset($result) && isset($result['rows']) &&
+            isset($result['rows'][0]) && isset($result['rows'][0]['value'])
+            ? $result['rows'][0]['value']
+            : null;
+    }
 
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     

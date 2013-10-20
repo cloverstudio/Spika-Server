@@ -15,7 +15,6 @@ date_default_timezone_set("GMT");
 
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../init.php';
-require_once __DIR__.'/../etc/tokenCheker.php';
 require_once __DIR__.'/../etc/utils.php';
 
 
@@ -24,11 +23,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\SwiftmailerServiceProvider;
 
-$app = new Silex\Application();
+$app = new Silex\Application(isset($dependencies) ? $dependencies : array());
 $app['debug'] = true;
-
-
-$app['beforeTokenChecker'] = $app->protect(makeBeforeTokenChecker());
 
 // register providers
 
@@ -42,6 +38,8 @@ $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
 ));
 
 $app->register(new SwiftmailerServiceProvider());
+
+$app->register(new Spika\Provider\TokenCheckerServiceProvider());
 
 $app->mount('/', new Spika\Controller\InstallerController());
 $app->mount('/api/', new Spika\Controller\SendPasswordController());

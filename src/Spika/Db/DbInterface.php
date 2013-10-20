@@ -15,6 +15,14 @@ interface DbInterface
 
     public function saveUserToken($userJson, $id);
 
+    /**
+     * Finds a user by User ID
+     *
+     * @param  string $id
+     * @return array
+     */
+    public function findUserById($id);
+
     public function doPostRequest($requestBody);
 
     public function doGetRequestGetHeader($queryString, $stripCredentials = true);

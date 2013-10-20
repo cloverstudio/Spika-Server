@@ -52,7 +52,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         $checker = $this->createTokenChecker($db);
         $request = $this->createValidRequest();
 
-        $request->headers->set('user_id', NULL);
+        $request->headers->set('user_id', null);
 
         $this->assertErrorResponse(
             403,

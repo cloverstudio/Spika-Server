@@ -43,6 +43,24 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($checker($request));
     }
 
+    /**
+     * @test
+     */
+    public function whenRequestWithoutUserIdIsGiven()
+    {
+        $db      = $this->createMockDb();
+        $checker = $this->createTokenChecker($db);
+        $request = $this->createValidRequest();
+
+        $request->headers->set('user_id', NULL);
+
+        $this->assertErrorResponse(
+            403,
+            'No token sent',
+            $checker($request)
+        );
+    }
+
     private function createTokenChecker(DbInterface $db)
     {
         return new TokenChecker(
@@ -78,5 +96,18 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
                 'HTTP_TOKEN'   => self::FIXTURE_TOKEN,
             )
         );
+    }
+
+    private function assertErrorResponse($expectedStatus, $expectedMessage, $response)
+    {
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $response
+        );
+        $this->assertSame($expectedStatus, $response->getStatusCode());
+
+        $message = json_decode($response->getContent())->message;
+
+        $this->assertSame($expectedMessage, $message);
     }
 }

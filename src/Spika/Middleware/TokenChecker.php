@@ -1,17 +1,10 @@
 <?php
+namespace Spika\Middleware;
 
-/*
- * This file is part of the Silex framework.
- *
- * Copyright (c) 2013 clover studio official account
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
+use Spika\Db\DbInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Silex\Application;
 
 function abortManually($errMessage){
     $arr = array('message' => $errMessage, 'error' => 'logout');
@@ -20,10 +13,26 @@ function abortManually($errMessage){
     die();
 }
 
-function makeBeforeTokenChecker()
+class TokenChecker
 {
-    return function (Request $request, Application $app) {
-	    
+    /**
+     * @var Spika\Db\DbInterface
+     */
+    private $db;
+
+    /**
+     * @var Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(DbInterface $db, LoggerInterface $logger)
+    {
+        $this->db     = $db;
+        $this->logger = $logger;
+    }
+
+    public function __invoke(Request $request)
+    {
 	    // pass token check when unit testing
 	    if(!function_exists("getallheaders"))
 	    	return;
@@ -33,10 +42,10 @@ function makeBeforeTokenChecker()
         $useridReceived = $headers['user_id'];
         $isCreateUserRequest = false;
 
-        $app['monolog']->addDebug("token : {$tokenReceived}");
-        $app['monolog']->addDebug("medhod : " . $request->getMethod());
-        $app['monolog']->addDebug("user id : {$useridReceived}");
-        $app['monolog']->addDebug(print_r($_SERVER,true));
+        $this->logger->addDebug("token : {$tokenReceived}");
+        $this->logger->addDebug("medhod : " . $request->getMethod());
+        $this->logger->addDebug("user id : {$useridReceived}");
+        $this->logger->addDebug(print_r($_SERVER,true));
 
         if($request->getMethod() == "POST" && $useridReceived == "create_user"){
             $isCreateUserRequest = true;
@@ -48,7 +57,7 @@ function makeBeforeTokenChecker()
         }
 
         $query = "?key=" . urlencode('"' . $useridReceived . '"');
-        $result = $app['spikadb']->doGetRequest("/_design/app/_view/find_user_by_id{$query}",false);
+        $result = $this->db->doGetRequest("/_design/app/_view/find_user_by_id{$query}",false);
         $userData = json_decode($result, true);
 
         if(!isset($userData['rows'][0]['value']['_id']) || $userData['rows'][0]['value']['_id'] != $useridReceived){
@@ -68,8 +77,8 @@ function makeBeforeTokenChecker()
         }
 
 
-        //$app['monolog']->addDebug("check token user id : " . $userid);
-        //$app['monolog']->addDebug("check token user : " . print_r($userData,true));
+        //$this->logger->addDebug("check token user id : " . $userid);
+        //$this->logger->addDebug("check token user : " . print_r($userData,true));
 
-    };
+    }
 }

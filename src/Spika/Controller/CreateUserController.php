@@ -28,40 +28,53 @@ max_favorite_count=10
 
 Response sample:
 "{
-	""ok"": true,
-	""id"": ""9b396ef6f2ea68ff9eee2263881cd3ee"",
-	""rev"": ""1-d4c2ac3c0cb683a14245a7eab3a0b4d6""
+	"ok": true,
+	"id": "9b396ef6f2ea68ff9eee2263881cd3ee",
+	"rev": "1-d4c2ac3c0cb683a14245a7eab3a0b4d6"
 }"
 
 */
-class CreateUserController implements ControllerProviderInterface
+class CreateUserController extends SpikaBaseController
 {
-    public function connect(Application $app)
-    {
-        $controllers = $app['controllers_factory'];
+public function connect(Application $app)
+{
+    $controllers = $app['controllers_factory'];
+    $self = $this;
+    
+	// Auth controller
+	$controllers->post('/createUser', function (Request $request) use ($app,$self) {
 
-		// Auth controller
-		$controllers->post('/createUser', function (Request $request) use ($app) {
+		$requestBody = $request->getContent();
+		
+		if(!$self->validateRequestParams($requestBody,array(
+			'name',
+			'email',
+			'password',
+			'type',
+			'online_status',
+			'max_contact_count',
+			'max_favorite_count'
+		))){
+            return $self->returnErrorResponse("insufficient params");
+		}
+		
+		$newUserId = $app['spikadb']->createUser($requestBody);
+		$app['monolog']->addDebug("Create User API called : \n {$requestBody} \n");
 			
-			$requestBody = $request->getContent();
-			
-			$newUserId = $app['spikadb']->createUser($requestBody);
-			$app['monolog']->addDebug("Create User API called : \n {$requestBody} \n");
-				
-			$responseBodyAry = array(
-				'ok' => true,
-				'id' => $newUserId,
-				'rev' => 'tmprev'
-			);
-			
-			return json_encode($responseBodyAry);
-			
-		});
-        
-        return $controllers;
-    }
+		$responseBodyAry = array(
+			'ok' => true,
+			'id' => $newUserId,
+			'rev' => 'tmprev'
+		);
+		
+		return json_encode($responseBodyAry);
+		
+	});
     
-    
+    return $controllers;
+}
+
+
 }
 
 ?>

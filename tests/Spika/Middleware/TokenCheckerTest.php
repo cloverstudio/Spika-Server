@@ -102,6 +102,52 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @test
+     */
+    public function whenTokenExpirationIsLeftOneSecond()
+    {
+        $db   = $this->createMockDb();
+        $user = array_merge(
+            $this->createFixtureUser(),
+            array('token_timestamp' => time() - TokenValidTime)
+        );
+
+        $db->expects(any())
+            ->method('findUserById')
+            ->will(returnValue($user));
+
+        $checker = $this->createTokenChecker($db);
+        $request = $this->createValidRequest();
+
+        $this->assertNull($checker($request));
+    }
+
+    /**
+     * @test
+     */
+    public function whenTokenIsExpired()
+    {
+        $db   = $this->createMockDb();
+        $user = array_merge(
+            $this->createFixtureUser(),
+            array('token_timestamp' => time() - TokenValidTime - 1)
+        );
+
+        $db->expects(any())
+            ->method('findUserById')
+            ->will(returnValue($user));
+
+        $checker = $this->createTokenChecker($db);
+        $request = $this->createValidRequest();
+
+        $this->assertErrorResponse(
+            403,
+            'Token expired',
+            $checker($request)
+        );
+    }
+
     private function createTokenChecker(DbInterface $db)
     {
         return new TokenChecker(

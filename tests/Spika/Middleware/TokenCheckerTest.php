@@ -61,6 +61,22 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @test
+     */
+    public function whenNoUserIsFound()
+    {
+        $db      = $this->createMockDb();
+        $checker = $this->createTokenChecker($db);
+        $request = $this->createValidRequest();
+
+        $this->assertErrorResponse(
+            403,
+            'No token sent',
+            $checker($request)
+        );
+    }
+
     private function createTokenChecker(DbInterface $db)
     {
         return new TokenChecker(

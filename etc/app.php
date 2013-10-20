@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\SwiftmailerServiceProvider;
 
-$app = new Silex\Application();
+$app = new Silex\Application(isset($dependencies) ? $dependencies : array());
 $app['debug'] = true;
 
 // register providers

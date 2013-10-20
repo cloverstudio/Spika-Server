@@ -11,6 +11,13 @@ class ReportControllerTest extends WebTestCase
 {
     public function createApplication()
     {
+        $pimple = new \Pimple;
+
+        $dependencies = array(
+            'beforeTokenChecker' => $pimple->protect(function () {
+            })
+        );
+
         require SPIKA_ROOT . '/etc/app.php';
 
         $mailer = $this->getMockBuilder('\Silex\Provider\SwiftmailerServiceProvider')

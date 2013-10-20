@@ -56,7 +56,7 @@ class TokenChecker
 
         $tokenTimestamp = $user['token_timestamp'];
         $currentTimestamp = time();
-        $tokenTime = $tokenTimestamp + TokenValidTime;
+        $tokenTime = $tokenTimestamp + TOKEN_VALID_TIME;
 
         if ($tokenTime < $currentTimestamp) {
             return $this->abortManually("Token expired");

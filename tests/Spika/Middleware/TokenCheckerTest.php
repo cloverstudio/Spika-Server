@@ -110,7 +110,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         $db   = $this->createMockDb();
         $user = array_merge(
             $this->createFixtureUser(),
-            array('token_timestamp' => time() - TokenValidTime)
+            array('token_timestamp' => time() - TOKEN_VALID_TIME)
         );
 
         $db->expects(any())
@@ -131,7 +131,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         $db   = $this->createMockDb();
         $user = array_merge(
             $this->createFixtureUser(),
-            array('token_timestamp' => time() - TokenValidTime - 1)
+            array('token_timestamp' => time() - TOKEN_VALID_TIME - 1)
         );
 
         $db->expects(any())

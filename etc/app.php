@@ -51,3 +51,4 @@ $app->mount('/api/', new Spika\Controller\SignoutController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());
 $app->mount('/api/', new Spika\Controller\AuthController());
 $app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());
+$app->mount('/api/', new Spika\Controller\CreateUserController());

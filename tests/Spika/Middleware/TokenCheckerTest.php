@@ -55,9 +55,12 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         return new Request(
             array(),
             array(),
+            array(),
+            array(),
+            array(),
             array(
-                'user_id' => self::FIXTURE_USER_ID,
-                'token'   => self::FIXTURE_TOKEN,
+                'HTTP_USER_ID' => self::FIXTURE_USER_ID,
+                'HTTP_TOKEN'   => self::FIXTURE_TOKEN,
             )
         );
     }

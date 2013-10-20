@@ -4,14 +4,7 @@ namespace Spika\Middleware;
 use Spika\Db\DbInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
-function abortManually($errMessage){
-    $arr = array('message' => $errMessage, 'error' => 'logout');
-    header("HTTP/1.0 403 Forbidden");
-    echo json_encode($arr);
-    die();
-}
+use Symfony\Component\HttpFoundation\Response;
 
 class TokenChecker
 {
@@ -33,19 +26,14 @@ class TokenChecker
 
     public function __invoke(Request $request)
     {
-	    // pass token check when unit testing
-	    if(!function_exists("getallheaders"))
-	    	return;
-	    	
-        $headers = getallheaders();
-        $tokenReceived = $headers['token'];
-        $useridReceived = $headers['user_id'];
+        $tokenReceived  = $request->headers->get('token');
+        $useridReceived = $request->headers->get('user_id');
         $isCreateUserRequest = false;
 
-        $this->logger->addDebug("token : {$tokenReceived}");
-        $this->logger->addDebug("medhod : " . $request->getMethod());
-        $this->logger->addDebug("user id : {$useridReceived}");
-        $this->logger->addDebug(print_r($_SERVER,true));
+        $this->logger->debug("token : {$tokenReceived}");
+        $this->logger->debug("medhod : " . $request->getMethod());
+        $this->logger->debug("user id : {$useridReceived}");
+        $this->logger->debug(print_r($_SERVER,true));
 
         if($request->getMethod() == "POST" && $useridReceived == "create_user"){
             $isCreateUserRequest = true;
@@ -53,32 +41,38 @@ class TokenChecker
         }
 
         if(empty($tokenReceived) || empty($useridReceived)){
-            abortManually("No token sent");
+            return $this->abortManually("No token sent");
         }
 
-        $query = "?key=" . urlencode('"' . $useridReceived . '"');
-        $result = $this->db->doGetRequest("/_design/app/_view/find_user_by_id{$query}",false);
-        $userData = json_decode($result, true);
+        $user = $this->db->findUserById($useridReceived);
 
-        if(!isset($userData['rows'][0]['value']['_id']) || $userData['rows'][0]['value']['_id'] != $useridReceived){
-            abortManually("No token sent");
+        if (!isset($user['_id']) || $user['_id'] != $useridReceived) {
+            return $this->abortManually("No token sent");
         }
 
-        if($tokenReceived != $userData['rows'][0]['value']['token']){
-            abortManually("Invalid token");
+        if ($tokenReceived !== $user['token']){
+            return $this->abortManually("Invalid token");
         }
 
-        $tokenTimestamp = $userData['rows'][0]['value']['token_timestamp'];
+        $tokenTimestamp = $user['token_timestamp'];
         $currentTimestamp = time();
         $tokenTime = $tokenTimestamp + TokenValidTime;
 
         if ($tokenTime < $currentTimestamp) {
-            abortManually("Token expired");
+            return $this->abortManually("Token expired");
         }
 
 
-        //$this->logger->addDebug("check token user id : " . $userid);
-        //$this->logger->addDebug("check token user : " . print_r($userData,true));
+        //$this->logger->debug("check token user id : " . $userid);
+        //$this->logger->debug("check token user : " . print_r($userData,true));
 
+    }
+
+    private function abortManually($errMessage)
+    {
+        $arr  = array('message' => $errMessage, 'error' => 'logout');
+        $json = json_encode($arr);
+
+        return new Response($json, 403);
     }
 }

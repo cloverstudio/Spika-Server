@@ -22,11 +22,7 @@ class CheckUniqueControllerTest extends WebTestCase
     {
         require realpath(__DIR__ . '/../../../') . '/etc/app.php';
 
-        $spikadb = $this->getMockBuilder('\Spika\SpikaDBHandler')
-            ->setMethods(array('checkEmailIsUnique', 'checkUserNameIsUnique', 'checkGroupNameIsUnique'))
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $spikadb = $this->getMock('\Spika\Db\DbInterface');
         $spikadb->expects(any())
             ->method('checkEmailIsUnique')
             ->with('ken.yasue@clover-studio.com')

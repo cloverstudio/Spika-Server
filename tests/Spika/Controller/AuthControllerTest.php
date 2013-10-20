@@ -19,7 +19,8 @@ class AuthControllerTest extends WebTestCase
         return $app;
     }
 
-    public function testHookupAuth()
+    /** @test */
+    public function hookupAuthReturnsTheValueReturnedSpikadb()
     {
         $client = $this->createClient();
         $crawler = $client->request('POST', '/api/hookup-auth.php');

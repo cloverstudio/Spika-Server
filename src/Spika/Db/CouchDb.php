@@ -188,6 +188,25 @@ class CouchDb implements DbInterface
             : null;
     }
 
+    /**
+     * create a user
+     *
+     * @param  string $json
+     * @return id
+     */
+    public function createUser($json)
+    {
+        $json   = $this->doPostRequest($json);
+        $result = json_decode($json, true);
+        
+        if(isset($result['ok']) && $result['ok'] == 'true' && isset($result['id'])){
+	        return $result['id'];
+        }else
+        	return null;
+
+    }
+
+
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     
 		$curl = curl_init();

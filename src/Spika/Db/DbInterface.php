@@ -23,6 +23,14 @@ interface DbInterface
      */
     public function findUserById($id);
 
+    /**
+     * Create a users
+     *
+     * @param  string $json
+     * @return string $id
+     */
+    public function createUser($userAry);
+
     public function doPostRequest($requestBody);
 
     public function doGetRequestGetHeader($queryString, $stripCredentials = true);

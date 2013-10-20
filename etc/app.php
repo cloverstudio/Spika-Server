@@ -22,6 +22,7 @@ require_once __DIR__.'/../etc/utils.php';
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Silex\Provider\MonologServiceProvider;
+use Silex\Provider\SwiftmailerServiceProvider;
 
 $app = new Silex\Application();
 $app['debug'] = true;
@@ -40,6 +41,7 @@ $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
     'couchdb.couchDBURL' => CouchDBURL,
 ));
 
+$app->register(new SwiftmailerServiceProvider());
 
 $app->mount('/', new Spika\Controller\InstallerController());
 $app->mount('/api/', new Spika\Controller\SendPasswordController());

@@ -16,7 +16,6 @@ use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-
 class ReportController implements ControllerProviderInterface
 {
     public function connect(Application $app)
@@ -26,13 +25,17 @@ class ReportController implements ControllerProviderInterface
 		// check unique controller
 		$controllers->get('/reportViolation.php', function (Request $request) use ($app) {
 			$documentId = $request->get('docment_id');
-			mail(AdministratorEmail, "SpilaViolationReport", $documentId);
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject("SpilaViolationReport")
+                ->setFrom(AdministratorEmail)
+                ->setTo(AdministratorEmail)
+                ->setBody($documentId);
+            $app['mailer']->send($message);
+
 			return 'OK';
 		})->before($app['beforeTokenChecker']);
-        
+
         return $controllers;
     }
-    
 }
-
-?>

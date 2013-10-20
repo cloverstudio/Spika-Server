@@ -33,14 +33,14 @@ class TokenChecker
         $this->logger->debug("token : {$tokenReceived}");
         $this->logger->debug("medhod : " . $request->getMethod());
         $this->logger->debug("user id : {$useridReceived}");
-        $this->logger->debug(print_r($_SERVER,true));
+        $this->logger->debug(print_r($_SERVER, true));
 
-        if($request->getMethod() == "POST" && $useridReceived == "create_user"){
+        if ($request->getMethod() === 'POST' && $useridReceived == 'create_user') {
             $isCreateUserRequest = true;
             return;
         }
 
-        if(empty($tokenReceived) || empty($useridReceived)){
+        if (empty($tokenReceived) || empty($useridReceived)) {
             return $this->abortManually("No token sent");
         }
 
@@ -50,7 +50,7 @@ class TokenChecker
             return $this->abortManually("No token sent");
         }
 
-        if ($tokenReceived !== $user['token']){
+        if ($tokenReceived !== $user['token']) {
             return $this->abortManually("Invalid token");
         }
 

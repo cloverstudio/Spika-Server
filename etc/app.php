@@ -15,7 +15,6 @@ date_default_timezone_set("GMT");
 
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../init.php';
-require_once __DIR__.'/../etc/tokenCheker.php';
 require_once __DIR__.'/../etc/utils.php';
 
 
@@ -25,9 +24,6 @@ use Silex\Provider\MonologServiceProvider;
 
 $app = new Silex\Application();
 $app['debug'] = true;
-
-
-$app['beforeTokenChecker'] = $app->protect(makeBeforeTokenChecker());
 
 // register providers
 
@@ -40,6 +36,7 @@ $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
     'couchdb.couchDBURL' => CouchDBURL,
 ));
 
+$app->register(new Spika\Provider\TokenCheckerServiceProvider());
 
 $app->mount('/', new Spika\Controller\InstallerController());
 $app->mount('/api/', new Spika\Controller\SendPasswordController());

@@ -154,7 +154,7 @@ class CouchDb implements DbInterface
     	$this->logger->addDebug("Token saved : \n {$userJson} \n");
 
     	
-    	list($header,$body) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
+    	list($header,$result) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
     		$userJson,array("Content-Type: application/json"));
 
 		$userJson = json_decode($userJson, true);

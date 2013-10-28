@@ -8,10 +8,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
-
-  config.vm.network :forwarded_port, guest: 5984, host: 5984
-  #uncomment this to use Futon for couchdb on http://localhost:1234/_utils/
-  #config.vm.network :forwarded_port, guest: 5984, host: 1234
+  #uncomment this to use Futon for couchdb on http://localhost:5984/_utils/
+  #config.vm.network :forwarded_port, guest: 5984, host: 5984
 
   config.vm.synced_folder "./", "/vagrant_data", :owner=> 'vagrant', :group=>'www-data', :mount_options => ['dmode=775','fmode=775']
 

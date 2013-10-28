@@ -27,8 +27,8 @@ class SpikaBaseController implements ControllerProviderInterface
     
    
     public function validateRequestParams($requestBody,$requiredParams){
-	    $requestParams = json_decode($requestBody,true);
-	    
+        $requestParams = json_decode($requestBody,true);
+
 	    if(!is_array($requestParams))
 	    	return false;
 	    	

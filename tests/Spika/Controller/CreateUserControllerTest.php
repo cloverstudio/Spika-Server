@@ -43,7 +43,7 @@ class CreateUserControllerTest extends WebTestCase
             array('CONTENT_TYPE' => 'application/json'),
             json_encode($sendParams)
         );
-        
+
         assertRegExp("/ok.+true/", $client->getResponse()->getContent());
     }
     

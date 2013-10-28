@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-//error_reporting( E_ALL );
-//ini_set( "display_errors", 1 );
+error_reporting( E_ALL );
+ini_set( "display_errors", 1 );
 date_default_timezone_set("GMT");
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -50,5 +50,10 @@ $app->mount('/api/', new Spika\Controller\SearchUserController());
 $app->mount('/api/', new Spika\Controller\SignoutController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());
 $app->mount('/api/', new Spika\Controller\AuthController());
-$app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());
 $app->mount('/api/', new Spika\Controller\CreateUserController());
+$app->mount('/api/', new Spika\Controller\UserController());
+$app->mount('/api/', new Spika\Controller\MediaController());
+$app->mount('/api/', new Spika\Controller\GroupController());
+
+
+$app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());

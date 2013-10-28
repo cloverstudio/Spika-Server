@@ -108,7 +108,7 @@ class CouchDb implements DbInterface
     
     public function doSpikaAuth($requestBody)
     {
-    	
+
    		$this->logger->addDebug("Receive Auth Request : \n {$requestBody} \n");
     	
     	$reqJson = json_decode($requestBody, true);
@@ -154,7 +154,7 @@ class CouchDb implements DbInterface
     	$this->logger->addDebug("Token saved : \n {$userJson} \n");
 
     	
-    	list($header,$body) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
+    	list($header,$result) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
     		$userJson,array("Content-Type: application/json"));
 
 		$userJson = json_decode($userJson, true);
@@ -178,15 +178,56 @@ class CouchDb implements DbInterface
      */
     public function findUserById($id)
     {
+
+
         $query  = "?key=" . urlencode('"' . $id . '"');
         $json   = $this->doGetRequest("/_design/app/_view/find_user_by_id{$query}", false);
         $result = json_decode($json, true);
+
 
         return isset($result) && isset($result['rows']) &&
             isset($result['rows'][0]) && isset($result['rows'][0]['value'])
             ? $result['rows'][0]['value']
             : null;
     }
+
+    /**
+     * Finds a user by email
+     *
+     * @param  string $email
+     * @return array
+     */
+    public function findUserByEmail($email)
+    {
+
+
+        $query  = "?key=" . urlencode('"' . $email . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_email{$query}", false);
+        $result = json_decode($json, true);
+
+
+        return isset($result) && isset($result['rows']) &&
+            isset($result['rows'][0]) && isset($result['rows'][0]['value'])
+            ? $result['rows'][0]['value']
+            : null;
+    }
+
+
+    /**
+     * Gets user activity summary
+     *
+     * @param  string $user_id
+     * @return array
+     */
+    public function getActivitySummary($user_id)
+    {
+        $query  = "?key=" . urlencode('"' . $user_id . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/user_activity_summary{$query}", false);
+        $result = json_decode($json, true);
+
+        return $result;
+    }
+
 
     /**
      * create a user
@@ -206,6 +247,96 @@ class CouchDb implements DbInterface
 
     }
 
+    public function updateUser($user){
+
+        $json = $this->doPutRequest($user['_id'],json_encode($user));
+        $result = json_decode($json, true);
+
+
+        if(isset($result['ok']) && $result['ok'] == 'true' && isset($result['id'])){
+            return $this->getUserById($result['id']);
+        }else
+            $arr = array('message' => 'Update user error!', 'error' => 'logout');
+            return json_encode($arr);;
+    }
+
+    public function getUserById($user_id){
+        $json = $this->doGetRequest($user_id);
+        $result = json_decode($json, true);
+
+        return $result;
+    }
+
+    public function addNewMessage($messageData){
+
+        $query = json_encode($messageData);
+        $json = $this->doPostRequest($query);
+
+        $result = json_decode($json, true);
+
+        if(isset($result['ok']) && $result['ok'] == 'true'){
+            if(isset($result['rev']))unset($result['rev']);
+        }
+
+        return $result;
+    }
+
+    public function getUserMessages($startKey,$endKey,$descending,$limit,$skip){
+
+        $query = "?startkey={$startKey}&endkey={$endKey}&descending={$descending}&limit={$limit}&skip={$skip}";
+        $json = $this->doGetRequest("/_design/app/_view/find_user_message{$query}");
+
+        $result = json_decode($json, true);
+
+        return $result;
+    }
+
+    public function getUserContacts($user_id,$include_docs){
+        $query = "?key=". urlencode('"' . $user_id . '"')."&include_docs={$include_docs}";
+        $json = $this->doGetRequest("/_design/app/_view/find_contacts{$query}");
+
+        $result = json_decode($json, true);
+        return $result;
+    }
+
+    public function getEmoticons(){
+        $json = $this->doGetRequest("/_design/app/_view/find_all_emoticons");
+        $result = json_decode($json, true);
+
+        return $result;
+    }
+
+    public function getCommentCount($messageId){
+        $query  = "?key=" . urlencode('"' . $messageId . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/get_comment_count{$query}", false);
+
+        $result = json_decode($json, true);
+
+        return $result;
+    }
+
+    public function getAvatarFileId($user_id){
+        $query  = "?key=" . urlencode('"' . $user_id . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/find_avatar_file_id{$query}", false);
+
+        $result = json_decode($json, true);
+
+        return $result;
+    }
+
+
+    public function createGroup($groupData){
+        $query = json_encode($groupData);
+        $json = $this->doPostRequest($query);
+
+        $result = json_decode($json, true);
+
+        if(isset($result['ok']) && $result['ok'] == 'true'){
+            if(isset($result['rev']))unset($result['rev']);
+        }
+
+        return $result;
+    }
 
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     
@@ -297,7 +428,8 @@ class CouchDb implements DbInterface
 		
 		$originalData = json_decode($originalJSON,true);
 		$newData = json_decode($requestBody,true);
-		$newData["_rev"] = $originalData["_rev"];
+
+        if(isset($originalData["_rev"])) $newData["_rev"] = $originalData["_rev"];
 		
 		$mergedData = array_merge($originalData,$newData);
 		$jsonToSave = json_encode($mergedData,true);

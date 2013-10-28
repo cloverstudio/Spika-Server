@@ -43,5 +43,5 @@ Open this url.
 You will see something like this.
 
 <pre>
-{"db_name":"spikademo","doc_count":56,"doc_del_count":0,"update_seq":56,"purge_seq":0,"compact_running":false,"disk_size":745561,"instance_start_time":"1382202784749403","disk_format_version":5,"committed_update_seq":56}
+{"message":"No token sent","error":"logout"}
 </pre>

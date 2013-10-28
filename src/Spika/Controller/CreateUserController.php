@@ -40,9 +40,12 @@ public function connect(Application $app)
 {
     $controllers = $app['controllers_factory'];
     $self = $this;
-    
+
+
+
 	// Auth controller
 	$controllers->post('/createUser', function (Request $request) use ($app,$self) {
+
 
 		$requestBody = $request->getContent();
 		
@@ -57,7 +60,9 @@ public function connect(Application $app)
 		))){
             return $self->returnErrorResponse("insufficient params");
 		}
-		
+
+
+
 		$newUserId = $app['spikadb']->createUser($requestBody);
 		$app['monolog']->addDebug("Create User API called : \n {$requestBody} \n");
 			

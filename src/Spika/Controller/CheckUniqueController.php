@@ -24,7 +24,7 @@ class CheckUniqueController implements ControllerProviderInterface
         $controllers = $app['controllers_factory'];
 
 		// check unique controller
-		$controllers->get('/checkUnique.php', function (Request $request) use ($app) {
+		$controllers->get('/checkUnique', function (Request $request) use ($app) {
 			
 			$email = $request->get('email');
 			$username = $request->get('username');

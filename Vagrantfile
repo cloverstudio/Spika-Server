@@ -8,8 +8,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
-  config.vm.network :forwarded_port, guest: 80, host: 8080
-  config.vm.network :forwarded_port, guest: 5984, host: 1234
+
+  config.vm.network :forwarded_port, guest: 5984, host: 5984
+  #uncomment this to use Futon for couchdb on http://localhost:1234/_utils/
+  #config.vm.network :forwarded_port, guest: 5984, host: 1234
+
   config.vm.synced_folder "./", "/vagrant_data", :owner=> 'vagrant', :group=>'www-data', :mount_options => ['dmode=775','fmode=775']
 
   config.vm.provision :shell, :inline => <<-EOS
@@ -38,14 +41,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo chmod 777 /vagrant_data/uploads
     sudo php /vagrant_data/composer.phar install -d /vagrant_data/
 
-<<<<<<< HEAD
-    sudo stop ufw
-    curl -X PUT http://localhost:5984/_config/httpd/bind_address -d '"0.0.0.0"'
-=======
+
     #uncomment this to use Futon for couchdb
     #sudo stop ufw
     #curl -X PUT http://localhost:5984/_config/httpd/bind_address -d '"0.0.0.0"'
->>>>>>> 63d92af2e2763c15e0d25252741bbbf89ec98404
+
 
     echo 'please open http://localhost:8080/wwwroot/install to finish setup'
     

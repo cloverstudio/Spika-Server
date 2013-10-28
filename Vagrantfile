@@ -9,7 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
   #uncomment this to use Futon for couchdb on http://localhost:5984/_utils/
-  config.vm.network :forwarded_port, guest: 5984, host: 5984
+  #config.vm.network :forwarded_port, guest: 5984, host: 5984
   config.vm.network :forwarded_port, guest: 80, host: 8080
 
   config.vm.synced_folder "./", "/vagrant_data", :owner=> 'vagrant', :group=>'www-data', :mount_options => ['dmode=775','fmode=775']
@@ -42,8 +42,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
     #uncomment this to use Futon for couchdb
-    sudo stop ufw
-    curl -X PUT http://localhost:5984/_config/httpd/bind_address -d '"0.0.0.0"'
+    #sudo stop ufw
+    #curl -X PUT http://localhost:5984/_config/httpd/bind_address -d '"0.0.0.0"'
 
 
     echo 'please open http://localhost:8080/wwwroot/install to finish setup'

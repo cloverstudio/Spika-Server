@@ -38,8 +38,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo chmod 777 /vagrant_data/uploads
     sudo php /vagrant_data/composer.phar install -d /vagrant_data/
 
+<<<<<<< HEAD
     sudo stop ufw
     curl -X PUT http://localhost:5984/_config/httpd/bind_address -d '"0.0.0.0"'
+=======
+    #uncomment this to use Futon for couchdb
+    #sudo stop ufw
+    #curl -X PUT http://localhost:5984/_config/httpd/bind_address -d '"0.0.0.0"'
+>>>>>>> 63d92af2e2763c15e0d25252741bbbf89ec98404
 
     echo 'please open http://localhost:8080/wwwroot/install to finish setup'
     

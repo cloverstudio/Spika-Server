@@ -73,18 +73,19 @@ class InstallerController implements ControllerProviderInterface
 			// create stickers
 			
 			// delete first
-			$resAllStickers = $app['spikadb']->doGetRequest("_design/app/_view/find_all_emoticons");
+			$resAllStickers = $app['spikadb']->doGetRequest("/_design/app/_view/find_all_emoticons");
 			$resAllStickersDic = json_decode($resAllStickers, true);
-
-			foreach ($resAllStickersDic['rows'] as $data) {
 			
-			    $id = $data['value']['_id'];
-			    $rev = $data['value']['_rev'];
-			    $app['spikadb']->doDeleteRequest($id,$rev);
-			
+			if(count($resAllStickersDic['rows']) > 0){
+    			foreach ($resAllStickersDic['rows'] as $data) {
+    			
+    			    $id = $data['value']['_id'];
+    			    $rev = $data['value']['_rev'];
+    			    $app['spikadb']->doDeleteRequest($id,$rev);
+    			
+    			}
 			}
-			
-			
+
 			
 			$files = array();
 			$filesPath = __DIR__.'/../../../install/resouces/emoticons';

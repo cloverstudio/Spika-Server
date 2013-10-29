@@ -111,6 +111,9 @@
        },
        "find_lastwatching_group_by_group_id": {
            "map": "function(doc) {\n  if(doc.type===\"watching_group_log\")\n    emit(doc.group_id, doc);\n}\n"
+       },
+       "find_user_by_token": {
+           "map": "function(doc) {\n  if(doc.type===\"user\")\n    emit(doc.token, doc);\n}\n"
        }
    }
 }

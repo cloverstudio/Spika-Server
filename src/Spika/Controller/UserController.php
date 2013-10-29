@@ -101,6 +101,10 @@ class UserController extends SpikaBaseController
                         $result = $app['spikadb']->findUserByEmail($value);
                         $app['monolog']->addDebug("FindUserByEmail API called with email: \n {$value} \n");
                         break;
+                    case "name":
+                        $result = $app['spikadb']->findUserByName($value);
+                        $app['monolog']->addDebug("FindUserByEmail API called with name: \n {$value} \n");
+                        break;
                     default:
                         return $self->returnErrorResponse("unknown search key");
 

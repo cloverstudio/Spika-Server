@@ -13,7 +13,8 @@ class TokenCheckerServiceProvider implements ServiceProviderInterface
             $app['beforeTokenChecker'] = $app->share(function () use ($app) {
                 return new TokenChecker(
                     $app['spikadb'],
-                    $app['logger']
+                    $app['logger'],
+                    $app
                 );
             });
         }

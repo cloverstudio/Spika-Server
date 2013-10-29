@@ -16,11 +16,12 @@ interface DbInterface
      * @param  string $id
      * @return array
      */
+    public function findUserByToken($token);
     public function findUserById($id);
     public function findUserByEmail($email);
     public function findUserByName($name);
     public function getActivitySummary($user_id);
-    public function updateUser($user);
+    public function updateUser($userId,$user);
     public function getEmoticons();
     public function getCommentCount($messageId);
     public function getAvatarFileId($user_id);

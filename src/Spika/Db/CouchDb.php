@@ -168,6 +168,24 @@ class CouchDb implements DbInterface
 	}
 
     /**
+     * Finds a user by Token
+     *
+     * @param  string $token
+     * @return array
+     */
+    public function findUserByToken($token)
+    {
+        $query  = "?key=" . urlencode('"' . $token . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_token{$query}", false);
+        $result = json_decode($json, true);
+        
+        return isset($result) && isset($result['rows']) &&
+            isset($result['rows'][0]) && isset($result['rows'][0]['value'])
+            ? $result['rows'][0]['value']
+            : null;
+    }
+    
+    /**
      * Finds a user by User ID
      *
      * @param  string $id
@@ -278,21 +296,22 @@ class CouchDb implements DbInterface
 
     }
 
-    public function updateUser($user){
-
-        $json = $this->doPutRequest($user['_id'],json_encode($user));
+    public function updateUser($userId,$user){
+        
+        $user['_id'] = $userId;
+        
+        $json = $this->doPutRequest($userId,json_encode($user));
         $result = json_decode($json, true);
 
-
-        if(isset($result['ok']) && $result['ok'] == 'true' && isset($result['id'])){
+        if(isset($result['ok']) && $result['ok'] == 1 && isset($result['id'])){
             return $this->getUserById($result['id']);
         }else
             $arr = array('message' => 'Update user error!', 'error' => 'logout');
             return json_encode($arr);;
     }
 
-    public function getUserById($user_id){
-        $json = $this->doGetRequest($user_id);
+    public function getUserById($userId){
+        $json = $this->doGetRequest("/{$userId}");
         $result = json_decode($json, true);
 
         return $result;
@@ -461,7 +480,7 @@ class CouchDb implements DbInterface
 		// put request is update in couchdb. for all get requests backend cuts off password and email
 		// so I have to merge with original data here. Other wise password will gone.
 		list($header,$originalJSON) = $this->execCurl("GET",$this->couchDBURL . "/{$id}");
-		
+
 		$originalData = json_decode($originalJSON,true);
 		$newData = json_decode($requestBody,true);
 
@@ -473,8 +492,6 @@ class CouchDb implements DbInterface
 	    // save
 	    list($header,$body) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",$jsonToSave,array("Content-Type: application/json"));
 
-	    $this->logger->addDebug($jsonToSave);
-	    
 	    return $body;
 
     }

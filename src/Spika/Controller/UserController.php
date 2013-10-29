@@ -34,17 +34,15 @@ class UserController extends SpikaBaseController
     }
 
     private function setupUpdateUserMethod($self,$app,$controllers){
-        $controllers->put('/UpdateUser',
+        $controllers->post('/updateUser',
             function (Request $request) use ($app,$self) {
-
+                
+                $currentUser = $app['currentUser'];
                 $userData = $request->getContent();
 
                 if(!$self->validateRequestParams($userData,array(
-                    '_id',
                     'name',
                     'email',
-                    'password',
-                    'type',
                     'online_status',
                     'max_contact_count',
                     'max_favorite_count'
@@ -52,19 +50,15 @@ class UserController extends SpikaBaseController
                     return $self->returnErrorResponse("insufficient params");
                 }
 
-                //user can update only his profile
-                if($request->headers->get('user_id') != $userData['_id']){
-                    return $self->returnErrorResponse("forbidden action");
-                }
-
                 $userDataArray=json_decode($userData,true);
 
-                $result = $app['spikadb']->updateUser($userDataArray);
+                $result = $app['spikadb']->updateUser($currentUser['_id'],$userDataArray);
                 $app['monolog']->addDebug("Update API called with user id: \n {$userData} \n");
-
+                
                 return json_encode($result);
             }
-        );
+            
+        )->before($app['beforeTokenChecker']);
     }
 
 
@@ -112,7 +106,7 @@ class UserController extends SpikaBaseController
                 return json_encode($result);
                 
             }
-        );
+        )->before($app['beforeTokenChecker']);
     }
 
     /*
@@ -170,7 +164,7 @@ class UserController extends SpikaBaseController
 
                 return json_encode($result);*/
             }
-        );
+        )->before($app['beforeTokenChecker']);
     }
 
     private function setupGetAvatarFileIdMethod($self,$app,$controllers){
@@ -201,7 +195,7 @@ class UserController extends SpikaBaseController
 
                 return json_encode($result);
             }
-        );
+        )->before($app['beforeTokenChecker']);
     }
 
 }

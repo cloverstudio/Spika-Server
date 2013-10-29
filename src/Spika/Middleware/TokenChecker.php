@@ -24,32 +24,13 @@ class TokenChecker
         $this->logger = $logger;
     }
 
-    public function __invoke(Request $request)
+    public function __invoke(Request $request,\Silex\Application $app)
     {
+        
         $tokenReceived  = $request->headers->get('token');
-        $useridReceived = $request->headers->get('user_id');
-        $isCreateUserRequest = false;
-
-        $this->logger->debug("token : {$tokenReceived}");
-        $this->logger->debug("medhod : " . $request->getMethod());
-        $this->logger->debug("user id : {$useridReceived}");
-        $this->logger->debug(print_r($_SERVER, true));
-
-        if ($request->getMethod() === 'POST' && $useridReceived == 'create_user') {
-            $isCreateUserRequest = true;
-            return;
-        }
-
-        if (empty($tokenReceived) || empty($useridReceived)) {
-            return $this->abortManually("No token sent");
-        }
-
-        $user = $this->db->findUserById($useridReceived);
-
-        if (!isset($user['_id']) || $user['_id'] != $useridReceived) {
-            return $this->abortManually("No token sent");
-        }
-
+        
+        $user = $this->db->findUserByToken($tokenReceived);
+        
         if ($tokenReceived !== $user['token']) {
             return $this->abortManually("Invalid token");
         }
@@ -61,11 +42,8 @@ class TokenChecker
         if ($tokenTime < $currentTimestamp) {
             return $this->abortManually("Token expired");
         }
-
-
-        //$this->logger->debug("check token user id : " . $userid);
-        //$this->logger->debug("check token user : " . print_r($userData,true));
-
+        
+        $app['currentUser'] = $user;
     }
 
     private function abortManually($errMessage)

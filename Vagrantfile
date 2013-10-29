@@ -30,8 +30,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     sudo rm -rf /var/www
     sudo ln -s /vagrant_data /var/www
-    mozda zbog ovog
 
+    curl -X PUT http://127.0.0.1:5984/spikademo
     curl -X PUT http://127.0.0.1:5984/spikademo/_design/app --data-binary @/vagrant_data/install/designdocuments.dump
     sudo /etc/init.d/apache2 restart
     sudo mkdir -p /vagrant_data/logs
@@ -44,7 +44,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #uncomment this to use Futon for couchdb
     #sudo stop ufw
     #curl -X PUT http://localhost:5984/_config/httpd/bind_address -d '"0.0.0.0"'
-
 
     echo 'please open http://localhost:8080/wwwroot/install to finish setup'
     

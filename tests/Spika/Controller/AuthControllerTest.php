@@ -13,7 +13,7 @@ class AuthControllerTest extends WebTestCase
         $spikadb = $this->getMock('\Spika\Db\DbInterface');
         $spikadb->expects($this->once())
             ->method('doSpikaAuth')
-            ->will($this->returnValue('auth result'));
+            ->will($this->returnValue('jR9hCaktyH51TOxG57J5jqcuymkSC2uWUDdwOy0m'));
         $app['spikadb'] = $spikadb;
 
         return $app;
@@ -23,8 +23,21 @@ class AuthControllerTest extends WebTestCase
     public function hookupAuthReturnsTheValueReturnedSpikadb()
     {
         $client = $this->createClient();
-        $crawler = $client->request('POST', '/api/hookup-auth.php');
-        assertSame(true, $client->getResponse()->isOk());
-        assertSame('auth result', $client->getResponse()->getContent());
+        $sendParams = array(
+            'name' => 'spikaTarou',
+            'email' => 'spikaTarou@clover-studio.com',
+            'password' => 'testtest',
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/auth',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
+        assertRegExp("/[0-9a-zA-Z]{40}/", $client->getResponse()->getContent());
     }
 }

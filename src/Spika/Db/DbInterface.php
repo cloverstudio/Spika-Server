@@ -7,7 +7,7 @@ interface DbInterface
     public function checkEmailIsUnique($email);
     public function checkUserNameIsUnique($name);
     public function checkGroupNameIsUnique($name);
-    public function doSpikaAuth($requestBody);
+    public function doSpikaAuth($email,$password);
     public function saveUserToken($userJson, $id);
 
     /**

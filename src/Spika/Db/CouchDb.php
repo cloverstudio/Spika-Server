@@ -109,17 +109,11 @@ class CouchDb implements DbInterface
     	
     }
     
-    public function doSpikaAuth($requestBody)
+    public function doSpikaAuth($email,$password)
     {
-
-   		$this->logger->addDebug("Receive Auth Request : \n {$requestBody} \n");
-    	
-    	$reqJson = json_decode($requestBody, true);
-    	
-    	$email = $reqJson['email'];
-    	$password = $reqJson['password'];
 		
-		$emailQuery = '"' . $email . '"';
+		$emailQuery = urlencode('"' . $email . '"');
+		
 		list($header,$result) = $this->execCurl("GET",$this->couchDBURL . "/_design/app/_view/find_user_by_email?key=" . $emailQuery);
 		
 		$this->logger->addDebug("Receive Auth Request : \n {$result} \n");
@@ -133,7 +127,7 @@ class CouchDb implements DbInterface
 		    return json_encode($arr);
 		}
 		
-		if ($json['rows'][0]['value']['password'] != $reqJson['password']) {
+		if ($json['rows'][0]['value']['password'] != $password) {
 		    $arr = array('message' => 'Wrong password!', 'error' => 'logout');
 		
 		    return json_encode($arr);
@@ -146,8 +140,9 @@ class CouchDb implements DbInterface
 		$json['rows'][0]['value']['last_login'] = time();
 		
 		$userJson = $json['rows'][0]['value'];
+		$this->saveUserToken(json_encode($userJson), $json['rows'][0]['value']['_id']);
 		
-		return $this->saveUserToken(json_encode($userJson), $json['rows'][0]['value']['_id']);
+		return $token;
 		
     }
 
@@ -260,14 +255,14 @@ class CouchDb implements DbInterface
      * @param  string $json
      * @return id
      */
-    public function createUser($userName,$password,$email)
+    public function createUser($userName,$email,$password)
     {
         
         $requestBodyAry = array();
         
         $requestBodyAry['name'] = $userName;
         $requestBodyAry['email'] = $email;
-        $requestBodyAry['password'] = md5($password);
+        $requestBodyAry['password'] = $password;
         $requestBodyAry['type'] = "user";
 		$requestBodyAry['online_status'] = "online";
 		$requestBodyAry['max_contact_count'] = 20;
@@ -409,8 +404,6 @@ class CouchDb implements DbInterface
 		$header = substr($response, 0, $header_size);
 		$body = substr($response, $header_size);
 		
-		$test = file_get_contents($URL);
-
 		curl_close($curl);
 		
 		return array($header,$body);

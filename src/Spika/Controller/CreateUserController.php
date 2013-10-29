@@ -61,12 +61,16 @@ public function connect(Application $app)
 
 		$email = trim($requestBodyAry['email']);
 		$username = trim($requestBodyAry['name']);
+		$password = trim($requestBodyAry['password']);
 		
 		if(empty($email))
 		  return $self->returnErrorResponse("Email is empty");
 		  
 		if(empty($username))
 		  return $self->returnErrorResponse("Name is empty");
+		  
+		if(empty($password))
+		  return $self->returnErrorResponse("Password is empty");
 		  
 		$checkUniqueName = $app['spikadb']->checkUserNameIsUnique($username);
 		$checkUniqueEmail = $app['spikadb']->checkEmailIsUnique($email);
@@ -78,9 +82,9 @@ public function connect(Application $app)
 		  return $self->returnErrorResponse("You are already signed up.");
 
 		$newUserId = $app['spikadb']->createUser(
-		  $requestBodyAry['name'],
-		  $requestBodyAry['email'],
-		  $requestBodyAry['password']);
+		  $username,
+		  $email,
+		  $password);
 		  
 		$app['monolog']->addDebug("Create User API called : \n {$requestBody} \n");
 			

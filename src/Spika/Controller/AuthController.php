@@ -24,10 +24,21 @@ class AuthController implements ControllerProviderInterface
         $controllers = $app['controllers_factory'];
 
 		// Auth controller
-		$controllers->post('/hookup-auth.php', function (Request $request) use ($app) {
+		$controllers->post('/auth', function (Request $request) use ($app) {
 			
 			$requestBody = $request->getContent();
-			$authResult = $app['spikadb']->doSpikaAuth($requestBody);
+    		$requestBodyAry = json_decode($requestBody,true);
+    
+    		$email = trim($requestBodyAry['email']);
+    		$password = trim($requestBodyAry['password']);
+		
+            if(empty($email))
+                return $self->returnErrorResponse("Email is empty");
+            
+            if(empty($password))
+                return $self->returnErrorResponse("Password is empty");
+
+			$authResult = $app['spikadb']->doSpikaAuth($email,$password);
 			
 			$app['monolog']->addDebug("Auth Response : \n {$authResult} \n");
 		

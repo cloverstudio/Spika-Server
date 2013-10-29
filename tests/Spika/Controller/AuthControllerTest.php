@@ -39,5 +39,6 @@ class AuthControllerTest extends WebTestCase
         );
 
         assertRegExp("/[0-9a-zA-Z]{40}/", $client->getResponse()->getContent());
+        
     }
 }

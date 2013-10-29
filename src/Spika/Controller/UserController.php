@@ -81,12 +81,8 @@ class UserController extends SpikaBaseController
          */
 
     private function setupFindUserMethod($self,$app,$controllers){
-        $controllers->get('/FindUser/{type}/{value}',
+        $controllers->get('/findUser/{type}/{value}',
             function ($type,$value) use ($app,$self) {
-
-                ;
-                //$requestBody = $request->getContent();
-                //$user_id = $request->get("user_id");
 
                 if(empty($value) || empty($type)){
                     return $self->returnErrorResponse("insufficient params");
@@ -103,16 +99,18 @@ class UserController extends SpikaBaseController
                         break;
                     case "name":
                         $result = $app['spikadb']->findUserByName($value);
-                        $app['monolog']->addDebug("FindUserByEmail API called with name: \n {$value} \n");
+                        $app['monolog']->addDebug("FindUserByName API called with name: \n {$value} \n");
                         break;
                     default:
                         return $self->returnErrorResponse("unknown search key");
 
                 }
 
-
-
+                if($result == null)
+                    return $self->returnErrorResponse("No user found");
+                    
                 return json_encode($result);
+                
             }
         );
     }

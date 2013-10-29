@@ -150,7 +150,6 @@ class CouchDb implements DbInterface
 	{
 	
     	$this->logger->addDebug("Token saved : \n {$userJson} \n");
-
     	
     	list($header,$result) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
     		$userJson,array("Content-Type: application/json"));
@@ -179,7 +178,7 @@ class CouchDb implements DbInterface
 
 
         $query  = "?key=" . urlencode('"' . $id . '"');
-        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_id{$query}", false);
+        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_id{$query}", true);
         $result = json_decode($json, true);
 
 
@@ -200,7 +199,7 @@ class CouchDb implements DbInterface
 
 
         $query  = "?key=" . urlencode('"' . $email . '"');
-        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_email{$query}", false);
+        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_email{$query}", true);
         $result = json_decode($json, true);
 
 
@@ -221,14 +220,13 @@ class CouchDb implements DbInterface
     {
 
 
-        $query  = "?key=" . urlencode('"' . $email . '"');
-        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_email{$query}", false);
+        $query  = "?key=" . urlencode('"' . $name . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_name{$query}", true);
         $result = json_decode($json, true);
-
-
+        
         return isset($result) && isset($result['rows']) &&
             isset($result['rows'][0]) && isset($result['rows'][0]['value'])
-            ? $result['rows'][0]['value']
+            ? $this->stripParamsFromJson($result['rows'][0]['value'])
             : null;
     }
 

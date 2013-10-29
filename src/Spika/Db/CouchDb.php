@@ -60,24 +60,27 @@ class CouchDb implements DbInterface
 	
     public function checkEmailIsUnique($email){
     	
-    	$startKey = "\"{$email}\"";
+    	$startKey = urlencode("\"{$email}\"");
 	    $query = "?key={$startKey}";
 	    $result = $this->doGetRequest("/_design/app/_view/find_user_by_email{$query}");
-	    $nameResult = json_decode($result, true);
+	    
+	    $resultAry = json_decode($result, true);
 
 	    $result = array();
-	    foreach ($nameResult['rows'] as $row) {
+	    
+	    foreach ($resultAry['rows'] as $row) {
 	        $result[] = $row['value'];
 	    }
 	    
-	    return $this->stripParamsFromJson(json_encode($result, true));
+	    return $result;
     	
     }
     
     public function checkUserNameIsUnique($name){
     	
-    	$startKey = "\"{$name}\"";
+    	$startKey = urlencode("\"{$name}\"");
 	    $query = "?key={$startKey}";
+	    
 	    $result = $this->doGetRequest("/_design/app/_view/find_user_by_name{$query}");
 	    $nameResult = json_decode($result, true);
 
@@ -86,7 +89,7 @@ class CouchDb implements DbInterface
 	        $result[] = $row['value'];
 	    }
 	    
-	    return $this->stripParamsFromJson(json_encode($result, true));
+	    return $result;
     	
     }
     
@@ -214,6 +217,28 @@ class CouchDb implements DbInterface
 
 
     /**
+     * Finds a user by name
+     *
+     * @param  string $name
+     * @return array
+     */
+    public function findUserByName($name)
+    {
+
+
+        $query  = "?key=" . urlencode('"' . $email . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/find_user_by_email{$query}", false);
+        $result = json_decode($json, true);
+
+
+        return isset($result) && isset($result['rows']) &&
+            isset($result['rows'][0]) && isset($result['rows'][0]['value'])
+            ? $result['rows'][0]['value']
+            : null;
+    }
+
+
+    /**
      * Gets user activity summary
      *
      * @param  string $user_id
@@ -235,9 +260,22 @@ class CouchDb implements DbInterface
      * @param  string $json
      * @return id
      */
-    public function createUser($json)
+    public function createUser($userName,$password,$email)
     {
-        $json   = $this->doPostRequest($json);
+        
+        $requestBodyAry = array();
+        
+        $requestBodyAry['name'] = $userName;
+        $requestBodyAry['email'] = $email;
+        $requestBodyAry['password'] = md5($password);
+        $requestBodyAry['type'] = "user";
+		$requestBodyAry['online_status'] = "online";
+		$requestBodyAry['max_contact_count'] = 20;
+		$requestBodyAry['max_favorite_count'] = 10;
+    
+		$requestBodyJson = json_encode($requestBodyAry);
+		
+        $json   = $this->doPostRequest($requestBodyJson);
         $result = json_decode($json, true);
         
         if(isset($result['ok']) && $result['ok'] == 'true' && isset($result['id'])){
@@ -362,10 +400,17 @@ class CouchDb implements DbInterface
 			
 		$response = curl_exec($curl);
 		
+		if($response === false){
+    		$error = curl_error($curl);
+    		return array("",$error);
+		}
+		
 		$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 		$header = substr($response, 0, $header_size);
 		$body = substr($response, $header_size);
 		
+		$test = file_get_contents($URL);
+
 		curl_close($curl);
 		
 		return array($header,$body);
@@ -403,7 +448,7 @@ class CouchDb implements DbInterface
     public function doGetRequest($queryString,$stripCredentials = true)
     {
     	
-    	$couchDBQuery = $this->couchDBURL . "/" . $queryString;
+    	$couchDBQuery = $this->couchDBURL . $queryString;
     	
     	$this->logger->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
     	

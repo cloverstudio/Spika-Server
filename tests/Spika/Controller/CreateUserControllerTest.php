@@ -29,10 +29,6 @@ class CreateUserControllerTest extends WebTestCase
             'name' => 'spikaTarou',
             'email' => 'spikaTarou@clover-studio.com',
             'password' => 'testtest',
-            'type' => 'user',
-            'online_status'=>'online',
-            'max_contact_count'=>'20',
-            'max_favorite_count'=>'10'
         );
         
         $crawler = $client->request(

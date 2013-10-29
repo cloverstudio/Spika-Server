@@ -52,18 +52,36 @@ public function connect(Application $app)
 		if(!$self->validateRequestParams($requestBody,array(
 			'name',
 			'email',
-			'password',
-			'type',
-			'online_status',
-			'max_contact_count',
-			'max_favorite_count'
+			'password'
 		))){
             return $self->returnErrorResponse("insufficient params");
 		}
+		
+		$requestBodyAry = json_decode($requestBody,true);
 
+		$email = trim($requestBodyAry['email']);
+		$username = trim($requestBodyAry['name']);
+		
+		if(empty($email))
+		  return $self->returnErrorResponse("Email is empty");
+		  
+		if(empty($username))
+		  return $self->returnErrorResponse("Name is empty");
+		  
+		$checkUniqueName = $app['spikadb']->checkUserNameIsUnique($username);
+		$checkUniqueEmail = $app['spikadb']->checkEmailIsUnique($email);
 
+		if(count($checkUniqueName) > 0)
+		  return $self->returnErrorResponse("The name is already taken.");
+		  
+		if(count($checkUniqueEmail) > 0)
+		  return $self->returnErrorResponse("You are already signed up.");
 
-		$newUserId = $app['spikadb']->createUser($requestBody);
+		$newUserId = $app['spikadb']->createUser(
+		  $requestBodyAry['name'],
+		  $requestBodyAry['email'],
+		  $requestBodyAry['password']);
+		  
 		$app['monolog']->addDebug("Create User API called : \n {$requestBody} \n");
 			
 		$responseBodyAry = array(

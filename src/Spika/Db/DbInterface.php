@@ -4,15 +4,10 @@ namespace Spika\Db;
 interface DbInterface
 {
     public function unregistToken($userId);
-
     public function checkEmailIsUnique($email);
-
     public function checkUserNameIsUnique($name);
-
     public function checkGroupNameIsUnique($name);
-
     public function doSpikaAuth($requestBody);
-
     public function saveUserToken($userJson, $id);
 
     /**
@@ -23,6 +18,7 @@ interface DbInterface
      */
     public function findUserById($id);
     public function findUserByEmail($email);
+    public function findUserByName($name);
     public function getActivitySummary($user_id);
     public function updateUser($user);
     public function getEmoticons();
@@ -38,15 +34,10 @@ interface DbInterface
      * @param  string $json
      * @return string $id
      */
-    public function createUser($userAry);
-
+    public function createUser($userName,$password,$email);
     public function doPostRequest($requestBody);
-
     public function doGetRequestGetHeader($queryString, $stripCredentials = true);
-
     public function doGetRequest($queryString, $stripCredentials = true);
-
     public function doPutRequest($id, $requestBody);
-
     public function doDeleteRequest($id, $rev);
 }

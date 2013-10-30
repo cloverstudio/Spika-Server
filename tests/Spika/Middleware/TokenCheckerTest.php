@@ -15,66 +15,19 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function whenValidRequestIsGiven()
     {
+        require realpath(__DIR__ . '/../../../') . '/etc/app.php';
+        
         $user = $this->createFixtureUser();
         $db   = $this->createMockDb();
 
         $db->expects(any())
-            ->method('findUserById')
+            ->method('findUserByToken')
             ->will(returnValue($user));
 
         $checker = $this->createTokenChecker($db);
         $request = $this->createValidRequest();
 
-        $this->assertNull($checker($request));
-    }
-
-    /**
-     * @test
-     */
-    public function whenCreateUserRequestIsGiven()
-    {
-        $db      = $this->createMockDb();
-        $checker = $this->createTokenChecker($db);
-        $request = $this->createValidRequest();
-
-        $request->server->set('REQUEST_METHOD', 'POST');
-        $request->headers->set('user_id', 'create_user');
-
-        $this->assertNull($checker($request));
-    }
-
-    /**
-     * @test
-     */
-    public function whenRequestWithoutUserIdIsGiven()
-    {
-        $db      = $this->createMockDb();
-        $checker = $this->createTokenChecker($db);
-        $request = $this->createValidRequest();
-
-        $request->headers->set('user_id', null);
-
-        $this->assertErrorResponse(
-            403,
-            'No token sent',
-            $checker($request)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function whenNoUserIsFound()
-    {
-        $db      = $this->createMockDb();
-        $checker = $this->createTokenChecker($db);
-        $request = $this->createValidRequest();
-
-        $this->assertErrorResponse(
-            403,
-            'No token sent',
-            $checker($request)
-        );
+        $this->assertNull($checker($request,$app));
     }
 
     /**
@@ -82,6 +35,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function whenTokenIsNotMatched()
     {
+        require realpath(__DIR__ . '/../../../') . '/etc/app.php';
         $db   = $this->createMockDb();
         $user = array_merge(
             $this->createFixtureUser(),
@@ -89,7 +43,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         );
 
         $db->expects(any())
-            ->method('findUserById')
+            ->method('findUserByToken')
             ->will(returnValue($user));
 
         $checker = $this->createTokenChecker($db);
@@ -98,7 +52,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertErrorResponse(
             403,
             'Invalid token',
-            $checker($request)
+            $checker($request,$app)
         );
     }
 
@@ -107,6 +61,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function whenTokenExpirationIsLeftOneSecond()
     {
+        require realpath(__DIR__ . '/../../../') . '/etc/app.php';
         $db   = $this->createMockDb();
         $user = array_merge(
             $this->createFixtureUser(),
@@ -114,13 +69,13 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         );
 
         $db->expects(any())
-            ->method('findUserById')
+            ->method('findUserByToken')
             ->will(returnValue($user));
 
         $checker = $this->createTokenChecker($db);
         $request = $this->createValidRequest();
 
-        $this->assertNull($checker($request));
+        $this->assertNull($checker($request,$app));
     }
 
     /**
@@ -128,6 +83,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function whenTokenIsExpired()
     {
+        require realpath(__DIR__ . '/../../../') . '/etc/app.php';
         $db   = $this->createMockDb();
         $user = array_merge(
             $this->createFixtureUser(),
@@ -135,7 +91,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         );
 
         $db->expects(any())
-            ->method('findUserById')
+            ->method('findUserByToken')
             ->will(returnValue($user));
 
         $checker = $this->createTokenChecker($db);
@@ -144,7 +100,7 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertErrorResponse(
             403,
             'Token expired',
-            $checker($request)
+            $checker($request,$app)
         );
     }
 
@@ -170,19 +126,21 @@ class TokenCheckerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function createValidRequest()
+    private function createValidRequest($path = "", $method = "GET", $requestBody = "")
     {
-        return new Request(
-            array(),
-            array(),
+    
+        return Request::create(
+            $path,
+            $method,
             array(),
             array(),
             array(),
             array(
-                'HTTP_USER_ID' => self::FIXTURE_USER_ID,
                 'HTTP_TOKEN'   => self::FIXTURE_TOKEN,
-            )
+            ),
+            $requestBody
         );
+
     }
 
     private function assertErrorResponse($expectedStatus, $expectedMessage, $response)

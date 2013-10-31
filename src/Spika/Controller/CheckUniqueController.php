@@ -35,7 +35,7 @@ class CheckUniqueController implements ControllerProviderInterface
 				if(count($result) == 0){
     				return "[]";
 				}else{
-    				return $result;
+    				return json_encode($result);
 				}
 			}
 			
@@ -44,7 +44,7 @@ class CheckUniqueController implements ControllerProviderInterface
 				if(count($result) == 0){
     				return "[]";
 				}else{
-    				return $result;
+    				return json_encode($result);
 				}
 			}
 			
@@ -53,7 +53,7 @@ class CheckUniqueController implements ControllerProviderInterface
 				if(count($result) == 0){
     				return "[]";
 				}else{
-    				return $result;
+    				return json_encode($result);
 				}
 			}
 			

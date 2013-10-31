@@ -140,10 +140,11 @@ class CouchDb implements DbInterface
 		$json['rows'][0]['value']['last_login'] = time();
 		
 		$userJson = $json['rows'][0]['value'];
-		$this->saveUserToken(json_encode($userJson), $json['rows'][0]['value']['_id']);
+
+		$result = $this->saveUserToken(json_encode($userJson), $json['rows'][0]['value']['_id']);
 		
-		return $token;
-		
+		return json_encode($result);
+
     }
 
 	function saveUserToken($userJson, $id)
@@ -159,11 +160,7 @@ class CouchDb implements DbInterface
 		
 		$userJson['_rev'] = $json['rev'];
 		
-		$responseJson = array();
-		
-		$responseJson['rows'][0]['value'] = $userJson;
-		
-		return json_encode($responseJson);
+		return $userJson;
 		
 	}
 

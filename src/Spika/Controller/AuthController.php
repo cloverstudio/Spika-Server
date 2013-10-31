@@ -38,6 +38,7 @@ class AuthController implements ControllerProviderInterface
             if(empty($password))
                 return $self->returnErrorResponse("Password is empty");
 
+            
 			$authResult = $app['spikadb']->doSpikaAuth($email,$password);
 			
 			$app['monolog']->addDebug("Auth Response : \n {$authResult} \n");

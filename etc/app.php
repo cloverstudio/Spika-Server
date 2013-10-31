@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+
 error_reporting( E_ALL );
 ini_set( "display_errors", 1 );
 date_default_timezone_set("GMT");
@@ -38,7 +39,6 @@ $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
 ));
 
 $app->register(new SwiftmailerServiceProvider());
-
 $app->register(new Spika\Provider\TokenCheckerServiceProvider());
 
 $app->mount('/', new Spika\Controller\InstallerController());
@@ -54,6 +54,5 @@ $app->mount('/api/', new Spika\Controller\CreateUserController());
 $app->mount('/api/', new Spika\Controller\UserController());
 $app->mount('/api/', new Spika\Controller\MediaController());
 $app->mount('/api/', new Spika\Controller\GroupController());
-
-
+$app->mount('/api/', new Spika\Controller\CheckUniqueController());
 $app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());

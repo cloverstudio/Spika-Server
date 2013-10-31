@@ -31,15 +31,30 @@ class CheckUniqueController implements ControllerProviderInterface
 			$groupname = $request->get('groupname');
 			
 			if(!empty($email)){
-				return $app['spikadb']->checkEmailIsUnique($email);
+			    $result = $app['spikadb']->checkEmailIsUnique($email);
+				if(count($result) == 0){
+    				return array();
+				}else{
+    				return $result;
+				}
 			}
 			
 			if(!empty($username)){
-				return $app['spikadb']->checkUserNameIsUnique($username);
+			    $result = $app['spikadb']->checkUserNameIsUnique($email);
+				if(count($result) == 0){
+    				return array();
+				}else{
+    				return $result;
+				}
 			}
 			
 			if(!empty($groupname)){
-				return $app['spikadb']->checkGroupNameIsUnique($groupname);
+			    $result = $app['spikadb']->checkGroupNameIsUnique($email);
+				if(count($result) == 0){
+    				return array();
+				}else{
+    				return $result;
+				}
 			}
 			
 			return '';

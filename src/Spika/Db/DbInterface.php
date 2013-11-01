@@ -28,6 +28,9 @@ interface DbInterface
     public function addNewMessage($messageData);
     public function getUserContacts($user_id,$include_docs);
     public function createGroup($groupData);
+    public function searchUserByName($name);
+    public function searchUserByGender($gender);
+    public function searchUserByAge($ageFrom,$ageTo);
 
     /**
      * Create a users

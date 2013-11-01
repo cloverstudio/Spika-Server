@@ -29,7 +29,7 @@ class SearchUserController implements ControllerProviderInterface
         $self = $this;
         
 		// check unique controller
-		$controllers->get('/searchuser.php', function (Request $request) use ($app,$self) {
+		$controllers->get('/searchUsers', function (Request $request) use ($app,$self) {
     
             $self->name = $request->get('n');
             $self->ageFrom = $request->get('af');
@@ -55,7 +55,7 @@ class SearchUserController implements ControllerProviderInterface
             
             return json_encode($resultAnd);
           
-        })->before($app['beforeTokenChecker']);
+        });
         
         return $controllers;
     }
@@ -128,13 +128,7 @@ class SearchUserController implements ControllerProviderInterface
     	if(empty($this->name))
     		return array();
     		
-    	$escapedKeyword = urlencode($this->name);
-	    $startKey = "\"{$escapedKeyword}\"";
-	    $endKey = "\"{$escapedKeyword}ZZZZ\"";
-	    $query = "?startkey={$startKey}&endkey={$endKey}";
-    	
-    	$result = $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_name{$query}");
-    	
+    	$result = $this->app['spikadb']->searchUserByName($this->name);
      	$nameResult = json_decode($result, true);
 
     	return $nameResult;
@@ -146,40 +140,19 @@ class SearchUserController implements ControllerProviderInterface
     	if(empty($this->gender))
     		return array();
     		
-    	$query = "?key=\"{$this->gender}\"";
-    	
-    	$result = $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_gender{$query}");
-   
-    	$genderResult = json_decode($result, true);
+    	$result = $this->app['spikadb']->searchUserByGender($this->gender);
+     	$genderResult = json_decode($result, true);
 
     	return $genderResult;
 
     }
 
     public function searchByAge(){
+		
+    	$result = $this->app['spikadb']->searchUserByAge($this->ageFrom,$this->ageTo);
+     	$ageResult = json_decode($result, true);
 
-		$ageQuery = "";
-		
-		if (empty($this->ageFrom) && empty($this->ageTo)){
-			return array();
-		}
-		
-		if (!empty($this->ageFrom) && !empty($this->ageTo)) {
-		    $ageQuery = "?startkey={$this->ageFrom}&endkey={$this->ageTo}";
-		}
-		
-		if (!empty($this->ageFrom) && empty($this->ageTo)) {
-		    $ageQuery = "?startkey={$this->ageFrom}";
-		}
-		
-		if (empty($this->ageFrom) && !empty($this->ageTo)) {
-		    $ageQuery = "?endkey={$this->ageTo}";
-		}
-		
-		$result = $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_age{$ageQuery}");
-		$ageResult = json_decode($result, true);
-			
-		return $ageResult;
+    	return $ageResult;
 		
     }
     

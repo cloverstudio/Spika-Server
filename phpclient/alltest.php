@@ -100,6 +100,9 @@
 	///////// update user API	
 	$newUserAry = $resultAry;
     $resultAry['name'] = "newname_user" . randString();
+    $resultAry['birthday'] = 367304400;
+    $resultAry['gender'] = 'male';
+
 
 	$result = HU_postRequest(API_URL . "/updateUser",json_encode(
 	   $resultAry
@@ -109,6 +112,7 @@
 	));
 	
 	$resultAry = json_decode($result,true);	
+
 	if(isset($resultAry['name']) && isset($resultAry['_id'])){
 	   print "/updateUser : OK \n";
 	}else{
@@ -129,6 +133,55 @@
     	 die("/activitySummary failed {$result}");
 	}
 
+
+
+    ///////// activitySummary
+	$result = HU_getRequest(API_URL . "/activitySummary",array(
+		'token' => $token,
+		'user_id' => $userId
+	));
+	
+	$resultAry = json_decode($result,true);	
+	if(isset($resultAry['total_rows'])){
+	   print "/activitySummary : OK \n";
+	}else{
+    	 die("/activitySummary failed {$result}");
+	}
+	
+	
+    ///////// searchUser
+	$result = HU_getRequest(API_URL . "/searchUsers?n=ken",array(
+	));
+
+	$resultAry = json_decode($result,true);	
+	
+	if(count($result)) {
+	   print "/search user by name : OK \n";
+	}else{
+    	 die("/search user by name  {$result}");
+	}
+	
+	$result = HU_getRequest(API_URL . "/searchUsers?af=30&at=35",array(
+	));
+
+	$resultAry = json_decode($result,true);	
+	
+	if(count($result)) {
+	   print "/search user by age : OK \n";
+	}else{
+    	 die("/search user by age  {$result}");
+	}
+	
+	$result = HU_getRequest(API_URL . "/searchUsers?g=male",array(
+	));
+
+	$resultAry = json_decode($result,true);	
+	
+	if(count($result)) {
+	   print "/search user by gender : OK \n";
+	}else{
+    	 die("/search user by gender  {$result}");
+	}
 	
 	
 	

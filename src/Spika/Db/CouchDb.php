@@ -245,6 +245,68 @@ class CouchDb implements DbInterface
             : null;
     }
 
+    /**
+     * Search a user by name
+     *
+     * @param  string $name
+     * @return array
+     */
+    public function searchUserByName($name){
+
+    	$escapedKeyword = urlencode($name);
+	    $startKey = "\"{$escapedKeyword}\"";
+	    $endKey = "\"{$escapedKeyword}ZZZZ\"";
+	    $query = "?startkey={$startKey}&endkey={$endKey}";
+    	
+    	//$result = $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_name{$query}");
+    	$result = $this->doGetRequest("/_design/app/_view/searchuser_name{$query}");
+
+		return $result;
+    }
+    
+    /**
+     * Search a user by gender
+     *
+     * @param  string $name
+     * @return array
+     */
+    public function searchUserByGender($gender){
+	    $query = "?key=\"{$gender}\"";
+    	$result = $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_gender{$query}");
+    	return $result;
+    }
+    
+    /**
+     * Search a user by age
+     *
+     * @param  string $name
+     * @return array
+     */
+    public function searchUserByAge($ageFrom,$ageTo){
+
+		$ageQuery = "";
+		
+		if (empty($ageFrom) && empty($ageTo)){
+			return array();
+		}
+		
+		if (!empty($ageFrom) && !empty($ageTo)) {
+		    $ageQuery = "?startkey={$ageFrom}&endkey={$ageTo}";
+		}
+		
+		if (!empty($ageFrom) && empty($ageTo)) {
+		    $ageQuery = "?startkey={$ageFrom}";
+		}
+		
+		if (empty($ageFrom) && !empty($ageTo)) {
+		    $ageQuery = "?endkey={$ageTo}";
+		}
+		
+		$result = $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_age{$ageQuery}");
+		$ageResult = json_decode($result, true);
+			
+		return $ageResult;
+    }
 
     /**
      * Gets user activity summary

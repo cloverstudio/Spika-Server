@@ -114,20 +114,23 @@ class UserController extends SpikaBaseController
      */
     private function setupActivitySummaryMethod($self,$app,$controllers){
 
-        $controllers->get('/ActivitySummary/{user_id}',
-            function ($user_id) use ($app,$self) {
-
-                if(empty($user_id)){
+        $controllers->get('/activitySummary',
+            function () use ($app,$self) {
+				
+				$user = $app['currentUser'];
+				$userId = $user['_id'];
+				
+                if(empty($userId)){
                     return $self->returnErrorResponse("insufficient params");
                 }
 
-                $result = $app['spikadb']->getActivitySummary($user_id);
-                $app['monolog']->addDebug("ActivitySummary API called with user id: \n {$user_id} \n");
-
+                $result = $app['spikadb']->getActivitySummary($userId);
+                $app['monolog']->addDebug("ActivitySummary API called with user id: \n {$userId} \n");
+				
 
                 return json_encode($result);
             }
-        );
+        )->before($app['beforeTokenChecker']);
     }
 
     private function setupMessagesMethod($self,$app,$controllers){
@@ -197,6 +200,7 @@ class UserController extends SpikaBaseController
             }
         )->before($app['beforeTokenChecker']);
     }
+
 
 }
 

@@ -51,7 +51,6 @@
 
     $result = json_decode($result,true);
     
-    print_r($result);
     print "Auth succeed: {$result['token']}\n";
 
     $token = $result['token'];
@@ -83,8 +82,6 @@
     	 die("/findUser/name {$result}");
 	}
 	
-	
-	
     ///////// /findUser/id/****
 	$result = HU_getRequest(API_URL . "/findUser/id/{$userId}",array(
 		'token' => $token,
@@ -101,7 +98,6 @@
 	
 
 	///////// update user API	
-	
 	$newUserAry = $resultAry;
     $resultAry['name'] = "newname_user" . randString();
 
@@ -112,7 +108,29 @@
 		'user_id' => $userId
 	));
 	
-	print $result;
+	$resultAry = json_decode($result,true);	
+	if(isset($resultAry['name']) && isset($resultAry['_id'])){
+	   print "/updateUser : OK \n";
+	}else{
+    	 die("/updateUser {$result}");
+	}
+
+
+    ///////// activitySummary
+	$result = HU_getRequest(API_URL . "/activitySummary",array(
+		'token' => $token,
+		'user_id' => $userId
+	));
 	
-    
+	$resultAry = json_decode($result,true);	
+	if(isset($resultAry['total_rows'])){
+	   print "/activitySummary : OK \n";
+	}else{
+    	 die("/activitySummary failed {$result}");
+	}
+
+	
+	
+	
+    	
 ?>

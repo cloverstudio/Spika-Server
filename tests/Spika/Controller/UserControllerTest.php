@@ -18,7 +18,8 @@ class UserControllerTest extends WebTestCase
         
         $dependencies = array(
             'beforeTokenChecker' => $pimple->protect(function () {
-            })
+            }),
+            'currentUser' => array("_id"=>"testid","token"=>"testtoken")
         );
         
         require realpath(__DIR__ . '/../../../') . '/etc/app.php';
@@ -36,6 +37,10 @@ class UserControllerTest extends WebTestCase
         $spikadb->expects($this->any())
             ->method('findUserByName')
             ->will($this->returnValue('OK'));
+                        
+        $spikadb->expects($this->any())
+            ->method('getActivitySummary')
+            ->will($this->returnValue('total_rows'));
                         
         $app['spikadb'] = $spikadb;
         
@@ -64,5 +69,13 @@ class UserControllerTest extends WebTestCase
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/findUser/id/test');
         assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+
+    /** @test */
+    public function findActivitySummaryTest()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/api/activitySummary');
+        assertRegExp('/total_rows/', $client->getResponse()->getContent());
     }
 }

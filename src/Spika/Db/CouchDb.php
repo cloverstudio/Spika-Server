@@ -272,7 +272,7 @@ class CouchDb implements DbInterface
      */
     public function searchUserByGender($gender){
 	    $query = "?key=\"{$gender}\"";
-    	$result = $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_gender{$query}");
+    	$result = $this->doGetRequest("/_design/app/_view/searchuser_gender{$query}");
     	return $result;
     }
     
@@ -287,7 +287,7 @@ class CouchDb implements DbInterface
 		$ageQuery = "";
 		
 		if (empty($ageFrom) && empty($ageTo)){
-			return array();
+			return "";
 		}
 		
 		if (!empty($ageFrom) && !empty($ageTo)) {
@@ -302,10 +302,9 @@ class CouchDb implements DbInterface
 		    $ageQuery = "?endkey={$ageTo}";
 		}
 		
-		$result = $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_age{$ageQuery}");
-		$ageResult = json_decode($result, true);
-			
-		return $ageResult;
+		$result = $this->doGetRequest("/_design/app/_view/searchuser_age{$ageQuery}");
+		
+		return $result;
     }
 
     /**
@@ -563,4 +562,14 @@ class CouchDb implements DbInterface
 	    return $body;
 
     }
+    
+    /*
+    public function addToContact($owserUserId,$tagetUserId){
+	    
+    }
+    
+    public function removeFromContact($owserUserId,$tagetUserId){
+	    
+    }*/
+
 }

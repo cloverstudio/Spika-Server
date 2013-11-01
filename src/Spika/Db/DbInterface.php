@@ -31,6 +31,8 @@ interface DbInterface
     public function searchUserByName($name);
     public function searchUserByGender($gender);
     public function searchUserByAge($ageFrom,$ageTo);
+    //public function addToContact($owserUserId,$tagetUserId);
+    //public function removeFromContact($owserUserId,$tagetUserId);
 
     /**
      * Create a users

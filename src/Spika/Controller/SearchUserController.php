@@ -150,6 +150,7 @@ class SearchUserController implements ControllerProviderInterface
     public function searchByAge(){
 		
     	$result = $this->app['spikadb']->searchUserByAge($this->ageFrom,$this->ageTo);
+    	
      	$ageResult = json_decode($result, true);
 
     	return $ageResult;

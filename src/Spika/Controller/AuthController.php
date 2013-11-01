@@ -41,6 +41,7 @@ class AuthController implements ControllerProviderInterface
             
 			$authResult = $app['spikadb']->doSpikaAuth($email,$password);
 			
+			$app['monolog']->addDebug("Auth Request : \n {$requestBody} \n");
 			$app['monolog']->addDebug("Auth Response : \n {$authResult} \n");
 		
 		    return $authResult;

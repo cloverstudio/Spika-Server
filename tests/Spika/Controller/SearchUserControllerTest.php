@@ -36,7 +36,7 @@ class UserControllerTest extends WebTestCase
         
         return $app;
     }
-	
+    
     /** @test */
     public function searchUserByName()
     {

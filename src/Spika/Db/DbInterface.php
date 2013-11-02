@@ -20,7 +20,7 @@ interface DbInterface
     public function getEmoticonImage($emoticonId);
     public function getCommentCount($messageId);
     public function getAvatarFileId($user_id);
-    public function addNewMessage($messageData);
+    public function addNewTextMessage($fromUserId,$toUserId,$message);
     public function getUserContacts($user_id,$include_docs);
     public function createGroup($groupData);
     public function searchUserByName($name);

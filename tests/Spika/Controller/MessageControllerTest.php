@@ -34,6 +34,10 @@ class MessageControllerTest extends WebTestCase
             ->method('getEmoticonImage')
             ->will($this->returnValue('OK'));
                         
+        $spikadb->expects($this->any())
+            ->method('addNewTextMessage')
+            ->will($this->returnValue('OK'));
+                        
         $app['spikadb'] = $spikadb;
         
         return $app;
@@ -52,6 +56,30 @@ class MessageControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/Emoticon/test');
+        assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+
+
+    /** @test */
+    public function sendTextMessage()
+    {
+    
+        $client = $this->createClient();
+        
+        $sendParams = array(
+            'to_user_id' => 'test',
+            'body' => 'hi',
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/sendMessageToUser',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
         assertRegExp('/OK/', $client->getResponse()->getContent());
     }
 }

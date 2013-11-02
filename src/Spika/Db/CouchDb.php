@@ -375,8 +375,33 @@ class CouchDb implements DbInterface
         return $result;
     }
 
-    public function addNewMessage($messageData){
+    public function addNewTextMessage($fromUserId,$toUserId,$message){
+		
+		$messageData = array();
+		
+        $messageData['from_user_id']=$fromUserId;
+        $messageData['to_user_id']=$toUserId;
+        $messageData['body']=$message;
 
+        $messageData['modified']=time();
+        $messageData['created']=time();
+        $messageData['type']='message';
+        $messageData['message_target_type']='text';
+
+        if(isset($fromUserId)){
+            $fromUserData=$this->findUserById($fromUserId);
+            $messageData['from_user_name']=$fromUserData['name'];
+        }else{
+            return null;
+        }
+
+        if(isset($toUserId)){
+            $toUserData=$this->findUserById($toUserId);
+            $messageData['to_user_name']=$toUserData['name'];
+        }else{
+            return null;
+        }
+                
         $query = json_encode($messageData);
         $json = $this->doPostRequest($query);
 

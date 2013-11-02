@@ -221,9 +221,41 @@
     	 die("Emoticons failed  {$result}");
 	}
 
+
+    //////// load Emoticon
+	$result = HU_getRequest(API_URL . "/Emoticon/{$resultAry['rows'][0]['id']}",array(
+		'token' => $token
+	));
+	
+	if($result != null) {
+	   print "Load Emoticon : OK \n";
+	}else{
+    	 die("Load Emoticon failed  {$result}");
+	}
+
     
-    	
-    
-    	
+   
+	//////// send text message
+
+	
+	$result = HU_postRequest(API_URL . "/sendMessageToUser",json_encode(array(
+	  "to_user_id" => $targetUserId,
+	  "body" => "Hi"
+	)),array(
+		'token' => $token
+	));
+	
+	
+	print $result;
+	die();
+	
+	$resultAry = json_decode($result,true);
+	$targetUserId = $resultAry['id'];
+	
+	if(empty($targetUserId))
+	   die("create target user failed {$result}");
+	   
+    print "Create target user succeed: {$targetUserId}\n";
+	
     
 ?>

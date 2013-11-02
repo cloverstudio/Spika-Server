@@ -93,49 +93,36 @@ class MessageController extends SpikaBaseController
     }
 
     private function setupSendMessageMethod($self,$app,$controllers){
-        $controllers->post('/SendMessage',
+    
+        $controllers->post('/sendMessageToUser',
             function (Request $request)use($app,$self) {
+
+                $currentUser = $app['currentUser'];
+                $userData = $request->getContent();
 
                 $messageData = $request->getContent();
 
 
                 if(!$self->validateRequestParams($messageData,array(
                     'to_user_id',
-                    'from_user_id',
-                    'body',
-                    'type',
-                    'message_target_type',
-                    'message_type'
+                    'body'
                 ))){
                     return $self->returnErrorResponse("insufficient params");
                 }
 
                 $messageDataArray=json_decode($messageData,true);
 
+				$fromUserId = $currentUser['_id'];
+				$toUserId = trim($messageDataArray['to_user_id']);
+				$message = $messageDataArray['body'];
+				
+                $result = $app['spikadb']->addNewTextMessage($fromUserId,$toUserId,$message);
+                $app['monolog']->addDebug("SendMessage API called from user: \n {$fromUserId} \n");
 
-                if(!isset($messageDataArray['from_user_name'])){
-                    $fromUserData=$app['spikadb']->findUserById($messageDataArray['from_user_id']);
-                    $messageDataArray['from_user_name']=$fromUserData['name'];
-                }
-
-                if(!isset($messageDataArray['to_user_id'])){
-                    $toUserData=$app['spikadb']->findUserById($messageDataArray['to_user_id']);
-                    $messageDataArray['to_user_name']=$toUserData['name'];
-                }
-
-                $messageDataArray['modified']=time();
-                $messageDataArray['created']=time();
-
-
-                if( $request->headers->get('user_id') != $messageDataArray['from_user_id']){
-                    return $self->returnErrorResponse("forbidden action");
-                }
-
-                $result = $app['spikadb']->addNewMessage($messageDataArray);
-                $app['monolog']->addDebug("SendMessage API called from user: \n {$messageDataArray['from_user_id']} \n");
-
+				if($result == null)
+					 return $self->returnErrorResponse("failed to send message");
+					 
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
-    }
-}
+    }}

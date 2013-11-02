@@ -31,28 +31,53 @@ class GroupController extends SpikaBaseController
 
     private function setupCreateGroupMethod($self,$app,$controllers){
 
-        $controllers->post('/CreateGroup',
+        $controllers->post('/createGroup',
             function (Request $request) use ($app,$self) {
 
-                $groupData = $request->getContent();
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
 
-                if(!$self->validateRequestParams($groupData,array(
-                    'category_id',
-                    'user_id',
-                    'description',
+                if(!$self->validateRequestParams($requestBody,array(
                     'name'
                 ))){
                     return $self->returnErrorResponse("insufficient params");
                 }
+                
+                $requestBodyAry = json_decode($requestBody,true);
+                
+                $name = trim($requestBodyAry['name']);
+                
+                $description = "";
+                if(isset($requestBodyAry['description']))
+                	$description = trim($requestBodyAry['description']);
+				
+				$categoryId = "";
+                if(isset($requestBodyAry['category_id']))
+                	$categoryId = trim($requestBodyAry['category_id']);
+                
+                $password = "";
+                if(isset($requestBodyAry['password']))
+                	$password = trim($requestBodyAry['password']);
+                
+                $avatarURL = "";
+                if(isset($requestBodyAry['avatar_file_id']))
+	                $avatarURL = trim($requestBodyAry['avatar_file_id']);
 
-                $groupData= json_decode($groupData);
-
-                $result = $app['spikadb']->createGroup($groupData);
-                $app['monolog']->addDebug("CreateGroup API called by user: \n {$groupData->user_id} \n");
+				$thumbURL = "";
+                if(isset($requestBodyAry['avatar_thumb_file_id']))
+	                $thumbURL = trim($requestBodyAry['avatar_thumb_file_id']);
+	                
+				$ownerId = $currentUser['_id'];
+				
+				if(empty($ownerId))
+					return $self->returnErrorResponse("user token is wrong");
+					
+                $result = $app['spikadb']->createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
+                $app['monolog']->addDebug("CreateGroup API called by user: \n {$result} \n");
 
                 return json_encode($result);
             }
-        );
+        )->before($app['beforeTokenChecker']);
     }
 
     private function setupSendGroupMessage($self,$app,$controllers){

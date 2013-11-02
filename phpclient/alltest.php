@@ -265,5 +265,31 @@
     print "read message : OK {$resultAry['rows'][0]['value']['body']}\n";
 
 	
+
+    //////// create group test
+	$result = HU_postRequest(API_URL . "/createGroup",json_encode(array(
+	  "name" => "test group",
+	  "group_password" => "",
+	  "category_id" => "361e5fc396c17b44e58eea1a230478ec",
+	  "description" => "test group",
+	  "type" => "group",
+	  "user_id" => $userId,
+	  "avatar_file_id" => "",
+	  "avatar_thumb_file_id" => "",
+	)),array(
+		'token' => $token
+	));
+	
+	print $result;
+	die();
+	
+	$targetUserId = $resultAry['id'];
+	
+	if(empty($resultAry['rows'][0]))
+	   die("read message failed {$result}");
+	   
+    print "read message : OK {$resultAry['rows'][0]['value']['body']}\n";
+
+	
     
 ?>

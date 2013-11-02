@@ -133,8 +133,28 @@ class InstallerController implements ControllerProviderInterface
 			}
 			
 			$result .= "Stickers are installed <br />";
+			
+			
+			// generate tmp group categories
+			// Create support user
+			$json = '{
+				   "type": "group_category",
+				   "title": "tmp_group_category_1"
+				}';
+			
+			$app['spikadb']->doPostRequest($json);
+
+			$json = '{
+				   "type": "group_category",
+				   "title": "tmp_group_category_2"
+				}';
+			
+			$app['spikadb']->doPostRequest($json);
+
+			
 			$result .= "Install done. <br />";
 			$result .= "<br />";
+			
 			
 			$pageURL = 'http';
 			if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {

@@ -484,7 +484,30 @@ class CouchDb implements DbInterface
     }
 
 
-    public function createGroup($groupData){
+    public function createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL){
+
+		// get category name
+		$categoryJson = $this->doGetRequest("/" . $categoryId, false);
+		$categoryArray = json_decode($categoryJson,true);
+		
+		$categoryName = "";
+		if(!empty($categoryArray['title'])){
+			$categoryName = $categoryArray['title'];
+		}
+		
+    	$groupData = array(
+    		'name' => $name,
+    		'group_password' => $password,
+    		'category_id' => $categoryId,
+    		'category_name' => $categoryName,
+    		'description' => $description,
+    		'type' => 'group',
+    		'user_id' => $ownerId,
+    		'is_favourite' => false,
+    		'avatar_file_id' => $avatarURL,
+    		'avatar_thumb_file_id' => $thumbURL
+    	);
+    
         $query = json_encode($groupData);
         $json = $this->doPostRequest($query);
 

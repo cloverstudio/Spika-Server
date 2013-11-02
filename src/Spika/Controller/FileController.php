@@ -39,7 +39,7 @@ class FileController extends SpikaBaseController
 			if(file_exists($filePath)){
 				return $app->sendFile($filePath);
 			}else{
-				return "";
+				return $self->returnErrorResponse("file doesn't exists.");
 			}
 		});
 			

@@ -21,7 +21,6 @@ interface DbInterface
     public function getCommentCount($messageId);
     public function getAvatarFileId($user_id);
     public function getUserContacts($user_id,$include_docs);
-    public function createGroup($groupData);
     public function searchUserByName($name);
     public function searchUserByGender($gender);
     public function searchUserByAge($ageFrom,$ageTo);
@@ -30,6 +29,8 @@ interface DbInterface
     public function addNewMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
     public function getUserMessages($ownerUserId,$targetUserId,$count,$offset);
     
+    public function createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
+
     //public function addToContact($owserUserId,$tagetUserId);
     //public function removeFromContact($owserUserId,$tagetUserId);
 

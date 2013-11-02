@@ -14,7 +14,7 @@ use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class MediaController extends SpikaBaseController
+class MessageController extends SpikaBaseController
 {
     public function connect(Application $app)
     {
@@ -38,7 +38,7 @@ class MediaController extends SpikaBaseController
 
                 return json_encode($result);
             }
-        );
+        )->before($app['beforeTokenChecker']);
 
     }
 
@@ -56,7 +56,7 @@ class MediaController extends SpikaBaseController
 
                 return json_encode($result);
             }
-        );
+        )->before($app['beforeTokenChecker']);
     }
 
     private function setupSendMessageMethod($self,$app,$controllers){
@@ -103,6 +103,6 @@ class MediaController extends SpikaBaseController
 
                 return json_encode($result);
             }
-        );
+        )->before($app['beforeTokenChecker']);
     }
 }

@@ -185,5 +185,45 @@
 	
 	
 	
+	//////// create taget user
+	$targetUserName = "user" . randString();
+	$targetEmail = "email@" . randString() . ".com";
+	$targetPassword = "password";
+	
+	$result = HU_postRequest(API_URL . "/createUser",json_encode(array(
+	  "name" => $targetUserName,
+	  "email" => $targetEmail,
+	  "password" => md5($targetPassword),
+	)),array(
+		'user_id: create_user'
+	));
+	
+	$resultAry = json_decode($result,true);
+	$targetUserId = $resultAry['id'];
+	
+	if(empty($targetUserId))
+	   die("create target user failed {$result}");
+	   
+    print "Create target user succeed: {$targetUserId}\n";
+
+
+    
+    //////// get Emoticons
+	$result = HU_getRequest(API_URL . "/Emoticons",array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);	
+	
+	if(count($resultAry['rows'][0])) {
+	   print "Emoticons : OK \n";
+	}else{
+    	 die("Emoticons failed  {$result}");
+	}
+
+    
     	
+    
+    	
+    
 ?>

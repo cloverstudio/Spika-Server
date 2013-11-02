@@ -199,9 +199,31 @@ class UserController extends SpikaBaseController
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
+
+/*
+        $controllers->post('/Contacts/add',
+            function () use ($app,$self) {
+				
+				$user = $app['currentUser'];
+				$ownerUserId = $user['_id'];
+
+				$requestBody = $request->getContent();
+				$requestBodyAry = json_decode($requestBodyAry,true);
+				$targetUserId = $requestBodyAry['userId'];
+				
+				if(empty($targetUserId))
+				  return $self->returnErrorResponse("UserId is empty");
+				 
+                $result = $app['spikadb']->addToContact($ownerUserId,$targetUserId);
+                $app['monolog']->addDebug("Add Contacts API called with user id: \n {$userId} \n");
+
+                return json_encode($result);
+            }
+        )->before($app['beforeTokenChecker']);
+*/
     }
 
-
+	
 }
 
 

@@ -7,7 +7,7 @@ use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class UserControllerTest extends WebTestCase
+class SearchUserControllerTest extends WebTestCase
 {
 
     const FIXTURE_TOKEN   = 'some_token';
@@ -42,7 +42,7 @@ class UserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchUsers?n=test');
-        assertRegExp('/OK/', $client->getResponse()->getContent());
+        assertRegExp('/\[\]/', $client->getResponse()->getContent());
     }
 
     /** @test */
@@ -50,7 +50,7 @@ class UserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchUsers?g=male');
-        assertRegExp('/OK/', $client->getResponse()->getContent());
+        assertRegExp('/\[\]/', $client->getResponse()->getContent());
     }
 
     /** @test */
@@ -58,6 +58,6 @@ class UserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchUsers?af=30&at=35');
-        assertRegExp('/OK/', $client->getResponse()->getContent());
+        assertRegExp('/\[\]/', $client->getResponse()->getContent());
     }
 }

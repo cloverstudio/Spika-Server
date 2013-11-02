@@ -35,12 +35,18 @@ class MessageControllerTest extends WebTestCase
             ->will($this->returnValue('OK'));
                         
         $spikadb->expects($this->any())
-            ->method('addNewMessage')
+            ->method('addNewUserMessage')
             ->will($this->returnValue('OK'));
                         
         $spikadb->expects($this->any())
             ->method('getUserMessages')
             ->will($this->returnValue('OK'));
+
+        $spikadb->expects($this->any())
+            ->method('addNewGroupMessage')
+            ->will($this->returnValue('OK'));
+                        
+
                         
         $app['spikadb'] = $spikadb;
         
@@ -65,7 +71,7 @@ class MessageControllerTest extends WebTestCase
 
 
     /** @test */
-    public function sendTextMessage()
+    public function sendTextUserMessage()
     {
     
         $client = $this->createClient();
@@ -92,6 +98,29 @@ class MessageControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/userMessages/test/20/0');
+
+        assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+    
+    /** @test */
+    public function sendTextGroupMessage()
+    {
+    
+        $client = $this->createClient();
+        
+        $sendParams = array(
+            'to_group_id' => 'test',
+            'body' => 'hi',
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/sendMessageToGroup',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
 
         assertRegExp('/OK/', $client->getResponse()->getContent());
     }

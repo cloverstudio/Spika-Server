@@ -27,7 +27,6 @@ class GroupControllerTest extends WebTestCase
             ->method('createGroup')
             ->will($this->returnValue('OK'));
             
-            
         $spikadb->expects($this->any())
             ->method('findGroupById')
             ->will($this->returnValue('OK'));

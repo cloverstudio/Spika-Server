@@ -26,7 +26,8 @@ interface DbInterface
     public function searchUserByAge($ageFrom,$ageTo);
     
     
-    public function addNewMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
+    public function addNewUserMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
+    public function addNewGroupMessage($messageType,$fromUserId,$toGroupId,$message,$additionalParams);
     public function getUserMessages($ownerUserId,$targetUserId,$count,$offset);
     public function findGroupById($id);
     

@@ -375,14 +375,13 @@ class CouchDb implements DbInterface
         return $result;
     }
 
-    public function addNewMessage($addNewMessage = 'text',$fromUserId,$toUserId,$message,$additionalParams=array()){
+    public function addNewUserMessage($addNewMessage = 'text',$fromUserId,$toUserId,$message,$additionalParams=array()){
 		
 		$messageData = array();
 		
         $messageData['from_user_id']=$fromUserId;
         $messageData['to_user_id']=$toUserId;
         $messageData['body']=$message;
-
         $messageData['modified']=time();
         $messageData['created']=time();
         $messageData['type']='message';
@@ -421,6 +420,53 @@ class CouchDb implements DbInterface
 
         return $result;
     }
+
+    public function addNewGroupMessage($addNewMessage = 'text',$fromUserId,$toGroupId,$message,$additionalParams=array()){
+		
+		$messageData = array();
+		
+        $messageData['from_user_id']=$fromUserId;
+        $messageData['to_group_id']=$toGroupId;
+        $messageData['body']=$message;
+        $messageData['modified']=time();
+        $messageData['created']=time();
+        $messageData['type']='message';
+        $messageData['message_target_type']='group';
+        $messageData['message_type']=$addNewMessage;
+        $messageData['valid']=true;
+
+		if(is_array($additionalParams)){
+			foreach($additionalParams as $key => $value){
+				$messageData[$key]=$value;
+			}
+		}
+		
+        if(isset($fromUserId)){
+            $fromUserData=$this->findUserById($fromUserId);
+            $messageData['from_user_name']=$fromUserData['name'];
+        }else{
+            return null;
+        }
+
+        if(isset($toGroupId)){
+            $toGroupData=$this->findUserById($toGroupId);
+            $messageData['to_group_name']=$toGroupData['name'];
+        }else{
+            return null;
+        }
+                
+        $query = json_encode($messageData);
+        $json = $this->doPostRequest($query);
+
+        $result = json_decode($json, true);
+
+        if(isset($result['ok']) && $result['ok'] == 'true'){
+            if(isset($result['rev']))unset($result['rev']);
+        }
+
+        return $result;
+    }
+
 
     public function getUserMessages($ownerUserId,$targetUserId,$count,$offset){
 		

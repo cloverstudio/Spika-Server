@@ -138,7 +138,7 @@ class MessageController extends SpikaBaseController
 				}
 
 				
-                $result = $app['spikadb']->addNewMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
+                $result = $app['spikadb']->addNewUserMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
                 $app['monolog']->addDebug("SendMessage API called from user: \n {$fromUserId} \n");
 
 				if($result == null)
@@ -167,6 +167,63 @@ class MessageController extends SpikaBaseController
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
+
+
+        $controllers->post('/sendMessageToGroup',
+            function (Request $request)use($app,$self) {
+
+                $currentUser = $app['currentUser'];
+                $messageData = $request->getContent();
+
+                if(!$self->validateRequestParams($messageData,array(
+                    'to_group_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+
+                $messageDataArray=json_decode($messageData,true);
+
+				$fromUserId = $currentUser['_id'];
+				$toGroupId = trim($messageDataArray['to_group_id']);
+				
+				if(isset($messageDataArray['body']))
+					$message = $messageDataArray['body'];
+				else
+					$message = "";
+				
+				if(isset($messageDataArray['message_type'])){
+					$messageType = $messageDataArray['message_type'];
+				} else {
+					$messageType = 'text';
+				}
+				
+				$additionalParams = array();
+				
+				// emoticon message
+				if(isset($messageDataArray['emoticon_image_url'])){
+					$additionalParams['emoticon_image_url'] = $messageDataArray['emoticon_image_url'];
+				}
+				
+				// pitcure message
+				if(isset($messageDataArray['picture_file_id'])){
+					$additionalParams['picture_file_id'] = $messageDataArray['picture_file_id'];
+				}
+				if(isset($messageDataArray['picture_thumb_file_id'])){
+					$additionalParams['picture_thumb_file_id'] = $messageDataArray['picture_thumb_file_id'];
+				}
+
+				
+                $result = $app['spikadb']->addNewGroupMessage($messageType,$fromUserId,$toGroupId,$message,$additionalParams);
+                $app['monolog']->addDebug("SendMessage API called from user: \n {$fromUserId} \n");
+
+				if($result == null)
+					 return $self->returnErrorResponse("failed to send message");
+					 
+                return json_encode($result);
+            }
+            
+        )->before($app['beforeTokenChecker']);
+
 
     }
 }

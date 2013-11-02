@@ -224,6 +224,22 @@ class MessageController extends SpikaBaseController
             
         )->before($app['beforeTokenChecker']);
 
+        $controllers->get('/groupMessages/{toGroupId}/{count}/{offset}',
+            function ($toGroupId = "",$count = 30,$offset = 0) use ($app,$self) {
+				
+				if(empty($toGroupId))
+					return $self->returnErrorResponse("failed to get message");
+					
+                $result = $app['spikadb']->getGroupMessages($toGroupId,$count,$offset);
+                $app['monolog']->addDebug("groupMessages API called");
+
+				if($result == null)
+					 return $self->returnErrorResponse("failed to get message");
+					 
+                return json_encode($result);
+            }
+        )->before($app['beforeTokenChecker']);
+
 
     }
 }

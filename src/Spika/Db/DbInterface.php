@@ -29,6 +29,7 @@ interface DbInterface
     public function addNewUserMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
     public function addNewGroupMessage($messageType,$fromUserId,$toGroupId,$message,$additionalParams);
     public function getUserMessages($ownerUserId,$targetUserId,$count,$offset);
+    public function getGroupMessages($targetGroupId,$count,$offset);
     public function findGroupById($id);
     
     public function createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);

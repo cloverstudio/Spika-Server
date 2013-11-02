@@ -319,4 +319,21 @@
 	   
     print "send group message : OK {$resultAry['id']}\n";
 
+
+    //////// get group messages
+	$result = HU_getRequest(API_URL . "/groupMessages/{$newGroupId}/30/0",array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	$targetUserId = $resultAry['id'];
+	
+	if(empty($resultAry['rows'][0]))
+	   die("read group message failed {$result}");
+	   
+    print "read group message : OK {$resultAry['rows'][0]['value']['body']}\n";
+
+
+
 ?>

@@ -480,6 +480,18 @@ class CouchDb implements DbInterface
         return $result;
     }
 
+    public function getGroupMessages($targetGroupId,$count,$offset){
+		
+		$startKey = "[\"{$targetGroupId}\",{}]";
+		$endKey = "[\"{$targetGroupId}\"]";
+        $query = "?startkey={$startKey}&endkey={$endKey}&descending=true&limit={$count}&skip={$offset}";
+        $json = $this->doGetRequest("/_design/app/_view/find_group_message{$query}");
+
+        $result = json_decode($json, true);
+
+        return $result;
+    }
+    
     public function getUserContacts($user_id,$include_docs){
         $query = "?key=". urlencode('"' . $user_id . '"')."&include_docs={$include_docs}";
         $json = $this->doGetRequest("/_design/app/_view/find_contacts{$query}");

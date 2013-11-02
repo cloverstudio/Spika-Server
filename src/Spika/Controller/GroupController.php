@@ -24,6 +24,7 @@ class GroupController extends SpikaBaseController
         $self = $this;
 
         $this->setupCreateGroupMethod($self,$app,$controllers);
+        $this->setupFindGroupMethod($self,$app,$controllers);
 
 
         return $controllers;
@@ -80,46 +81,32 @@ class GroupController extends SpikaBaseController
         )->before($app['beforeTokenChecker']);
     }
 
-    private function setupSendGroupMessage($self,$app,$controllers){
+    private function setupFindGroupMethod($self,$app,$controllers){
+        $controllers->get('/findGroup/{type}/{value}',
+            function ($type,$value) use ($app,$self) {
 
-        $controllers->post('/SendGroupMessage',
-            function (Request $request) use ($app,$self) {
-
-                $messageData = $request->getContent();
-
-                if(!$self->validateRequestParams($messageData,array(
-                    'to_group_id',
-                    'from_user_id',
-                    'body',
-                    'type',
-                    'message_target_type',
-                    'message_type'
-                ))){
+                if(empty($value) || empty($type)){
                     return $self->returnErrorResponse("insufficient params");
                 }
+				
+                switch ($type){
+                    case "id":
+                        $result = $app['spikadb']->findGroupById($value);
+                        $app['monolog']->addDebug("FindUserById API called with user id: \n {$value} \n");
+                        break;
+                    default:
+                        return $self->returnErrorResponse("unknown search key");
 
-                $messageDataArray=json_decode($messageData,true);
-
-                //FIRST THING TO DO : GET GROUP DATA BY ID
-
-                /*
-                if(!isset($messageDataArray['from_user_name'])){
-                    $fromUserData=$app['spikadb']->findUserById($messageDataArray['from_user_id']);
-                    $messageDataArray['from_user_name']=$fromUserData['name'];
                 }
 
-                if(!isset($messageDataArray['to_group_id'])){
-                    //load group data
-                    //$groupData=$app['spikadb']->findUserById($messageDataArray['to_user_id']);
-                    //$messageDataArray['to_user_name']=$toUserData['name'];
-                } */
-
-                echo print_r($messageData);
-                die();
-
+                if($result == null)
+                    return $self->returnErrorResponse("No group found");
+                    
+                return json_encode($result);
+                
             }
-        );
+        )->before($app['beforeTokenChecker']);
     }
-
+    
 
 }

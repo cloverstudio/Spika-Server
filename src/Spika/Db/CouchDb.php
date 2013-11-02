@@ -520,6 +520,22 @@ class CouchDb implements DbInterface
         return $result;
     }
 
+    public function findGroupById($id)
+    {
+
+
+        $query  = "?key=" . urlencode('"' . $id . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/find_group_by_id{$query}", true);
+        $result = json_decode($json, true);
+
+
+        return isset($result) && isset($result['rows']) &&
+            isset($result['rows'][0]) && isset($result['rows'][0]['value'])
+            ? $result['rows'][0]['value']
+            : null;
+    }
+
+
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     
 		$curl = curl_init();

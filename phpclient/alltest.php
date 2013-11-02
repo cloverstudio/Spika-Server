@@ -264,8 +264,6 @@
 	   
     print "read message : OK {$resultAry['rows'][0]['value']['body']}\n";
 
-	
-
     //////// create group test
 	$result = HU_postRequest(API_URL . "/createGroup",json_encode(array(
 	  "name" => "test group",
@@ -280,16 +278,30 @@
 		'token' => $token
 	));
 	
-	print $result;
-	die();
+	$resultAry = json_decode($result,true);
+	$newGroupId = $resultAry['id'];
 	
-	$targetUserId = $resultAry['id'];
-	
-	if(empty($resultAry['rows'][0]))
-	   die("read message failed {$result}");
+	if(empty($resultAry['id']))
+	   die("create group failed {$result}");
 	   
-    print "read message : OK {$resultAry['rows'][0]['value']['body']}\n";
+    print "create group : OK {$resultAry['id']}\n";
 
+    //////// find group by id
+    ///////// /findUser/id/****
+    
+	$result = HU_getRequest(API_URL . "/findGroup/id/{$newGroupId}",array(
+		'token' => $token
+	));
 	
+	$resultAry = json_decode($result,true);
+
+
+	if(isset($resultAry['name']) && isset($resultAry['_id'])){
+	   print "/findGroup/id : OK \n";
+	}else{
+    	 die("/findGroup/id {$result}");
+	}
+
+
     
 ?>

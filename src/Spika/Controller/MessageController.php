@@ -101,8 +101,7 @@ class MessageController extends SpikaBaseController
                 $messageData = $request->getContent();
 
                 if(!$self->validateRequestParams($messageData,array(
-                    'to_user_id',
-                    'body'
+                    'to_user_id'
                 ))){
                     return $self->returnErrorResponse("insufficient params");
                 }
@@ -111,7 +110,11 @@ class MessageController extends SpikaBaseController
 
 				$fromUserId = $currentUser['_id'];
 				$toUserId = trim($messageDataArray['to_user_id']);
-				$message = $messageDataArray['body'];
+				
+				if(isset($messageDataArray['body']))
+					$message = $messageDataArray['body'];
+				else
+					$message = "";
 				
 				if(isset($messageDataArray['message_type'])){
 					$messageType = $messageDataArray['message_type'];
@@ -121,9 +124,19 @@ class MessageController extends SpikaBaseController
 				
 				$additionalParams = array();
 				
+				// emoticon message
 				if(isset($messageDataArray['emoticon_image_url'])){
 					$additionalParams['emoticon_image_url'] = $messageDataArray['emoticon_image_url'];
 				}
+				
+				// pitcure message
+				if(isset($messageDataArray['picture_file_id'])){
+					$additionalParams['picture_file_id'] = $messageDataArray['picture_file_id'];
+				}
+				if(isset($messageDataArray['picture_thumb_file_id'])){
+					$additionalParams['picture_thumb_file_id'] = $messageDataArray['picture_thumb_file_id'];
+				}
+
 				
                 $result = $app['spikadb']->addNewMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
                 $app['monolog']->addDebug("SendMessage API called from user: \n {$fromUserId} \n");

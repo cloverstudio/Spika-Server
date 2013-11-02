@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 
-class FileController implements ControllerProviderInterface
+class FileController extends SpikaBaseController
 {
 
 	static $paramName = 'file';
@@ -28,9 +28,10 @@ class FileController implements ControllerProviderInterface
     	global $beforeTokenCheker;
     	
         $controllers = $app['controllers_factory'];
+        $self = $this;
         
         // ToDo: Add token check
-		$controllers->get('/filedownloader.php', function (Request $request) use ($app) {
+		$controllers->get('/filedownloader', function (Request $request) use ($app,$self) {
 			
 			$fileID = $request->get('file');
 			$filePath = __DIR__.'/../'.FileController::$fileDirName."/".$fileID;
@@ -45,10 +46,14 @@ class FileController implements ControllerProviderInterface
 		//})->before($app['beforeTokenChecker']);
         
         // ToDo: Add token check
-		$controllers->post('/fileuploader.php', function (Request $request) use ($app) {
+		$controllers->post('/fileuploader', function (Request $request) use ($app,$self) {
 			
 			$file = $request->files->get(FileController::$paramName); 
 			$fineName = \Spika\Utils::randString(20, 20) . time();
+			
+			if(!is_writable(__DIR__.'/../'.FileController::$fileDirName))
+				return $self->returnErrorResponse(FileController::$fileDirName ." dir is not writable.");
+				
 			$file->move(__DIR__.'/../'.FileController::$fileDirName, $fineName); 
 			return $fineName; 
 					

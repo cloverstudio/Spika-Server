@@ -375,7 +375,7 @@ class CouchDb implements DbInterface
         return $result;
     }
 
-    public function addNewTextMessage($fromUserId,$toUserId,$message){
+    public function addNewMessage($addNewMessage = 'text',$fromUserId,$toUserId,$message,$additionalParams=array()){
 		
 		$messageData = array();
 		
@@ -387,9 +387,15 @@ class CouchDb implements DbInterface
         $messageData['created']=time();
         $messageData['type']='message';
         $messageData['message_target_type']='user';
-        $messageData['message_type']='text';
+        $messageData['message_type']=$addNewMessage;
         $messageData['valid']=true;
 
+		if(is_array($additionalParams)){
+			foreach($additionalParams as $key => $value){
+				$messageData[$key]=$value;
+			}
+		}
+		
         if(isset($fromUserId)){
             $fromUserData=$this->findUserById($fromUserId);
             $messageData['from_user_name']=$fromUserData['name'];

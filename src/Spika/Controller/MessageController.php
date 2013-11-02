@@ -98,10 +98,7 @@ class MessageController extends SpikaBaseController
             function (Request $request)use($app,$self) {
 
                 $currentUser = $app['currentUser'];
-                $userData = $request->getContent();
-
                 $messageData = $request->getContent();
-
 
                 if(!$self->validateRequestParams($messageData,array(
                     'to_user_id',
@@ -116,7 +113,19 @@ class MessageController extends SpikaBaseController
 				$toUserId = trim($messageDataArray['to_user_id']);
 				$message = $messageDataArray['body'];
 				
-                $result = $app['spikadb']->addNewTextMessage($fromUserId,$toUserId,$message);
+				if(isset($messageDataArray['message_type'])){
+					$messageType = $messageDataArray['message_type'];
+				} else {
+					$messageType = 'text';
+				}
+				
+				$additionalParams = array();
+				
+				if(isset($messageDataArray['emoticon_image_url'])){
+					$additionalParams['emoticon_image_url'] = $messageDataArray['emoticon_image_url'];
+				}
+				
+                $result = $app['spikadb']->addNewMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
                 $app['monolog']->addDebug("SendMessage API called from user: \n {$fromUserId} \n");
 
 				if($result == null)

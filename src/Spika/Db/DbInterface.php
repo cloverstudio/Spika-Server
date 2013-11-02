@@ -27,7 +27,7 @@ interface DbInterface
     public function searchUserByAge($ageFrom,$ageTo);
     
     
-    public function addNewTextMessage($fromUserId,$toUserId,$message);
+    public function addNewMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
     public function getUserMessages($ownerUserId,$targetUserId,$count,$offset);
     
     //public function addToContact($owserUserId,$tagetUserId);

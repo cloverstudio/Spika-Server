@@ -35,7 +35,7 @@ class MessageControllerTest extends WebTestCase
             ->will($this->returnValue('OK'));
                         
         $spikadb->expects($this->any())
-            ->method('addNewTextMessage')
+            ->method('addNewMessage')
             ->will($this->returnValue('OK'));
                         
         $spikadb->expects($this->any())

@@ -10,12 +10,6 @@ interface DbInterface
     public function doSpikaAuth($email,$password);
     public function saveUserToken($userJson, $id);
 
-    /**
-     * Finds a user by User ID
-     *
-     * @param  string $id
-     * @return array
-     */
     public function findUserByToken($token);
     public function findUserById($id);
     public function findUserByEmail($email);
@@ -23,6 +17,7 @@ interface DbInterface
     public function getActivitySummary($user_id);
     public function updateUser($userId,$user);
     public function getEmoticons();
+    public function getEmoticonImage($emoticonId);
     public function getCommentCount($messageId);
     public function getAvatarFileId($user_id);
     public function addNewMessage($messageData);
@@ -31,6 +26,8 @@ interface DbInterface
     public function searchUserByName($name);
     public function searchUserByGender($gender);
     public function searchUserByAge($ageFrom,$ageTo);
+    
+    
     //public function addToContact($owserUserId,$tagetUserId);
     //public function removeFromContact($owserUserId,$tagetUserId);
 

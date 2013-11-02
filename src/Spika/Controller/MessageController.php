@@ -40,6 +40,17 @@ class MessageController extends SpikaBaseController
             }
         )->before($app['beforeTokenChecker']);
 
+        $controllers->get('/Emoticon/{id}',
+            function ($emoticonId) use ($app,$self) {
+
+                $result = $app['spikadb']->getEmoticonImage($emoticonId);
+                $app['monolog']->addDebug("Emoticons API called\n");
+
+                return json_encode($result);
+            }
+        )->before($app['beforeTokenChecker']);
+
+
     }
 
     private function setupGetCommentCountMethod($self,$app,$controllers){

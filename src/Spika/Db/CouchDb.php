@@ -414,6 +414,18 @@ class CouchDb implements DbInterface
         return $result;
     }
 
+    public function getEmoticonImage($emoticonId){
+        $json = $this->doGetRequest($emoticonId);
+        
+        
+        print $result;
+        die();
+        
+        $result = json_decode($json, true);
+
+        return $result;
+    }
+
     public function getCommentCount($messageId){
         $query  = "?key=" . urlencode('"' . $messageId . '"');
         $json   = $this->doGetRequest("/_design/app/_view/get_comment_count{$query}", false);

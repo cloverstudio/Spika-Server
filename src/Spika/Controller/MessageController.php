@@ -24,7 +24,7 @@ class MessageController extends SpikaBaseController
 
         $this->setupEmoticonsMethod($self,$app,$controllers);
         $this->setupGetCommentCountMethod($self,$app,$controllers);
-        $this->setupSendMessageMethod($self,$app,$controllers);
+        $this->setupMessageMethod($self,$app,$controllers);
 
         return $controllers;
     }
@@ -92,7 +92,7 @@ class MessageController extends SpikaBaseController
         )->before($app['beforeTokenChecker']);
     }
 
-    private function setupSendMessageMethod($self,$app,$controllers){
+    private function setupMessageMethod($self,$app,$controllers){
     
         $controllers->post('/sendMessageToUser',
             function (Request $request)use($app,$self) {
@@ -124,5 +124,27 @@ class MessageController extends SpikaBaseController
 					 
                 return json_encode($result);
             }
+            
         )->before($app['beforeTokenChecker']);
-    }}
+        
+        $controllers->get('/userMessages/{toUserId}/{count}/{offset}',
+            function ($toUserId = "",$count = 30,$offset = 0) use ($app,$self) {
+
+   				$currentUser = $app['currentUser'];
+				$ownerUserId = $currentUser['_id'];
+				
+				if(empty($ownerUserId) || empty($toUserId))
+					return $self->returnErrorResponse("failed to get message");
+					
+                $result = $app['spikadb']->getUserMessages($ownerUserId,$toUserId,$count,$offset);
+                $app['monolog']->addDebug("UserMessages API called");
+
+				if($result == null)
+					 return $self->returnErrorResponse("failed to get message");
+					 
+                return json_encode($result);
+            }
+        )->before($app['beforeTokenChecker']);
+
+    }
+}

@@ -386,7 +386,9 @@ class CouchDb implements DbInterface
         $messageData['modified']=time();
         $messageData['created']=time();
         $messageData['type']='message';
-        $messageData['message_target_type']='text';
+        $messageData['message_target_type']='user';
+        $messageData['message_type']='text';
+        $messageData['valid']=true;
 
         if(isset($fromUserId)){
             $fromUserData=$this->findUserById($fromUserId);
@@ -414,9 +416,11 @@ class CouchDb implements DbInterface
         return $result;
     }
 
-    public function getUserMessages($startKey,$endKey,$descending,$limit,$skip){
-
-        $query = "?startkey={$startKey}&endkey={$endKey}&descending={$descending}&limit={$limit}&skip={$skip}";
+    public function getUserMessages($ownerUserId,$targetUserId,$count,$offset){
+		
+		$startKey = "[\"{$ownerUserId}\",\"{$targetUserId}\",{}]";
+		$endKey = "[\"{$ownerUserId}\",\"{$targetUserId}\"]";
+        $query = "?startkey={$startKey}&endkey={$endKey}&descending=true&limit={$count}&skip={$offset}";
         $json = $this->doGetRequest("/_design/app/_view/find_user_message{$query}");
 
         $result = json_decode($json, true);

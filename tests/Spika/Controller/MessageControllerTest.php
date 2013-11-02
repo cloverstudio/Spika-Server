@@ -38,6 +38,10 @@ class MessageControllerTest extends WebTestCase
             ->method('addNewTextMessage')
             ->will($this->returnValue('OK'));
                         
+        $spikadb->expects($this->any())
+            ->method('getUserMessages')
+            ->will($this->returnValue('OK'));
+                        
         $app['spikadb'] = $spikadb;
         
         return $app;
@@ -79,6 +83,15 @@ class MessageControllerTest extends WebTestCase
             array('CONTENT_TYPE' => 'application/json'),
             json_encode($sendParams)
         );
+
+        assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+    
+    /** @test */
+    public function getTextMessage()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/api/userMessages/test/20/0');
 
         assertRegExp('/OK/', $client->getResponse()->getContent());
     }

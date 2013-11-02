@@ -236,8 +236,6 @@
     
    
 	//////// send text message
-
-	
 	$result = HU_postRequest(API_URL . "/sendMessageToUser",json_encode(array(
 	  "to_user_id" => $targetUserId,
 	  "body" => "Hi"
@@ -245,17 +243,27 @@
 		'token' => $token
 	));
 	
+	$resultAry = json_decode($result,true);
 	
-	print $result;
-	die();
+	if(empty($resultAry['id']))
+	   die("send message failed {$result}");
+	   
+    print "send message : OK {$resultAry['id']}\n";
+	
+    //////// get user messages
+	$result = HU_getRequest(API_URL . "/userMessages/{$targetUserId}/30/0",array(
+		'token' => $token
+	));
+	
 	
 	$resultAry = json_decode($result,true);
 	$targetUserId = $resultAry['id'];
 	
-	if(empty($targetUserId))
-	   die("create target user failed {$result}");
+	if(empty($resultAry['rows'][0]))
+	   die("read message failed {$result}");
 	   
-    print "Create target user succeed: {$targetUserId}\n";
+    print "read message : OK {$resultAry['rows'][0]['value']['body']}\n";
+
 	
     
 ?>

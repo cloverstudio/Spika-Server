@@ -26,7 +26,6 @@ class UserController extends SpikaBaseController
         $this->setupUpdateUserMethod($self,$app,$controllers);
         $this->setupFindUserMethod($self,$app,$controllers);
         $this->setupActivitySummaryMethod($self,$app,$controllers);
-        $this->setupMessagesMethod($self,$app,$controllers);
         $this->setupGetAvatarFileIdMethod($self,$app,$controllers);
         $this->setupContactsMethod($self,$app,$controllers);
 
@@ -129,43 +128,6 @@ class UserController extends SpikaBaseController
 				
 
                 return json_encode($result);
-            }
-        )->before($app['beforeTokenChecker']);
-    }
-
-    private function setupMessagesMethod($self,$app,$controllers){
-        $controllers->get('/Messages',
-            function (Request $request) use ($app,$self) {
-
-                /*
-                $params=array();
-                $params['startkey']=$request->get('startkey');
-                $params['endkey']=$request->get('endkey');
-                $params['descending']=$request->get('descending');
-                $params['limit']=$request->get('limit');
-                $params['skip']=$request->get('skip');
-                */
-
-                return print_r($request,true);
-
-                if(!$self->validateRequestParams($requestBody,array(
-                    'startkey',
-                    'endkey',
-                    'descending',
-                    'limit',
-                    'skip'
-                ))){
-                    return $self->returnErrorResponse("insufficient params");
-                }
-
-
-
-                  /*
-                $result = $app['spikadb']->getUserMessages($start);
-                $app['monolog']->addDebug("MessagesFrom API called with start key: \n {$start} \n");
-
-
-                return json_encode($result);*/
             }
         )->before($app['beforeTokenChecker']);
     }

@@ -415,15 +415,19 @@ class CouchDb implements DbInterface
     }
 
     public function getEmoticonImage($emoticonId){
-        $json = $this->doGetRequest($emoticonId);
-        
-        
-        print $result;
-        die();
-        
+        $json = $this->doGetRequest("/{$emoticonId}");
         $result = json_decode($json, true);
-
-        return $result;
+		
+		if(!isset($result['_attachments'])){
+			return null;
+		}
+		
+		foreach($result['_attachments'] as $imageName => $image){
+			$imageBody = $this->doGetRequest("/{$emoticonId}/{$imageName}");
+			return $imageBody;
+		}
+		
+        return null;
     }
 
     public function getCommentCount($messageId){

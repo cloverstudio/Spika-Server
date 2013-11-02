@@ -28,6 +28,10 @@ class MessageControllerTest extends WebTestCase
         
         $spikadb->expects($this->any())
             ->method('getEmoticons')
+            ->will($this->returnValue(array('rows'=>array())));
+                        
+        $spikadb->expects($this->any())
+            ->method('getEmoticonImage')
             ->will($this->returnValue('OK'));
                         
         $app['spikadb'] = $spikadb;
@@ -40,6 +44,14 @@ class MessageControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/Emoticons');
+        assertRegExp('/rows/', $client->getResponse()->getContent());
+    }
+    
+    /** @test */
+    public function loadEmoticonTest()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/api/Emoticon/test');
         assertRegExp('/OK/', $client->getResponse()->getContent());
     }
 }

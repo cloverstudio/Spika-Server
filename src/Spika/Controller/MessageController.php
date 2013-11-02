@@ -12,6 +12,7 @@ namespace Spika\Controller;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class MessageController extends SpikaBaseController
@@ -36,17 +37,38 @@ class MessageController extends SpikaBaseController
                 $result = $app['spikadb']->getEmoticons();
                 $app['monolog']->addDebug("Emoticons API called\n");
 
+				if($result == null){
+                    return $self->returnErrorResponse("load emoticons error");
+                }
+
+				if(!isset($result['rows'])){
+                    return $self->returnErrorResponse("load emoticons error");
+                }
+
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
 
         $controllers->get('/Emoticon/{id}',
-            function ($emoticonId) use ($app,$self) {
+            function ($id = "") use ($app,$self) {
 
-                $result = $app['spikadb']->getEmoticonImage($emoticonId);
-                $app['monolog']->addDebug("Emoticons API called\n");
+				if(empty($id)){
+                    return $self->returnErrorResponse("please specify emoticon id");
+                }
 
-                return json_encode($result);
+                $result = $app['spikadb']->getEmoticonImage($id);
+                $app['monolog']->addDebug("Emoticon API called\n");
+
+				if($result == null){
+                    return $self->returnErrorResponse("load emoticon error");
+                }
+                
+                return new Response(
+                	$result,
+                	200,
+                	array('Content-Type' => 'image/png')
+                );
+
             }
         )->before($app['beforeTokenChecker']);
 

@@ -541,7 +541,7 @@ class CouchDb implements DbInterface
 		$commentData['message_id'] = $messageId;
 		$commentData['user_id'] = $userId;
 		$commentData['type'] = 'comment';
-		$commentData['comment'] = "comment";
+		$commentData['comment'] = $comment;
 		$commentData['user_name'] = $userData['name'];
 		$commentData['created'] = time();
 		

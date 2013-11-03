@@ -990,16 +990,8 @@ class CouchDb implements DbInterface
 		return true;
 	}
 	
-	public function unWatchGroup($groupId,$userId){
+	public function unWatchGroup($userId){
 		
-		// find group
-		$groupJSON = $this->doGetRequest("/" . $groupId, false);
-		$groupArray = json_decode($groupJSON,true);
-		
-		if(empty($groupArray['_id'])){
-			return false;
-		}
-
 		// find user
 		$userJSON = $this->doGetRequest("/" . $userId, false);
 		$userArray = json_decode($userJSON,true);
@@ -1017,10 +1009,12 @@ class CouchDb implements DbInterface
 		if(!isset($jsonAry['rows']))
 			return false;
 			
+		$this->logger->addDebug("watch log found ".print_r($jsonAry,true));
+		
 		foreach($jsonAry['rows'] as $row){
 	        $watchLogData = $row['value'];
 	        $this->doDeleteRequest($watchLogData['_id'],$watchLogData['_rev']);
-			
+			$this->logger->addDebug("watch log deleted {$watchLogData['_id']}");
 		}
 				
 		return true;

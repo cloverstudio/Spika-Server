@@ -327,6 +327,7 @@ class GroupController extends SpikaBaseController
 	private function setupWatchMethod($self,$app,$controllers){
 		
         $controllers->post('/watchGroup',
+        
             function (Request $request) use ($app,$self) {
                 
                 $currentUser = $app['currentUser'];
@@ -359,29 +360,20 @@ class GroupController extends SpikaBaseController
             function (Request $request) use ($app,$self) {
                 
                 $currentUser = $app['currentUser'];
-                $requestBody = $request->getContent();
-
-                if(!$self->validateRequestParams($requestBody,array(
-                    'group_id'
-                ))){
-                    return $self->returnErrorResponse("insufficient params");
-                }
                 
-                $requestBodyAry = json_decode($requestBody,true);
-                $groupId = trim($requestBodyAry['group_id']);
-
-                $result = $app['spikadb']->unWatchGroup($groupId,$currentUser['_id']);
+                $result = $app['spikadb']->unWatchGroup($currentUser['_id']);
                 
                 if($result == false)
                 	return $self->returnErrorResponse("failed to watch group");
                 	
-                $app['monolog']->addDebug("Watch API called for group: \n {$groupId} \n");
+                $app['monolog']->addDebug("UnWatch API called");
 				
 				return "OK";
                 
-            }
+			}
             
-        )->before($app['beforeTokenChecker']);
+		)->before($app['beforeTokenChecker']);
 		
 	}
+	    
 }

@@ -214,6 +214,10 @@ class GroupController extends SpikaBaseController
                         $result = $app['spikadb']->findGroupById($value);
                         $app['monolog']->addDebug("FindGroupById API called with user id: \n {$value} \n");
                         break;
+                    case "name":
+                        $result = $app['spikadb']->findGroupByName($value);
+                        $app['monolog']->addDebug("FindGroupByName API called with user id: \n {$value} \n");
+                        break;
                     case "categoryId":
                         $result = $app['spikadb']->findGroupByCategoryId($value);
                         $app['monolog']->addDebug("FindGroupById API called with user id: \n {$value} \n");

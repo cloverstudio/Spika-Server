@@ -144,6 +144,11 @@ class UserController extends SpikaBaseController
 
                 $userDataArray=json_decode($userData,true);
 
+				// prevent change password and token
+				unset($userDataArray['password']);
+				unset($userDataArray['token']);
+				unset($userDataArray['token_timestamp']);
+				
                 $result = $app['spikadb']->updateUser($currentUser['_id'],$userDataArray);
                 $app['monolog']->addDebug("Update API called with user id: \n {$userData} \n");
                 

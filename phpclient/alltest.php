@@ -250,6 +250,21 @@
 	   
     print "send message : OK {$resultAry['id']}\n";
 	
+	
+	//////// get message by id
+	$result = HU_getRequest(API_URL . "/findMessageById/{$resultAry['id']}",array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+
+	if(empty($resultAry['_id']))
+	   die("findMessageById failed {$result}");
+	   
+    print "findMessageById : OK {$resultAry['_id']}\n";
+	
+
+
     //////// get user messages
 	$result = HU_getRequest(API_URL . "/userMessages/{$targetUserId}/30/0",array(
 		'token' => $token
@@ -296,8 +311,9 @@
 
 
     //////// create group test
+    $groupName = "group" . randString();
 	$result = HU_postRequest(API_URL . "/createGroup",json_encode(array(
-	  "name" => "test group",
+	  "name" => $groupName,
 	  "group_password" => "",
 	  "category_id" => "361e5fc396c17b44e58eea1a230478ec",
 	  "description" => "test group",
@@ -319,10 +335,11 @@
 
 	$newGroupId = $resultAry['id'];
 	
+	$groupName = $groupName . "lll";
     //////// update group test
 	$result = HU_postRequest(API_URL . "/updateGroup",json_encode(array(
 	  "_id" => $newGroupId,
-	  "name" => "test group sss",
+	  "name" => $groupName,
 	)),array(
 		'token' => $token
 	));
@@ -347,7 +364,22 @@
 	if(isset($resultAry['name']) && isset($resultAry['_id'])){
 	   print "/findGroup/id : OK \n";
 	}else{
-    	 die("/findGroup/id {$result}");
+    	 die("/findGroup/id failed {$result}");
+	}
+
+
+    //////// find group by name
+	$result = HU_getRequest(API_URL . "/findGroup/name/{$groupName}",array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+
+
+	if(isset($resultAry['name']) && isset($resultAry['_id'])){
+	   print "/findGroup/name : OK \n";
+	}else{
+    	 die("/findGroup/name failed {$result}");
 	}
 
 
@@ -412,6 +444,9 @@
     print "send group message : OK {$resultAry['id']}\n";
 
 	$newMessageId = $resultAry['id'];
+	
+	
+
 	
     //////// get group messages
 	$result = HU_getRequest(API_URL . "/groupMessages/{$newGroupId}/30/0",array(

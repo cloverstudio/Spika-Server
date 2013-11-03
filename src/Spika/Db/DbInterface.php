@@ -30,11 +30,13 @@ interface DbInterface
     public function addNewGroupMessage($messageType,$fromUserId,$toGroupId,$message,$additionalParams);
     public function getUserMessages($ownerUserId,$targetUserId,$count,$offset);
     public function getCommentCount($messageId);
+    public function findMessageById($messageId);
 	public function addNewComment($messageId,$userId,$comment);
 	public function getComments($messageId,$count,$offset);
 	
     public function getGroupMessages($targetGroupId,$count,$offset);
     public function findGroupById($id);
+    public function findGroupByName($name);
     public function findGroupByCategoryId($categoryId);
     public function findGroupsByName($name);
     public function createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);

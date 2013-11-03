@@ -217,6 +217,25 @@ class MessageController extends SpikaBaseController
             }
         )->before($app['beforeTokenChecker']);
 
+        $controllers->get('/findMessageById/{id}',
+            function ($id) use ($app,$self) {
+
+   				$currentUser = $app['currentUser'];
+				$ownerUserId = $currentUser['_id'];
+				
+				if(empty($ownerUserId) || empty($id))
+					return $self->returnErrorResponse("failed to get message");
+					
+                $result = $app['spikadb']->findMessageById($id);
+                $app['monolog']->addDebug("findMessageById API called");
+
+				if($result == null)
+					 return $self->returnErrorResponse("failed to get message");
+					 
+                return json_encode($result);
+            }
+        )->before($app['beforeTokenChecker']);
+
 
         $controllers->post('/sendMessageToGroup',
             function (Request $request)use($app,$self) {

@@ -608,6 +608,13 @@ class CouchDb implements DbInterface
         return $result;
     }
 
+    public function findMessageById($messageId){
+        $json = $this->doGetRequest("/{$messageId}");
+        
+        $result = json_decode($json, true);
+        return $result;
+    }
+    
 	public function addNewComment($messageId,$userId,$comment){
 		
 		$userData=$this->findUserById($userId);
@@ -776,9 +783,21 @@ class CouchDb implements DbInterface
             : null;
     }
 
-    public function findGroupByCategoryId($categoryId)
+    public function findGroupByName($name)
     {
 
+        $query  = "?key=" . urlencode('"' . $name . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/find_group_by_name{$query}", true);
+        $result = json_decode($json, true);
+
+        return isset($result) && isset($result['rows']) &&
+            isset($result['rows'][0]) && isset($result['rows'][0]['value'])
+            ? $result['rows'][0]['value']
+            : null;
+    }
+    
+    public function findGroupByCategoryId($categoryId)
+    {
 
         $query  = "?key=" . urlencode('"' . $categoryId . '"');
         $json   = $this->doGetRequest("/_design/app/_view/find_group_by_category_id{$query}", true);

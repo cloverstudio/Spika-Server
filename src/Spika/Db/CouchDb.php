@@ -98,6 +98,7 @@ class CouchDb implements DbInterface
     	$startKey = "\"{$name}\"";
 	    $query = "?key={$startKey}";
 	    $result = $this->doGetRequest("/_design/app/_view/find_group_by_name{$query}");
+	    
 	    $nameResult = json_decode($result, true);
 
 	    $result = array();
@@ -105,7 +106,7 @@ class CouchDb implements DbInterface
 	        $result[] = $row['value'];
 	    }
 	    
-	    return $this->stripParamsFromJson(json_encode($result, true));
+	    return $result;
     	
     }
     
@@ -358,7 +359,7 @@ class CouchDb implements DbInterface
         
         $user['_id'] = $userId;
         
-        $json = $this->doPutRequest($userId,json_encode($user));
+        $json = $this->doPutRequest($userId,json_encode($user,JSON_FORCE_OBJECT));
         $result = json_decode($json, true);
 
         if(isset($result['ok']) && $result['ok'] == 1 && isset($result['id'])){

@@ -52,6 +52,12 @@ class GroupController extends SpikaBaseController
                 
                 $name = trim($requestBodyAry['name']);
                 
+                //check name is unique
+	            $checkUniqueName = $app['spikadb']->checkGroupNameIsUnique($name);
+		
+				if(count($checkUniqueName) > 0)
+				  return $self->returnErrorResponse("The name is already taken.");
+				
                 $description = "";
                 if(isset($requestBodyAry['description']))
                 	$description = trim($requestBodyAry['description']);
@@ -79,7 +85,17 @@ class GroupController extends SpikaBaseController
 					
                 $result = $app['spikadb']->createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
                 $app['monolog']->addDebug("CreateGroup API called by user: \n {$result} \n");
+				
+				if($result == null)
+					return $self->returnErrorResponse("create group failed");
 
+				if(isset($result['id'])){
+					$newGroupId = $result['id'];
+					$app['spikadb']->subscribeGroup($newGroupId,$ownerId);
+				}else{
+					return $self->returnErrorResponse("create group failed");
+				}
+				
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);

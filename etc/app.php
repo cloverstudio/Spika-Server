@@ -52,4 +52,4 @@ $app->mount('/api/', new Spika\Controller\UserController());
 $app->mount('/api/', new Spika\Controller\MessageController());
 $app->mount('/api/', new Spika\Controller\GroupController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());
-$app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());
+//$app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());

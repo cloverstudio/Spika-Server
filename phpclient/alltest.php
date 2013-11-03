@@ -310,6 +310,7 @@
 	}
 
 
+
     //////// create group test
     $groupName = "group" . randString();
 	$result = HU_postRequest(API_URL . "/createGroup",json_encode(array(

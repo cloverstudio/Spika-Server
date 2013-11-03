@@ -255,14 +255,45 @@
 		'token' => $token
 	));
 	
-	
 	$resultAry = json_decode($result,true);
-	$targetUserId = $resultAry['id'];
-	
+		
 	if(empty($resultAry['rows'][0]))
 	   die("read message failed {$result}");
 	   
     print "read message : OK {$resultAry['rows'][0]['value']['body']}\n";
+
+
+    //////// add contact
+	$result = HU_postRequest(API_URL . "/addContact",json_encode(array(
+	  "user_id"=>$targetUserId
+	)),array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	if(isset($resultAry['name']) && isset($resultAry['_id'])){
+	   print "/addContact : OK \n";
+	}else{
+    	 die("/addContact {$result}");
+	}
+
+
+    //////// remove contact
+	$result = HU_postRequest(API_URL . "/removeContact",json_encode(array(
+	  "user_id"=>$targetUserId
+	)),array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+
+	if(isset($resultAry['name']) && isset($resultAry['_id'])){
+	   print "/removeContact : OK \n";
+	}else{
+    	 die("/removeContact {$result}");
+	}
+
 
     //////// create group test
 	$result = HU_postRequest(API_URL . "/createGroup",json_encode(array(
@@ -306,7 +337,6 @@
 
 
     //////// find group by id
-    
 	$result = HU_getRequest(API_URL . "/findGroup/id/{$newGroupId}",array(
 		'token' => $token
 	));
@@ -343,7 +373,7 @@
 	
 	$resultAry = json_decode($result,true);
 	
-	if(isset($resultAry['_id'])){
+	if(isset($resultAry['rows'])){
 	   print "/findGroup/categoryId : OK \n";
 	}else{
     	 die("/findGroup/categoryId {$result}");

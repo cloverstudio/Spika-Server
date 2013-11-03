@@ -500,6 +500,82 @@ class CouchDb implements DbInterface
         return $result;
     }
 
+
+	public function addContact($userId,$targetUserId){
+		
+		// find user
+		$userJSON = $this->doGetRequest("/" . $userId, false);
+		$userArray = json_decode($userJSON,true);
+		
+		if(empty($userArray['_id'])){
+			return null;
+		}
+		
+		$targetUserJSON = $this->doGetRequest("/" . $targetUserId, false);
+		$tagertUserArray = json_decode($targetUserJSON,true);
+		
+		if(empty($tagertUserArray['_id'])){
+			return null;
+		}
+
+		if(!isset($userArray['contacts']))
+			 $userArray['contacts'] = array();
+		
+		if(!in_array($targetUserId, $userArray['contacts'])){
+		
+			array_push($userArray['contacts'], strval($targetUserId));
+			
+			$this->updateUser($userId,$userArray);
+			$this->logger->addDebug("update updated");
+		}
+		
+		return true;
+	}
+	
+	public function removeContact($userId,$targetUserId){
+		
+		// find user
+		$userJSON = $this->doGetRequest("/" . $userId, false);
+		$userArray = json_decode($userJSON,true);
+		
+		if(empty($userArray['_id'])){
+			return null;
+		}
+		
+		$targetUserJSON = $this->doGetRequest("/" . $targetUserId, false);
+		$tagertUserArray = json_decode($targetUserJSON,true);
+		
+		if(empty($tagertUserArray['_id'])){
+			return null;
+		}
+
+		if(!isset($userArray['contacts']))
+			 $userArray['contacts'] = array();
+		
+		if(in_array($targetUserId, $userArray['contacts'])){
+			
+			$deleteIndex = "";
+			
+			foreach($userArray['contacts'] as $index => $row){
+				
+				if($row == $targetUserId){
+					$deleteIndex = $index;
+					break;
+				}
+				
+			}
+
+			unset($userArray['contacts'][$deleteIndex]);
+
+			$this->updateUser($userId,$userArray);
+			
+		}else{
+			return null;
+		}
+		
+		return true;
+	}
+	
     public function getEmoticons(){
         $json = $this->doGetRequest("/_design/app/_view/find_all_emoticons");
         $result = json_decode($json, true);
@@ -799,7 +875,7 @@ class CouchDb implements DbInterface
 			 $userArray['favorite_groups'] = array();
 		
 		if(!in_array($groupId, $favoriteGroupList)){
-			$userArray['favorite_groups'][] = strval($groupId);
+			array_push($userArray['favorite_groups'], strval($groupId));
 			$this->updateUser($userId,$userArray);
 		}
 		

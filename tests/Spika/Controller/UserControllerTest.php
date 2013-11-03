@@ -39,6 +39,14 @@ class UserControllerTest extends WebTestCase
             ->will($this->returnValue('OK'));
                         
         $spikadb->expects($this->any())
+            ->method('addContact')
+            ->will($this->returnValue('OK'));
+                        
+        $spikadb->expects($this->any())
+            ->method('removeContact')
+            ->will($this->returnValue('OK'));
+                        
+        $spikadb->expects($this->any())
             ->method('getActivitySummary')
             ->will($this->returnValue('total_rows'));
                         
@@ -68,6 +76,55 @@ class UserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/findUser/id/test');
+        assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+
+
+    /** @test */
+    public function addContactTest()
+    {
+
+        $client = $this->createClient();
+        
+        $sendParams = array(
+            'user_id' => 'test'
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/addContact',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
+
+        assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+
+
+    /** @test */
+    public function removeContactTest()
+    {
+
+        $client = $this->createClient();
+        
+        $sendParams = array(
+            'user_id' => 'test'
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/removeContact',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
+
+
         assertRegExp('/OK/', $client->getResponse()->getContent());
     }
 

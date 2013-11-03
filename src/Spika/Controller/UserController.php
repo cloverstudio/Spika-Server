@@ -60,19 +60,6 @@ class UserController extends SpikaBaseController
         )->before($app['beforeTokenChecker']);
     }
 
-
-
-        /*
-         * example calls
-         *
-         * find by id
-         * curl -vX GET http://192.168.1.101:8080/wwwroot/api/FindUser/id/13583389e04adfaa3bac7ae52501a92a -H "token: pFfQJob0Q9kKLAxKEeNeKiLxLb0DPWcfCs6lRhlH" -H "user_id: 13583389e04adfaa3bac7ae52501809e"
-         *
-         * find by email
-         * curl -vX GET http://192.168.1.101:8080/wwwroot/api/FindUser/email/dinko.klobucar@clover-studio.com -H "token:  "user_id: 13583389e04adfaa3bac7ae52501809e"
-         *
-         */
-
     private function setupFindUserMethod($self,$app,$controllers){
         $controllers->get('/findUser/{type}/{value}',
             function ($type,$value) use ($app,$self) {
@@ -152,37 +139,67 @@ class UserController extends SpikaBaseController
 
     private function setupContactsMethod($self,$app,$controllers){
 
-        $controllers->get('/Contacts/{user_id}/{include_docs}',
-            function ($user_id, $include_docs) use ($app,$self) {
+    
+        $controllers->post('/addContact',
+            function (Request $request) use ($app,$self) {
+                
+                $app['monolog']->addDebug("addContact API called");
 
-                $result = $app['spikadb']->getUserContacts($user_id, $include_docs);
-                $app['monolog']->addDebug("Contacts API called with user id: \n {$user_id} \n");
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
 
-                return json_encode($result);
+                if(!$self->validateRequestParams($requestBody,array(
+                    'user_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+                
+                $requestBodyAry = json_decode($requestBody,true);
+                $userId = trim($requestBodyAry['user_id']);
+
+                $result = $app['spikadb']->addContact($currentUser['_id'],$userId);
+                
+                if($result == null)
+                	return $self->returnErrorResponse("failed to add contact");
+                	
+				$userData = $app['spikadb']->findUserById($currentUser['_id']);
+				
+                return json_encode($userData);
+                
             }
+            
+        )->before($app['beforeTokenChecker']);
+        
+        $controllers->post('/removeContact',
+            function (Request $request) use ($app,$self) {
+                
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
+
+                if(!$self->validateRequestParams($requestBody,array(
+                    'user_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+                
+                $requestBodyAry = json_decode($requestBody,true);
+                $userId = trim($requestBodyAry['user_id']);
+
+                $result = $app['spikadb']->removeContact($currentUser['_id'],$userId);
+                
+                if($result == null)
+                	return $self->returnErrorResponse("failed to remove contact");
+                	
+                $app['monolog']->addDebug("removeContact ");
+				
+				$userData = $app['spikadb']->findUserById($currentUser['_id']);
+				
+                return json_encode($userData);
+                
+            }
+            
         )->before($app['beforeTokenChecker']);
 
-/*
-        $controllers->post('/Contacts/add',
-            function () use ($app,$self) {
-				
-				$user = $app['currentUser'];
-				$ownerUserId = $user['_id'];
-
-				$requestBody = $request->getContent();
-				$requestBodyAry = json_decode($requestBodyAry,true);
-				$targetUserId = $requestBodyAry['userId'];
-				
-				if(empty($targetUserId))
-				  return $self->returnErrorResponse("UserId is empty");
-				 
-                $result = $app['spikadb']->addToContact($ownerUserId,$targetUserId);
-                $app['monolog']->addDebug("Add Contacts API called with user id: \n {$userId} \n");
-
-                return json_encode($result);
-            }
-        )->before($app['beforeTokenChecker']);
-*/
     }
 
 	

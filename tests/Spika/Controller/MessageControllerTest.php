@@ -50,6 +50,10 @@ class MessageControllerTest extends WebTestCase
             ->method('getGroupMessages')
             ->will($this->returnValue('OK'));
 
+        $spikadb->expects($this->any())
+            ->method('addNewComment')
+            ->will($this->returnValue('OK'));
+
 
                         
         $app['spikadb'] = $spikadb;
@@ -135,6 +139,30 @@ class MessageControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/groupMessages/test/20/0');
+
+        assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+    
+    /** @test */
+    public function sendCommentTest()
+    {
+        
+        $client = $this->createClient();
+        
+        $sendParams = array(
+            'message_id' => 'test',
+            'comment' => 'hi',
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/sendComment',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
 
         assertRegExp('/OK/', $client->getResponse()->getContent());
     }

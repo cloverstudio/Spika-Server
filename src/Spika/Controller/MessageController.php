@@ -23,7 +23,7 @@ class MessageController extends SpikaBaseController
         $self = $this;
 
         $this->setupEmoticonsMethod($self,$app,$controllers);
-        $this->setupGetCommentCountMethod($self,$app,$controllers);
+        $this->setupGetCommentMethod($self,$app,$controllers);
         $this->setupMessageMethod($self,$app,$controllers);
 
         return $controllers;
@@ -75,9 +75,9 @@ class MessageController extends SpikaBaseController
 
     }
 
-    private function setupGetCommentCountMethod($self,$app,$controllers){
+    private function setupGetCommentMethod($self,$app,$controllers){
 
-        $controllers->get('/CommentsCount/{messageId}',
+        $controllers->get('/commentsCount/{messageId}',
             function ($messageId)use($app,$self) {
 
                 if(empty($messageId)){
@@ -90,6 +90,38 @@ class MessageController extends SpikaBaseController
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
+
+        $controllers->post('/sendComment',
+        
+            function (Request $request)use($app,$self) {
+
+                $currentUser = $app['currentUser'];
+                $messageData = $request->getContent();
+
+                if(!$self->validateRequestParams($messageData,array(
+                    'message_id',
+                    'comment'                    
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+				
+				$messageDataArray=json_decode($messageData,true);
+				
+				$messageId = $messageDataArray['message_id'];
+				$comment = $messageDataArray['comment'];
+				$fromUserId = $currentUser['_id'];
+				
+                $result = $app['spikadb']->addNewComment($messageId,$fromUserId,$comment);
+                $app['monolog']->addDebug("sendComment API called\n");
+
+				if($result == null)
+					return $self->returnErrorResponse("failed to add comment");
+					
+                return json_encode($result);
+            }
+            
+        )->before($app['beforeTokenChecker']);
+
     }
 
     private function setupMessageMethod($self,$app,$controllers){

@@ -532,6 +532,32 @@ class CouchDb implements DbInterface
         return $result;
     }
 
+	public function addNewComment($messageId,$userId,$comment){
+		
+		$userData=$this->findUserById($userId);
+		
+		$commentData = array();
+		
+		$commentData['message_id'] = $messageId;
+		$commentData['user_id'] = $userId;
+		$commentData['type'] = 'comment';
+		$commentData['comment'] = "comment";
+		$commentData['user_name'] = $userData['name'];
+		$commentData['created'] = time();
+		
+        $query = json_encode($commentData);
+        $json = $this->doPostRequest($query);
+
+        $result = json_decode($json, true);
+
+        if(isset($result['ok']) && $result['ok'] == 'true'){
+            return $result;;
+        }
+
+        return null;
+		
+	}
+
     public function getAvatarFileId($user_id){
         $query  = "?key=" . urlencode('"' . $user_id . '"');
         $json   = $this->doGetRequest("/_design/app/_view/find_avatar_file_id{$query}", false);

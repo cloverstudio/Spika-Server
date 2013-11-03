@@ -18,20 +18,20 @@ interface DbInterface
     public function updateUser($userId,$user);
     public function getEmoticons();
     public function getEmoticonImage($emoticonId);
-    public function getCommentCount($messageId);
     public function getAvatarFileId($user_id);
     public function getUserContacts($user_id,$include_docs);
     public function searchUserByName($name);
     public function searchUserByGender($gender);
     public function searchUserByAge($ageFrom,$ageTo);
-    
-    
+        
     public function addNewUserMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
     public function addNewGroupMessage($messageType,$fromUserId,$toGroupId,$message,$additionalParams);
     public function getUserMessages($ownerUserId,$targetUserId,$count,$offset);
+    public function getCommentCount($messageId);
+	public function addNewComment($messageId,$userId,$comment);
+
     public function getGroupMessages($targetGroupId,$count,$offset);
     public function findGroupById($id);
-    
     public function createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
 
     //public function addToContact($owserUserId,$tagetUserId);

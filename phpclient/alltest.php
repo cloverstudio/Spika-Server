@@ -319,7 +319,8 @@
 	   
     print "send group message : OK {$resultAry['id']}\n";
 
-
+	$newMessageId = $resultAry['id'];
+	
     //////// get group messages
 	$result = HU_getRequest(API_URL . "/groupMessages/{$newGroupId}/30/0",array(
 		'token' => $token
@@ -333,6 +334,24 @@
 	   die("read group message failed {$result}");
 	   
     print "read group message : OK {$resultAry['rows'][0]['value']['body']}\n";
+	
+
+    //////// send commnet
+	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(
+	  "message_id" => $newMessageId,
+	  "comment" => "Hi"
+	)),array(
+		'token' => $token
+	));
+
+	$resultAry = json_decode($result,true);
+	
+	$targetUserId = $resultAry['id'];
+	
+	if(empty($resultAry['id']))
+	   die("send comment failed {$result}");
+	   
+    print "send comment : OK {$resultAry['id']}\n";
 
 
 

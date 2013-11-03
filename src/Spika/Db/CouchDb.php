@@ -700,6 +700,21 @@ class CouchDb implements DbInterface
             : null;
     }
 
+    public function findGroupByCategoryId($categoryId)
+    {
+
+
+        $query  = "?key=" . urlencode('"' . $categoryId . '"');
+        $json   = $this->doGetRequest("/_design/app/_view/find_group_by_category_id{$query}", true);
+        $result = json_decode($json, true);
+
+		if(isset($result['rows'])){
+			return $result;
+		}
+		
+		return null;
+    }
+
     public function findGroupsByName($name)
     {
 		
@@ -733,6 +748,18 @@ class CouchDb implements DbInterface
 		
         return $returnResult;
     }
+
+	public function findAllGroupCategory(){
+        
+        $json = $this->doGetRequest("/_design/app/_view/find_group_categories");
+
+        $result = json_decode($json, true);
+
+        return $result;
+
+		
+	}
+
 
 	public function subscribeGroup($groupId,$userId){
 		

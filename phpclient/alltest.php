@@ -321,6 +321,35 @@
 	}
 
 
+    ////////  group category test
+	$result = HU_getRequest(API_URL . "/findAllGroupCategory",array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	if(empty($resultAry['rows']))
+	   die("get all group category failed {$result}");
+	   
+    print "get all group category : OK\n";
+    
+    $categoryId = $resultAry['rows'][0]['value']['_id'];
+    
+    //////// find group by category id
+    
+	$result = HU_getRequest(API_URL . "/findGroup/categoryId/{$categoryId}",array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	if(isset($resultAry['_id'])){
+	   print "/findGroup/categoryId : OK \n";
+	}else{
+    	 die("/findGroup/categoryId {$result}");
+	}
+
+
     //////// find group by name
     
 	$result = HU_getRequest(API_URL . "/searchGroups/name/test",array(
@@ -368,6 +397,50 @@
 	   
     print "read group message : OK {$resultAry['rows'][0]['value']['body']}\n";
 	
+
+    //////// subscribe group test
+	$result = HU_postRequest(API_URL . "/subscribeGroup",json_encode(array(
+	  "group_id" => $newGroupId,
+	)),array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	if(empty($resultAry['_id']))
+	   die("subscribe group failed {$result}");
+	   
+    print "subscribe group : OK {$resultAry['id']}\n";
+
+
+    //////// unsubscribe group test
+	$result = HU_postRequest(API_URL . "/unSubscribeGroup",json_encode(array(
+	  "group_id" => $newGroupId,
+	)),array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	if(empty($resultAry['_id']))
+	   die("unsubscribe group failed {$result}");
+	   
+    print "unsubscribe group : OK\n";
+
+
+    ////////  group category test
+	$result = HU_getRequest(API_URL . "/findAllGroupCategory",array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	if(empty($resultAry['rows']))
+	   die("get all group category failed {$result}");
+	   
+    print "get all group category : OK\n";
+
+
 
     //////// delete group test
 	$result = HU_postRequest(API_URL . "/deleteGroup",json_encode(array(

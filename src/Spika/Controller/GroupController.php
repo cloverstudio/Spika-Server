@@ -28,6 +28,7 @@ class GroupController extends SpikaBaseController
 		$this->setupUpdateGroupMethod($self,$app,$controllers);
 		$this->setupDeleteGroupMethod($self,$app,$controllers);
 		$this->setupSubscribeMethod($self,$app,$controllers);
+		$this->setupGroupCategoryMethod($self,$app,$controllers);
 
         return $controllers;
     }
@@ -179,7 +180,26 @@ class GroupController extends SpikaBaseController
             
         )->before($app['beforeTokenChecker']);
     }
+	
+    private function setupGroupCategoryMethod($self,$app,$controllers){
+    
+        $controllers->get('/findAllGroupCategory',
+            function () use ($app,$self) {
+				
+                $result = $app['spikadb']->findAllGroupCategory();
+                $app['monolog']->addDebug("findAllGroupCategory API called\n");
+ 
+                if($result == null)
+                    return $self->returnErrorResponse("No group found");
+                    
+                return json_encode($result);
+                
+            }
+        )->before($app['beforeTokenChecker']);
+        
+    }
 
+	
     private function setupFindGroupMethod($self,$app,$controllers){
         $controllers->get('/findGroup/{type}/{value}',
             function ($type,$value) use ($app,$self) {
@@ -191,6 +211,10 @@ class GroupController extends SpikaBaseController
                 switch ($type){
                     case "id":
                         $result = $app['spikadb']->findGroupById($value);
+                        $app['monolog']->addDebug("FindGroupById API called with user id: \n {$value} \n");
+                        break;
+                    case "categoryId":
+                        $result = $app['spikadb']->findGroupByCategoryId($value);
                         $app['monolog']->addDebug("FindGroupById API called with user id: \n {$value} \n");
                         break;
                     default:

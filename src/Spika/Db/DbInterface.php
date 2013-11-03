@@ -33,6 +33,7 @@ interface DbInterface
 	
     public function getGroupMessages($targetGroupId,$count,$offset);
     public function findGroupById($id);
+    public function findGroupByCategoryId($categoryId);
     public function findGroupsByName($name);
     public function createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
     public function updateGroup($groupId,$name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
@@ -40,6 +41,9 @@ interface DbInterface
 
     public function subscribeGroup($groupId,$userId);
     public function unSubscribeGroup($groupId,$userId);
+    
+    public function findAllGroupCategory();
+    
     //public function addToContact($owserUserId,$tagetUserId);
     //public function removeFromContact($owserUserId,$tagetUserId);
 

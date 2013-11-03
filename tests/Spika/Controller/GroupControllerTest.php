@@ -58,6 +58,13 @@ class GroupControllerTest extends WebTestCase
             ->method('findUserById')
             ->will($this->returnValue('OK'));
             
+        $spikadb->expects($this->any())
+            ->method('findGroupByCategoryId')
+            ->will($this->returnValue('OK'));
+            
+        $spikadb->expects($this->any())
+            ->method('findAllGroupCategory')
+            ->will($this->returnValue('OK'));
 
 
         $app['spikadb'] = $spikadb;
@@ -143,6 +150,22 @@ class GroupControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchGroups/name/test');
+        assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+    
+    /** @test */
+    public function findAllGroupCategoryTest()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/api/findAllGroupCategory');
+        assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+    
+    /** @test */
+    public function findGroupByCategoryId()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/api/findGroup/categoryId/test');
         assertRegExp('/OK/', $client->getResponse()->getContent());
     }
     

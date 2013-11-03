@@ -44,6 +44,9 @@ interface DbInterface
     public function subscribeGroup($groupId,$userId);
     public function unSubscribeGroup($groupId,$userId);
     
+    public function watchGroup($groupId,$userId);
+    public function unWatchGroup($groupId,$userId);
+    
     public function findAllGroupCategory();
     
     //public function addToContact($owserUserId,$tagetUserId);

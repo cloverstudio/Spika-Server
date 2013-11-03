@@ -952,6 +952,81 @@ class CouchDb implements DbInterface
 		return true;
 	}
 	
+	
+	
+	public function watchGroup($groupId,$userId){
+		
+		// find group
+		$groupJSON = $this->doGetRequest("/" . $groupId, false);
+		$groupArray = json_decode($groupJSON,true);
+		
+		if(empty($groupArray['_id'])){
+			return false;
+		}
+
+		// find user
+		$userJSON = $this->doGetRequest("/" . $userId, false);
+		$userArray = json_decode($userJSON,true);
+		
+		if(empty($userArray['_id'])){
+			return false;
+		}
+		
+		$groupUserData = array(
+    		'group_id' => $groupArray['_id'],
+    		'user_id' => $userId,
+    		'group_id' => $groupId,
+    		'type' => "watching_group_log"
+    	);
+    
+        $query = json_encode($groupUserData);
+        $json = $this->doPostRequest($query);
+		$jsonArray = json_decode($json,true);
+		
+		if(!isset($jsonArray['ok']) || $jsonArray['ok'] != true){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public function unWatchGroup($groupId,$userId){
+		
+		// find group
+		$groupJSON = $this->doGetRequest("/" . $groupId, false);
+		$groupArray = json_decode($groupJSON,true);
+		
+		if(empty($groupArray['_id'])){
+			return false;
+		}
+
+		// find user
+		$userJSON = $this->doGetRequest("/" . $userId, false);
+		$userArray = json_decode($userJSON,true);
+		
+		if(empty($userArray['_id'])){
+			return false;
+		}
+
+		// delete watch log
+		$query = "?key=\"{$userId}\"";
+		$strUrl = "/_design/app/_view/find_lastwatching_group_by_user_id{$query}";
+        $json = $this->doGetRequest($strUrl, false);
+        $jsonAry = json_decode($json,true);
+		
+		if(!isset($jsonAry['rows']))
+			return false;
+			
+		foreach($jsonAry['rows'] as $row){
+	        $watchLogData = $row['value'];
+	        $this->doDeleteRequest($watchLogData['_id'],$watchLogData['_rev']);
+			
+		}
+				
+		return true;
+		
+	}
+	
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     
 		$curl = curl_init();

@@ -191,7 +191,6 @@ class GroupControllerTest extends WebTestCase
 
     }
 
-
     /** @test */
     public function unSubscribeTest()
     {

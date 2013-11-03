@@ -343,7 +343,7 @@ class GroupController extends SpikaBaseController
 
                 $result = $app['spikadb']->watchGroup($groupId,$currentUser['_id']);
                 
-                if($result == null)
+                if($result == false)
                 	return $self->returnErrorResponse("failed to watch group");
                 	
                 $app['monolog']->addDebug("Watch API called for group: \n {$groupId} \n");
@@ -372,7 +372,7 @@ class GroupController extends SpikaBaseController
 
                 $result = $app['spikadb']->unWatchGroup($groupId,$currentUser['_id']);
                 
-                if($result == null)
+                if($result == false)
                 	return $self->returnErrorResponse("failed to watch group");
                 	
                 $app['monolog']->addDebug("Watch API called for group: \n {$groupId} \n");

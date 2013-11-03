@@ -489,7 +489,6 @@
 
 
 
-
     //////// send commnet
 	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(
 	  "message_id" => $newMessageId,
@@ -509,7 +508,6 @@
 
 
     //////// comment count
-    
 	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(
 	  "message_id" => $newMessageId,
 	  "comment" => "Hi1"
@@ -543,7 +541,6 @@
 	   
     print "count comment : OK {$resultAry['rows'][0]['value']}\n";
 
-
 	
     //////// get comments
 	$result = HU_getRequest(API_URL . "/comments/{$newMessageId}/30/0",array(
@@ -556,6 +553,33 @@
 	   die("read comment failed {$result}");
 	   
     print "read comment : OK\n";
+
+
+    //////// watch group test
+	$result = HU_postRequest(API_URL . "/watchGroup",json_encode(array(
+	  "group_id" => $newGroupId,
+	)),array(
+		'token' => $token
+	));
 	
+	if($result != 'OK')
+	   die("watch group failed {$result}");
+	   
+    print "watch group : OK \n";
+
+
+    //////// unwatch group test
+	$result = HU_postRequest(API_URL . "/unWatchGroup",json_encode(array(
+	  "group_id" => $newGroupId,
+	)),array(
+		'token' => $token
+	));
+	
+	if($result != 'OK')
+	   die("unwatch group failed {$result}");
+	   
+    print "unwatch group : OK \n";
+
+
 
 ?>

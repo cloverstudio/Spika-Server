@@ -42,6 +42,12 @@ class GroupControllerTest extends WebTestCase
                 'user_id' => 'testid'
             )));
             
+
+        $spikadb->expects($this->any())
+            ->method('findGroupsByName')
+            ->will($this->returnValue('OK'));
+
+
         $app['spikadb'] = $spikadb;
 
         return $app;
@@ -118,5 +124,14 @@ class GroupControllerTest extends WebTestCase
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/findGroup/id/test');
         assertRegExp('/user_id/', $client->getResponse()->getContent());
+    }
+
+
+    /** @test */
+    public function serachGroupByNameTest()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/api/searchGroups/name/test');
+        assertRegExp('/OK/', $client->getResponse()->getContent());
     }
 }

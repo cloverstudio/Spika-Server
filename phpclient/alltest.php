@@ -321,6 +321,21 @@
 	}
 
 
+    //////// find group by name
+    
+	$result = HU_getRequest(API_URL . "/searchGroups/name/test",array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+
+	if(isset($resultAry[0])){
+	   print "/searchGroups/name : OK \n";
+	}else{
+    	 die("/searchGroups/name {$result}");
+	}
+
+
     
 	//////// send text message to group
 	$result = HU_postRequest(API_URL . "/sendMessageToGroup",json_encode(array(

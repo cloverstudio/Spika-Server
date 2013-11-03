@@ -179,7 +179,6 @@ class GroupController extends SpikaBaseController
         )->before($app['beforeTokenChecker']);
     }
 
-
     private function setupFindGroupMethod($self,$app,$controllers){
         $controllers->get('/findGroup/{type}/{value}',
             function ($type,$value) use ($app,$self) {
@@ -191,7 +190,7 @@ class GroupController extends SpikaBaseController
                 switch ($type){
                     case "id":
                         $result = $app['spikadb']->findGroupById($value);
-                        $app['monolog']->addDebug("FindUserById API called with user id: \n {$value} \n");
+                        $app['monolog']->addDebug("FindGroupById API called with user id: \n {$value} \n");
                         break;
                     default:
                         return $self->returnErrorResponse("unknown search key");
@@ -205,6 +204,34 @@ class GroupController extends SpikaBaseController
                 
             }
         )->before($app['beforeTokenChecker']);
+        
+
+        $controllers->get('/searchGroups/{type}/{value}',
+            function ($type,$value) use ($app,$self) {
+
+                if(empty($value) || empty($type)){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+				
+                switch ($type){
+                    case "name":
+                        $result = $app['spikadb']->findGroupsByName($value);
+                        $app['monolog']->addDebug("FindGroupsByName API called with user id: \n {$value} \n");
+                        break;
+                    default:
+                        return $self->returnErrorResponse("unknown search key");
+
+                }
+
+                if($result == null)
+                    return $self->returnErrorResponse("No group found");
+                    
+                return json_encode($result);
+                
+            }
+        )->before($app['beforeTokenChecker']);
+        
+
     }
     
 

@@ -700,6 +700,40 @@ class CouchDb implements DbInterface
             : null;
     }
 
+    public function findGroupsByName($name)
+    {
+		
+		$query = "";
+		
+		if(!empty($keyword)){
+			
+			$startKey = "\"{$name}\"";
+			$endKey = "\"{$name}ZZZZ\"";
+			$query = "?startkey={$startKey}&endkey={$endKey}";
+
+		} else {
+
+		}
+
+        $json   = $this->doGetRequest("/_design/app/_view/searchgroup_name{$query}", true);
+        $result = json_decode($json, true);
+		
+		if(!isset($result['rows'])){
+			return null;
+		}
+		
+		// format array
+		$returnResult = array();
+		
+		foreach($result['rows'] as $row){
+			
+			$returnResult[] = $row['value'];
+			
+		}
+		
+        return $returnResult;
+    }
+
 
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     

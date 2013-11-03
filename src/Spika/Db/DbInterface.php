@@ -33,6 +33,7 @@ interface DbInterface
 	
     public function getGroupMessages($targetGroupId,$count,$offset);
     public function findGroupById($id);
+    public function findGroupsByName($name);
     public function createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
     public function updateGroup($groupId,$name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
     public function deleteGroup($groupId);

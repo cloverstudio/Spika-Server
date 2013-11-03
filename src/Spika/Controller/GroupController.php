@@ -59,8 +59,8 @@ class GroupController extends SpikaBaseController
                 	$categoryId = trim($requestBodyAry['category_id']);
                 
                 $password = "";
-                if(isset($requestBodyAry['password']))
-                	$password = trim($requestBodyAry['password']);
+                if(isset($requestBodyAry['group_password']))
+                	$password = trim($requestBodyAry['group_password']);
                 
                 $avatarURL = "";
                 if(isset($requestBodyAry['avatar_file_id']))
@@ -120,8 +120,8 @@ class GroupController extends SpikaBaseController
                 	$categoryId = trim($requestBodyAry['category_id']);
                 
                 $password = "";
-                if(isset($requestBodyAry['password']))
-                	$password = trim($requestBodyAry['password']);
+                if(isset($requestBodyAry['group_password']))
+                	$password = trim($requestBodyAry['group_password']);
                 
                 $avatarURL = "";
                 if(isset($requestBodyAry['avatar_file_id']))

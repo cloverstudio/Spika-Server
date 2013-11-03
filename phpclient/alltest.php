@@ -354,5 +354,41 @@
     print "send comment : OK {$resultAry['id']}\n";
 
 
+    //////// comment count
+    
+	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(
+	  "message_id" => $newMessageId,
+	  "comment" => "Hi"
+	)),array(
+		'token' => $token
+	));
+	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(
+	  "message_id" => $newMessageId,
+	  "comment" => "Hi"
+	)),array(
+		'token' => $token
+	));
+	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(
+	  "message_id" => $newMessageId,
+	  "comment" => "Hi"
+	)),array(
+		'token' => $token
+	));
+
+	$result = HU_getRequest(API_URL . "/commentsCount/{$newMessageId}",array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	
+	$targetUserId = $resultAry['id'];
+	
+	if(empty($resultAry['rows'][0]['value']))
+	   die("count comment failed {$result}");
+	   
+    print "count comment : OK {$resultAry['rows'][0]['value']}\n";
+
+
 
 ?>

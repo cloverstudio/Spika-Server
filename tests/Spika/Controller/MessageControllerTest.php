@@ -54,6 +54,10 @@ class MessageControllerTest extends WebTestCase
             ->method('addNewComment')
             ->will($this->returnValue('OK'));
 
+        $spikadb->expects($this->any())
+            ->method('getCommentCount')
+            ->will($this->returnValue('OK'));
+
 
                         
         $app['spikadb'] = $spikadb;
@@ -163,6 +167,16 @@ class MessageControllerTest extends WebTestCase
             json_encode($sendParams)
         );
 
+
+        assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+    
+    
+    /** @test */
+    public function getCommentCountTest()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/api/commentsCount/test');
 
         assertRegExp('/OK/', $client->getResponse()->getContent());
     }

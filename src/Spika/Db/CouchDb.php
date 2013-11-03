@@ -617,6 +617,74 @@ class CouchDb implements DbInterface
         return $result;
     }
 
+    public function updateGroup($groupId,$name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL){
+
+		// get category name
+		$categoryJson = $this->doGetRequest("/" . $categoryId, false);
+		$categoryArray = json_decode($categoryJson,true);
+		
+		$categoryName = "";
+		if(!empty($categoryArray['title'])){
+			$categoryName = $categoryArray['title'];
+		}
+		
+    	$groupData = array();
+    
+		if(!empty($name))
+			$groupData['name'] = $name;
+			
+		if(!empty($password))
+			$groupData['group_password'] = $password;
+			
+		if(!empty($categoryId)){
+			$groupData['category_id'] = $categoryId;
+			$groupData['category_name'] = $categoryName;
+			
+		}
+
+		if(!empty($description))
+			$groupData['description'] = $description;
+			
+		if(!empty($ownerId))
+			$groupData['user_id'] = $ownerId;
+			
+		if(!empty($avatarURL))
+			$groupData['avatar_file_id'] = $avatarURL;
+			
+		if(!empty($thumbURL))
+			$groupData['avatar_thumb_file_id'] = $thumbURL;
+
+			
+        $query = json_encode($groupData);
+        $json = $this->doPutRequest($groupId,$query);
+
+        $result = json_decode($json, true);
+
+        if(isset($result['ok']) && $result['ok'] == 'true'){
+        	return $result;
+        }
+
+        return null;
+        
+    }
+
+    public function deleteGroup($groupId){
+
+    	$groupData = array("deleted" => true);
+			
+        $query = json_encode($groupData);
+        $json = $this->doPutRequest($groupId,$query);
+
+        $result = json_decode($json, true);
+
+        if(isset($result['ok']) && $result['ok'] == 'true'){
+        	return $result;
+        }
+
+        return null;
+        
+    }
+
     public function findGroupById($id)
     {
 

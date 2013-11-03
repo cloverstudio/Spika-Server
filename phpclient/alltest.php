@@ -286,8 +286,26 @@
 	   
     print "create group : OK {$resultAry['id']}\n";
 
+	$newGroupId = $resultAry['id'];
+	
+    //////// update group test
+	$result = HU_postRequest(API_URL . "/updateGroup",json_encode(array(
+	  "_id" => $newGroupId,
+	  "name" => "test group sss",
+	)),array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	
+	if(empty($resultAry['id']))
+	   die("update group failed {$result}");
+	   
+    print "update group : OK {$resultAry['id']}\n";
+
+
     //////// find group by id
-    ///////// /findUser/id/****
     
 	$result = HU_getRequest(API_URL . "/findGroup/id/{$newGroupId}",array(
 		'token' => $token
@@ -335,6 +353,24 @@
 	   
     print "read group message : OK {$resultAry['rows'][0]['value']['body']}\n";
 	
+
+    //////// delete group test
+	$result = HU_postRequest(API_URL . "/deleteGroup",json_encode(array(
+	  "_id" => $newGroupId,
+	)),array(
+		'token' => $token
+	));
+	
+	$resultAry = json_decode($result,true);
+	
+	
+	if(empty($resultAry['id']))
+	   die("delete group failed {$result}");
+	   
+    print "delete group : OK {$resultAry['id']}\n";
+
+
+
 
     //////// send commnet
 	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(

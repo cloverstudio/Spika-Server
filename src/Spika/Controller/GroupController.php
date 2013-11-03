@@ -25,7 +25,8 @@ class GroupController extends SpikaBaseController
 
         $this->setupCreateGroupMethod($self,$app,$controllers);
         $this->setupFindGroupMethod($self,$app,$controllers);
-
+		$this->setupUpdateGroupMethod($self,$app,$controllers);
+		$this->setupDeleteGroupMethod($self,$app,$controllers);
 
         return $controllers;
     }
@@ -80,6 +81,104 @@ class GroupController extends SpikaBaseController
             }
         )->before($app['beforeTokenChecker']);
     }
+
+    private function setupUpdateGroupMethod($self,$app,$controllers){
+        $controllers->post('/updateGroup',
+            function (Request $request) use ($app,$self) {
+                
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
+
+                if(!$self->validateRequestParams($requestBody,array(
+                    '_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+                
+                $requestBodyAry = json_decode($requestBody,true);
+                
+                $groupId = trim($requestBodyAry['_id']);
+
+				//check permission
+				$groupData = $app['spikadb']->findGroupById($groupId);
+				$groupOwner = $groupData['user_id'];
+				if($groupOwner != $currentUser['_id']){
+					return $self->returnErrorResponse("invalid user");
+				}
+
+                $name = "";
+                if(isset($requestBodyAry['name']))
+                	$name = trim($requestBodyAry['name']);
+                
+                $description = "";
+                if(isset($requestBodyAry['description']))
+                	$description = trim($requestBodyAry['description']);
+				
+				$categoryId = "";
+                if(isset($requestBodyAry['category_id']))
+                	$categoryId = trim($requestBodyAry['category_id']);
+                
+                $password = "";
+                if(isset($requestBodyAry['password']))
+                	$password = trim($requestBodyAry['password']);
+                
+                $avatarURL = "";
+                if(isset($requestBodyAry['avatar_file_id']))
+	                $avatarURL = trim($requestBodyAry['avatar_file_id']);
+
+				$thumbURL = "";
+                if(isset($requestBodyAry['avatar_thumb_file_id']))
+	                $thumbURL = trim($requestBodyAry['avatar_thumb_file_id']);
+	                
+				$ownerId = $currentUser['_id'];
+				
+				if(empty($ownerId))
+					return $self->returnErrorResponse("user token is wrong");
+					
+                $result = $app['spikadb']->updateGroup($groupId,$name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
+                
+                $app['monolog']->addDebug("UpdateGroup API called by user: \n {$result} \n");
+
+                return json_encode($result);
+            }
+            
+        )->before($app['beforeTokenChecker']);
+    }
+
+    private function setupDeleteGroupMethod($self,$app,$controllers){
+        $controllers->post('/deleteGroup',
+            function (Request $request) use ($app,$self) {
+                
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
+
+                if(!$self->validateRequestParams($requestBody,array(
+                    '_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+                
+                $requestBodyAry = json_decode($requestBody,true);
+                
+                $groupId = trim($requestBodyAry['_id']);
+
+				//check permission
+				$groupData = $app['spikadb']->findGroupById($groupId);
+				$groupOwner = $groupData['user_id'];
+				if($groupOwner != $currentUser['_id']){
+					return $self->returnErrorResponse("invalid user");
+				}
+
+                $result = $app['spikadb']->deleteGroup($groupId);
+                
+                $app['monolog']->addDebug("Delete Group API called by user: \n {$result} \n");
+
+                return json_encode($result);
+            }
+            
+        )->before($app['beforeTokenChecker']);
+    }
+
 
     private function setupFindGroupMethod($self,$app,$controllers){
         $controllers->get('/findGroup/{type}/{value}',

@@ -28,8 +28,19 @@ class GroupControllerTest extends WebTestCase
             ->will($this->returnValue('OK'));
             
         $spikadb->expects($this->any())
-            ->method('findGroupById')
+            ->method('updateGroup')
             ->will($this->returnValue('OK'));
+            
+        $spikadb->expects($this->any())
+            ->method('deleteGroup')
+            ->will($this->returnValue('OK'));
+            
+
+        $spikadb->expects($this->any())
+            ->method('findGroupById')
+            ->will($this->returnValue(array(
+                'user_id' => 'testid'
+            )));
             
         $app['spikadb'] = $spikadb;
 
@@ -57,12 +68,55 @@ class GroupControllerTest extends WebTestCase
         assertRegExp("/OK/", $client->getResponse()->getContent());
     }
     
+    /** @test */
+    public function updateGroupRegularCaseTest()
+    {
+        $client = $this->createClient();
+        
+        $sendParams = array(
+             '_id' => 'test',
+            'name' => 'testGroup',
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/updateGroup',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
+        assertRegExp("/OK/", $client->getResponse()->getContent());
+    }
+    
+    /** @test */
+    public function deleteGroupRegularCaseTest()
+    {
+        $client = $this->createClient();
+        
+        $sendParams = array(
+             '_id' => 'test',
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/deleteGroup',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
+        assertRegExp("/OK/", $client->getResponse()->getContent());
+    }
+    
 
     /** @test */
     public function findGroupIdTest()
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/findGroup/id/test');
-        assertRegExp('/OK/', $client->getResponse()->getContent());
+        assertRegExp('/user_id/', $client->getResponse()->getContent());
     }
 }

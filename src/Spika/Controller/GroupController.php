@@ -29,6 +29,7 @@ class GroupController extends SpikaBaseController
 		$this->setupDeleteGroupMethod($self,$app,$controllers);
 		$this->setupSubscribeMethod($self,$app,$controllers);
 		$this->setupGroupCategoryMethod($self,$app,$controllers);
+		$this->setupWatchMethod($self,$app,$controllers);
 
         return $controllers;
     }
@@ -323,4 +324,64 @@ class GroupController extends SpikaBaseController
         )->before($app['beforeTokenChecker']);
     }
 
+	private function setupWatchMethod($self,$app,$controllers){
+		
+        $controllers->post('/watchGroup',
+            function (Request $request) use ($app,$self) {
+                
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
+
+                if(!$self->validateRequestParams($requestBody,array(
+                    'group_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+                
+                $requestBodyAry = json_decode($requestBody,true);
+                $groupId = trim($requestBodyAry['group_id']);
+
+                $result = $app['spikadb']->watchGroup($groupId,$currentUser['_id']);
+                
+                if($result == null)
+                	return $self->returnErrorResponse("failed to watch group");
+                	
+                $app['monolog']->addDebug("Watch API called for group: \n {$groupId} \n");
+				
+				return "OK";
+                
+            }
+            
+        )->before($app['beforeTokenChecker']);
+		
+        $controllers->post('/unWatchGroup',
+        
+            function (Request $request) use ($app,$self) {
+                
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
+
+                if(!$self->validateRequestParams($requestBody,array(
+                    'group_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+                
+                $requestBodyAry = json_decode($requestBody,true);
+                $groupId = trim($requestBodyAry['group_id']);
+
+                $result = $app['spikadb']->unWatchGroup($groupId,$currentUser['_id']);
+                
+                if($result == null)
+                	return $self->returnErrorResponse("failed to watch group");
+                	
+                $app['monolog']->addDebug("Watch API called for group: \n {$groupId} \n");
+				
+				return "OK";
+                
+            }
+            
+        )->before($app['beforeTokenChecker']);
+		
+	}
 }

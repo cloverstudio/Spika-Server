@@ -27,6 +27,15 @@ class UserControllerTest extends WebTestCase
         $spikadb = $this->getMock('\Spika\Db\DbInterface');
         
         $spikadb->expects($this->any())
+            ->method('doSpikaAuth')
+            ->will($this->returnValue('jR9hCaktyH51TOxG57J5jqcuymkSC2uWUDdwOy0m'));
+        $app['spikadb'] = $spikadb;
+        
+        $spikadb->expects($this->any())
+            ->method('createUser')
+            ->will($this->returnValue('tempip'));
+            
+        $spikadb->expects($this->any())
             ->method('findUserById')
             ->will($this->returnValue('OK'));
 
@@ -54,6 +63,74 @@ class UserControllerTest extends WebTestCase
         
         return $app;
     }
+
+    /** @test */
+    public function hookupAuthReturnsTheValueReturnedSpikadb()
+    {
+        $client = $this->createClient();
+        $sendParams = array(
+            'name' => 'spikaTarou',
+            'email' => 'spikaTarou@clover-studio.com',
+            'password' => 'testtest',
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/auth',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
+        assertRegExp("/[0-9a-zA-Z]{40}/", $client->getResponse()->getContent());
+        
+    }
+    
+    /** @test */
+    public function createUserRegularCaseTest()
+    {
+        $client = $this->createClient();
+        
+        $sendParams = array(
+            'name' => 'spikaTarou',
+            'email' => 'spikaTarou@clover-studio.com',
+            'password' => 'testtest',
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/createUser',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
+        assertRegExp("/ok.+true/", $client->getResponse()->getContent());
+    }
+    
+    /** @test */
+    public function createUserIregularCaseTest()
+    {
+        $client = $this->createClient();
+        
+        $sendParams = array(
+            'name' => 'spikaTarou',
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/createUser',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+        
+        assertRegExp("/error/", $client->getResponse()->getContent());
+    }
+
 
     /** @test */
     public function findUserEmailTest()

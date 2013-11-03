@@ -48,8 +48,6 @@ $app->mount('/api/', new Spika\Controller\FileController());
 $app->mount('/api/', new Spika\Controller\SearchUserController());
 $app->mount('/api/', new Spika\Controller\SignoutController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());
-$app->mount('/api/', new Spika\Controller\AuthController());
-$app->mount('/api/', new Spika\Controller\CreateUserController());
 $app->mount('/api/', new Spika\Controller\UserController());
 $app->mount('/api/', new Spika\Controller\MessageController());
 $app->mount('/api/', new Spika\Controller\GroupController());

@@ -23,6 +23,8 @@ class UserController extends SpikaBaseController
         $controllers = $app['controllers_factory'];
         $self = $this;
 
+        $this->setupAuthMethod($self,$app,$controllers);
+        $this->setupCreateUserMethod($self,$app,$controllers);
         $this->setupUpdateUserMethod($self,$app,$controllers);
         $this->setupFindUserMethod($self,$app,$controllers);
         $this->setupActivitySummaryMethod($self,$app,$controllers);
@@ -31,6 +33,97 @@ class UserController extends SpikaBaseController
 
         return $controllers;
     }
+
+
+    private function setupAuthMethod($self,$app,$controllers){
+
+		// Auth controller
+		$controllers->post('/auth', function (Request $request) use ($app) {
+			
+			$requestBody = $request->getContent();
+    		$requestBodyAry = json_decode($requestBody,true);
+    
+    		$email = trim($requestBodyAry['email']);
+    		$password = trim($requestBodyAry['password']);
+		
+            if(empty($email))
+                return $self->returnErrorResponse("Email is empty");
+            
+            if(empty($password))
+                return $self->returnErrorResponse("Password is empty");
+
+            
+			$authResult = $app['spikadb']->doSpikaAuth($email,$password);
+			
+			$app['monolog']->addDebug("Auth Request : \n {$requestBody} \n");
+			$app['monolog']->addDebug("Auth Response : \n {$authResult} \n");
+		
+		    return $authResult;
+		
+		});
+
+    }
+
+
+    private function setupCreateUserMethod($self,$app,$controllers){
+
+		$controllers->post('/createUser', function (Request $request) use ($app,$self) {
+	
+	
+			$requestBody = $request->getContent();
+			
+			if(!$self->validateRequestParams($requestBody,array(
+				'name',
+				'email',
+				'password'
+			))){
+	            return $self->returnErrorResponse("insufficient params");
+			}
+			
+			$requestBodyAry = json_decode($requestBody,true);
+	
+			$email = trim($requestBodyAry['email']);
+			$username = trim($requestBodyAry['name']);
+			$password = trim($requestBodyAry['password']);
+			
+			if(empty($email))
+			  return $self->returnErrorResponse("Email is empty");
+			  
+			if(empty($username))
+			  return $self->returnErrorResponse("Name is empty");
+			  
+			if(empty($password))
+			  return $self->returnErrorResponse("Password is empty");
+			  
+			$checkUniqueName = $app['spikadb']->checkUserNameIsUnique($username);
+			$checkUniqueEmail = $app['spikadb']->checkEmailIsUnique($email);
+	
+			if(count($checkUniqueName) > 0)
+			  return $self->returnErrorResponse("The name is already taken.");
+			  
+			if(count($checkUniqueEmail) > 0)
+			  return $self->returnErrorResponse("You are already signed up.");
+	
+			$newUserId = $app['spikadb']->createUser(
+			  $username,
+			  $email,
+			  $password);
+			  
+			$app['monolog']->addDebug("Create User API called : \n {$requestBody} \n");
+				
+			$responseBodyAry = array(
+				'ok' => true,
+				'id' => $newUserId,
+				'rev' => 'tmprev'
+			);
+			
+			return json_encode($responseBodyAry);
+			
+		});
+
+
+    }
+
 
     private function setupUpdateUserMethod($self,$app,$controllers){
         $controllers->post('/updateUser',

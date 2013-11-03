@@ -558,6 +558,19 @@ class CouchDb implements DbInterface
 		
 	}
 
+	public function getComments($messageId,$count,$offset){
+		
+        $query = "?key=\"{$messageId}\"&descending=true&limit={$count}&skip={$offset}";
+        
+        $json = $this->doGetRequest("/_design/app/_view/find_comments_by_message_id{$query}");
+
+        $result = json_decode($json, true);
+
+        return $result;
+
+		
+	}
+
     public function getAvatarFileId($user_id){
         $query  = "?key=" . urlencode('"' . $user_id . '"');
         $json   = $this->doGetRequest("/_design/app/_view/find_avatar_file_id{$query}", false);

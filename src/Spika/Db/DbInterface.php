@@ -29,7 +29,8 @@ interface DbInterface
     public function getUserMessages($ownerUserId,$targetUserId,$count,$offset);
     public function getCommentCount($messageId);
 	public function addNewComment($messageId,$userId,$comment);
-
+	public function getComments($messageId,$count,$offset);
+	
     public function getGroupMessages($targetGroupId,$count,$offset);
     public function findGroupById($id);
     public function createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);

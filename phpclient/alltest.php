@@ -358,19 +358,19 @@
     
 	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(
 	  "message_id" => $newMessageId,
-	  "comment" => "Hi"
+	  "comment" => "Hi1"
 	)),array(
 		'token' => $token
 	));
 	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(
 	  "message_id" => $newMessageId,
-	  "comment" => "Hi"
+	  "comment" => "Hi2"
 	)),array(
 		'token' => $token
 	));
 	$result = HU_postRequest(API_URL . "/sendComment",json_encode(array(
 	  "message_id" => $newMessageId,
-	  "comment" => "Hi"
+	  "comment" => "Hi3"
 	)),array(
 		'token' => $token
 	));
@@ -390,5 +390,18 @@
     print "count comment : OK {$resultAry['rows'][0]['value']}\n";
 
 
+	
+    //////// get comments
+	$result = HU_getRequest(API_URL . "/comments/{$newMessageId}/30/0",array(
+		'token' => $token
+	));
+
+	$resultAry = json_decode($result,true);
+	
+	if(empty($resultAry['rows'][0]))
+	   die("read comment failed {$result}");
+	   
+    print "read comment : OK\n";
+	
 
 ?>

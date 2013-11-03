@@ -34,7 +34,7 @@ class GroupControllerTest extends WebTestCase
         $spikadb->expects($this->any())
             ->method('deleteGroup')
             ->will($this->returnValue('OK'));
-            
+  
 
         $spikadb->expects($this->any())
             ->method('findGroupById')
@@ -42,10 +42,22 @@ class GroupControllerTest extends WebTestCase
                 'user_id' => 'testid'
             )));
             
-
         $spikadb->expects($this->any())
             ->method('findGroupsByName')
             ->will($this->returnValue('OK'));
+
+        $spikadb->expects($this->any())
+            ->method('subscribeGroup')
+            ->will($this->returnValue(true));
+
+        $spikadb->expects($this->any())
+            ->method('unSubscribeGroup')
+            ->will($this->returnValue(true));
+
+        $spikadb->expects($this->any())
+            ->method('findUserById')
+            ->will($this->returnValue('OK'));
+            
 
 
         $app['spikadb'] = $spikadb;
@@ -126,12 +138,56 @@ class GroupControllerTest extends WebTestCase
         assertRegExp('/user_id/', $client->getResponse()->getContent());
     }
 
-
     /** @test */
     public function serachGroupByNameTest()
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchGroups/name/test');
         assertRegExp('/OK/', $client->getResponse()->getContent());
+    }
+    
+    /** @test */
+    public function subscribeTest()
+    {
+        $client = $this->createClient();
+        
+        $sendParams = array(
+             'group_id' => 'test'
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/subscribeGroup',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
+        assertRegExp("/OK/", $client->getResponse()->getContent());
+
+    }
+
+
+    /** @test */
+    public function unSubscribeTest()
+    {
+        $client = $this->createClient();
+        
+        $sendParams = array(
+             'group_id' => 'test'
+        );
+        
+        $crawler = $client->request(
+            'POST',
+            '/api/unSubscribeGroup',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($sendParams)
+        );
+
+        assertRegExp("/OK/", $client->getResponse()->getContent());
+
     }
 }

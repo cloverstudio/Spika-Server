@@ -734,7 +734,121 @@ class CouchDb implements DbInterface
         return $returnResult;
     }
 
+	public function subscribeGroup($groupId,$userId){
+		
+		// find group
+		$groupJSON = $this->doGetRequest("/" . $groupId, false);
+		$groupArray = json_decode($groupJSON,true);
+		
+		if(empty($groupArray['_id'])){
+			return null;
+		}
 
+		// find user
+		$userJSON = $this->doGetRequest("/" . $userId, false);
+		$userArray = json_decode($userJSON,true);
+		
+		if(empty($userArray['_id'])){
+			return null;
+		}
+		
+		$groupUserData = array(
+    		'group_id' => $groupArray['_id'],
+    		'user_id' => $userArray['_id'],
+    		'user_name' => $userArray['name'],
+    		'type' => "user_group"
+    	);
+    
+        $query = json_encode($groupUserData);
+        $json = $this->doPostRequest($query);
+		$jsonArray = json_decode($json,true);
+		
+		if(!isset($jsonArray['ok']) || $jsonArray['ok'] != true){
+			return null;
+		}
+		
+		$favoriteGroupList = array();
+		if(!isset($userArray['favorite_groups']))
+			 $userArray['favorite_groups'] = array();
+		
+		if(!in_array($groupId, $favoriteGroupList)){
+			$userArray['favorite_groups'][] = strval($groupId);
+			$this->updateUser($userId,$userArray);
+		}
+		
+		return true;
+	}
+	
+	public function unSubscribeGroup($groupId,$userId){
+		
+		// find group
+		$groupJSON = $this->doGetRequest("/" . $groupId, false);
+		$groupArray = json_decode($groupJSON,true);
+		
+		if(empty($groupArray['_id'])){
+			return null;
+		}
+
+		// find user
+		$userJSON = $this->doGetRequest("/" . $userId, false);
+		$userArray = json_decode($userJSON,true);
+		
+		if(empty($userArray['_id'])){
+			return null;
+		}
+		
+		// delete users groups
+		$query = "?key=[\"{$groupId}\",\"{$userId}\"]";
+		$strUrl = "/_design/app/_view/find_users_group{$query}";
+        $json = $this->doGetRequest($strUrl, false);
+        $jsonAry = json_decode($json,true);
+
+        if(isset($jsonAry['rows'][0]['value'])){
+	        $usersGroupsData = $jsonAry['rows'][0]['value'];
+	        $this->doDeleteRequest($usersGroupsData['_id'],$usersGroupsData['_rev']);
+        }
+
+		$groupUserData = array(
+    		'group_id' => $groupArray['_id'],
+    		'user_id' => $userArray['_id'],
+    		'user_name' => $userArray['name'],
+    		'type' => "user_group"
+    	);
+    
+        $query = json_encode($groupUserData);
+        $json = $this->doPostRequest($query);
+		$jsonArray = json_decode($json,true);
+		
+		if(!isset($jsonArray['ok']) || $jsonArray['ok'] != true){
+			return null;
+		}
+		
+		$favoriteGroupList = $userArray['favorite_groups'];
+		
+		if(in_array($groupId, $favoriteGroupList)){
+			
+			$deleteIndex = "";
+			
+			foreach($favoriteGroupList as $index => $row){
+				
+				if($row == $groupId){
+					$deleteIndex = $index;
+					break;
+				}
+				
+			}
+
+			unset($userArray['favorite_groups'][$deleteIndex]);
+
+			$this->updateUser($userId,$userArray);
+			
+		}else{
+			return null;
+		}
+		
+		return true;
+	}
+	
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     
 		$curl = curl_init();

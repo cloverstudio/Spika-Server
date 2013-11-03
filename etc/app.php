@@ -45,7 +45,6 @@ $app->mount('/', new Spika\Controller\InstallerController());
 $app->mount('/api/', new Spika\Controller\SendPasswordController());
 $app->mount('/api/', new Spika\Controller\ReportController());
 $app->mount('/api/', new Spika\Controller\FileController());
-$app->mount('/api/', new Spika\Controller\SearchGroupController());
 $app->mount('/api/', new Spika\Controller\SearchUserController());
 $app->mount('/api/', new Spika\Controller\SignoutController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());

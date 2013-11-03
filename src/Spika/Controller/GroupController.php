@@ -27,6 +27,7 @@ class GroupController extends SpikaBaseController
         $this->setupFindGroupMethod($self,$app,$controllers);
 		$this->setupUpdateGroupMethod($self,$app,$controllers);
 		$this->setupDeleteGroupMethod($self,$app,$controllers);
+		$this->setupSubscribeMethod($self,$app,$controllers);
 
         return $controllers;
     }
@@ -234,5 +235,68 @@ class GroupController extends SpikaBaseController
 
     }
     
+
+    private function setupSubscribeMethod($self,$app,$controllers){
+    
+        $controllers->post('/subscribeGroup',
+            function (Request $request) use ($app,$self) {
+                
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
+
+                if(!$self->validateRequestParams($requestBody,array(
+                    'group_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+                
+                $requestBodyAry = json_decode($requestBody,true);
+                $groupId = trim($requestBodyAry['group_id']);
+
+                $result = $app['spikadb']->subscribeGroup($groupId,$currentUser['_id']);
+                
+                if($result == null)
+                	return $self->returnErrorResponse("failed to subscribe group");
+                	
+                $app['monolog']->addDebug("Subscribe API called for group: \n {$groupId} \n");
+				
+				$userData = $app['spikadb']->findUserById($currentUser['_id']);
+				
+                return json_encode($userData);
+                
+            }
+            
+        )->before($app['beforeTokenChecker']);
+        
+        $controllers->post('/unSubscribeGroup',
+            function (Request $request) use ($app,$self) {
+                
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
+
+                if(!$self->validateRequestParams($requestBody,array(
+                    'group_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+                
+                $requestBodyAry = json_decode($requestBody,true);
+                $groupId = trim($requestBodyAry['group_id']);
+
+                $result = $app['spikadb']->unSubscribeGroup($groupId,$currentUser['_id']);
+                
+                if($result == null)
+                	return $self->returnErrorResponse("failed to subscribe group");
+                	
+                $app['monolog']->addDebug("Subscribe API called for group: \n {$groupId} \n");
+				
+				$userData = $app['spikadb']->findUserById($currentUser['_id']);
+				
+                return json_encode($userData);
+                
+            }
+            
+        )->before($app['beforeTokenChecker']);
+    }
 
 }

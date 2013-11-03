@@ -38,6 +38,8 @@ interface DbInterface
     public function updateGroup($groupId,$name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
     public function deleteGroup($groupId);
 
+    public function subscribeGroup($groupId,$userId);
+    public function unSubscribeGroup($groupId,$userId);
     //public function addToContact($owserUserId,$tagetUserId);
     //public function removeFromContact($owserUserId,$tagetUserId);
 

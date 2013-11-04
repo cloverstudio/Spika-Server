@@ -259,7 +259,7 @@ class CouchDb implements DbInterface
 	    $endKey = "\"{$escapedKeyword}ZZZZ\"";
 	    $query = "?startkey={$startKey}&endkey={$endKey}";
     	
-    	//$result = $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_name{$query}");
+    	//$result = $this->>doGetRequest("/_design/app/_view/searchuser_name{$query}");
     	$result = $this->doGetRequest("/_design/app/_view/searchuser_name{$query}");
 
 		return $result;
@@ -1041,6 +1041,110 @@ class CouchDb implements DbInterface
 		
 	}
 	
+    // change this after API is done
+    function updateActivitySummary($toUserId, $fromUserId, $type)
+    {
+        
+        // get latest activity summary
+        $url = "/_design/app/_view/usere_activity_summary?key=" . urlencode('"' . $toUserId . '"');
+        $return = $this->doGetRequest($url);
+        $returnDic = json_decode($return, true);
+        
+        $return = $this->doGetRequest($fromUserId);
+        $fromUserData = json_decode($return, true);
+        
+        if (count($returnDic['rows']) == 0) {
+    
+            // if doesn't exist generate
+            $params = array(
+                'type' => 'activity_summary',
+                'user_id' => $toUserId,
+                'recent_activity' => array(
+                    $type => array(
+                        'name' => 'Chat activity',
+                        "target_type" => "user",
+                        'notifications' => array()
+                    )
+                )
+            );
+    
+            $result = $this->doPostRequest(json_encode($params));
+            
+            $url = "/_design/app/_view/usere_activity_summary?key=" . urlencode('"' . $toUserId . '"');
+            $return = $this->doGetRequest($url);
+            $returnDic = json_decode($return, true);
+    
+        }
+    
+        $userActivitySummary = $returnDic['rows'][0]['value'];
+        $userActivitySummary['recent_activity'][$type]['name'] = 'Chat activity';
+        $userActivitySummary['recent_activity'][$type]['target_type'] = 'user';
+    
+        $message = sprintf(DIRECTMESSAGE_NOTIFICATION_MESSAGE,$fromUserData['name']);
+        
+        if (isset($userActivitySummary)) {
+    
+            //find row
+            $targetTypeALL = $userActivitySummary['recent_activity'][$type]['notifications'];
+            $isExists = false;
+            $inAryKey = 0;
+            $baseJSONData = array();
+    
+            foreach ($targetTypeALL as $key => $perTypeRow) {
+                if ($perTypeRow['target_id'] == $fromUserId) {
+                    $isExists = true;
+                    $baseJSONData = $perTypeRow;
+                    $inAryKey = $key;
+                }
+            }
+    
+            if (!$isExists) {
+                $baseJSONData = array(
+                    "target_id" => $fromUserId,
+                    "count" => 0,
+                    "messages" => array()
+                );
+            }
+    
+            $baseJSONData['count']++;
+            $baseJSONData['lastupdate'] = time();
+    
+    
+            $avatarPath = "/" . $fromUserId . "/";
+            
+            if(isset($fromUserData['_attachments']) && is_array($fromUserData['_attachments'])){
+                foreach ($fromUserData['_attachments'] as $key => $val) {
+                    if (preg_match("/avatar/", $key)) {
+                        $avatarPath .= $key;
+                        break;
+                    }
+                }
+            }else{
+                $avatarPath = '';
+            }
+
+    
+            $baseJSONData['messages'][0] = array(
+                "from_user_id" => $fromUserId,
+                "message" => $message,
+                "user_image_url" => $avatarPath
+            );
+    
+            if (!$isExists) {
+                $userActivitySummary['recent_activity'][$type]['notifications'][] = $baseJSONData;
+            } else {
+                $userActivitySummary['recent_activity'][$type]['notifications'][$inAryKey] = $baseJSONData;
+            }
+    
+            // update summary
+            $json = json_encode($userActivitySummary, JSON_FORCE_OBJECT);
+            
+            $this->doPutRequest($userActivitySummary["_id"],$json);
+            
+        }
+        
+    }
+    
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     
 		$curl = curl_init();
@@ -1158,6 +1262,7 @@ class CouchDb implements DbInterface
 
     }
     
+ 
     /*
     public function addToContact($owserUserId,$tagetUserId){
 	    

@@ -418,7 +418,7 @@ class CouchDb implements DbInterface
         if(isset($result['ok']) && $result['ok'] == 'true'){
             if(isset($result['rev']))unset($result['rev']);
         }
-
+		
         return $result;
     }
 
@@ -477,7 +477,7 @@ class CouchDb implements DbInterface
         $json = $this->doGetRequest("/_design/app/_view/find_user_message{$query}");
 
         $result = json_decode($json, true);
-
+				
         return $result;
     }
 
@@ -1040,17 +1040,18 @@ class CouchDb implements DbInterface
 		return true;
 		
 	}
-	
-    // change this after API is done
-    function updateActivitySummary($toUserId, $fromUserId, $type)
+
+    function updateActivitySummaryByDirectMessage($toUserId, $fromUserId)
     {
+        
+        $type = ACTIVITY_SUMMARY_DIRECT_MESSAGE;
         
         // get latest activity summary
         $url = "/_design/app/_view/usere_activity_summary?key=" . urlencode('"' . $toUserId . '"');
         $return = $this->doGetRequest($url);
         $returnDic = json_decode($return, true);
         
-        $return = $this->doGetRequest($fromUserId);
+        $return = $this->doGetRequest("/" . $fromUserId);
         $fromUserData = json_decode($return, true);
         
         if (count($returnDic['rows']) == 0) {
@@ -1145,6 +1146,166 @@ class CouchDb implements DbInterface
         
     }
     
+    function updateActivitySummaryByGroupMessage($toGroupId, $fromUserId)
+    {
+        
+        $type = ACTIVITY_SUMMARY_GROUP_MESSAGE;
+        
+		$url =  "/{$toGroupId}";
+		$return = $this->doGetRequest($url, false);
+		$toGroupData = json_decode($return, true);
+		
+		$url = "/{$fromUserId}";
+		$return = $this->doGetRequest($url, false);
+		$fromUserData = json_decode($return, true);
+
+		// find users who are subscribing the group
+        $url = "/_design/app/_view/find_users_by_groupid?key=" . urlencode('"' . $toGroupId . '"');
+		$subscribedUsers = array();
+        $userListResultJSON = $this->doGetRequest($url, true);
+        $userListResult = json_decode($userListResultJSON, true);
+        $userListResultRows = $userListResult['rows'];
+        foreach ($userListResultRows as $row) {
+            $toUser = $row['value']['user_id'];
+
+            if ($toUser == $fromUserId) {
+                continue;
+            }
+
+			$subscribedUsers[] = $toUser;
+			
+        }
+
+        foreach($subscribedUsers as $toUserId){
+        
+		    // get latest activity summary
+	        $url = "/_design/app/_view/usere_activity_summary?key=" . urlencode('"' . $toUserId . '"');
+	        $return = $this->doGetRequest($url);
+	        $returnDic = json_decode($return, true);
+
+		    if (count($returnDic['rows']) == 0) {
+		
+		        // if doesn't exist generate
+		        $params = array(
+		            'type' => 'activity_summary',
+		            'user_id' => $toUserId,
+		            'recent_activity' => array(
+		                $type => array(
+		                    'name' => 'Groups activity',
+		                    "target_type" => "group",
+		                    'notifications' => array()
+		                )
+		            )
+		        );
+		
+		        $result = $this->doPostRequest(json_encode($params));
+		
+		        $url = "/_design/app/_view/usere_activity_summary?key=" . urlencode('"' . $toUserId . '"');
+		        $return = $this->doGetRequest($url);
+		        $returnDic = json_decode($return, true);
+		
+		    }
+		
+		    $userActivitySummary = $returnDic['rows'][0]['value'];
+		    $userActivitySummary['recent_activity'][$type]['name'] = 'Groups activity';
+		    $userActivitySummary['recent_activity'][$type]['target_type'] = 'group';
+		
+		    $message = sprintf(GROUPMESSAGE_NOTIFICATION_MESSAGE,$fromUserData['name'],$toGroupData['name']);
+	        
+			if (isset($userActivitySummary)) {
+				
+		        //find row
+		        $targetTypeALL = $userActivitySummary['recent_activity'][$type]['notifications'];
+		        $isExists = false;
+		        $inAryKey = 0;
+		        $baseJSONData = array();
+		
+		        foreach ($targetTypeALL as $key => $perTypeRow) {
+		            if ($perTypeRow['target_id'] == $toGroupId) {
+		                $isExists = true;
+		                $baseJSONData = $perTypeRow;
+		                $inAryKey = $key;
+		            }
+		        }
+		
+		        if (!$isExists) {
+		            $baseJSONData = array(
+		                "target_id" => $toGroupId,
+		                "count" => 0,
+		                "messages" => array()
+		            );
+		        }
+		
+		        $baseJSONData['count']++;
+		        $baseJSONData['lastupdate'] = time();
+		
+		        $baseJSONData['messages'][0] = array(
+		            "from_user_id" => $fromUserId,
+		            "message" => $message
+		        );
+				
+				if(isset( $fromUserData['avatar_thumb_file_id']))
+					$baseJSONData['messages'][0]['user_image_url'] = $fromUserData['avatar_thumb_file_id'];
+				
+		        if ($isExists) {
+		            $userActivitySummary['recent_activity'][$type]['notifications'][$inAryKey] = $baseJSONData;
+		        } else {
+		            $userActivitySummary['recent_activity'][$type]['notifications'][] = $baseJSONData;
+		        }
+		
+		        // update summary
+		        $json = json_encode($userActivitySummary, JSON_FORCE_OBJECT);
+		        $result = $this->doPutRequest(
+		            $userActivitySummary["_id"],
+		            $json
+		        );
+				
+			}
+			
+        }
+                
+    }
+    
+	function clearActivitySummary($toUser, $type, $fieldKey)
+	{
+	    global $db_url;
+	
+	
+	    // get latest activity summary
+	    $url = "/_design/app/_view/usere_activity_summary?key=" . urlencode('"' . $toUser . '"');
+	    $return = $this->doGetRequest($url);
+	    $returnDic = json_decode($return, true);
+	
+		if(!isset($returnDic['rows'][0]['value']['recent_activity'][$type]))
+			return;
+			
+	    $userActivitySummary = $returnDic['rows'][0]['value'];
+	    $userActivitySummaryType = $returnDic['rows'][0]['value']['recent_activity'][$type];
+	    $targetIndex = null;
+	
+	    foreach ($userActivitySummaryType['notifications'] as $key => $row) {
+	
+	        if ($row['target_id'] == $fieldKey) {
+	            $targetIndex = $key;
+	        }
+	
+	    }
+	
+	    if (isset($userActivitySummaryType['notifications'][$targetIndex])) {
+	
+	        unset($userActivitySummary['recent_activity'][$type]['notifications'][$targetIndex]);
+	        $json = json_encode($userActivitySummary, JSON_FORCE_OBJECT);
+	        $result = $this->doPutRequest(
+	            $userActivitySummary["_id"],
+	            $json
+	        );
+	
+	    }
+	
+	
+	}
+
+
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     
 		$curl = curl_init();

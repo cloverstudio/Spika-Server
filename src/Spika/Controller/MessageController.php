@@ -193,6 +193,8 @@ class MessageController extends SpikaBaseController
 				if($result == null)
 					 return $self->returnErrorResponse("failed to send message");
 					 
+				$app['spikadb']->updateActivitySummaryByDirectMessage($toUserId,$fromUserId);
+				
                 return json_encode($result);
             }
             
@@ -213,6 +215,8 @@ class MessageController extends SpikaBaseController
 				if($result == null)
 					 return $self->returnErrorResponse("failed to get message");
 					 
+				$app['spikadb']->clearActivitySummary($ownerUserId, ACTIVITY_SUMMARY_DIRECT_MESSAGE, $toUserId);
+				
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
@@ -287,6 +291,8 @@ class MessageController extends SpikaBaseController
 				if($result == null)
 					 return $self->returnErrorResponse("failed to send message");
 					 
+				$app['spikadb']->updateActivitySummaryByGroupMessage($toGroupId,$fromUserId);
+				
                 return json_encode($result);
             }
             
@@ -304,6 +310,9 @@ class MessageController extends SpikaBaseController
 				if($result == null)
 					 return $self->returnErrorResponse("failed to get message");
 					 
+				$currentUser = $app['currentUser'];
+				$app['spikadb']->clearActivitySummary($currentUser['_id'], ACTIVITY_SUMMARY_GROUP_MESSAGE, $toGroupId);
+				
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);

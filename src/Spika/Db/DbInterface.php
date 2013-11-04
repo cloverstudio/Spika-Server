@@ -45,7 +45,9 @@ interface DbInterface
     public function watchGroup($groupId,$userId);
     public function unWatchGroup($userId);
     public function findAllGroupCategory();
-	public function updateActivitySummary($toUserId, $fromUserId, $type);
+	public function updateActivitySummaryByDirectMessage($toUserId, $fromUserId);
+	public function updateActivitySummaryByGroupMessage($toUserId, $fromUserId);
+	public function clearActivitySummary($toUserId, $type, $fieldKey);
 	
     //public function addToContact($owserUserId,$tagetUserId);
     //public function removeFromContact($owserUserId,$tagetUserId);

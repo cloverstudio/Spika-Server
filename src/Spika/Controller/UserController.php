@@ -193,9 +193,6 @@ class UserController extends SpikaBaseController
         )->before($app['beforeTokenChecker']);
     }
 
-    /*
-     * curl -vX GET http://192.168.1.101:8080/wwwroot/api/ActivitySummary -H "token: pFfQJob0Q9kKLAxKEeNeKiLxLb0DPWcfCs6lRhlH" -H "user_id: 13583389e04adfaa3bac7ae52501809e"
-     */
     private function setupActivitySummaryMethod($self,$app,$controllers){
 
         $controllers->get('/activitySummary',

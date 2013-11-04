@@ -132,21 +132,6 @@
 	}else{
     	 die("/activitySummary failed {$result}");
 	}
-
-
-
-    ///////// activitySummary
-	$result = HU_getRequest(API_URL . "/activitySummary",array(
-		'token' => $token,
-		'user_id' => $userId
-	));
-	
-	$resultAry = json_decode($result,true);	
-	if(isset($resultAry['total_rows'])){
-	   print "/activitySummary : OK \n";
-	}else{
-    	 die("/activitySummary failed {$result}");
-	}
 	
 	
     ///////// searchUser
@@ -206,7 +191,23 @@
 	   
     print "Create target user succeed: {$targetUserId}\n";
 
+	///////// Auth target user
+	$result = HU_postRequest(API_URL . "/auth",json_encode(array(
+	  "email" => $targetEmail,
+	  "password" => md5($targetPassword),
+	)),array(
+		'user_id: create_user'
+	));
+	
+	if(empty($result))
+	   die("auth failed {$result}");
 
+    $result = json_decode($result,true);
+    
+    print "Target Auth succeed: {$result['token']}\n";
+
+    $targetToken = $result['token'];
+    
     
     //////// get Emoticons
 	$result = HU_getRequest(API_URL . "/Emoticons",array(
@@ -248,8 +249,25 @@
 	if(empty($resultAry['id']))
 	   die("send message failed {$result}");
 	   
-    print "send message : OK {$resultAry['id']}\n";
+
+
+    ///////// activitySummary
+	$result = HU_getRequest(API_URL . "/activitySummary",array(
+		'token' => $targetToken
+	));
 	
+	$resultAry = json_decode($result,true);	
+	
+	print_r($resultAry);
+	
+	if(isset($resultAry['total_rows'])){
+	   print "/activitySummary : OK \n";
+	}else{
+    	 die("/activitySummary failed {$result}");
+	}
+	die();
+
+
 	
 	//////// get message by id
 	$result = HU_getRequest(API_URL . "/findMessageById/{$resultAry['id']}",array(

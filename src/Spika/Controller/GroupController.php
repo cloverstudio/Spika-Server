@@ -80,7 +80,7 @@ class GroupController extends SpikaBaseController
 	                
 				$ownerId = $currentUser['_id'];
 				
-				if(empty($ownerId))
+				if(empty($ownerId)) 
 					return $self->returnErrorResponse("user token is wrong");
 					
                 $result = $app['spikadb']->createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);

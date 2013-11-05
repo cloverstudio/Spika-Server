@@ -18,7 +18,6 @@ require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../init.php';
 require_once __DIR__.'/../etc/utils.php';
 
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Silex\Provider\MonologServiceProvider;
@@ -40,6 +39,9 @@ $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
 
 $app->register(new SwiftmailerServiceProvider());
 $app->register(new Spika\Provider\TokenCheckerServiceProvider());
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => __DIR__.'/../views',
+));
 
 $app->mount('/', new Spika\Controller\InstallerController());
 $app->mount('/api/', new Spika\Controller\SendPasswordController());
@@ -52,4 +54,5 @@ $app->mount('/api/', new Spika\Controller\UserController());
 $app->mount('/api/', new Spika\Controller\MessageController());
 $app->mount('/api/', new Spika\Controller\GroupController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());
+$app->mount('/page/', new Spika\Controller\PasswordResetController());
 //$app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());

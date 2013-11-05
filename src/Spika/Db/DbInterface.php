@@ -48,6 +48,9 @@ interface DbInterface
 	public function updateActivitySummaryByDirectMessage($toUserId, $fromUserId);
 	public function updateActivitySummaryByGroupMessage($toUserId, $fromUserId);
 	public function clearActivitySummary($toUserId, $type, $fieldKey);
+	public function addPassworResetRequest($toUserId);
+	public function getPassworResetRequest($requestCode);
+	public function changePassword($userId,$newPassword);
 	
     //public function addToContact($owserUserId,$tagetUserId);
     //public function removeFromContact($owserUserId,$tagetUserId);

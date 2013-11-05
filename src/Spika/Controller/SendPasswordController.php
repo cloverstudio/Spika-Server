@@ -24,7 +24,7 @@ class SendPasswordController implements ControllerProviderInterface
         $controllers = $app['controllers_factory'];
 
 		// check unique controller
-		$controllers->get('/sendpassword.php', function (Request $request) use ($app) {
+		$controllers->get('/resetPassword', function (Request $request) use ($app) {
 
 			$email = $request->get('email');
 			
@@ -36,14 +36,32 @@ class SendPasswordController implements ControllerProviderInterface
 		    if (count($resutlData['rows'] != 0)) {
 		
 		        $user = $resutlData['rows'][0]['value'];
-		
-		        $email = $user['email'];
-		
-		        $body = sprintf("here is your password %s", $user['password']);
-		
-		        mail($email, "spika password reminder", $body, AdministratorEmail);
-		
-		
+				$resetCode = $app['spikadb']->addPassworResetRequest($user['_id']);
+				
+				$resetPasswordUrl = ROOT_URL . "/page/resetPassword/" . $resetCode;
+				
+				$app['monolog']->addDebug("Generated reset password url {$resetPasswordUrl}");
+				
+				$body = "Please reset password here {$resetPasswordUrl}";
+				
+				$message = \Swift_Message::newInstance()
+					->setSubject("Spika Reset Password")
+					->setFrom(AdministratorEmail)
+					->setTo($user['email'])
+					->setBody($body);
+					
+				if($app['mailer']->send($message)){
+					return 'OK';
+				}else{
+					 return $self->returnErrorResponse("faied to send email.");
+				}
+				
+				
+				
+		    }else{
+			    
+			    return $self->returnErrorResponse("invalid email");
+			    
 		    }
     
 			return 'OK';

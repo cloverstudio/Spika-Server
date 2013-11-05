@@ -1305,7 +1305,40 @@ class CouchDb implements DbInterface
 	
 	}
 
-
+	public function addPassworResetRequest($toUserId){
+		
+		$params = array(
+			'user_id' => $toUserId,
+			'timestamp' => time()
+		);
+		
+		$result = $this->doPostRequest(json_encode($params));
+        $resultDic = json_decode($result, true);
+		
+		
+		return $resultDic['id'];
+	}
+	
+	public function getPassworResetRequest($requestCode){
+		$result = $this->doGetRequest("/" . $requestCode);
+		return json_decode($result, true);
+	}
+	
+	public function changePassword($userId,$newPassword){
+		
+		$changeData = array(
+			'password' => $newPassword
+		); 
+		
+        // update summary
+        $json = json_encode($changeData);
+        $result = $this->doPutRequest(
+            $userId,
+            $json
+        );
+		
+	}
+	
     private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
     
 		$curl = curl_init();

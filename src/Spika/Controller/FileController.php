@@ -34,7 +34,7 @@ class FileController extends SpikaBaseController
 		$controllers->get('/filedownloader', function (Request $request) use ($app,$self) {
 			
 			$fileID = $request->get('file');
-			$filePath = __DIR__.'/../'.FileController::$fileDirName."/".$fileID;
+			$filePath = __DIR__.'/../'.FileController::$fileDirName."/".basename($fileID);
 			
 			if(file_exists($filePath)){
 				return $app->sendFile($filePath);

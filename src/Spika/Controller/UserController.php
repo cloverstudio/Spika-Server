@@ -185,7 +185,7 @@ class UserController extends SpikaBaseController
                 }
 
                 if($result == null)
-                    return "";
+                    return "{}";
                     
                 return json_encode($result);
                 

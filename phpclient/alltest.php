@@ -246,6 +246,7 @@
 	
 	$resultAry = json_decode($result,true);
 	
+	
 	if(empty($resultAry['id']))
 	   die("send message failed {$result}");
 	   
@@ -256,19 +257,15 @@
 		'token' => $targetToken
 	));
 	
-	$resultAry = json_decode($result,true);	
+	$resultAryA = json_decode($result,true);	
 	
-	print_r($resultAry);
-	
-	if(isset($resultAry['total_rows'])){
+	if(isset($resultAryA['total_rows'])){
 	   print "/activitySummary : OK \n";
 	}else{
     	 die("/activitySummary failed {$result}");
 	}
-	die();
 
 
-	
 	//////// get message by id
 	$result = HU_getRequest(API_URL . "/findMessageById/{$resultAry['id']}",array(
 		'token' => $token

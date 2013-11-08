@@ -185,7 +185,7 @@ class UserController extends SpikaBaseController
                 }
 
                 if($result == null)
-                    return $self->returnErrorResponse("No user found");
+                    return "";
                     
                 return json_encode($result);
                 

@@ -136,8 +136,6 @@ class UserController extends SpikaBaseController
                     'name',
                     'email',
                     'online_status',
-                    'max_contact_count',
-                    'max_favorite_count'
                 ))){
                     return $self->returnErrorResponse("insufficient params");
                 }

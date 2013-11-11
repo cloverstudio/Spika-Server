@@ -1364,7 +1364,6 @@ class CouchDb implements DbInterface
 
 		}
 		
-		
 		$response = $request->send();
 	
 		return array($response->getHeaderLines(),$response->getBody());

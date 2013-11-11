@@ -11,9 +11,6 @@
 
 namespace Spika\Controller;
 
-define("DIRECTMESSAGE_NOTIFICATION_MESSAGE", "You got message from %s");
-define("GROUPMESSAGE_NOTIFICATION_MESSAGE", "%s posted message to group %s");
-
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;

@@ -11,6 +11,8 @@ namespace Spika\Db;
 
 use Spika\Db\DbInterface;
 use Psr\Log\LoggerInterface;
+use Guzzle\Http\Client;
+use Guzzle\Http\Message\EntityEnclosingRequest;
 
 class CouchDb implements DbInterface
 
@@ -115,7 +117,7 @@ class CouchDb implements DbInterface
 		
 		$emailQuery = urlencode('"' . $email . '"');
 		
-		list($header,$result) = $this->execCurl("GET",$this->couchDBURL . "/_design/app/_view/find_user_by_email?key=" . $emailQuery);
+		list($header,$result) = $this->sendRequest("GET",$this->couchDBURL . "/_design/app/_view/find_user_by_email?key=" . $emailQuery);
 		
 		$this->logger->addDebug("Receive Auth Request : \n {$result} \n");
 		$json = json_decode($result, true);
@@ -153,8 +155,8 @@ class CouchDb implements DbInterface
 	
     	$this->logger->addDebug("Token saved : \n {$userJson} \n");
     	
-    	list($header,$result) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",
-    		$userJson,array("Content-Type: application/json"));
+    	list($header,$result) = $this->sendRequest("PUT",$this->couchDBURL . "/{$id}",
+    		$userJson);
 
 		$userJson = json_decode($userJson, true);
 		$json = json_decode($result, true);
@@ -1339,51 +1341,40 @@ class CouchDb implements DbInterface
 		
 	}
 	
-    private function execCurl($method,$URL,$postBody = "",$httpheaders = array()){
+    private function sendRequest($method,$URL,$postBody = ""){
     
-		$curl = curl_init();
+		$client = new Client();
+		$request = null;
 		
-		curl_setopt($curl, CURLOPT_URL, $URL);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, $httpheaders);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_HEADER, 1);
-		
-		if($method == "POST")
-			curl_setopt($curl, CURLOPT_POST, true);
+		if($method == "POST"){
+			$request = $client->post($URL);
+		}
+		else if($method == "PUT")
+			$request = $client->put($URL);
 			
-		if($method == "PUT")
-			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+		else if($method == "DELETE")
+			$request = $client->delete($URL);
+
+		else
+			$request = $client->get($URL);
 			
-		if($method == "DELETE")
-			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-			
-			
-		if(!empty($postBody))
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $postBody);
-			
-		$response = curl_exec($curl);
-		
-		if($response === false){
-    		$error = curl_error($curl);
-    		return array("",$error);
+		if($method == "POST" || $method == "PUT" || $method == "DELETE"){
+			if(!empty($postBody))
+				$request->setBody($postBody,'application/json');
+
 		}
 		
-		$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-		$header = substr($response, 0, $header_size);
-		$body = substr($response, $header_size);
 		
-		curl_close($curl);
-		
-		return array($header,$body);
+		$response = $request->send();
+	
+		return array($response->getHeaderLines(),$response->getBody());
 		
     }
     
     public function doPostRequest($requestBody)
     {
     	
-    	$this->logger->addDebug("Receive Post Request : \n {$requestBody} \n");
-    	
-    	list($header,$body) = $this->execCurl("POST",$this->couchDBURL,$requestBody,array("Content-Type: application/json"));
+    	list($header,$body) = $this->sendRequest("POST",$this->couchDBURL,$requestBody);
     	
 	    return $body;
 
@@ -1396,7 +1387,7 @@ class CouchDb implements DbInterface
     	
     	$this->logger->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
     	
-		list($header,$body) = $this->execCurl("GET",$couchDBQuery);
+		list($header,$body) = $this->sendRequest("GET",$couchDBQuery);
 		
 		if($stripCredentials)
 			return array($header,$this->stripParamsFromJson($body));
@@ -1413,7 +1404,7 @@ class CouchDb implements DbInterface
     	
     	$this->logger->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
     	
-		list($header,$body) = $this->execCurl("GET",$couchDBQuery);
+		list($header,$body) = $this->sendRequest("GET",$couchDBQuery);
 		
 		if($stripCredentials)
 			return $this->stripParamsFromJson($body);
@@ -1430,7 +1421,7 @@ class CouchDb implements DbInterface
 		// merge with original json
 		// put request is update in couchdb. for all get requests backend cuts off password and email
 		// so I have to merge with original data here. Other wise password will gone.
-		list($header,$originalJSON) = $this->execCurl("GET",$this->couchDBURL . "/{$id}");
+		list($header,$originalJSON) = $this->sendRequest("GET",$this->couchDBURL . "/{$id}");
 
 		$originalData = json_decode($originalJSON,true);
 		$newData = json_decode($requestBody,true);
@@ -1441,7 +1432,7 @@ class CouchDb implements DbInterface
 		$jsonToSave = json_encode($mergedData,true);
 	    	    
 	    // save
-	    list($header,$body) = $this->execCurl("PUT",$this->couchDBURL . "/{$id}",$jsonToSave,array("Content-Type: application/json"));
+	    list($header,$body) = $this->sendRequest("PUT",$this->couchDBURL . "/{$id}",$jsonToSave);
 
 	    return $body;
 
@@ -1450,7 +1441,7 @@ class CouchDb implements DbInterface
     public function doDeleteRequest($id,$rev)
     {
     
-		list($header,$body) = $this->execCurl("DELETE",$this->couchDBURL . "/{$id}?rev={$rev}");
+		list($header,$body) = $this->sendRequest("DELETE",$this->couchDBURL . "/{$id}?rev={$rev}");
 
 	    return $body;
 

@@ -331,7 +331,7 @@
 	$result = HU_postRequest(API_URL . "/createGroup",json_encode(array(
 	  "name" => $groupName,
 	  "group_password" => "",
-	  "category_id" => "361e5fc396c17b44e58eea1a230478ec",
+	  "category_id" => "",
 	  "description" => "test group",
 	  "type" => "group",
 	  "user_id" => $userId,

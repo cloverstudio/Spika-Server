@@ -199,7 +199,16 @@ class CouchDb implements DbInterface
         $json   = $this->doGetRequest("/_design/app/_view/find_user_by_id{$query}", true);
         $result = json_decode($json, true);
 
-
+		// favorite groups force to be array
+		if(isset($result['rows'][0]['value']['favorite_groups'])){
+			$result['rows'][0]['value']['favorite_groups'] = array_values($result['rows'][0]['value']['favorite_groups']);
+		}
+		
+		// contacts groups force to be array
+		if(isset($result['rows'][0]['value']['contacts'])){
+			$result['rows'][0]['value']['contacts'] = array_values($result['rows'][0]['value']['contacts']);
+		}
+		
         return isset($result) && isset($result['rows']) &&
             isset($result['rows'][0]) && isset($result['rows'][0]['value'])
             ? $result['rows'][0]['value']

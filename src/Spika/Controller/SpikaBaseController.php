@@ -40,10 +40,10 @@ class SpikaBaseController implements ControllerProviderInterface
 	    return true;
     }
 
-    public function returnErrorResponse($errorMessage){
+    public function returnErrorResponse($errorMessage,$httpCode = 500){
 	    $arr  = array('message' => $errorMessage, 'error' => 'error');
         $json = json_encode($arr);
-        return new Response($json, 500);
+        return new Response($json, $httpCode);
     }
 }
 

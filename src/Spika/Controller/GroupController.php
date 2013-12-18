@@ -244,13 +244,12 @@ class GroupController extends SpikaBaseController
                 }
 
                 if($result == null)
-                    return $self->returnErrorResponse("No group found");
+                    return "{}";
                     
                 return json_encode($result);
                 
             }
         )->before($app['beforeTokenChecker']);
-        
 
         $controllers->get('/searchGroups/{type}/{value}',
             function ($type,$value) use ($app,$self) {
@@ -331,7 +330,7 @@ class GroupController extends SpikaBaseController
                 $result = $app['spikadb']->unSubscribeGroup($groupId,$currentUser['_id']);
                 
                 if($result == null)
-                	return $self->returnErrorResponse("failed to subscribe group");
+                	return $self->returnErrorResponse("failed to unsubscribe group");
                 	
                 $app['monolog']->addDebug("Subscribe API called for group: \n {$groupId} \n");
 				

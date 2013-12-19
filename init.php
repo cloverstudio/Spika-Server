@@ -16,6 +16,9 @@ define('TOKEN_VALID_TIME', isset($_ENV['SPIKA_TOKEN_VALID_TIME']) ? $_ENV['SPIKA
 define('PW_RESET_CODE_VALID_TIME', isset($_ENV['SPIKA_PW_RESET_CODE_VALID_TIME']) ? $_ENV['SPIKA_PW_RESET_CODE_VALID_TIME'] : 60*5);
 define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://localhost:8080/wwwroot");
 
+define('HTTP_PORT', 80);
+
+
 define("DIRECTMESSAGE_NOTIFICATION_MESSAGE", "You got message from %s");
 define("GROUPMESSAGE_NOTIFICATION_MESSAGE", "%s posted message to group %s");
 define("ACTIVITY_SUMMARY_DIRECT_MESSAGE", "direct_messages");

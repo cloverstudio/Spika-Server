@@ -192,8 +192,11 @@ class MessageController extends SpikaBaseController
 
 				if($result == null)
 					 return $self->returnErrorResponse("failed to send message");
-					 
-				$app['spikadb']->updateActivitySummaryByDirectMessage($toUserId,$fromUserId);
+				
+				$newMessageId = $result['id'];
+				
+				// send async request
+				$self->doAsyncRequest($app,$request,"notifyNewDirectMessage",array('messageId' => $newMessageId));
 				
                 return json_encode($result);
             }
@@ -291,7 +294,10 @@ class MessageController extends SpikaBaseController
 				if($result == null)
 					 return $self->returnErrorResponse("failed to send message");
 					 
-				$app['spikadb']->updateActivitySummaryByGroupMessage($toGroupId,$fromUserId);
+				$newGroupMessageId = $result['id'];
+				
+				// send async request
+				$self->doAsyncRequest($app,$request,"notifyNewGroupMessage",array('messageId' => $newGroupMessageId));
 				
                 return json_encode($result);
             }

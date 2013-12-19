@@ -487,6 +487,7 @@
 	));
 	
 	$resultAry = json_decode($result,true);
+
 	
 	if(empty($resultAry['_id']))
 	   die("subscribe group failed {$result}");
@@ -502,6 +503,10 @@
 	));
 	
 	$resultAry = json_decode($result,true);
+	
+		
+	print($result);
+	die();
 	
 	if(empty($resultAry['_id']))
 	   die("unsubscribe group failed {$result}");

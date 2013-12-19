@@ -54,5 +54,6 @@ $app->mount('/api/', new Spika\Controller\UserController());
 $app->mount('/api/', new Spika\Controller\MessageController());
 $app->mount('/api/', new Spika\Controller\GroupController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());
+$app->mount('/api/', new Spika\Controller\AsyncTaskController());
 $app->mount('/page/', new Spika\Controller\PasswordResetController());
 $app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());

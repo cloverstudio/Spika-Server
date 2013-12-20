@@ -185,6 +185,43 @@ class CouchDb implements DbInterface
             : null;
     }
     
+    private function filterUserAry($userAry){
+	    
+
+	    for($i = 0 ; $i < count($userAry['rows']) ; $i++){
+	    
+	    	// favorite groups force to be array
+			if(isset($userAry['rows'][$i]['value']['favorite_groups'] )){
+				$userAry['rows'][$i]['value']['favorite_groups'] = array_values($userAry['rows'][$i]['value']['favorite_groups']);
+			}
+			
+			// contacts groups force to be array
+			if(isset($userAry['rows'][$i]['value']['contacts'])){
+				$userAry['rows'][$i]['value']['contacts'] = array_values($userAry['rows'][$i]['value']['contacts']);
+			}
+			
+	    }
+	    
+		return $userAry;
+	    
+    }
+    
+     /**
+     * Finds all users
+     *
+     * @return array
+     */
+    public function findAllUsers()
+    {
+
+    	$json = $this->doGetRequest("/_design/app/_view/searchuser_name");
+    	$result = json_decode($json, true);
+    	
+		$result = $this->filterUserAry($result);
+		
+		return $result;
+    }
+    
     /**
      * Finds a user by User ID
      *
@@ -199,15 +236,7 @@ class CouchDb implements DbInterface
         $json   = $this->doGetRequest("/_design/app/_view/find_user_by_id{$query}", true);
         $result = json_decode($json, true);
 
-		// favorite groups force to be array
-		if(isset($result['rows'][0]['value']['favorite_groups'])){
-			$result['rows'][0]['value']['favorite_groups'] = array_values($result['rows'][0]['value']['favorite_groups']);
-		}
-		
-		// contacts groups force to be array
-		if(isset($result['rows'][0]['value']['contacts'])){
-			$result['rows'][0]['value']['contacts'] = array_values($result['rows'][0]['value']['contacts']);
-		}
+		$result = $this->filterUserAry($result);
 		
         return isset($result) && isset($result['rows']) &&
             isset($result['rows'][0]) && isset($result['rows'][0]['value'])
@@ -228,7 +257,7 @@ class CouchDb implements DbInterface
         $query  = "?key=" . urlencode('"' . $email . '"');
         $json   = $this->doGetRequest("/_design/app/_view/find_user_by_email{$query}", true);
         $result = json_decode($json, true);
-
+		$result = $this->filterUserAry($result);
 
         return isset($result) && isset($result['rows']) &&
             isset($result['rows'][0]) && isset($result['rows'][0]['value'])
@@ -250,6 +279,7 @@ class CouchDb implements DbInterface
         $query  = "?key=" . urlencode('"' . $name . '"');
         $json   = $this->doGetRequest("/_design/app/_view/find_user_by_name{$query}", true);
         $result = json_decode($json, true);
+        $result = $this->filterUserAry($result);
         
         return isset($result) && isset($result['rows']) &&
             isset($result['rows'][0]) && isset($result['rows'][0]['value'])
@@ -271,8 +301,11 @@ class CouchDb implements DbInterface
 	    $query = "?startkey={$startKey}&endkey={$endKey}";
     	
     	//$result = $this->>doGetRequest("/_design/app/_view/searchuser_name{$query}");
-    	$result = $this->doGetRequest("/_design/app/_view/searchuser_name{$query}");
-
+    	$json = $this->doGetRequest("/_design/app/_view/searchuser_name{$query}");
+    	$result = json_decode($json, true);
+    	
+		$result = $this->filterUserAry($result);
+		
 		return $result;
     }
     
@@ -284,7 +317,10 @@ class CouchDb implements DbInterface
      */
     public function searchUserByGender($gender){
 	    $query = "?key=\"{$gender}\"";
-    	$result = $this->doGetRequest("/_design/app/_view/searchuser_gender{$query}");
+    	$json = $this->doGetRequest("/_design/app/_view/searchuser_gender{$query}");
+    	$result = json_decode($json, true);
+    	
+    	$result = $this->filterUserAry($result);
     	return $result;
     }
     
@@ -314,7 +350,10 @@ class CouchDb implements DbInterface
 		    $ageQuery = "?endkey={$ageTo}";
 		}
 		
-		$result = $this->doGetRequest("/_design/app/_view/searchuser_age{$ageQuery}");
+		$json = $this->doGetRequest("/_design/app/_view/searchuser_age{$ageQuery}");
+		$result = json_decode($json, true);
+		
+		$result = $this->filterUserAry($result);
 		
 		return $result;
     }

@@ -38,7 +38,10 @@ class SearchUserController implements ControllerProviderInterface
             
             // returns all users if nothing decleard
             if(empty($self->name) && empty($self->ageFrom) && empty($self->ageTo) && empty($self->gender)){
-            	return $this->getDefaultResult();
+            	$result = $self->getDefaultResult();
+            	$resultAll = $self->mergeOrResults($result,$result);
+            	$resultAnd = $self->mergeAndResults($resultAll,$result);
+            	return json_encode($resultAnd);     	
 			}
             
             // set default values
@@ -46,13 +49,13 @@ class SearchUserController implements ControllerProviderInterface
             $nameResult = $self->searchByName();
             $ageResult = $self->searchByAge();
             $genderResult = $self->searchByGender();
-            
+
             // you can use this result if you want search in "or" criteria
             $resultAll = $self->mergeOrResults($nameResult,$ageResult,$genderResult);
             
             // this is for "and"
             $resultAnd = $self->mergeAndResults($resultAll,$nameResult,$ageResult,$genderResult);
-            
+                        
             return json_encode($resultAnd);
           
         });
@@ -128,8 +131,7 @@ class SearchUserController implements ControllerProviderInterface
     	if(empty($this->name))
     		return array();
     		
-    	$result = $this->app['spikadb']->searchUserByName($this->name);
-     	$nameResult = json_decode($result, true);
+    	$nameResult = $this->app['spikadb']->searchUserByName($this->name);
 
     	return $nameResult;
 
@@ -140,8 +142,7 @@ class SearchUserController implements ControllerProviderInterface
     	if(empty($this->gender))
     		return array();
     		
-    	$result = $this->app['spikadb']->searchUserByGender($this->gender);
-     	$genderResult = json_decode($result, true);
+    	$genderResult = $this->app['spikadb']->searchUserByGender($this->gender);
 
     	return $genderResult;
 
@@ -149,9 +150,7 @@ class SearchUserController implements ControllerProviderInterface
 
     public function searchByAge(){
 		
-    	$result = $this->app['spikadb']->searchUserByAge($this->ageFrom,$this->ageTo);
-    	
-     	$ageResult = json_decode($result, true);
+    	$ageResult = $this->app['spikadb']->searchUserByAge($this->ageFrom,$this->ageTo);
 
     	return $ageResult;
 		
@@ -170,7 +169,7 @@ class SearchUserController implements ControllerProviderInterface
     }
     
     public function getDefaultResult(){	    
-	    return $this->app['spikadb']->doGetRequest("/_design/app/_view/searchuser_name");
+	    return $this->app['spikadb']->findAllUsers();
     }
 }
 

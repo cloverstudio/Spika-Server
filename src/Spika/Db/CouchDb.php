@@ -861,6 +861,28 @@ class CouchDb implements DbInterface
 		return null;
     }
 
+   public function findAllGroups()
+    {
+		
+        $json   = $this->doGetRequest("/_design/app/_view/searchgroup_name", true);
+        $result = json_decode($json, true);
+		
+		if(!isset($result['rows'])){
+			return null;
+		}
+		
+		// format array
+		$returnResult = array();
+		
+		foreach($result['rows'] as $row){
+			
+			$returnResult[] = $row['value'];
+			
+		}
+		
+        return $returnResult;
+    }
+    
     public function findGroupsByName($name)
     {
 		

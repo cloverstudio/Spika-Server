@@ -222,9 +222,11 @@ class GroupController extends SpikaBaseController
             function ($type,$value) use ($app,$self) {
 
                 if(empty($value) || empty($type)){
-                    return $self->returnErrorResponse("insufficient params");
+                    return "{}";
                 }
-				
+				       
+				$app['monolog']->addDebug("value : {$value} type : {$type}");
+
                 switch ($type){
                     case "id":
                         $result = $app['spikadb']->findGroupById($value);
@@ -246,15 +248,23 @@ class GroupController extends SpikaBaseController
                 if($result == null)
                     return "{}";
                     
+                
                 return json_encode($result);
                 
             }
         )->before($app['beforeTokenChecker']);
 
+        $controllers->get('/searchGroups/{type}/',
+            function ($type) use ($app,$self) {
+                $result = $app['spikadb']->findAllGroups();
+                return json_encode($result);
+            }
+        )->before($app['beforeTokenChecker']);
+        
         $controllers->get('/searchGroups/{type}/{value}',
             function ($type,$value) use ($app,$self) {
 
-                if(empty($value) || empty($type)){
+                if(empty($type)){
                     return $self->returnErrorResponse("insufficient params");
                 }
 				
@@ -267,9 +277,6 @@ class GroupController extends SpikaBaseController
                         return $self->returnErrorResponse("unknown search key");
 
                 }
-
-                if($result == null)
-                    return $self->returnErrorResponse("No group found");
                     
                 return json_encode($result);
                 

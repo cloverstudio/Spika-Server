@@ -23,4 +23,9 @@ define("DIRECTMESSAGE_NOTIFICATION_MESSAGE", "You got message from %s");
 define("GROUPMESSAGE_NOTIFICATION_MESSAGE", "%s posted message to group %s");
 define("ACTIVITY_SUMMARY_DIRECT_MESSAGE", "direct_messages");
 define("ACTIVITY_SUMMARY_GROUP_MESSAGE", "group_posts");
+
+define("APN_DEV_CERT_PATH", "files/apns-dev.pem");
+define("APN_PROD_CERT_PATH", "files/apns-prod.pem");
+define("GCM_API_KEY","AIzaSyDpsF-TIc6GJRGhqi-4T2NI5KHyc463QiM");
+
 ?>

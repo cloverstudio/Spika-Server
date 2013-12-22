@@ -34,7 +34,7 @@ class FileController extends SpikaBaseController
 		$controllers->get('/filedownloader', function (Request $request) use ($app,$self) {
 			
 			$fileID = $request->get('file');
-			$filePath = __DIR__.'/../'.FileController::$fileDirName."/".basename($fileID);
+			$filePath = __DIR__.'/../../../'.FileController::$fileDirName."/".basename($fileID);
 			
 			if(file_exists($filePath)){
 				return $app->sendFile($filePath);
@@ -51,10 +51,10 @@ class FileController extends SpikaBaseController
 			$file = $request->files->get(FileController::$paramName); 
 			$fineName = \Spika\Utils::randString(20, 20) . time();
 			
-			if(!is_writable(__DIR__.'/../'.FileController::$fileDirName))
+			if(!is_writable(__DIR__.'/../../../'.FileController::$fileDirName))
 				return $self->returnErrorResponse(FileController::$fileDirName ." dir is not writable.");
 				
-			$file->move(__DIR__.'/../'.FileController::$fileDirName, $fineName); 
+			$file->move(__DIR__.'/../../../'.FileController::$fileDirName, $fineName); 
 			return $fineName; 
 					
 		});

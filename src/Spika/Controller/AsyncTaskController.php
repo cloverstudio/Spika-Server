@@ -27,6 +27,11 @@ class AsyncTaskController extends SpikaBaseController
 		
 		$controllers->post('/notifyNewDirectMessage', function (Request $request) use ($self,$app) {
 			
+			$host = $request->getHttpHost();
+			if($host != "localhost"){
+				return $self->returnErrorResponse("invalid access to internal API");
+			}
+			
 			$requestBody = $request->getContent();
 			$requestData = json_decode($requestBody,true);
 			
@@ -42,8 +47,12 @@ class AsyncTaskController extends SpikaBaseController
 			
 		});
 		
-		
 		$controllers->post('/notifyNewGroupMessage', function (Request $request) use ($self,$app) {
+
+			$host = $request->getHttpHost();
+			if($host != "localhost"){
+				return $self->returnErrorResponse("invalid access to internal API");
+			}
 			
 			$requestBody = $request->getContent();
 			$requestData = json_decode($requestBody,true);

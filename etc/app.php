@@ -40,7 +40,7 @@ $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
 $app->register(new SwiftmailerServiceProvider());
 $app->register(new Spika\Provider\TokenCheckerServiceProvider());
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => __DIR__.'/../views',
+    'twig.path' => __DIR__.'/../src/Spika/Views',
 ));
 
 $app->mount('/', new Spika\Controller\InstallerController());

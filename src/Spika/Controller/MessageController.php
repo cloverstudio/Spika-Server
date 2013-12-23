@@ -206,7 +206,6 @@ class MessageController extends SpikaBaseController
 					$additionalParams['latitude'] = $messageDataArray['latitude'];
 				}
 				
-
                 $result = $app['spikadb']->addNewUserMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
                 $app['monolog']->addDebug("send message API params " . print_r($additionalParams,true));
 
@@ -305,6 +304,24 @@ class MessageController extends SpikaBaseController
 				}
 				if(isset($messageDataArray['picture_thumb_file_id'])){
 					$additionalParams['picture_thumb_file_id'] = $messageDataArray['picture_thumb_file_id'];
+				}
+
+				// voice message
+				if(isset($messageDataArray['voice_file_id'])){
+					$additionalParams['voice_file_id'] = $messageDataArray['voice_file_id'];
+				}
+				
+				// video message
+				if(isset($messageDataArray['video_file_id'])){
+					$additionalParams['video_file_id'] = $messageDataArray['video_file_id'];
+				}
+				
+				// location message
+				if(isset($messageDataArray['longitude'])){
+					$additionalParams['longitude'] = $messageDataArray['longitude'];
+				}
+				if(isset($messageDataArray['latitude'])){
+					$additionalParams['latitude'] = $messageDataArray['latitude'];
 				}
 
 				

@@ -283,7 +283,7 @@ class CouchDb implements DbInterface
         
         return isset($result) && isset($result['rows']) &&
             isset($result['rows'][0]) && isset($result['rows'][0]['value'])
-            ? $this->stripParamsFromJson($result['rows'][0]['value'])
+            ? $result['rows'][0]['value']
             : null;
     }
 

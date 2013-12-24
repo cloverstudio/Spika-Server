@@ -89,8 +89,6 @@ class GroupController extends SpikaBaseController
 				if($result == null)
 					return $self->returnErrorResponse("create group failed");
 
-				$result = json_decode($result,true);
-				
 				if(isset($result['id'])){
 					$newGroupId = $result['id'];
 					$app['spikadb']->subscribeGroup($newGroupId,$ownerId);

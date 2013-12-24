@@ -22,15 +22,15 @@ class SearchUserControllerTest extends WebTestCase
         
         $spikadb->expects($this->any())
             ->method('searchUserByName')
-            ->will($this->returnValue('OK'));
+            ->will($this->returnValue('[]'));
 
         $spikadb->expects($this->any())
             ->method('searchUserByGender')
-            ->will($this->returnValue('OK'));
+            ->will($this->returnValue('[]'));
             
         $spikadb->expects($this->any())
             ->method('searchUserByAge')
-            ->will($this->returnValue('OK'));
+            ->will($this->returnValue('[]'));
                         
         $app['spikadb'] = $spikadb;
         
@@ -42,7 +42,7 @@ class SearchUserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchUsers?n=test');
-        assertRegExp('/OK/', $client->getResponse()->getContent());
+        assertRegExp('/\[\]/', $client->getResponse()->getContent());
     }
 
     /** @test */
@@ -50,7 +50,7 @@ class SearchUserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchUsers?g=male');
-        assertRegExp('/OK/', $client->getResponse()->getContent());
+        assertRegExp('/\[\]/', $client->getResponse()->getContent());
     }
 
     /** @test */
@@ -58,6 +58,6 @@ class SearchUserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchUsers?af=30&at=35');
-        assertRegExp('/OK/', $client->getResponse()->getContent());
+        assertRegExp('/\[\]/', $client->getResponse()->getContent());
     }
 }

@@ -89,6 +89,8 @@ class GroupController extends SpikaBaseController
 				if($result == null)
 					return $self->returnErrorResponse("create group failed");
 
+				$result = json_decode($result,true);
+				
 				if(isset($result['id'])){
 					$newGroupId = $result['id'];
 					$app['spikadb']->subscribeGroup($newGroupId,$ownerId);
@@ -148,7 +150,7 @@ class GroupController extends SpikaBaseController
 				$thumbURL = "";
                 if(isset($requestBodyAry['avatar_thumb_file_id']))
 	                $thumbURL = trim($requestBodyAry['avatar_thumb_file_id']);
-	                
+	            
 				$ownerId = $currentUser['_id'];
 				
 				if(empty($ownerId))

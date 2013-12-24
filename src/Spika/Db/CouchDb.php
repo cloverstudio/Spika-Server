@@ -893,7 +893,7 @@ class CouchDb implements DbInterface
 		
 		$query = "";
 		
-		if(!empty($keyword)){
+		if(!empty($name)){
 			
 			$startKey = "\"{$name}\"";
 			$endKey = "\"{$name}ZZZZ\"";

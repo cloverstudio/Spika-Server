@@ -17,14 +17,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 
-class SendPasswordController implements ControllerProviderInterface
+class SendPasswordController extends SpikaBaseController
 {
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
-
+		$self = $this;
+		
 		// check unique controller
-		$controllers->get('/resetPassword', function (Request $request) use ($app) {
+		$controllers->get('/resetPassword', function (Request $request) use ($app,$self) {
 
 			$email = $request->get('email');
 			
@@ -33,7 +34,7 @@ class SendPasswordController implements ControllerProviderInterface
 			$resultTmp = $app['spikadb']->doGetRequest("/_design/app/_view/find_user_by_email{$query}",false);
 			$resutlData = json_decode($resultTmp, true);
 
-		    if (count($resutlData['rows'] != 0)) {
+		    if (count($resutlData['rows']) != 0) {
 		
 		        $user = $resutlData['rows'][0]['value'];
 				$resetCode = $app['spikadb']->addPassworResetRequest($user['_id']);

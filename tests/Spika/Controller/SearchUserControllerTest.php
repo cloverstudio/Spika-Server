@@ -42,7 +42,7 @@ class SearchUserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchUsers?n=test');
-        assertRegExp('/\[\]/', $client->getResponse()->getContent());
+        assertRegExp('/OK/', $client->getResponse()->getContent());
     }
 
     /** @test */
@@ -50,7 +50,7 @@ class SearchUserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchUsers?g=male');
-        assertRegExp('/\[\]/', $client->getResponse()->getContent());
+        assertRegExp('/OK/', $client->getResponse()->getContent());
     }
 
     /** @test */
@@ -58,6 +58,6 @@ class SearchUserControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/searchUsers?af=30&at=35');
-        assertRegExp('/\[\]/', $client->getResponse()->getContent());
+        assertRegExp('/OK/', $client->getResponse()->getContent());
     }
 }

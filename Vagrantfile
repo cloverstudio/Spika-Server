@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, :inline => <<-EOS
     sudo apt-get update
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php5 php5-curl phpunit couchdb curl git-core php5-xdebug
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php5 php5-curl phpunit couchdb curl git-core php5-xdebug postfix
 
     #http://www.giocc.com/installing-phpunit-on-ubuntu-11-04-natty-narwhal.html
     sudo pear upgrade pear
@@ -39,7 +39,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo chmod 777 /vagrant_data/logs
     sudo chmod 777 /vagrant_data/uploads
     sudo php /vagrant_data/composer.phar install -d /vagrant_data/
-
 
     #comment this to disable Futon for couchdb
     sudo stop ufw

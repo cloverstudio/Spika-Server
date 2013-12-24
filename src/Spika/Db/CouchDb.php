@@ -465,6 +465,9 @@ class CouchDb implements DbInterface
 
         $result = json_decode($json, true);
 
+
+		$this->logger->addDebug(" add message result " . $json);
+
         if(isset($result['ok']) && $result['ok'] == 'true'){
             if(isset($result['rev']))unset($result['rev']);
         }
@@ -769,7 +772,9 @@ class CouchDb implements DbInterface
 			
 		if(!empty($password))
 			$groupData['group_password'] = $password;
-			
+		else
+			$groupData['group_password'] = "";
+		
 		if(!empty($categoryId)){
 			$groupData['category_id'] = $categoryId;
 			$groupData['category_name'] = $categoryName;

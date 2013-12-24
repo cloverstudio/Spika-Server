@@ -25,7 +25,7 @@ class GroupControllerTest extends WebTestCase
         $spikadb = $this->getMock('\Spika\Db\DbInterface');
         $spikadb->expects($this->any())
             ->method('createGroup')
-            ->will($this->returnValue('OK'));
+            ->will($this->returnValue('{"id":"testgroup"}'));
             
         $spikadb->expects($this->any())
             ->method('updateGroup')
@@ -96,7 +96,7 @@ class GroupControllerTest extends WebTestCase
             json_encode($sendParams)
         );
 
-        assertRegExp("/OK/", $client->getResponse()->getContent());
+        assertRegExp("/testgroup/", $client->getResponse()->getContent());
     }
     
     /** @test */

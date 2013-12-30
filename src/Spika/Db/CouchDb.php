@@ -145,8 +145,11 @@ class CouchDb implements DbInterface
 		$userJson = $json['rows'][0]['value'];
 
 		$result = $this->saveUserToken(json_encode($userJson), $json['rows'][0]['value']['_id']);
+		$this->logger->addDebug(print_r($result,true));
+		$filteredUserData = $this->filterUser($result);
+		$this->logger->addDebug(print_r($filteredUserData,true));
 		
-		return json_encode($result);
+		return json_encode($filteredUserData);
 
     }
 
@@ -201,6 +204,24 @@ class CouchDb implements DbInterface
 			}
 			
 	    }
+	    
+	    
+	    
+		return $userAry;
+	    
+    }
+    
+    private function filterUser($userAry){
+	    
+    	// favorite groups force to be array
+		if(isset($userAry['favorite_groups'])){
+			$userAry['favorite_groups'] = array_values($userAry['favorite_groups']);
+		}
+		
+		// contacts groups force to be array
+		if(isset($userAry['contacts'])){
+			$userAry['contacts'] = array_values($userAry['contacts']);
+		}
 	    
 		return $userAry;
 	    

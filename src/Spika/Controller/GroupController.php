@@ -84,7 +84,6 @@ class GroupController extends SpikaBaseController
 					return $self->returnErrorResponse("user token is wrong");
 					
                 $result = $app['spikadb']->createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
-                $app['monolog']->addDebug("CreateGroup API called by user: \n {$result} \n");
 				
 				if($result == null)
 					return $self->returnErrorResponse("create group failed");
@@ -156,8 +155,6 @@ class GroupController extends SpikaBaseController
 					
                 $result = $app['spikadb']->updateGroup($groupId,$name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
                 
-                $app['monolog']->addDebug("UpdateGroup API called by user: \n {$result} \n");
-
                 return json_encode($result);
             }
             
@@ -190,8 +187,6 @@ class GroupController extends SpikaBaseController
 
                 $result = $app['spikadb']->deleteGroup($groupId);
                 
-                $app['monolog']->addDebug("Delete Group API called by user: \n {$result} \n");
-
                 return json_encode($result);
             }
             
@@ -204,8 +199,6 @@ class GroupController extends SpikaBaseController
             function () use ($app,$self) {
 				
                 $result = $app['spikadb']->findAllGroupCategory();
-                $app['monolog']->addDebug("findAllGroupCategory API called\n");
- 
                 if($result == null)
                     return $self->returnErrorResponse("No group found");
                     
@@ -224,21 +217,16 @@ class GroupController extends SpikaBaseController
                 if(empty($value) || empty($type)){
                     return "{}";
                 }
-				       
-				$app['monolog']->addDebug("value : {$value} type : {$type}");
 
                 switch ($type){
                     case "id":
                         $result = $app['spikadb']->findGroupById($value);
-                        $app['monolog']->addDebug("FindGroupById API called with user id: \n {$value} \n");
                         break;
                     case "name":
                         $result = $app['spikadb']->findGroupByName($value);
-                        $app['monolog']->addDebug("FindGroupByName API called with user id: \n {$value} \n");
                         break;
                     case "categoryId":
                         $result = $app['spikadb']->findGroupByCategoryId($value);
-                        $app['monolog']->addDebug("FindGroupById API called with user id: \n {$value} \n");
                         break;
                     default:
                         return $self->returnErrorResponse("unknown search key");
@@ -271,7 +259,6 @@ class GroupController extends SpikaBaseController
                 switch ($type){
                     case "name":
                         $result = $app['spikadb']->findGroupsByName($value);
-                        $app['monolog']->addDebug("FindGroupsByName API called with user id: \n {$value} \n");
                         break;
                     default:
                         return $self->returnErrorResponse("unknown search key");
@@ -309,8 +296,6 @@ class GroupController extends SpikaBaseController
                 if($result == null)
                 	return $self->returnErrorResponse("failed to subscribe group");
                 	
-                $app['monolog']->addDebug("Subscribe API called for group: \n {$groupId} \n");
-				
 				$userData = $app['spikadb']->findUserById($currentUser['_id']);
 				
                 return json_encode($userData);
@@ -339,8 +324,6 @@ class GroupController extends SpikaBaseController
                 if($result == null)
                 	return $self->returnErrorResponse("failed to unsubscribe group");
                 	
-                $app['monolog']->addDebug("Subscribe API called for group: \n {$groupId} \n");
-				
 				$userData = $app['spikadb']->findUserById($currentUser['_id']);
 				
                 return json_encode($userData);
@@ -373,8 +356,6 @@ class GroupController extends SpikaBaseController
                 if($result == false)
                 	return $self->returnErrorResponse("failed to watch group");
                 	
-                $app['monolog']->addDebug("Watch API called for group: \n {$groupId} \n");
-				
 				return "OK";
                 
             }
@@ -392,8 +373,6 @@ class GroupController extends SpikaBaseController
                 if($result == false)
                 	return $self->returnErrorResponse("failed to watch group");
                 	
-                $app['monolog']->addDebug("UnWatch API called");
-				
 				return "OK";
                 
 			}

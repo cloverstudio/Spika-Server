@@ -35,7 +35,6 @@ class MessageController extends SpikaBaseController
             function () use ($app,$self) {
 
                 $result = $app['spikadb']->getEmoticons();
-                $app['monolog']->addDebug("Emoticons API called\n");
 
 				if($result == null){
                     return $self->returnErrorResponse("load emoticons error");
@@ -57,7 +56,6 @@ class MessageController extends SpikaBaseController
                 }
 
                 $result = $app['spikadb']->getEmoticonImage($id);
-                $app['monolog']->addDebug("Emoticon API called\n");
 
 				if($result == null){
                     return $self->returnErrorResponse("load emoticon error");
@@ -85,7 +83,6 @@ class MessageController extends SpikaBaseController
                 }
 
                 $result = $app['spikadb']->getCommentCount($messageId);
-                $app['monolog']->addDebug("CommentsCount API called\n");
 
                 return json_encode($result);
             }
@@ -112,7 +109,6 @@ class MessageController extends SpikaBaseController
 				$fromUserId = $currentUser['_id'];
 				
                 $result = $app['spikadb']->addNewComment($messageId,$fromUserId,$comment);
-                $app['monolog']->addDebug("sendComment API called\n");
 
 				if($result == null)
 					return $self->returnErrorResponse("failed to add comment");
@@ -130,7 +126,6 @@ class MessageController extends SpikaBaseController
 					return $self->returnErrorResponse("failed to get message");
 				
                 $result = $app['spikadb']->getComments($messageId,$count,$offset);
-                $app['monolog']->addDebug("groupMessages API called");
 
 				if($result == null)
 					 return $self->returnErrorResponse("failed to get message");
@@ -157,7 +152,6 @@ class MessageController extends SpikaBaseController
 
                 $messageDataArray=json_decode($messageData,true);
 				
-				$app['monolog']->addDebug("message json " . $messageData);
 				
 				$fromUserId = $currentUser['_id'];
 				$toUserId = trim($messageDataArray['to_user_id']);
@@ -207,7 +201,6 @@ class MessageController extends SpikaBaseController
 				}
 				
                 $result = $app['spikadb']->addNewUserMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
-                $app['monolog']->addDebug("send message API params " . print_r($additionalParams,true));
 
 				if($result == null)
 					 return $self->returnErrorResponse("failed to send message");
@@ -232,7 +225,6 @@ class MessageController extends SpikaBaseController
 					return $self->returnErrorResponse("failed to get message");
 					
                 $result = $app['spikadb']->getUserMessages($ownerUserId,$toUserId,$count,$offset);
-                $app['monolog']->addDebug("UserMessages API called");
 
 				if($result == null)
 					 return $self->returnErrorResponse("failed to get message");
@@ -253,7 +245,6 @@ class MessageController extends SpikaBaseController
 					return $self->returnErrorResponse("failed to get message");
 					
                 $result = $app['spikadb']->findMessageById($id);
-                $app['monolog']->addDebug("findMessageById API called");
 
 				if($result == null)
 					 return $self->returnErrorResponse("failed to get message");
@@ -326,7 +317,6 @@ class MessageController extends SpikaBaseController
 
 				
                 $result = $app['spikadb']->addNewGroupMessage($messageType,$fromUserId,$toGroupId,$message,$additionalParams);
-                $app['monolog']->addDebug("SendMessage API called from user: \n {$fromUserId} \n");
 
 				if($result == null)
 					 return $self->returnErrorResponse("failed to send message");
@@ -348,7 +338,6 @@ class MessageController extends SpikaBaseController
 					return $self->returnErrorResponse("failed to get message");
 					
                 $result = $app['spikadb']->getGroupMessages($toGroupId,$count,$offset);
-                $app['monolog']->addDebug("groupMessages API called");
 
 				if($result == null)
 					 return $self->returnErrorResponse("failed to get message");

@@ -41,8 +41,6 @@ class SendPasswordController extends SpikaBaseController
 				
 				$resetPasswordUrl = ROOT_URL . "/page/resetPassword/" . $resetCode;
 				
-				$app['monolog']->addDebug("Generated reset password url {$resetPasswordUrl}");
-				
 				$body = "Please reset password here {$resetPasswordUrl}";
 				
 				$message = \Swift_Message::newInstance()

@@ -54,10 +54,7 @@ class UserController extends SpikaBaseController
 
             
 			$authResult = $app['spikadb']->doSpikaAuth($email,$password);
-			
-			$app['monolog']->addDebug("Auth Request : \n {$requestBody} \n");
-			$app['monolog']->addDebug("Auth Response : \n {$authResult} \n");
-		
+					
 		    return $authResult;
 		
 		});
@@ -109,8 +106,6 @@ class UserController extends SpikaBaseController
 			  $email,
 			  $password);
 			  
-			$app['monolog']->addDebug("Create User API called : \n {$requestBody} \n");
-				
 			$responseBodyAry = array(
 				'ok' => true,
 				'id' => $newUserId,
@@ -148,7 +143,6 @@ class UserController extends SpikaBaseController
 				unset($userDataArray['token_timestamp']);
 				
                 $result = $app['spikadb']->updateUser($currentUser['_id'],$userDataArray);
-                $app['monolog']->addDebug("Update API called with user id: \n {$userData} \n");
                 
                 return json_encode($result);
             }
@@ -167,15 +161,12 @@ class UserController extends SpikaBaseController
                 switch ($type){
                     case "id":
                         $result = $app['spikadb']->findUserById($value);
-                        $app['monolog']->addDebug("FindUserById API called with user id: \n {$value} \n");
                         break;
                     case "email":
                         $result = $app['spikadb']->findUserByEmail($value);
-                        $app['monolog']->addDebug("FindUserByEmail API called with email: \n {$value} \n");
                         break;
                     case "name":
                         $result = $app['spikadb']->findUserByName($value);
-                        $app['monolog']->addDebug("FindUserByName API called with name: \n {$value} \n");
                         break;
                     default:
                         return $self->returnErrorResponse("unknown search key");
@@ -204,8 +195,7 @@ class UserController extends SpikaBaseController
                 }
 
                 $result = $app['spikadb']->getActivitySummary($userId);
-                $app['monolog']->addDebug("ActivitySummary API called with user id: \n {$userId} \n");
-				
+ 				
 
                 return json_encode($result);
             }
@@ -222,7 +212,6 @@ class UserController extends SpikaBaseController
                 }
 
                 $result = $app['spikadb']->getAvatarFileId($user_id);
-                $app['monolog']->addDebug("GetAvatarFileId API called with user id: \n {$user_id} \n");
 
 
                 return json_encode($result);
@@ -236,7 +225,6 @@ class UserController extends SpikaBaseController
         $controllers->post('/addContact',
             function (Request $request) use ($app,$self) {
                 
-                $app['monolog']->addDebug("addContact API called");
 
                 $currentUser = $app['currentUser'];
                 $requestBody = $request->getContent();
@@ -283,8 +271,6 @@ class UserController extends SpikaBaseController
                 if($result == null)
                 	return $self->returnErrorResponse("failed to remove contact");
                 	
-                $app['monolog']->addDebug("removeContact ");
-				
 				$userData = $app['spikadb']->findUserById($currentUser['_id']);
 				
                 return json_encode($userData);

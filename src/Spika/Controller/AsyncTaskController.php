@@ -48,9 +48,6 @@ class AsyncTaskController extends SpikaBaseController
 			$fromUser = $app['spikadb']->getUserById($fromUserId);
 			$toUser = $app['spikadb']->getUserById($toUserId);
 			
-			$app['monolog']->addDebug(print_r($toUser,true));
-			$app['monolog']->addDebug(print_r($fromUser,true));
-			
 			$pushnotificationMessage = $self->generatePushNotificationMessage($fromUser,$toUser);
 			
 			// send iOS push notification
@@ -91,7 +88,6 @@ class AsyncTaskController extends SpikaBaseController
 			
 				$payload = json_encode($fields);
 				$result = $self->sendGCM($payload,$app);		
-				$app['monolog']->addDebug("GCM result " . $result);
 				
 			}
 			
@@ -240,8 +236,6 @@ class AsyncTaskController extends SpikaBaseController
 	}
 
 	function sendGCM($json, $app = null) {
-		
-		$app['monolog']->addDebug("dddd" . $json);
 		
 		$apiKey = GCM_API_KEY;
 	

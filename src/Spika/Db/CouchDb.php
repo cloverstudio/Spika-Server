@@ -119,11 +119,8 @@ class CouchDb implements DbInterface
 		
 		list($header,$result) = $this->sendRequest("GET",$this->couchDBURL . "/_design/app/_view/find_user_by_email?key=" . $emailQuery);
 		
-		$this->logger->addDebug("Receive Auth Request : \n {$result} \n");
 		$json = json_decode($result, true);
-		
-		$this->logger->addDebug($result);
-		
+				
 		if (empty($json['rows'][0]['value']['email'])) {
 		    $arr = array('message' => 'User not found!', 'error' => 'logout');
 		
@@ -145,9 +142,7 @@ class CouchDb implements DbInterface
 		$userJson = $json['rows'][0]['value'];
 
 		$result = $this->saveUserToken(json_encode($userJson), $json['rows'][0]['value']['_id']);
-		$this->logger->addDebug(print_r($result,true));
 		$filteredUserData = $this->filterUser($result);
-		$this->logger->addDebug(print_r($filteredUserData,true));
 		
 		return json_encode($filteredUserData);
 
@@ -156,8 +151,6 @@ class CouchDb implements DbInterface
 	function saveUserToken($userJson, $id)
 	{
 	
-    	$this->logger->addDebug("Token saved : \n {$userJson} \n");
-    	
     	list($header,$result) = $this->sendRequest("PUT",$this->couchDBURL . "/{$id}",
     		$userJson);
 
@@ -487,8 +480,6 @@ class CouchDb implements DbInterface
         $result = json_decode($json, true);
 
 
-		$this->logger->addDebug(" add message result " . $json);
-
         if(isset($result['ok']) && $result['ok'] == 'true'){
             if(isset($result['rev']))unset($result['rev']);
         }
@@ -601,7 +592,6 @@ class CouchDb implements DbInterface
 			array_push($userArray['contacts'], strval($targetUserId));
 			
 			$this->updateUser($userId,$userArray);
-			$this->logger->addDebug("update updated");
 		}
 		
 		return true;
@@ -1126,13 +1116,10 @@ class CouchDb implements DbInterface
 		
 		if(!isset($jsonAry['rows']))
 			return false;
-			
-		$this->logger->addDebug("watch log found ".print_r($jsonAry,true));
 		
 		foreach($jsonAry['rows'] as $row){
 	        $watchLogData = $row['value'];
 	        $this->doDeleteRequest($watchLogData['_id'],$watchLogData['_rev']);
-			$this->logger->addDebug("watch log deleted {$watchLogData['_id']}");
 		}
 				
 		return true;
@@ -1480,8 +1467,6 @@ class CouchDb implements DbInterface
     	
     	$couchDBQuery = $this->couchDBURL . "/" . $queryString;
     	
-    	$this->logger->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
-    	
 		list($header,$body) = $this->sendRequest("GET",$couchDBQuery);
 		
 		if($stripCredentials)
@@ -1497,8 +1482,6 @@ class CouchDb implements DbInterface
     	
     	$couchDBQuery = $this->couchDBURL . $queryString;
     	
-    	$this->logger->addDebug("Receive Get Request : \n {$couchDBQuery} \n");
-    	
 		list($header,$body) = $this->sendRequest("GET",$couchDBQuery);
 		
 		if($stripCredentials)
@@ -1511,8 +1494,6 @@ class CouchDb implements DbInterface
     public function doPutRequest($id,$requestBody)
     {
     	
-		$this->logger->addDebug("Receive Put Request : \n {$requestBody} \n");
-	
 		// merge with original json
 		// put request is update in couchdb. for all get requests backend cuts off password and email
 		// so I have to merge with original data here. Other wise password will gone.

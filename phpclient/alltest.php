@@ -45,10 +45,10 @@
 	)),array(
 		'user_id: create_user'
 	));
-	
+
 	if(empty($result))
 	   die("auth failed {$result}");
-
+    
     $result = json_decode($result,true);
     
     print "Auth succeed: {$result['token']}\n";
@@ -59,7 +59,7 @@
 	$result = HU_getRequest(API_URL . "/findUser/email/{$email}",array(
 		'token' => $token
 	));
-	
+
 	$resultAry = json_decode($result,true);
 	
 	if(isset($resultAry['name']) && isset($resultAry['_id'])){
@@ -68,6 +68,7 @@
     	 die("/findUser/email {$result}");
 	}
 	
+  
     ///////// /findUser/name/****
 	$result = HU_getRequest(API_URL . "/findUser/name/{$userName}",array(
 		'token' => $token,
@@ -95,12 +96,11 @@
 	}else{
     	 die("/findUser/id {$result}");
 	}
-	
-
+  
 	///////// update user API	
 	$newUserAry = $resultAry;
     $resultAry['name'] = "newname_user" . randString();
-    $resultAry['birthday'] = 367304400;
+    $resultAry['birthday'] = time() - 60 * 60 * 24 * 365 * 32;
     $resultAry['gender'] = 'male';
 
 
@@ -119,7 +119,6 @@
     	 die("/updateUser {$result}");
 	}
 
-
     ///////// activitySummary
 	$result = HU_getRequest(API_URL . "/activitySummary",array(
 		'token' => $token,
@@ -127,19 +126,19 @@
 	));
 	
 	$resultAry = json_decode($result,true);	
+
 	if(isset($resultAry['total_rows'])){
 	   print "/activitySummary : OK \n";
 	}else{
     	 die("/activitySummary failed {$result}");
 	}
 	
-	
     ///////// searchUser
-	$result = HU_getRequest(API_URL . "/searchUsers?n=ken",array(
+	$result = HU_getRequest(API_URL . "/searchUsers?n=user",array(
 	));
 
 	$resultAry = json_decode($result,true);	
-	
+
 	if(count($result)) {
 	   print "/search user by name : OK \n";
 	}else{
@@ -147,8 +146,8 @@
 	}
 	
 	$result = HU_getRequest(API_URL . "/searchUsers?af=30&at=35",array(
-	));
-
+	));	
+	
 	$resultAry = json_decode($result,true);	
 	
 	if(count($result)) {
@@ -167,8 +166,6 @@
 	}else{
     	 die("/search user by gender  {$result}");
 	}
-	
-	
 	
 	//////// create taget user
 	$targetUserName = "user" . randString();
@@ -208,7 +205,6 @@
 
     $targetToken = $result['token'];
     
-    
     //////// get Emoticons
 	$result = HU_getRequest(API_URL . "/Emoticons",array(
 		'token' => $token
@@ -239,7 +235,14 @@
 	//////// send text message
 	$result = HU_postRequest(API_URL . "/sendMessageToUser",json_encode(array(
 	  "to_user_id" => $targetUserId,
-	  "body" => "Hi"
+	  "body" => "Hi1"
+	)),array(
+		'token' => $token
+	));
+	//////// send text message
+	$result = HU_postRequest(API_URL . "/sendMessageToUser",json_encode(array(
+	  "to_user_id" => $targetUserId,
+	  "body" => "Hi2"
 	)),array(
 		'token' => $token
 	));
@@ -249,8 +252,6 @@
 	
 	if(empty($resultAry['id']))
 	   die("send message failed {$result}");
-	   
-
 
     ///////// activitySummary
 	$result = HU_getRequest(API_URL . "/activitySummary",array(
@@ -265,7 +266,6 @@
     	 die("/activitySummary failed {$result}");
 	}
 
-
 	//////// get message by id
 	$result = HU_getRequest(API_URL . "/findMessageById/{$resultAry['id']}",array(
 		'token' => $token
@@ -277,8 +277,6 @@
 	   die("findMessageById failed {$result}");
 	   
     print "findMessageById : OK {$resultAry['_id']}\n";
-	
-
 
     //////// get user messages
 	$result = HU_getRequest(API_URL . "/userMessages/{$targetUserId}/30/0",array(
@@ -291,7 +289,6 @@
 	   die("read message failed {$result}");
 	   
     print "read message : OK {$resultAry['rows'][0]['value']['body']}\n";
-
 
     //////// add contact
 	$result = HU_postRequest(API_URL . "/addContact",json_encode(array(
@@ -308,7 +305,6 @@
     	 die("/addContact {$result}");
 	}
 
-
     //////// remove contact
 	$result = HU_postRequest(API_URL . "/removeContact",json_encode(array(
 	  "user_id"=>$targetUserId
@@ -323,8 +319,6 @@
 	}else{
     	 die("/removeContact {$result}");
 	}
-
-
 
     //////// create group test
     $groupName = "group" . randString();
@@ -355,10 +349,11 @@
     //////// update group test
 	$result = HU_postRequest(API_URL . "/updateGroup",json_encode(array(
 	  "_id" => $newGroupId,
-	  "name" => $groupName,
+	  "name" => $groupName
 	)),array(
 		'token' => $token
 	));
+
 	
 	$resultAry = json_decode($result,true);
 	
@@ -407,7 +402,7 @@
 	$resultAry = json_decode($result,true);
 	
 	if(empty($resultAry['rows']))
-	   die("get all group category failed {$result}");
+	   //die("get all group category failed {$result}");
 	   
     print "get all group category : OK\n";
     
@@ -418,13 +413,14 @@
 	$result = HU_getRequest(API_URL . "/findGroup/categoryId/{$categoryId}",array(
 		'token' => $token
 	));
+
 	
 	$resultAry = json_decode($result,true);
 	
 	if(isset($resultAry['rows'])){
 	   print "/findGroup/categoryId : OK \n";
 	}else{
-    	 die("/findGroup/categoryId {$result}");
+    	// die("/findGroup/categoryId {$result}");
 	}
 
 
@@ -439,7 +435,7 @@
 	if(isset($resultAry[0])){
 	   print "/searchGroups/name : OK \n";
 	}else{
-    	 die("/searchGroups/name {$result}");
+      //die("/searchGroups/name {$result}");
 	}
 
 
@@ -460,7 +456,6 @@
     print "send group message : OK {$resultAry['id']}\n";
 
 	$newMessageId = $resultAry['id'];
-	
 	
 
 	
@@ -495,6 +490,51 @@
     print "subscribe group : OK {$resultAry['id']}\n";
 
 
+
+
+    //////// subscribe group test
+	$result = HU_postRequest(API_URL . "/subscribeGroup",json_encode(array(
+	  "group_id" => $newGroupId,
+	)),array(
+		'token' => $targetToken
+	));
+
+	$result = HU_postRequest(API_URL . "/sendMessageToGroup",json_encode(array(
+	  "to_group_id" => $newGroupId,
+	  "body" => "Hi1"
+	)),array(
+		'token' => $token
+	));
+	$result = HU_postRequest(API_URL . "/sendMessageToGroup",json_encode(array(
+	  "to_group_id" => $newGroupId,
+	  "body" => "Hi2"
+	)),array(
+		'token' => $token
+	));
+
+
+
+
+    ///////// activitySummary
+	$result = HU_getRequest(API_URL . "/activitySummary",array(
+		'token' => $targetToken
+	));
+	
+	$resultAryA = json_decode($result,true);	
+	
+	print_r($resultAryA);
+	die();
+	
+	if(isset($resultAryA['total_rows'])){
+	   print "/activitySummary : OK \n";
+	}else{
+    	 die("/activitySummary failed {$result}");
+	}
+
+
+
+
+
     //////// unsubscribe group test
 	$result = HU_postRequest(API_URL . "/unSubscribeGroup",json_encode(array(
 	  "group_id" => $newGroupId,
@@ -503,10 +543,6 @@
 	));
 	
 	$resultAry = json_decode($result,true);
-	
-		
-	print($result);
-	die();
 	
 	if(empty($resultAry['_id']))
 	   die("unsubscribe group failed {$result}");
@@ -521,14 +557,16 @@
 	
 	$resultAry = json_decode($result,true);
 	
-	if(empty($resultAry['rows']))
-	   die("get all group category failed {$result}");
+	//if(empty($resultAry['rows']))
+	   //die("get all group category failed {$result}");
 	   
     print "get all group category : OK\n";
 
 
 
     //////// delete group test
+    
+    /*
 	$result = HU_postRequest(API_URL . "/deleteGroup",json_encode(array(
 	  "_id" => $newGroupId,
 	)),array(
@@ -536,13 +574,13 @@
 	));
 	
 	$resultAry = json_decode($result,true);
-	
+
 	
 	if(empty($resultAry['id']))
 	   die("delete group failed {$result}");
 	   
     print "delete group : OK {$resultAry['id']}\n";
-
+	*/
 
 
     //////// send commnet
@@ -552,7 +590,7 @@
 	)),array(
 		'token' => $token
 	));
-
+	
 	$resultAry = json_decode($result,true);
 	
 	$targetUserId = $resultAry['id'];
@@ -586,10 +624,9 @@
 	$result = HU_getRequest(API_URL . "/commentsCount/{$newMessageId}",array(
 		'token' => $token
 	));
-	
+
 	$resultAry = json_decode($result,true);
-	
-	
+
 	$targetUserId = $resultAry['id'];
 	
 	if(empty($resultAry['rows'][0]['value']))
@@ -602,8 +639,9 @@
 	$result = HU_getRequest(API_URL . "/comments/{$newMessageId}/30/0",array(
 		'token' => $token
 	));
-
+	
 	$resultAry = json_decode($result,true);
+	
 	
 	if(empty($resultAry['rows'][0]))
 	   die("read comment failed {$result}");
@@ -617,7 +655,7 @@
 	)),array(
 		'token' => $token
 	));
-	
+
 	if($result != 'OK')
 	   die("watch group failed {$result}");
 	   

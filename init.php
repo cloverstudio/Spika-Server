@@ -14,17 +14,16 @@ define('CouchDBURL', isset($_ENV['SPIKA_COUCH_DB_URL']) ? $_ENV['SPIKA_COUCH_DB_
 define('AdministratorEmail', isset($_ENV['SPIKA_ADMIN_EMAIL']) ? $_ENV['SPIKA_ADMIN_EMAIL'] : "ken.yasue@clover-studio.com");
 define('TOKEN_VALID_TIME', isset($_ENV['SPIKA_TOKEN_VALID_TIME']) ? $_ENV['SPIKA_TOKEN_VALID_TIME'] : 60*60*24);
 define('PW_RESET_CODE_VALID_TIME', isset($_ENV['SPIKA_PW_RESET_CODE_VALID_TIME']) ? $_ENV['SPIKA_PW_RESET_CODE_VALID_TIME'] : 60*5);
-define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://localhost:8080/wwwroot");
 
-/*
-define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "");
-define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "");
-define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "");
-define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "");
-*/
+define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_SPIKA_ROOT_URL'] : "");
+define("MySQL_HOST", isset($_ENV['SPIKA_MySQL_HOST']) ? $_ENV['SPIKA_MySQL_HOST'] : "");
+define('MySQL_DBNAME', isset($_ENV['SPIKA_MySQL_DBNAME']) ? $_ENV['SPIKA_MySQL_DBNAME'] : "");
+define('MySQL_USERNAME', isset($_ENV['SPIKA_MySQL_USERNAME']) ? $_ENV['SPIKA_MySQL_USERNAME'] : "");
+define('MySQL_PASSWORD', isset($_ENV['SPIKA_MySQL_PASSWORD']) ? $_ENV['SPIKA_MySQL_PASSWORD'] : "");
 
-define('Admin_USERNAME', isset($_ENV['Admin_USERNAME']) ? $_ENV['Admin_USERNAME'] : "admin");
-define('Admin_PASSWORD', isset($_ENV['Admin_PASSWORD']) ? $_ENV['Admin_PASSWORD'] : "password");
+
+define('Admin_USERNAME', isset($_ENV['SPIKA_Admin_USERNAME']) ? $_ENV['SPIKA_Admin_USERNAME'] : "admin");
+define('Admin_PASSWORD', isset($_ENV['SPIKA_Admin_PASSWORD']) ? $_ENV['SPIKA_Admin_PASSWORD'] : "password");
 
 
 define('HTTP_PORT', 80);

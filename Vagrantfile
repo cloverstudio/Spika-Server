@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, :inline => <<-EOS
     sudo apt-get update
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php5 php5-curl phpunit couchdb curl git-core php5-xdebug postfix
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php5 php5-curl phpunit curl git-core php5-xdebug postfix mysql-server php5-mysql
 
     #http://www.giocc.com/installing-phpunit-on-ubuntu-11-04-natty-narwhal.html
     sudo pear upgrade pear
@@ -31,8 +31,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo rm -rf /var/www
     sudo ln -s /vagrant_data /var/www
 
-    curl -X PUT http://127.0.0.1:5984/spikademo
-    curl -X PUT http://127.0.0.1:5984/spikademo/_design/app --data-binary @/vagrant_data/install/designdocuments.dump
     sudo /etc/init.d/apache2 restart
     sudo mkdir -p /vagrant_data/logs
     sudo mkdir -p /vagrant_data/uploads
@@ -40,11 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo chmod 777 /vagrant_data/uploads
     sudo php /vagrant_data/composer.phar install -d /vagrant_data/
 
-    #comment this to disable Futon for couchdb
-    sudo stop ufw
-    curl -X PUT http://localhost:5984/_config/httpd/bind_address -d '"0.0.0.0"'
-
-    echo 'please open http://localhost:8080/wwwroot/install to finish setup'
+    echo 'please open http://localhost:8080/wwwroot/installer to finish setup'
     
   EOS
 end

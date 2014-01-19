@@ -118,7 +118,7 @@
 					<p>Please keep this information.</p>
 					<div class="well">
 						
-						<p>API end point URL is <strong> adfasdfsd </strong></p>
+						<p>API end point URL is <strong> {{ROOT_URL}}/api </strong></p>
 						<p>Support user id is <strong> 1 </strong></p>
 						<p>
 							Default username and password is  <strong> admin / password </strong> to login admin cms.
@@ -131,10 +131,12 @@
 					<h3>To finish setup</h3>
 					<p>Add database connection settings to <strong>init.php</strong>.</p>
 						<pre>
-define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "");
-define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "");
-define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "");
-define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "");
+define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "{{ROOT_URL}}");
+
+define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "{{DbParams.host}}");
+define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "{{DbParams.dbname}}");
+define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "{{DbParams.user}}");
+define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "{{DbParams.password}}");
 						</pre>
 
 					

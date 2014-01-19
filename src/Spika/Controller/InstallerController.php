@@ -20,20 +20,43 @@ use Doctrine\DBAL\DriverManager;
 
 class InstallerController implements ControllerProviderInterface
 {
+
+	public function curPageURL() {
+	
+		$pageURL = 'http';
+		if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
+			$pageURL .= "s";
+		}
+		
+		$pageURL .= "://";
+		
+		if ($_SERVER["SERVER_PORT"] != "80") {
+			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		} else {
+			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		}
+		
+		return $pageURL;
+	}
+
     public function connect(Application $app)
     {
     	ExceptionHandler::register(false);
         $controllers = $app['controllers_factory'];
-
+		$self = $this;
+		
 		// first screen
-		$controllers->get('/installer', function (Request $request) use ($app) {
+		$controllers->get('/installer', function (Request $request) use ($app,$self) {
+			$rootUrl = str_replace("/installer","",$self->curPageURL());
+			
 			return $app['twig']->render('installerTop.twig', array(
-				'ROOT_URL' => ROOT_URL
+				'ROOT_URL' => $rootUrl
 			));			
 		});
 
 		// connect to DB
-		$controllers->post('/installer/step1', function (Request $request) use ($app) {
+		$controllers->post('/installer/step1', function (Request $request) use ($app,$self) {
+			$rootUrl = str_replace("/installer/step1","",$self->curPageURL());
 			
 			$host = $request->get('host');
 			$database = $request->get('database');
@@ -62,19 +85,20 @@ class InstallerController implements ControllerProviderInterface
 			
 			if($connectionResult){
 				return $app['twig']->render('installerStep1.twig', array(
-					'ROOT_URL' => ROOT_URL,
+					'ROOT_URL' => $rootUrl,
 					'ConnectionSucceed' => $connectionResult
 				));			
 			}else{
 				return $app['twig']->render('installerTop.twig', array(
-					'ROOT_URL' => ROOT_URL,
+					'ROOT_URL' => $rootUrl,
 					'ConnectionSucceed' => $connectionResult
 				));			
 			}
 		});
 
 		// create database schema
-		$controllers->post('/installer/step2', function (Request $request) use ($app) {
+		$controllers->post('/installer/step2', function (Request $request) use ($app,$self) {
+			$rootUrl = str_replace("/installer/step2","",$self->curPageURL());
 			
 			$config = new \Doctrine\DBAL\Configuration();
 			$connectionParams = $app['session']->get('databaseConfiguration');
@@ -91,7 +115,7 @@ class InstallerController implements ControllerProviderInterface
 			$pathToSchemaFile = "../install/databaseschema.sql";
 			if(!file_exists("../install/databaseschema.sql")){
 				return $app['twig']->render('installerError.twig', array(
-					'ROOT_URL' => ROOT_URL
+					'ROOT_URL' => $rootUrl
 				));
 			}
 			
@@ -114,20 +138,21 @@ class InstallerController implements ControllerProviderInterface
 			} catch(\Exception $e){
 				$conn->rollback();		
 				return $app['twig']->render('installerError.twig', array(
-					'ROOT_URL' => ROOT_URL
+					'ROOT_URL' => $rootUrl
 				));
 				
 			}
 			
 			return $app['twig']->render('installerStep2.twig', array(
-				'ROOT_URL' => ROOT_URL,
+				'ROOT_URL' => $rootUrl,
 				'ConnectionSucceed' => $connectionResult
 			));		
 		
 		});
 
 		// generate initial data
-		$controllers->post('/installer/step3', function (Request $request) use ($app) {
+		$controllers->post('/installer/step3', function (Request $request) use ($app,$self) {
+			$rootUrl = str_replace("/installer/step3","",$self->curPageURL());
 			
 			$config = new \Doctrine\DBAL\Configuration();
 			$connectionParams = $app['session']->get('databaseConfiguration');
@@ -143,7 +168,7 @@ class InstallerController implements ControllerProviderInterface
 			$fileDir = __DIR__.'/../../../'.FileController::$fileDirName;
 			if(!is_writable($fileDir)){
 				return $app['twig']->render('installerError.twig', array(
-					'ROOT_URL' => ROOT_URL
+					'ROOT_URL' => $rootUrl
 				));
 			}
 			
@@ -194,7 +219,7 @@ class InstallerController implements ControllerProviderInterface
 					$conn->rollback();	
 						
 					return $app['twig']->render('installerError.twig', array(
-						'ROOT_URL' => ROOT_URL
+						'ROOT_URL' => $rootUrl
 					));
 					
 				}
@@ -245,7 +270,7 @@ class InstallerController implements ControllerProviderInterface
 					$conn->rollback();	
 						
 					return $app['twig']->render('installerError.twig', array(
-						'ROOT_URL' => ROOT_URL
+						'ROOT_URL' => $rootUrl,
 					));
 					
 				}
@@ -268,164 +293,12 @@ class InstallerController implements ControllerProviderInterface
 			$conn->commit();	
 				
 			return $app['twig']->render('installerStep3.twig', array(
-				'ROOT_URL' => ROOT_URL,
-				'ConnectionSucceed' => $connectionResult
+				'ROOT_URL' => $rootUrl,
+				'ConnectionSucceed' => $connectionResult,
+				'DbParams' => $connectionParams,
+				'SupportUserId' => $conn->lastInsertId("_id"),
 			));		
 			
-		});
-
-		// check unique controller
-		$controllers->get('/install', function (Request $request) use ($app) {
-			
-			$randomEmail = \Spika\Utils::randString(8, 8) . '@clover-studio.com';
-			$password = \Spika\Utils::randString(8, 8);
-			
-			$result = "";
-			
-			$resCheckDB = $app['spikadb']->doGetRequest("");
-			$resCheckDBDic = json_decode($resCheckDB, true);
-			
-			if (!isset($resCheckDBDic['db_name'])) {
-			    die("Database does not exist \n");
-			}else{
-				$result .= "Database check OK: Database name is {$resCheckDBDic['db_name']} <br />";
-			}
-			
-			// Create support user
-			$json = '{
-				   "about": "Auto pilot user",
-				   "password": "' . $password . '",
-				   "favorite_groups": [],
-				   "token": "testtesttest",
-				   "type": "user",
-				   "contacts": [],
-				   "email": "' . $randomEmail . '",
-				   "online_status": "online",
-				   "birthday": 1377554400,
-				   "token_timestamp": 1378467097,
-				   "max_favorite_count": 10,
-				   "gender": "female",
-				   "name": "Create User Test",
-				   "avatar_file_id": "",
-				   "max_contact_count": 20,
-				   "avatar_thumb_file_id": ""
-				}';
-			
-			$resultCreateUser = $app['spikadb']->doPostRequest($json);
-			$resultCreateUserDic = json_decode($resultCreateUser, true);
-			
-			if ($resultCreateUserDic['ok'] != 'true') {
-			    die("Failed to create user. \n");
-			}
-			
-			$result .= "Create User OK: email is '{$randomEmail}',password is '{$password}', support user id {$resultCreateUserDic['id']} <br />";
-			
-			
-			// create stickers
-			
-			// delete first
-			$resAllStickers = $app['spikadb']->doGetRequest("/_design/app/_view/find_all_emoticons");
-			$resAllStickersDic = json_decode($resAllStickers, true);
-			
-			if(count($resAllStickersDic['rows']) > 0){
-    			foreach ($resAllStickersDic['rows'] as $data) {
-    			
-    			    $id = $data['value']['_id'];
-    			    $rev = $data['value']['_rev'];
-    			    $app['spikadb']->doDeleteRequest($id,$rev);
-    			
-    			}
-			}
-
-			
-			$files = array();
-			$filesPath = __DIR__.'/../../../install/resouces/emoticons';
-			
-			if ($handle = opendir($filesPath)) {
-			
-			    while ($entry = readdir($handle)) {
-			        if (is_file($filesPath . "/" . $entry)) {
-			
-			            if (preg_match("/png/", $entry)) {
-			                $files[] = $filesPath . "/" . $entry;
-			            }
-			        }
-			    }
-			
-			    closedir($handle);
-			}
-			
-			foreach ($files as $path) {
-			
-			    $imgbinary = @file_get_contents($path);
-			    $base64EncodedImage = base64_encode($imgbinary);
-			
-			    $pathinfo = pathinfo($path);
-			
-			    $dataAry = array(
-			        'type' => 'master_emoticon',
-			        'identifier' => $pathinfo['filename'],
-			        '_attachments' => array(
-			            $pathinfo['basename'] => array(
-			                "content_type" => "image/png",
-			                "data" => $base64EncodedImage
-			            )
-			        )
-			
-			    );
-			
-			    $resInsertSticker = $app['spikadb']->doPostRequest(json_encode($dataAry));
-			    $resInsertStickerDic = json_decode($resInsertSticker, true);
-			    
-				if ($resInsertStickerDic['ok'] != 'true') {
-			   		die("Failed to create sticker. \n");
-			    }
-
-			}
-			
-			$result .= "Stickers are installed <br />";
-			
-			
-			// generate tmp group categories
-			// Create support user
-			$json = '{
-				   "type": "group_category",
-				   "title": "tmp_group_category_1"
-				}';
-			
-			$app['spikadb']->doPostRequest($json);
-
-			$json = '{
-				   "type": "group_category",
-				   "title": "tmp_group_category_2"
-				}';
-			
-			$app['spikadb']->doPostRequest($json);
-
-			
-			$result .= "Install done. <br />";
-			$result .= "<br />";
-			
-			
-			$pageURL = 'http';
-			if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
-				$pageURL .= "s";
-			}
-			
-			$pageURL .= "://";
-			if ($_SERVER["SERVER_PORT"] != "80") {
-				$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-			} else {
-				$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-			}
-			
-			$pageURL = str_replace("install","api",$pageURL);
-
-			$result .= "API URL is <strong>{$pageURL}/</strong>";
-			
-			
-			return $result;
-		
 		});
         
         return $controllers;

@@ -95,10 +95,10 @@ class UserController extends SpikaBaseController
 			$checkUniqueName = $app['spikadb']->checkUserNameIsUnique($username);
 			$checkUniqueEmail = $app['spikadb']->checkEmailIsUnique($email);
 	
-			if(count($checkUniqueName) > 0)
+			if(is_array($checkUniqueName))
 			  return $self->returnErrorResponse("The name is already taken.");
 			  
-			if(count($checkUniqueEmail) > 0)
+			if(is_array($checkUniqueEmail))
 			  return $self->returnErrorResponse("You are already signed up.");
 	
 			$newUserId = $app['spikadb']->createUser(
@@ -129,8 +129,6 @@ class UserController extends SpikaBaseController
 
                 if(!$self->validateRequestParams($userData,array(
                     'name',
-                    'email',
-                    'online_status',
                 ))){
                     return $self->returnErrorResponse("insufficient params");
                 }
@@ -195,7 +193,6 @@ class UserController extends SpikaBaseController
                 }
 
                 $result = $app['spikadb']->getActivitySummary($userId);
- 				
 
                 return json_encode($result);
             }

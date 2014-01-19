@@ -85,10 +85,10 @@ class PasswordResetController implements ControllerProviderInterface
 			return false;
 		}
 		
-		$requestReceivedTimeStamp = $resetData['timestamp'];
+		$requestReceivedTimeStamp = $resetData['created'];
 		$interval = time() - $requestReceivedTimeStamp;
 		
-		if($interval > PW_RESET_CODE_VALID_TIME){
+		if($interval > PW_RESET_CODE_VALID_TIME || $resetData['valid'] == 0){
 			return false;
 		}
 		

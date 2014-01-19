@@ -51,11 +51,12 @@ class GroupController extends SpikaBaseController
                 $requestBodyAry = json_decode($requestBody,true);
                 
                 $name = trim($requestBodyAry['name']);
+
                 
                 //check name is unique
 	            $checkUniqueName = $app['spikadb']->checkGroupNameIsUnique($name);
 		
-				if(count($checkUniqueName) > 0)
+				if(isset($checkUniqueName['_id']))
 				  return $self->returnErrorResponse("The name is already taken.");
 				
                 $description = "";
@@ -119,6 +120,7 @@ class GroupController extends SpikaBaseController
 
 				//check permission
 				$groupData = $app['spikadb']->findGroupById($groupId);
+				
 				$groupOwner = $groupData['user_id'];
 				if($groupOwner != $currentUser['_id']){
 					return $self->returnErrorResponse("invalid user");

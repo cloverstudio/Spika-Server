@@ -16,7 +16,6 @@ use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-
 class SendPasswordController extends SpikaBaseController
 {
     public function connect(Application $app)
@@ -29,34 +28,32 @@ class SendPasswordController extends SpikaBaseController
 
 			$email = $request->get('email');
 			
-			$startKey = "\"{$email}\"";
-			$query = "?key={$startKey}";
-			$resultTmp = $app['spikadb']->doGetRequest("/_design/app/_view/find_user_by_email{$query}",false);
-			$resutlData = json_decode($resultTmp, true);
+			$user = $app['spikadb']->findUserByEmail($email);
+						
+		    if (isset($user['_id'])) {
+				
+				$user = $app['spikadb']->findUserById($user['_id'],false);
 
-		    if (count($resutlData['rows']) != 0) {
-		
-		        $user = $resutlData['rows'][0]['value'];
 				$resetCode = $app['spikadb']->addPassworResetRequest($user['_id']);
 				
 				$resetPasswordUrl = ROOT_URL . "/page/resetPassword/" . $resetCode;
 				
 				$body = "Please reset password here {$resetPasswordUrl}";
 				
-				$message = \Swift_Message::newInstance()
-					->setSubject("Spika Reset Password")
-					->setFrom(AdministratorEmail)
-					->setTo($user['email'])
-					->setBody($body);
+				try{
+					$message = \Swift_Message::newInstance()
+						->setSubject("Spika Reset Password")
+						->setFrom(AdministratorEmail)
+						->setTo($user['email'])
+						->setBody($body);
+				} catch(\Exception $e){
 					
-				if($app['mailer']->send($message)){
-					return 'OK';
-				}else{
-					 return $self->returnErrorResponse("faied to send email.");
+					
+					
 				}
-				
-				
-				
+					
+				return 'OK';
+
 		    }else{
 			    
 			    return $self->returnErrorResponse("invalid email");

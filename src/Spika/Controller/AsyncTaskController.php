@@ -35,6 +35,8 @@ class AsyncTaskController extends SpikaBaseController
 			$requestBody = $request->getContent();
 			$requestData = json_decode($requestBody,true);
 			
+
+
 			if(empty($requestData['messageId']))
 				return $self->returnErrorResponse("insufficient params");
 
@@ -47,6 +49,8 @@ class AsyncTaskController extends SpikaBaseController
 			
 			$fromUser = $app['spikadb']->getUserById($fromUserId);
 			$toUser = $app['spikadb']->getUserById($toUserId);
+
+			$app['spikadb']->updateActivitySummaryByDirectMessage($message['to_user_id'],$message['from_user_id']);
 			
 			$pushnotificationMessage = $self->generatePushNotificationMessage($fromUser,$toUser);
 			
@@ -90,8 +94,6 @@ class AsyncTaskController extends SpikaBaseController
 				$result = $self->sendGCM($payload,$app);		
 				
 			}
-			
-			$app['spikadb']->updateActivitySummaryByDirectMessage($message['to_user_id'],$message['from_user_id']);
 			
 			return "";
 			

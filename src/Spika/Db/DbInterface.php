@@ -19,7 +19,6 @@ interface DbInterface
     public function getEmoticons();
     public function getEmoticonImage($emoticonId);
     public function getAvatarFileId($user_id);
-    public function getUserContacts($user_id,$include_docs);
     public function searchUserByName($name);
     public function searchUserByGender($gender);
     public function searchUserByAge($ageFrom,$ageTo);

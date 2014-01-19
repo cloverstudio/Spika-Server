@@ -83,9 +83,10 @@ class MessageController extends SpikaBaseController
                 }
 
                 $result = $app['spikadb']->getCommentCount($messageId);
-
+				
                 return json_encode($result);
             }
+            
         )->before($app['beforeTokenChecker']);
 
         $controllers->post('/sendComment',
@@ -220,6 +221,9 @@ class MessageController extends SpikaBaseController
 
    				$currentUser = $app['currentUser'];
 				$ownerUserId = $currentUser['_id'];
+				
+				$count = intval($count);
+				$offset = intval($offset);
 				
 				if(empty($ownerUserId) || empty($toUserId))
 					return $self->returnErrorResponse("failed to get message");

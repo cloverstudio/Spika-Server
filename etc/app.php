@@ -33,8 +33,19 @@ $app->register(new MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/debug.log',
 ));
 
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => array (
+            'driver'    => 'pdo_mysql',
+            'host'      => MySQL_HOST,
+            'dbname'    => MySQL_DBNAME,
+            'user'      => MySQL_USERNAME,
+            'password'  => MySQL_PASSWORD,
+            'charset'   => 'utf8'
+    )
+));
+
 $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
-    'couchdb.couchDBURL' => CouchDBURL,
+    'couchdb.couchDBURL' => CouchDBURL
 ));
 
 $app->register(new SwiftmailerServiceProvider());
@@ -42,6 +53,10 @@ $app->register(new Spika\Provider\TokenCheckerServiceProvider());
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../src/Spika/Views',
 ));
+
+$app->register(new Silex\Provider\SessionServiceProvider(), array(
+));
+
 
 $app->mount('/', new Spika\Controller\InstallerController());
 $app->mount('/api/', new Spika\Controller\SendPasswordController());

@@ -110,12 +110,35 @@
 			</div>
 			<div class="col-md-8">
 					<div class="alert alert-success">
-						Succeed to create database schema.
+						<h1>Congratulation!</h1>
+						Spika Server is installed.
 					</div>
+					
+					<h3>Important information </h3>
+					<p>Please keep this information.</p>
+					<div class="well">
+						
+						<p>API end point URL is <strong> adfasdfsd </strong></p>
+						<p>Support user id is <strong> 1 </strong></p>
+						<p>
+							Default username and password is  <strong> admin / password </strong> to login admin cms.
+							<span style="color:red">Edit init.php to change username and password for admin.</span>
+						</p>
+						
+					</div>
+					
+					
+					<h3>To finish setup</h3>
+					<p>Add database connection settings to <strong>init.php</strong>.</p>
+						<pre>
+define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "");
+define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "");
+define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "");
+define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "");
+						</pre>
 
-					<div class="alert alert-warning">
-						<strong>Next step is to create initial data. Default emoticons and group categories and support user account will be generated.</strong>
-					</div>
+					
+					
 
 				      <form class="form-database" method="post" action="{{ROOT_URL}}/installer/step3">
 				        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Initial Data</button>

@@ -16,8 +16,18 @@ define('TOKEN_VALID_TIME', isset($_ENV['SPIKA_TOKEN_VALID_TIME']) ? $_ENV['SPIKA
 define('PW_RESET_CODE_VALID_TIME', isset($_ENV['SPIKA_PW_RESET_CODE_VALID_TIME']) ? $_ENV['SPIKA_PW_RESET_CODE_VALID_TIME'] : 60*5);
 define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://localhost:8080/wwwroot");
 
-define('HTTP_PORT', 80);
+/*
+define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "");
+define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "");
+define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "");
+define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "");
+*/
 
+define('Admin_USERNAME', isset($_ENV['Admin_USERNAME']) ? $_ENV['Admin_USERNAME'] : "admin");
+define('Admin_PASSWORD', isset($_ENV['Admin_PASSWORD']) ? $_ENV['Admin_PASSWORD'] : "password");
+
+
+define('HTTP_PORT', 80);
 
 define("DIRECTMESSAGE_NOTIFICATION_MESSAGE", "You got message from %s");
 define("GROUPMESSAGE_NOTIFICATION_MESSAGE", "%s posted message to group %s");

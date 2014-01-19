@@ -1,3 +1,23 @@
+DROP TABLE IF EXISTS `emoticon`;
+CREATE TABLE IF NOT EXISTS `emoticon` (
+  `_id` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(255) COLLATE utf8_bin NOT NULL,
+  `file_id` varchar(255) COLLATE utf8_bin NOT NULL,
+  `created` int(11) NOT NULL,
+  `modified` int(11) NOT NULL,
+  PRIMARY KEY (`_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+DROP TABLE IF EXISTS `password_change_request`;
+CREATE TABLE IF NOT EXISTS `password_change_request` (
+  `_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `token` varchar(255) COLLATE utf8_bin NOT NULL,
+  `valid` tinyint(1) NOT NULL,
+  `created` int(11) NOT NULL,
+  PRIMARY KEY (`_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 DROP TABLE IF EXISTS `group`;
 CREATE TABLE IF NOT EXISTS `group` (
   `_id` int(11) NOT NULL AUTO_INCREMENT,

@@ -891,6 +891,11 @@ class MySQL implements DbInterface
     {
 		$group = $this->DB->fetchAssoc('select * from `group` where _id = ?',array($id));
 		$group = $this->reformatGroupData($group);
+		
+		// find group cateogory
+		$groupCategory = $this->DB->fetchAssoc('select * from group_category where _id = ?',array($group['category_id']));
+		$group['category_name'] = $groupCategory['title'];
+		
 		return $this->formatRow($group);
     }
 

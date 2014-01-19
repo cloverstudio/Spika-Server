@@ -54,15 +54,5 @@ interface DbInterface
     //public function addToContact($owserUserId,$tagetUserId);
     //public function removeFromContact($owserUserId,$tagetUserId);
 
-    /**
-     * Create a users
-     *
-     * @param  string $json
-     * @return string $id
-     */
-    public function doPostRequest($requestBody);
-    public function doGetRequestGetHeader($queryString, $stripCredentials = true);
-    public function doGetRequest($queryString, $stripCredentials = true);
-    public function doPutRequest($id, $requestBody);
-    public function doDeleteRequest($id, $rev);
+
 }

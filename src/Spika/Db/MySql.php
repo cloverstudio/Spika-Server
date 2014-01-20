@@ -366,11 +366,7 @@ class MySQL implements DbInterface
 						'_id' => $user_id,
 						'_rev'  => 'tmprev',
 						'type'  => 'activity_summary' ,
-						'user_id'  => $user_id,
-						'recent_activity' => array(
-							//ACTIVITY_SUMMARY_DIRECT_MESSAGE=>array('notifications'=>array()),
-							//ACTIVITY_SUMMARY_GROUP_MESSAGE=>array('notifications'=>array()),
-						)
+						'user_id'  => $user_id
 					)
 				)
 			)

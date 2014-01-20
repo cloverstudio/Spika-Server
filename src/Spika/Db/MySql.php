@@ -898,7 +898,10 @@ class MySQL implements DbInterface
     public function findGroupByName($name)
     {
 		$group = $this->DB->fetchAssoc('select * from `group` where name = ?',array($name));
-		$group = $this->reformatGroupData($group);
+		
+		if(isset($group['_id']))
+			$group = $this->reformatGroupData($group);
+			
 		return $this->formatRow($group);
     }
     
@@ -1304,13 +1307,13 @@ class MySQL implements DbInterface
     	return $comment;
     }
     
-	public function reformatGroupData($message){
+	public function reformatGroupData($gourp){
 
-	    $message['created'] = intval($message['created']);
-	    $message['modified'] = intval($message['modified']);
-	    $message['type'] = 'group';
+	    $gourp['created'] = intval($gourp['created']);
+	    $gourp['modified'] = intval($gourp['modified']);
+	    $gourp['type'] = 'group';
 
-    	return $message;
+    	return $gourp;
     }
     
 }

@@ -77,6 +77,7 @@ class InstallerController implements ControllerProviderInterface
 				$connectionResult = $conn->connect();			
 			}catch(\PDOException $e){
 				$connectionResult = false;
+				$app['monolog']->addDebug("Failed to connect DB");
 			}
 			
 			if($connectionResult){
@@ -132,6 +133,8 @@ class InstallerController implements ControllerProviderInterface
 				
 				$conn->commit();	
 			} catch(\Exception $e){
+				$app['monolog']->addDebug($e->getMessage());
+				
 				$conn->rollback();		
 				return $app['twig']->render('installer/installerError.twig', array(
 					'ROOT_URL' => $rootUrl
@@ -158,6 +161,7 @@ class InstallerController implements ControllerProviderInterface
 			try{
 				$connectionResult = $conn->connect();			
 			}catch(\PDOException $e){
+				$app['monolog']->addDebug($e->getMessage());
 				$app->redirect('/installer');
 			}
 			
@@ -211,7 +215,7 @@ class InstallerController implements ControllerProviderInterface
 			        $conn->insert('group_category',$data);
 					
 				} catch(\Exception $e){
-				
+					$app['monolog']->addDebug($e->getMessage());
 					$conn->rollback();	
 						
 					return $app['twig']->render('installer/installerError.twig', array(
@@ -262,7 +266,7 @@ class InstallerController implements ControllerProviderInterface
 			        $conn->insert('emoticon',$data);
 					
 				} catch(\Exception $e){
-				
+					$app['monolog']->addDebug($e->getMessage());
 					$conn->rollback();	
 						
 					return $app['twig']->render('installer/installerError.twig', array(

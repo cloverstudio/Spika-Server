@@ -38,7 +38,6 @@ function getEYDBConfiguration($EYDatabaseConfigurationFile){
 
 // read database configuration from engine yard
 $DBConfig = getEYDBConfiguration("../config/database.yml");
-print_r($DBConfig);
  
 define('CouchDBURL', isset($_ENV['SPIKA_COUCH_DB_URL']) ? $_ENV['SPIKA_COUCH_DB_URL'] : "http://localhost:5984/spikademo");
 define('AdministratorEmail', isset($_ENV['SPIKA_ADMIN_EMAIL']) ? $_ENV['SPIKA_ADMIN_EMAIL'] : "ken.yasue@clover-studio.com");

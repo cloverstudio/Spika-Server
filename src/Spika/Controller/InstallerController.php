@@ -30,11 +30,7 @@ class InstallerController implements ControllerProviderInterface
 		
 		$pageURL .= "://";
 		
-		if ($_SERVER["SERVER_PORT"] != "80") {
-			$pageURL .= $_SERVER["HTTP_HOST"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-		} else {
-			$pageURL .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
-		}
+		$pageURL .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 		
 		return $pageURL;
 	}
@@ -49,7 +45,7 @@ class InstallerController implements ControllerProviderInterface
 		$controllers->get('/installer', function (Request $request) use ($app,$self) {
 			$rootUrl = str_replace("/installer","",$self->curPageURL());
 			
-			return $app['twig']->render('installerTop.twig', array(
+			return $app['twig']->render('installer/installerTop.twig', array(
 				'ROOT_URL' => $rootUrl
 			));			
 		});

@@ -70,7 +70,7 @@ if(isset($DBConfig['password'])){
 	define("MySQL_PASSWORD", "");
 }
 
-define('EY_APP_NAME', isset($_ENV['SPIKA_EY_APP_NAME']) ? $_ENV['SPIKA_EY_APP_NAME'] : "spikatest");
+define('EY_APP_NAME', "##EAAPPNAME##");
 define('EY_SHARED_DIR_PATH', isset($_ENV['SPIKA_EY_APP_NAME']) ? $_ENV['SPIKA_EY_APP_NAME'] : "/data/" . EY_APP_NAME . "/shared");
 
 define('Admin_USERNAME', isset($_ENV['SPIKA_Admin_USERNAME']) ? $_ENV['SPIKA_Admin_USERNAME'] : "admin");

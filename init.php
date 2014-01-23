@@ -8,7 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+function getEYDBConfiguration($EYDatabaseConfigurationFile){
+	$EYDatabaseConfiguration = file_get_contents($EYDatabaseConfigurationFile);
+	$lines = explode("\n",$EYDatabaseConfiguration);
+	print_r($lines);
+} 
+
+// read database configuration from engine yard
+$DBConfig = getEYDBConfiguration("../config/database.yml");
+
  
 define('CouchDBURL', isset($_ENV['SPIKA_COUCH_DB_URL']) ? $_ENV['SPIKA_COUCH_DB_URL'] : "http://localhost:5984/spikademo");
 define('AdministratorEmail', isset($_ENV['SPIKA_ADMIN_EMAIL']) ? $_ENV['SPIKA_ADMIN_EMAIL'] : "ken.yasue@clover-studio.com");

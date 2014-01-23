@@ -45,12 +45,31 @@ define('AdministratorEmail', isset($_ENV['SPIKA_ADMIN_EMAIL']) ? $_ENV['SPIKA_AD
 define('TOKEN_VALID_TIME', isset($_ENV['SPIKA_TOKEN_VALID_TIME']) ? $_ENV['SPIKA_TOKEN_VALID_TIME'] : 60*60*24);
 define('PW_RESET_CODE_VALID_TIME', isset($_ENV['SPIKA_PW_RESET_CODE_VALID_TIME']) ? $_ENV['SPIKA_PW_RESET_CODE_VALID_TIME'] : 60*5);
 
-define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_SPIKA_ROOT_URL'] : "");
-define("MySQL_HOST", isset($_ENV['SPIKA_MySQL_HOST']) ? $_ENV['SPIKA_MySQL_HOST'] : "");
-define('MySQL_DBNAME', isset($_ENV['SPIKA_MySQL_DBNAME']) ? $_ENV['SPIKA_MySQL_DBNAME'] : "");
-define('MySQL_USERNAME', isset($_ENV['SPIKA_MySQL_USERNAME']) ? $_ENV['SPIKA_MySQL_USERNAME'] : "");
-define('MySQL_PASSWORD', isset($_ENV['SPIKA_MySQL_PASSWORD']) ? $_ENV['SPIKA_MySQL_PASSWORD'] : "");
+define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_SPIKA_ROOT_URL'] : "");	
 
+if(isset($DBConfig['host'])){
+	define("MySQL_HOST", $DBConfig['host']);
+}else{
+	define("MySQL_HOST", "");
+}
+
+if(isset($DBConfig['database'])){
+	define('MySQL_DBNAME', $DBConfig['database'] );
+}else{
+	define("MySQL_DBNAME", "");
+}
+
+if(isset($DBConfig['username'])){
+	define('MySQL_USERNAME', $DBConfig['username'] );
+}else{
+	define("MySQL_USERNAME", "");
+}
+
+if(isset($DBConfig['password'])){
+	define('MySQL_PASSWORD', $DBConfig['password'] );
+}else{
+	define("MySQL_PASSWORD", "");
+}
 
 define('Admin_USERNAME', isset($_ENV['SPIKA_Admin_USERNAME']) ? $_ENV['SPIKA_Admin_USERNAME'] : "admin");
 define('Admin_PASSWORD', isset($_ENV['SPIKA_Admin_PASSWORD']) ? $_ENV['SPIKA_Admin_PASSWORD'] : "password");

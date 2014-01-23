@@ -49,7 +49,12 @@ class InstallerController implements ControllerProviderInterface
 			$rootUrl = str_replace("/installer","",$self->curPageURL());
 			
 			return $app['twig']->render('installer/installerTop.twig', array(
-				'ROOT_URL' => $rootUrl
+				'ROOT_URL' => $rootUrl,
+				'MySQL_HOST' => MySQL_HOST,
+				'MySQL_DBNAME' => MySQL_DBNAME,
+				'MySQL_USERNAME' => MySQL_USERNAME,
+				'MySQL_PASSWORD' => MySQL_PASSWORD,
+				
 			));			
 		});
 

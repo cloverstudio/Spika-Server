@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Spika Installer</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ROOT_URL}}/assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="resetpassword.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="{{ROOT_URL}}/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    
+    <style>
+    
+		body {
+		  padding-top: 20px;
+		}
+		
+		.form-database {
+		  padding: 15px;
+		  margin: 0 auto;
+		}
+
+		.form-database .form-control {
+		  position: relative;
+		  font-size: 16px;
+		  height: auto;
+		  padding: 10px;
+		  -webkit-box-sizing: border-box;
+		     -moz-box-sizing: border-box;
+		          box-sizing: border-box;
+		  margin-bottom: 10px;
+		}
+
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container">
+		
+				
+      <div class="jumbotron">
+        <h1>Welcome to Spika server installer</h1>
+        <p class="lead">
+	        Spika is opensource mobile messenger system. Please follow this setup to install Spika backend to your server.
+        </p>
+      </div>
+      
+		<div class="row">
+			<div class="col-md-4">
+				
+				<div class="panel panel-primary">
+				  <div class="panel-heading">
+				    Sotfware Requirements
+				  </div>
+					  
+				  <div class="panel-body">
+					<ul>
+						<li>
+							PHP 5.3.3+</br>
+							<strong>Modules required</strong>
+							<ul>
+								<li>PDO</li>
+								<li>cURL</li>
+							</ul>
+						</li>
+						<li>
+							MySQL 5.0.0+
+						</li>						
+						<li>
+							curl 7.16.2+
+						</li>						
+						<li>
+							postfix 2.0.0+
+						</li>						
+					</ul>	  
+					  
+				  </div>
+				</div>				
+				
+				<div class="list-group">
+					<a class="list-group-item active">
+						Installation Steps
+					</a>
+					<a href="{{ROOT_URL}}/installer" class="list-group-item "><span class="glyphicon glyphicon-chevron-down"></span>
+						Input information to connect database.</a>
+					<a href="" class="list-group-item"><span class="glyphicon glyphicon-chevron-down"></span>
+						Create database schema.</a>
+					<a href="" class="list-group-item"><span class="glyphicon glyphicon-chevron-down"></span>
+						Create initial data.</a>
+					<a href="" class="list-group-item">Finish.</a>
+				</div>
+
+
+			</div>
+			<div class="col-md-8">
+					<div class="alert alert-success">
+						<h1>Congratulation!</h1>
+						Spika Server is installed.
+					</div>
+					
+					<h3>Important information </h3>
+					<p>Please keep this information.</p>
+					<div class="well">
+						
+						<p>API end point URL is <strong> {{ROOT_URL}}/api </strong></p>
+						<p>Support user id is <strong> 1 </strong></p>
+						<p>
+							Default username and password is  <strong> admin / password </strong> to login admin cms.
+							<span style="color:red">Edit init.php to change username and password for admin.</span>
+						</p>
+						
+					</div>
+					
+					
+					<h3>To finish setup</h3>
+					<p>Add database connection settings to <strong>init.php</strong>.</p>
+						<pre>
+define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "{{ROOT_URL}}");
+
+define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "{{DbParams.host}}");
+define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "{{DbParams.dbname}}");
+define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "{{DbParams.user}}");
+define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "{{DbParams.password}}");
+						</pre>
+
+					
+					
+
+				      <form class="form-database" method="post" action="{{ROOT_URL}}/installer/step3">
+				        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Initial Data</button>
+				      </form>
+
+
+			</div>
+		</div>
+
+
+    </div> 
+  </body>
+</html>

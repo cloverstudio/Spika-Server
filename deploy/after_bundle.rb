@@ -1,1 +1,1 @@
-run "sed -i '/define(\'EY_APP_NAME\', ##EAAPPNAME##);/c define(\'EY_APP_NAME\', \"#{config.app}\");' #{config.current_path}/init.php"
+run "sed -i 's/##EAAPPNAME##/\"#{config.app}\"/' #{config.current_path}/init.php"

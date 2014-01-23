@@ -21,7 +21,7 @@ class FileController extends SpikaBaseController
 {
 
 	static $paramName = 'file';
-	static $fileDirName = 'uploads';
+	static $fileDirName = '../../shared/uploads'; // EY support
 	
     public function connect(Application $app)
     {

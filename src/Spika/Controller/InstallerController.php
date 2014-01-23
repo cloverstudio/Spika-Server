@@ -36,6 +36,8 @@ class InstallerController implements ControllerProviderInterface
 			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 		}
 		
+		print_r($_SERVER);
+		
 		return $pageURL;
 	}
 

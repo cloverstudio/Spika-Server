@@ -8,10 +8,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+ 
+// import yaml parser to composer.json only for this part is too much so I manually do this.
 function getEYDBConfiguration($EYDatabaseConfigurationFile){
+	
+	$keys = array('database','username','password','host');
+	$dbConfData = array();
+	
 	$EYDatabaseConfiguration = file_get_contents($EYDatabaseConfigurationFile);
 	$lines = explode("\n",$EYDatabaseConfiguration);
-	print_r($lines);
+	foreach($lines as $line){
+		
+		foreach($keys as $key){
+			
+			preg_match_all("/{$key}:'(.*?)'/", $line, $args);
+			
+			print_r($args);
+		}
+		
+	}
 } 
 
 // read database configuration from engine yard

@@ -31,12 +31,10 @@ class InstallerController implements ControllerProviderInterface
 		$pageURL .= "://";
 		
 		if ($_SERVER["SERVER_PORT"] != "80") {
-			$pageURL .= $_SERVER["DB_HOST"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+			$pageURL .= $_SERVER["HTTP_HOST"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 		} else {
-			$pageURL .= $_SERVER["DB_HOST"].$_SERVER["REQUEST_URI"];
+			$pageURL .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 		}
-		
-		print_r($_SERVER);
 		
 		return $pageURL;
 	}

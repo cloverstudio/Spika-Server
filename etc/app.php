@@ -30,7 +30,7 @@ $app['debug'] = true;
 
 // logging
 $app->register(new MonologServiceProvider(), array(
-    'monolog.logfile' => __DIR__.'/../logs/debug.log',
+    'monolog.logfile' => EY_APP_NAME . '/log/debug.log',
 ));
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(

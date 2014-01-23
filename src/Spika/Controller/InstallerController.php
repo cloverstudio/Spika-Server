@@ -84,12 +84,12 @@ class InstallerController implements ControllerProviderInterface
 			}
 			
 			if($connectionResult){
-				return $app['twig']->render('installerStep1.twig', array(
+				return $app['twig']->render('installer/installerStep1.twig', array(
 					'ROOT_URL' => $rootUrl,
 					'ConnectionSucceed' => $connectionResult
 				));			
 			}else{
-				return $app['twig']->render('installerTop.twig', array(
+				return $app['twig']->render('installer/installerTop.twig', array(
 					'ROOT_URL' => $rootUrl,
 					'ConnectionSucceed' => $connectionResult
 				));			
@@ -114,7 +114,7 @@ class InstallerController implements ControllerProviderInterface
 			// read sql file
 			$pathToSchemaFile = "../install/databaseschema.sql";
 			if(!file_exists("../install/databaseschema.sql")){
-				return $app['twig']->render('installerError.twig', array(
+				return $app['twig']->render('installer/installerError.twig', array(
 					'ROOT_URL' => $rootUrl
 				));
 			}
@@ -137,13 +137,13 @@ class InstallerController implements ControllerProviderInterface
 				$conn->commit();	
 			} catch(\Exception $e){
 				$conn->rollback();		
-				return $app['twig']->render('installerError.twig', array(
+				return $app['twig']->render('installer/installerError.twig', array(
 					'ROOT_URL' => $rootUrl
 				));
 				
 			}
 			
-			return $app['twig']->render('installerStep2.twig', array(
+			return $app['twig']->render('installer/installerStep2.twig', array(
 				'ROOT_URL' => $rootUrl,
 				'ConnectionSucceed' => $connectionResult
 			));		
@@ -167,7 +167,7 @@ class InstallerController implements ControllerProviderInterface
 			
 			$fileDir = __DIR__.'/../../../'.FileController::$fileDirName;
 			if(!is_writable($fileDir)){
-				return $app['twig']->render('installerError.twig', array(
+				return $app['twig']->render('installer/installerError.twig', array(
 					'ROOT_URL' => $rootUrl
 				));
 			}
@@ -218,7 +218,7 @@ class InstallerController implements ControllerProviderInterface
 				
 					$conn->rollback();	
 						
-					return $app['twig']->render('installerError.twig', array(
+					return $app['twig']->render('installer/installerError.twig', array(
 						'ROOT_URL' => $rootUrl
 					));
 					
@@ -269,7 +269,7 @@ class InstallerController implements ControllerProviderInterface
 				
 					$conn->rollback();	
 						
-					return $app['twig']->render('installerError.twig', array(
+					return $app['twig']->render('installer/installerError.twig', array(
 						'ROOT_URL' => $rootUrl,
 					));
 					
@@ -292,7 +292,7 @@ class InstallerController implements ControllerProviderInterface
 			$conn->insert('user',$userData);			
 			$conn->commit();	
 				
-			return $app['twig']->render('installerStep3.twig', array(
+			return $app['twig']->render('installer/installerStep3.twig', array(
 				'ROOT_URL' => $rootUrl,
 				'ConnectionSucceed' => $connectionResult,
 				'DbParams' => $connectionParams,

@@ -183,7 +183,7 @@ class InstallerController implements ControllerProviderInterface
 				$app->redirect('/installer');
 			}
 			
-			$fileDir = __DIR__.'/../../../'.FileController::$fileDirName;
+			$fileDir = EY_SHARED_DIR_PATH."/".FileController::$fileDirName;
 			if(!is_writable($fileDir)){
 				$app['monolog']->addDebug("{$fileDir} is not writable.");
 				return $app['twig']->render('installer/installerError.twig', array(

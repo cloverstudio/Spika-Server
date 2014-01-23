@@ -21,9 +21,9 @@ function getEYDBConfiguration($EYDatabaseConfigurationFile){
 		
 		foreach($keys as $key){
 			
-			preg_match_all("/{$key}:'(.*?)'/", $line, $args);
+			preg_match_all("/{$key}:'(.*?)'/", $line, &$matches);
 			
-			print_r($args);
+			print_r($matches);
 		}
 		
 	}

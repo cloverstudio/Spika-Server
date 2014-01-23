@@ -43,6 +43,9 @@ class InstallerController implements ControllerProviderInterface
 		
 		// first screen
 		$controllers->get('/installer', function (Request $request) use ($app,$self) {
+			
+			$app['monolog']->addDebug("top");
+			
 			$rootUrl = str_replace("/installer","",$self->curPageURL());
 			
 			return $app['twig']->render('installer/installerTop.twig', array(
@@ -52,6 +55,9 @@ class InstallerController implements ControllerProviderInterface
 
 		// connect to DB
 		$controllers->post('/installer/step1', function (Request $request) use ($app,$self) {
+			
+			$app['monolog']->addDebug("step1");
+			
 			$rootUrl = str_replace("/installer/step1","",$self->curPageURL());
 			
 			$host = $request->get('host');
@@ -95,6 +101,9 @@ class InstallerController implements ControllerProviderInterface
 
 		// create database schema
 		$controllers->post('/installer/step2', function (Request $request) use ($app,$self) {
+			
+			$app['monolog']->addDebug("step2");
+			
 			$rootUrl = str_replace("/installer/step2","",$self->curPageURL());
 			
 			$config = new \Doctrine\DBAL\Configuration();
@@ -151,6 +160,9 @@ class InstallerController implements ControllerProviderInterface
 
 		// generate initial data
 		$controllers->post('/installer/step3', function (Request $request) use ($app,$self) {
+			
+			$app['monolog']->addDebug("step3");
+			
 			$rootUrl = str_replace("/installer/step3","",$self->curPageURL());
 			
 			$config = new \Doctrine\DBAL\Configuration();
@@ -161,6 +173,7 @@ class InstallerController implements ControllerProviderInterface
 			try{
 				$connectionResult = $conn->connect();			
 			}catch(\PDOException $e){
+				$app['monolog']->addDebug("failed to connect DB" . var_dump($connectionParams));
 				$app['monolog']->addDebug($e->getMessage());
 				$app->redirect('/installer');
 			}

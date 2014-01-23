@@ -1,3 +1,3 @@
-sudo "chmod -R 777 #{config.release_dir}/logs"
-sudo "mkdir #{config.release_dir}/uploads"
-sudo "chmod -R 777 #{config.release_dir}/uploads"
+run "chmod -R 777 #{config.current_path}/logs"
+run "mkdir #{config.current_path}/uploads"
+run "chmod -R 777 #{config.current_path}/uploads"

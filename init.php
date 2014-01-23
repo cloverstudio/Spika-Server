@@ -11,27 +11,34 @@
  
 // import yaml parser to composer.json only for this part is too much so I manually do this.
 function getEYDBConfiguration($EYDatabaseConfigurationFile){
-	
-	$keys = array('database','username','password','host');
-	$dbConfData = array();
-	
-	$EYDatabaseConfiguration = file_get_contents($EYDatabaseConfigurationFile);
-	$lines = explode("\n",$EYDatabaseConfiguration);
-	foreach($lines as $line){
-		
-		foreach($keys as $key){
-			
-			preg_match_all("/{$key}: '(.*?)'/", $line, $matches);
-			
-			print_r($matches);
-		}
-		
-	}
-} 
+
+        $keys = array('database','username','password','host');
+        $dbConfData = array();
+
+        $EYDatabaseConfiguration = file_get_contents($EYDatabaseConfigurationFile);
+        $lines = explode("\n",$EYDatabaseConfiguration);
+        
+        foreach($lines as $line){
+        
+            foreach($keys as $key){
+
+                preg_match_all("/{$key}:\s+'(.*)'/", $line, $matches);
+                
+                if(!empty($matches[1][0])){
+                        $dbConfData[$key] = $matches[1][0];
+                }
+                
+            }
+            
+        }
+
+        return $dbConfData;
+}
+
 
 // read database configuration from engine yard
 $DBConfig = getEYDBConfiguration("../config/database.yml");
-
+print_r($DBConfig);
  
 define('CouchDBURL', isset($_ENV['SPIKA_COUCH_DB_URL']) ? $_ENV['SPIKA_COUCH_DB_URL'] : "http://localhost:5984/spikademo");
 define('AdministratorEmail', isset($_ENV['SPIKA_ADMIN_EMAIL']) ? $_ENV['SPIKA_ADMIN_EMAIL'] : "ken.yasue@clover-studio.com");

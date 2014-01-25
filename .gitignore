@@ -1,9 +1,6 @@
 *.swp
 .idea/
 .vagrant/
-.HookUpServer/hookup/files/
-.HookUpServer/hookup/tmp/log/
-.HookUpServer/hookup_push/tmp/log/
 .logs/
 .uploads/
 .vendor/

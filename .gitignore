@@ -1,11 +1,9 @@
 *.swp
-.idea/
-.vagrant/
-.logs/
-.uploads/
-.vendor/
-.other/
-build/
+idea/
+vagrant/
+logs/
+uploads/
 vendor/
+build/
 logs/
 !logs/.gitkeep

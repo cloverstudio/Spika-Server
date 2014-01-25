@@ -7,4 +7,5 @@ uploads/
 vendor/
 build/
 logs/
+nottrackingfiles/
 !logs/.gitkeep

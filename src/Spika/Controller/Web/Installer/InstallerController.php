@@ -17,6 +17,7 @@ use Symfony\Component\Debug\ExceptionHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Doctrine\DBAL\DriverManager;
+use Spika\Controller\FileController;
 
 class InstallerController implements ControllerProviderInterface
 {

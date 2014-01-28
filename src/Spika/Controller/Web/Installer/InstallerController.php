@@ -243,7 +243,7 @@ class InstallerController implements ControllerProviderInterface
 			
 			// generate emoticons
 			$files = array();
-			$filesPath = __DIR__.'/../../../install/resouces/emoticons';
+			$filesPath = __DIR__.'/../../../../../install/resouces/emoticons';
 			if ($handle = opendir($filesPath)) {
 			
 			    while ($entry = readdir($handle)) {

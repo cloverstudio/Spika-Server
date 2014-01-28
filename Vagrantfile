@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, :inline => <<-EOS
     sudo apt-get update
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php5 php5-curl phpunit curl git-core php5-xdebug postfix mysql-server php5-mysql
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php5 php5-curl phpunit curl git-core php5-xdebug postfix mysql-server php5-mysql php5-gd
 
     #http://www.giocc.com/installing-phpunit-on-ubuntu-11-04-natty-narwhal.html
     sudo pear upgrade pear

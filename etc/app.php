@@ -15,7 +15,7 @@ ini_set( "display_errors", 1 );
 date_default_timezone_set("GMT");
 
 require_once __DIR__.'/../vendor/autoload.php';
-require_once __DIR__.'/../init.php';
+require_once __DIR__.'/../config/init.php';
 require_once __DIR__.'/../etc/utils.php';
 
 use Symfony\Component\HttpFoundation\Request;
@@ -57,8 +57,12 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->register(new Silex\Provider\SessionServiceProvider(), array(
 ));
 
+$app['adminBeforeTokenChecker'] = $app->share(function () use ($app) {
+    return new Spika\Middleware\AdminChecker(
+        $app
+    );
+});
 
-$app->mount('/', new Spika\Controller\InstallerController());
 $app->mount('/api/', new Spika\Controller\SendPasswordController());
 $app->mount('/api/', new Spika\Controller\ReportController());
 $app->mount('/api/', new Spika\Controller\FileController());
@@ -71,4 +75,8 @@ $app->mount('/api/', new Spika\Controller\GroupController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());
 $app->mount('/api/', new Spika\Controller\AsyncTaskController());
 $app->mount('/page/', new Spika\Controller\PasswordResetController());
-//$app->mount('/api/', new Spika\Controller\GeneralAPIHandlerController());
+
+$app->mount('/', new Spika\Controller\Web\Installer\InstallerController());
+$app->mount('/admin/', new Spika\Controller\Web\Admin\LoginController());
+$app->mount('/admin/', new Spika\Controller\Web\Admin\GroupController());
+

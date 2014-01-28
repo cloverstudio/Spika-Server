@@ -817,7 +817,9 @@ class MySQL implements DbInterface
     		'description' => $description,
     		'user_id' => $ownerId,
     		'avatar_file_id' => $avatarURL,
-    		'avatar_thumb_file_id' => $thumbURL
+    		'avatar_thumb_file_id' => $thumbURL,
+    		'created' => time(),
+    		'modified' => time()
     	);
     
         if($this->DB->insert('`group`',$groupData)){
@@ -918,10 +920,17 @@ class MySQL implements DbInterface
 		
     	return $this->formatResult($formatedGroups);
     }
-
-   public function findAllGroups()
+    
+   public function findAllGroups($offset = 0,$count=0)
     {
-    	$result = $this->DB->fetchAll('select * from `group`');
+    	$query = "select * from `group` order by _id  ";
+    	
+    	if($count != 0){
+	    	$query .= " limit {$count} offset {$offset} ";
+    	}
+    	
+	    
+    	$result = $this->DB->fetchAll($query);
 		
 		$formatedGroups = array();
 		foreach($result as $group){
@@ -930,6 +939,15 @@ class MySQL implements DbInterface
 		}
 		
     	return $this->formatResult($formatedGroups);
+    }
+    
+   public function findGroupCount()
+    {
+    	$query = "select count(*) as count from `group`";
+	    
+    	$result = $this->DB->fetchColumn($query);
+
+    	return $result;
     }
     
     public function findGroupsByName($name)

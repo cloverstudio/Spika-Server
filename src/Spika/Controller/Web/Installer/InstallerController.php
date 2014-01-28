@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spika\Controller;
+namespace Spika\Controller\Web\Installer;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -319,5 +319,3 @@ class InstallerController implements ControllerProviderInterface
     }
     
 }
-
-?>

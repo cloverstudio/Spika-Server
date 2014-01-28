@@ -179,7 +179,7 @@ class InstallerController implements ControllerProviderInterface
 				$app->redirect('/installer');
 			}
 			
-			$fileDir = __DIR__.'/../../../'.FileController::$fileDirName;
+			$fileDir = __DIR__.'/../../../../'.FileController::$fileDirName;
 			if(!is_writable($fileDir)){
 				$app['monolog']->addDebug("{$fileDir} is not writable.");
 				return $app['twig']->render('installer/installerError.twig', array(
@@ -192,7 +192,7 @@ class InstallerController implements ControllerProviderInterface
 			// generate group categories
 
 			$files = array();
-			$filesPath = __DIR__.'/../../../install/resouces/categoryimages';
+			$filesPath = __DIR__.'/../../../../install/resouces/categoryimages';
 			if ($handle = opendir($filesPath)) {
 			
 			    while ($entry = readdir($handle)) {

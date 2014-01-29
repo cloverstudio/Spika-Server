@@ -500,7 +500,7 @@ class MySQL implements DbInterface
 					avatar_file_id = ?,
 					avatar_thumb_file_id = ?,
 					ios_push_token = ?,
-					ios_push_token = ?,
+					android_push_token = ?,
 					modified = ?
 					WHERE _id = ?', 
 				array(

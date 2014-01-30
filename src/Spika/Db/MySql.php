@@ -75,7 +75,7 @@ class MySQL implements DbInterface
     public function doSpikaAuth($email,$password)
     {
 		$user = $this->DB->fetchAssoc('select * from user where email = ? and password = ?',array($email,$password));
-		
+
 		if (empty($user['_id'])) {
 		    $arr = array('message' => 'User not found!', 'error' => 'logout');
 		    return json_encode($arr);
@@ -85,6 +85,8 @@ class MySQL implements DbInterface
 		    $arr = array('message' => 'Wrong password!', 'error' => 'logout');
 		    return json_encode($arr);
 		}
+		
+
 
 		$token = \Spika\Utils::randString(40, 40);
 		
@@ -515,6 +517,8 @@ class MySQL implements DbInterface
 					$user['android_push_token'],
 					$now,
 					$userId));
+
+		$this->logger->addDebug("user id is {$userId}");
 
         if($result){
             return $this->findUserById($userId,false);
@@ -1295,14 +1299,26 @@ class MySQL implements DbInterface
 			unset($user['token']);
 		}
 		
-	    $user['birthday'] = intval($user['birthday']);
-    	$user['last_login'] = intval($user['last_login']);
-    	$user['max_contact_count'] = intval($user['max_contact_count']);
-    	$user['max_favorite_count'] = intval($user['max_contact_count']);
-    	$user['type'] = 'user';
+		if(isset($user['birthday']))
+	    	$user['birthday'] = intval($user['birthday']);
 
-	    $user['created'] = intval($user['created']);
-	    $user['modified'] = intval($user['modified']);
+		if(isset($user['last_login']))
+	    	$user['last_login'] = intval($user['last_login']);
+
+		if(isset($user['max_contact_count']))
+	    	$user['max_contact_count'] = intval($user['max_contact_count']);
+
+		if(isset($user['max_favorite_count']))
+	    	$user['max_favorite_count'] = intval($user['max_contact_count']);
+
+
+		if(isset($user['created']))
+		    $user['created'] = intval($user['created']);
+
+		if(isset($user['modified']))
+		    $user['modified'] = intval($user['modified']);
+
+	    $user['type'] = 'user';
 	    $user['_rev'] = 'tmprev';
     	
     	return $user;

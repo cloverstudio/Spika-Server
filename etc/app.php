@@ -75,6 +75,7 @@ $app->mount('/api/', new Spika\Controller\GroupController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());
 $app->mount('/api/', new Spika\Controller\AsyncTaskController());
 $app->mount('/page/', new Spika\Controller\PasswordResetController());
+$app->mount('/page/', new Spika\Controller\Web\StaticPageController());
 
 $app->mount('/', new Spika\Controller\Web\Installer\InstallerController());
 $app->mount('/admin/', new Spika\Controller\Web\Admin\LoginController());

@@ -41,7 +41,7 @@ Vagrant.configure('2') do |config|
     sudo chmod -R 777 /vagrant/uploads
     sudo php /vagrant/composer.phar install -d /vagrant/
 
-    echo 'please open http://localhost:8080/wwwroot/installer to finish setup'
+    echo 'please open http://[your_ip_address]/wwwroot/installer to finish setup'
   	
   EOT
 

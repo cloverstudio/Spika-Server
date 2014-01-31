@@ -1,5 +1,5 @@
 Vagrant.configure('2') do |config|
-  config.vm.hostname              = 'test001.foobar.com'  # 好きなhostnameに変更
+  config.vm.hostname              = 'test002.foobar.com'  # 好きなhostnameに変更
 
   config.vm.provider :digital_ocean do |provider, override|
   
@@ -32,14 +32,14 @@ Vagrant.configure('2') do |config|
     sed -i '/AllowOverride None/c AllowOverride All' /etc/apache2/sites-available/default    
 
     sudo rm -rf /var/www
-    sudo ln -s /vagrant_data /var/www
+    sudo ln -s /vagrant /var/www
 
     sudo /etc/init.d/apache2 restart
-    sudo mkdir -p /vagrant_data/logs
-    sudo mkdir -p /vagrant_data/uploads
-    sudo chmod 777 /vagrant_data/logs
-    sudo chmod 777 /vagrant_data/uploads
-    sudo php /vagrant_data/composer.phar install -d /vagrant_data/
+    sudo mkdir -p /vagrant/logs
+    sudo mkdir -p /vagrant/uploads
+    sudo chmod 777 /vagrant/logs
+    sudo chmod 777 /vagrant/uploads
+    sudo php /vagrant/composer.phar install -d /vagrant/
 
     echo 'please open http://localhost:8080/wwwroot/installer to finish setup'
   	

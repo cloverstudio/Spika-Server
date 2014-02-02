@@ -81,4 +81,6 @@ $app->mount('/', new Spika\Controller\Web\Installer\InstallerController());
 $app->mount('/admin/', new Spika\Controller\Web\Admin\LoginController());
 $app->mount('/admin/', new Spika\Controller\Web\Admin\GroupController());
 $app->mount('/admin/', new Spika\Controller\Web\Admin\UserController());
+$app->mount('/admin/', new Spika\Controller\Web\Admin\GroupCategoryController());
+$app->mount('/admin/', new Spika\Controller\Web\Admin\EmoticonController());
 

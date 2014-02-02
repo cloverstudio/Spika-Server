@@ -22,8 +22,6 @@ use Spika\Controller\Web\SpikaWebBaseController;
 use Spika\Controller\FileController;
 use Symfony\Component\HttpFoundation\Cookie;
 
-#define kStatusDataSource   @[ @"online", @"away", @"busy", @"offline" ]
-
 class UserController extends SpikaWebBaseController
 {
 
@@ -373,8 +371,8 @@ class UserController extends SpikaWebBaseController
 				$mimeType = $file->getClientMimeType();
 				
 				if(!preg_match("/jpeg/", $mimeType)){
-					$self->setErrorAlert($self->language['messageValidationErrorFormat']);
-					$validationError = false;
+					$this->setErrorAlert($this->language['messageValidationErrorFormat']);
+					$validationResult = false;
 					
 				}else{
 										

@@ -217,7 +217,7 @@ class GroupController extends SpikaWebBaseController
 					
 					if(!preg_match("/jpeg/", $mimeType)){
 						$self->setErrorAlert($self->language['messageValidationErrorFormat']);
-						$validationError = true;
+						$validationResult = true;
 						
 					}else{
 											

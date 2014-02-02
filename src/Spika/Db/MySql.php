@@ -1443,4 +1443,156 @@ class MySQL implements DbInterface
         );
     }
     
+    public function createGroupCategory($title,$picture){
+        
+            	
+    	$now = time();
+ 
+        $valueArray = array();
+        $valueArray['title'] = $title;
+		$valueArray['avatar_file_id'] = $picture;
+		$valueArray['created'] = $now;
+		$valueArray['modified'] = $now;
+		
+        if($this->DB->insert('group_category',$valueArray)){
+	        return $this->DB->lastInsertId("_id");
+        }else{
+	        return null;
+        }
+        
+    }
+    
+	public function findAllGroupCategoryWithPaging($offset = 0,$count){
+	    
+    	$query = "select * from group_category order by _id ";
+    	
+    	if($count != 0){
+	    	$query .= " limit {$count} offset {$offset} ";
+    	}
+	    
+	    
+    	$result = $this->DB->fetchAll($query);
+    	
+    	return $this->formatResult($result);
+    	
+	}
+    
+    public function findGroupCategoryCount()
+    {
+    	$query = "select count(*) as count from group_category";
+    	$result = $this->DB->fetchColumn($query);
+    	return $result;
+    }
+
+    public function findGroupCategoryById($id){
+        
+    	$groupCategory = $this->DB->fetchAssoc('select * from group_category where _id = ?',array($id));				
+    	return $groupCategory;
+        
+    }
+    
+    public function updateGroupCategory($id,$title,$picture){
+
+		$result = $this->DB->executeupdate(
+				'update group_category set 
+					title = ?,
+					avatar_file_id = ?,
+					modified = ?
+					WHERE _id = ?', 
+				array(
+				    $title,
+				    $picture,
+					time(),
+					$id));
+        
+        return $result;
+    }
+
+    public function deleteGroupCategory($id){
+
+		$this->DB->delete('group_category', array('_id' => $id));
+		
+        return array(
+            	'ok' => 1,
+            	'id' => $groupId,
+            	'rev' => 'tmprev' 
+        );
+    }
+    
+    
+    public function createEmoticon($idenfier,$picture){
+        
+    	$now = time();
+ 
+        $valueArray = array();
+        $valueArray['identifier'] = $idenfier;
+		$valueArray['file_id'] = $picture;
+		$valueArray['created'] = $now;
+		$valueArray['modified'] = $now;
+		
+        if($this->DB->insert('emoticon',$valueArray)){
+	        return $this->DB->lastInsertId("_id");
+        }else{
+	        return null;
+        }
+        
+    }
+
+	public function findAllEmoticonsWithPaging($offset = 0,$count){
+	    
+    	$query = "select * from emoticon order by _id ";
+    	
+    	if($count != 0){
+	    	$query .= " limit {$count} offset {$offset} ";
+    	}
+	    
+	    
+    	$result = $this->DB->fetchAll($query);
+    	
+    	return $this->formatResult($result);
+    	
+	}
+    
+    public function findEmoticonCount()
+    {
+    	$query = "select count(*) as count from emoticon";
+    	$result = $this->DB->fetchColumn($query);
+    	return $result;
+    }
+
+    public function findEmoticonById($id){
+        
+    	$groupCategory = $this->DB->fetchAssoc('select * from emoticon where _id = ?',array($id));				
+    	return $groupCategory;
+        
+    }
+    
+    public function updateEmoticon($id,$title,$picture){
+
+		$result = $this->DB->executeupdate(
+				'update emoticon set 
+					identifier = ?,
+					file_id = ?,
+					modified = ?
+					WHERE _id = ?', 
+				array(
+				    $title,
+				    $picture,
+					time(),
+					$id));
+        
+        return $result;
+    }
+
+    public function deleteEmoticon($id){
+
+		$this->DB->delete('emoticon', array('_id' => $id));
+		
+        return array(
+            	'ok' => 1,
+            	'id' => $groupId,
+            	'rev' => 'tmprev' 
+        );
+    }
+
 }

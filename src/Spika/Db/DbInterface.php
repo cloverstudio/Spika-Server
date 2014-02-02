@@ -55,6 +55,20 @@ interface DbInterface
     public function findUserCount();
     public function findAllUsersWithPaging($offect,$count);
     public function deleteUser($id);
+
+    public function createGroupCategory($title,$picture);
+    public function findAllGroupCategoryWithPaging($offect,$count);
+    public function findGroupCategoryCount();
+    public function findGroupCategoryById($id);
+    public function updateGroupCategory($id,$title,$picture);
+    public function deleteGroupCategory($id);
+    
+    public function createEmoticon($identifier,$picture);
+    public function findAllEmoticonsWithPaging($offect,$count);
+    public function findEmoticonCount();
+    public function findEmoticonById($id);
+    public function updateEmoticon($id,$title,$picture);
+    public function deleteEmoticon($id);
     //public function addToContact($owserUserId,$tagetUserId);
     //public function removeFromContact($owserUserId,$tagetUserId);
 

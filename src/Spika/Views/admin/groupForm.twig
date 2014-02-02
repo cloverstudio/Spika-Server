@@ -2,6 +2,31 @@
 
 {% block content %}
 
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+
+        $('#chkbox_change_password').click(function() {
+        
+            var $this = $(this);
+
+            if ($this.is(':checked')) {
+                
+                $('#group_password').removeAttr("disabled");
+                $('#group_password').val('');
+                
+            } else {
+                
+                $('#group_password').attr("disabled","disabled");
+                $('#group_password').val('');
+                
+            }
+            
+        });        
+    });
+    
+</script>
+
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
@@ -21,8 +46,12 @@
 					
 					{% include "admin/alerts.twig" %}
 					
-                    <form role="form" method="post" action="{{ROOT_URL}}/admin/group/add" enctype="multipart/form-data">
-                    
+                    {% if mode == 'edit' %}
+                        <form role="form" method="post" action="{{ROOT_URL}}/admin/group/edit/{{id}}" enctype="multipart/form-data">
+                    {% else %}
+                        <form role="form" method="post" action="{{ROOT_URL}}/admin/group/add" enctype="multipart/form-data">
+                    {% endif %}
+
 						{% if mode == 'view' or mode == 'edit' %}
 						
 							<div class="panel panel-default">
@@ -43,9 +72,19 @@
 									{% endif %}
 			                    </div>
 			                </div>
-
-						{% endif %}
+                        
+                        {% endif %}
 						
+
+                        {% if mode == 'edit' %}
+    						<div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="chkbox_delete_picture" value="1">
+                                    {{lang.labelDeletePicture}}
+                                </label>
+                            </div>
+                        {% endif %}
+                        
                         <div class="form-group">
                             <label>{{lang.formGroupCategory}}</label>
                             
@@ -81,8 +120,14 @@
                             {% if mode == 'new' %}
                            	 	<input class="form-control" name="group_password" value="{{formValues.group_password}}">
 						   	{% elseif mode == 'edit' %}
-                           	 	<input class="form-control" name="group_password">
-                           	 	<span class="help-block">{{lang.messageChangePassword}}</span>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="checkbox" id="chkbox_change_password" name="chkbox_change_password" value="1">
+                                    </span>
+                                    <input type="text" class="form-control" id="group_password" name="group_password" disabled="disabled" placeholder="{{lang.messageChangePassword}}">
+                                </div>
+                                                  	 	
                             {% else %}
                             	<div class="well">{% if formValues.group_password != "" %}Yes{% else %}No{% endif %}</div>
                             {% endif %}
@@ -119,5 +164,6 @@
                 </div>
             </div>
              
-             
+</script>
+       
 {% endblock %}

@@ -195,8 +195,6 @@ class MySQL implements DbInterface
     	$user['contacts'] = $contactIds;
     	$user['favorite_groups'] = $groupIds;
     	
-    	$this->logger->addDebug(print_r($user,true));
-    	
     	$user = $this->reformatUserData($user,$deletePersonalInfo);
 				
     	return $user;
@@ -459,6 +457,41 @@ class MySQL implements DbInterface
         
      }
 
+    /**
+     * create a user with detailed params
+     *
+     * @param  string $json
+     * @return id
+     */
+    public function createUserDetail($userName,$password,$email,$about,$onlineStatus,$maxContacts,$maxFavorites,$birthday,$gender,$avatarFile,$thumbFile)
+    {
+    	
+    	$now = time();
+ 
+        $valueArray = array();
+        $valueArray['name'] = $userName;
+        $valueArray['email'] = $email;
+        $valueArray['password'] = $password;
+        $valueArray['about'] = $about;
+		$valueArray['online_status'] =$onlineStatus;
+		$valueArray['max_contact_count'] = $maxContacts;
+		$valueArray['max_favorite_count'] = $maxFavorites;
+		$valueArray['birthday'] = $birthday;
+		$valueArray['gender'] = $gender;
+		$valueArray['avatar_file_id'] = $avatarFile;
+		$valueArray['avatar_thumb_file_id'] = $thumbFile;
+		$valueArray['created'] = $now;
+		$valueArray['modified'] = $now;
+		
+        if($this->DB->insert('user',$valueArray)){
+	        return $this->DB->lastInsertId("_id");
+        }else{
+	        return null;
+        }
+        
+     }
+
+    
     public function updateUser($userId,$user){
 
         $originalData = $this->findUserById($userId,false);
@@ -467,6 +500,9 @@ class MySQL implements DbInterface
 
 		if(!isset($user['name']))
 			$user['name'] = $originalData['name'];
+			
+		if(!isset($user['email']))
+			$user['email'] = $originalData['email'];
 			
 		if(!isset($user['about']))
 			$user['about'] = $originalData['about'];
@@ -492,9 +528,19 @@ class MySQL implements DbInterface
  		if(!isset($user['android_push_token']))
 			$user['android_push_token'] = $originalData['android_push_token'];
     	
+ 		if(!isset($user['max_contact_count']))
+			$user['max_contact_count'] = $originalData['max_contact_count'];
+    	
+ 		if(!isset($user['max_favorite_count']))
+			$user['max_favorite_count'] = $originalData['max_favorite_count'];
+    	
+ 		if(!isset($user['token']))
+			$user['token'] = $originalData['token'];
+    	
 		$result = $this->DB->executeupdate(
 				'update user set 
 					name = ?,
+					email = ?,
 					about = ?,
 					online_status = ?,
 					birthday = ?,
@@ -503,10 +549,14 @@ class MySQL implements DbInterface
 					avatar_thumb_file_id = ?,
 					ios_push_token = ?,
 					android_push_token = ?,
+					max_contact_count = ?,
+					max_favorite_count = ?,
+					token = ?,
 					modified = ?
 					WHERE _id = ?', 
 				array(
 					$user['name'],
+					$user['email'],
 					$user['about'],
 					$user['online_status'],
 					$user['birthday'],
@@ -515,6 +565,9 @@ class MySQL implements DbInterface
 					$user['avatar_thumb_file_id'],
 					$user['ios_push_token'],
 					$user['android_push_token'],
+					$user['max_contact_count'],
+					$user['max_favorite_count'],
+					$user['token'],
 					$now,
 					$userId));
 
@@ -524,9 +577,9 @@ class MySQL implements DbInterface
             return $this->findUserById($userId,false);
         }else
             $arr = array('message' => 'update user error!', 'error' => 'logout');
-            return json_encode($arr);;
+            return json_encode($arr);
     }
-
+    
     public function getUserById($userId){
     	return $this->findUserById($userId);
     }
@@ -1309,7 +1362,7 @@ class MySQL implements DbInterface
 	    	$user['max_contact_count'] = intval($user['max_contact_count']);
 
 		if(isset($user['max_favorite_count']))
-	    	$user['max_favorite_count'] = intval($user['max_contact_count']);
+	    	$user['max_favorite_count'] = intval($user['max_favorite_count']);
 
 
 		if(isset($user['created']))
@@ -1348,6 +1401,46 @@ class MySQL implements DbInterface
 	    $gourp['type'] = 'group';
 
     	return $gourp;
+    }
+    
+   public function findAllUsersWithPaging($offset = 0,$count=0)
+   {
+    	$query = "select * from user order by _id  ";
+    	
+    	if($count != 0){
+	    	$query .= " limit {$count} offset {$offset} ";
+    	}
+    	
+	    
+    	$result = $this->DB->fetchAll($query);
+		
+		$formatedUsers = array();
+		foreach($result as $user){
+			$user = $this->reformatUserData($user,false);
+			$formatedUsers[] = $user;
+		}
+		
+    	return $this->formatResult($formatedUsers);
+    }
+    
+   public function findUserCount()
+    {
+    	$query = "select count(*) as count from user";
+	    
+    	$result = $this->DB->fetchColumn($query);
+
+    	return $result;
+    }
+
+    public function deleteUser($userId){
+
+		$this->DB->delete('user', array('_id' => $userId));
+		
+        return array(
+            	'ok' => 1,
+            	'id' => $groupId,
+            	'rev' => 'tmprev' 
+        );
     }
     
 }

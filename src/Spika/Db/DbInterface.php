@@ -4,6 +4,7 @@ namespace Spika\Db;
 interface DbInterface
 {
     public function createUser($userName,$password,$email);
+    public function createUserDetail($userName,$password,$email,$about,$onlineStatus,$maxContacts,$maxFavorites,$birthday,$gender,$avatarFile,$thumbFile);
     public function unregistToken($userId);
     public function checkEmailIsUnique($email);
     public function checkUserNameIsUnique($name);
@@ -51,6 +52,9 @@ interface DbInterface
 	public function getPassworResetRequest($requestCode);
 	public function changePassword($userId,$newPassword);
 	
+    public function findUserCount();
+    public function findAllUsersWithPaging($offect,$count);
+    public function deleteUser($id);
     //public function addToContact($owserUserId,$tagetUserId);
     //public function removeFromContact($owserUserId,$tagetUserId);
 

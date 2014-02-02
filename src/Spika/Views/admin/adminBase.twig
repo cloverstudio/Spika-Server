@@ -19,6 +19,22 @@
     <!-- Page-Level Plugin CSS - Dashboard -->
     <link href="{{ROOT_URL}}/assets/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
     <link href="{{ROOT_URL}}/assets/css/plugins/timeline/timeline.css" rel="stylesheet">
+    <link href="{{ROOT_URL}}/assets/css/datepicker.css" rel="stylesheet">
+    
+    <!-- Core Scripts - Include with every page -->
+    <script src="{{ROOT_URL}}/assets/js/jquery-1.10.2.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/bootstrap.min.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="{{ROOT_URL}}/assets/js/sb-admin.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="{{ROOT_URL}}/assets/js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/plugins/morris/morris.js"></script>
+
+    <script src="{{ROOT_URL}}/assets/js/bootstrap-datepicker.js"></script>
+
 
 </head>
 
@@ -113,7 +129,7 @@
                         <a href="{{ROOT_URL}}/admin/dashboard"><i class="fa fa-dashboard fa-fw"></i> {{lang.menuDashboard}}</a>
                     </li>
                     <li>
-                        <a href="{{ROOT_URL}}/admin/users"><i class="fa fa-table fa-fw"></i> {{lang.menuUser}}</a>
+                        <a href="{{ROOT_URL}}/admin/user/list"><i class="fa fa-table fa-fw"></i> {{lang.menuUser}}</a>
                     </li>
                     <li>
                         <a href="{{ROOT_URL}}/admin/group/list"><i class="fa fa-edit fa-fw"></i> {{lang.menuGroups}}</a>
@@ -143,25 +159,13 @@
         </nav>
         <!-- /.navbar-static-side -->
 
-        <div id="page-wrapper">
+        <div id="page-wrapper" style="padding-bottom:30px">
 			{% block content %}{% endblock %}
         </div>
         <!-- /#page-wrapper -->
 
     </div>
     <!-- /#wrapper -->
-
-     <!-- Core Scripts - Include with every page -->
-    <script src="{{ROOT_URL}}/assets/js/jquery-1.10.2.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/bootstrap.min.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-
-    <!-- SB Admin Scripts - Include with every page -->
-    <script src="{{ROOT_URL}}/assets/js/sb-admin.js"></script>
-
-    <!-- Page-Level Plugin Scripts - Dashboard -->
-    <script src="{{ROOT_URL}}/assets/js/plugins/morris/raphael-2.1.0.min.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/plugins/morris/morris.js"></script>
 
 
 </body>

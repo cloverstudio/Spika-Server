@@ -69,8 +69,8 @@ interface DbInterface
     public function findEmoticonById($id);
     public function updateEmoticon($id,$title,$picture);
     public function deleteEmoticon($id);
-    //public function addToContact($owserUserId,$tagetUserId);
-    //public function removeFromContact($owserUserId,$tagetUserId);
 
+    public function getMessageCount();
+    public function getLastLoginedUsersCount();
 
 }

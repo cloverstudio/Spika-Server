@@ -30,8 +30,12 @@ class LoginController extends SpikaWebBaseController
 		
         $controllers = $app['controllers_factory'];
 		$self = $this;
+	
+		$controllers->get('/', function (Request $request) use ($app,$self) {
+		    return $app->redirect(ROOT_URL . '/admin/login');	
+		});	
 		
-		$controllers->get('login', function (Request $request) use ($app,$self) {
+		$controllers->get('/login', function (Request $request) use ($app,$self) {
 			
 			$cookies = $request->cookies;
 			
@@ -57,7 +61,7 @@ class LoginController extends SpikaWebBaseController
 						
 		});
         
-		$controllers->post('login', function (Request $request) use ($app,$self) {
+		$controllers->post('/login', function (Request $request) use ($app,$self) {
 			
 			$username = $request->get('username');
 			$password = $request->get('password');
@@ -108,9 +112,16 @@ class LoginController extends SpikaWebBaseController
 						
 		});
 		
-		$controllers->get('dashboard', function (Request $request) use ($app,$self) {
-		
+		$controllers->get('/dashboard', function (Request $request) use ($app,$self) {
+		    
+		    $countUsers = $self->app['spikadb']->findUserCount();
+		    $countMessages = $self->app['spikadb']->getMessageCount();
+		    $countLastLoginedUsers = $self->app['spikadb']->getLastLoginedUsersCount();
+
 			return $self->render('admin/dashboard.twig', array(
+			    'countUsers' => $countUsers,
+			    'countMessages' => $countMessages,
+			    'countLastLoginedUsers' => $countLastLoginedUsers
 			));
 			
 						

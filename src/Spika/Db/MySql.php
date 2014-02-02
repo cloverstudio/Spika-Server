@@ -1595,4 +1595,17 @@ class MySQL implements DbInterface
         );
     }
 
+    public function getMessageCount(){
+    	$query = "select count(*) as count from message";
+    	$result = $this->DB->fetchColumn($query);
+    	return $result;
+    }
+    
+    public function getLastLoginedUsersCount(){
+        $timeFrom = time() - 60 * 60 * 24;
+    	$query = "select count(*) as count from message where created > {$timeFrom}";
+    	$result = $this->DB->fetchColumn($query);
+    	return $result;
+    }
+    
 }

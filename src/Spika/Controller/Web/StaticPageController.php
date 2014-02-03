@@ -36,6 +36,12 @@ class StaticPageController extends SpikaWebBaseController
 			));
 			
 		});
+		$controllers->get('/privacypolicy/{language}', function (Request $request,$language) use ($app,$self) {
+			
+			return $app['twig']->render("static/privacy_{$language}.twig", array(
+			));
+			
+		});
         
         return $controllers;
     }

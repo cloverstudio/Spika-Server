@@ -65,7 +65,10 @@ class SpikaBaseController implements ControllerProviderInterface
 			$protocol = "https";
 		}
 		
-		$requestURL = "{$protocol}://localhost:{$port}{$currentUrlDir}/{$apiName}";
+		$requestURL = "http://localhost/projects/spika_orig/Spika-Server/wwwroot/api/{$apiName}";
+		
+		$app['monolog']->addDebug($requestURL);
+		
 		$request = $client->post($requestURL);
 		$json = json_encode($params);
 		$request->setBody($json,'application/json');

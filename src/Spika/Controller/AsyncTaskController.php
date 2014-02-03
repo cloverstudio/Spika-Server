@@ -54,10 +54,15 @@ class AsyncTaskController extends SpikaBaseController
 			
 			$pushnotificationMessage = $self->generatePushNotificationMessage($fromUser,$toUser);
 			
+			$app['monolog']->addDebug("---------");
+			$app['monolog']->addDebug(print_r($toUser,true));
+			
 			// send iOS push notification
 			if(!empty($toUser['ios_push_token'])){
 
 				$iosDevCertPath = __DIR__.'/../../../'.APN_DEV_CERT_PATH;
+				
+				$app['monolog']->addDebug($iosDevCertPath);
 				
 				if(file_exists($iosDevCertPath)){
 					
@@ -75,7 +80,7 @@ class AsyncTaskController extends SpikaBaseController
 			
 			}
 			
-			$app['monolog']->addDebug(print_r($toUser,true));
+			
 			
 			// send Android push notification
 			if(!empty($toUser['android_push_token'])){

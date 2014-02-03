@@ -117,10 +117,10 @@
 		      
 		      <form class="form-database" method="post" action="{{ROOT_URL}}/installer/step1">
 		        
-		        <input type="text" name="host" class="form-control" placeholder="Host address" value="{{MySQL_HOST}}" required autofocus>
-		        <input type="text" name="database" class="form-control" placeholder="Database name" value="{{MySQL_DBNAME}}" required autofocus>
-		        <input type="text" name="username" class="form-control" placeholder="User name" value="{{MySQL_USERNAME}}" required autofocus>
-		        <input type="password" name="password" class="form-control" placeholder="Password" value="{{MySQL_PASSWORD}}" required>
+		        <input type="text" name="host" class="form-control" placeholder="Host address" required autofocus>
+		        <input type="text" name="database" class="form-control" placeholder="Database name" required autofocus>
+		        <input type="text" name="username" class="form-control" placeholder="User name" required autofocus>
+		        <input type="text" name="password" class="form-control" placeholder="Password" required>
 		        
 		        <button class="btn btn-lg btn-primary btn-block" type="submit">Connect to Database</button>
 		      </form>

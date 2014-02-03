@@ -50,12 +50,7 @@ class InstallerController implements ControllerProviderInterface
 			$rootUrl = str_replace("/installer","",$self->curPageURL());
 			
 			return $app['twig']->render('installer/installerTop.twig', array(
-				'ROOT_URL' => $rootUrl,
-				'MySQL_HOST' => MySQL_HOST,
-				'MySQL_DBNAME' => MySQL_DBNAME,
-				'MySQL_USERNAME' => MySQL_USERNAME,
-				'MySQL_PASSWORD' => MySQL_PASSWORD,
-				
+				'ROOT_URL' => $rootUrl
 			));			
 		});
 
@@ -184,8 +179,7 @@ class InstallerController implements ControllerProviderInterface
 				$app->redirect('/installer');
 			}
 			
-			$fileDir = EY_SHARED_DIR_PATH."/".FileController::$fileDirName;
-
+			$fileDir = __DIR__.'/../../../../../'.FileController::$fileDirName;
 			if(!is_writable($fileDir)){
 				$app['monolog']->addDebug("{$fileDir} is not writable.");
 				return $app['twig']->render('installer/installerError.twig', array(

@@ -10,38 +10,4 @@ For any detail please refer our web site.
 http://spikaapp.com/
 
 # Development setup
-
-
-## configure Vagrant.
-
-install required software.
-
-- VirtualBox
-- Vagrant 1.3.x+
-
-## boot VM
-
-boot a virtual machine on your workstation.
-
-<pre>
-git clone #{this_repo}
-cd #{this_repo}
-vagrant up
-</pre>
-
-## Setup Database
-
-Access to instller for Spika server.
-
-[http://localhost:8080/wwwroot/install](http://localhost:8080/wwwroot/install)
-
-## confirm database is working
-
-Open this url.
-[http://localhost:8080/wwwroot/api/](http://localhost:8080/wwwroot/api/)
-
-You will see something like this.
-
-<pre>
-{"message":"No token sent","error":"logout"}
-</pre>
+http://www.spikaapp.com/install-backend.php

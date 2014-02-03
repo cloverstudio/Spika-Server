@@ -24,6 +24,9 @@ define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'
 
 define('ADMIN_USERNAME', isset($_ENV['SPIKA_Admin_USERNAME']) ? $_ENV['SPIKA_Admin_USERNAME'] : "admin");
 define('ADMIN_PASSWORD', isset($_ENV['SPIKA_Admin_PASSWORD']) ? $_ENV['SPIKA_Admin_PASSWORD'] : "testtest");
+define('ENABLE_LOGGING', isset($_ENV['SPIKA_ENABLE_LOGGING']) ? $_ENV['SPIKA_ENABLE_LOGGING'] : true);
+
+
 define('SUPPORT_USER_ID', 1);
 define('ADMIN_LISTCOUNT', 10);
 define("DEFAULT_LANGUAGE","en");
@@ -37,4 +40,9 @@ define("ACTIVITY_SUMMARY_GROUP_MESSAGE", "group_posts");
 
 define("APN_DEV_CERT_PATH", "files/apns-dev.pem");
 define("APN_PROD_CERT_PATH", "files/apns-prod.pem");
+<<<<<<< HEAD
 define("GCM_API_KEY","AIzaSyDOkqeO0MZ_igwH_zGyy95DO1ahM8-Ebrw");
+=======
+define("GCM_API_KEY","AIzaSyDpsF-TIc6GJRGhqi-4T2NI5KHyc463QiM");
+
+>>>>>>> ceb54124b5dad7e31ceefea7f66af3fcd118a655

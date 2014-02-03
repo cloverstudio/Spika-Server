@@ -22,17 +22,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\SwiftmailerServiceProvider;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\NullHandler;
 
 $app = new Silex\Application(isset($dependencies) ? $dependencies : array());
 $app['debug'] = true;
 
 // register providers
 
-// logging
+// logging  
 $app->register(new MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/debug.log',
 ));
 
+if(!ENABLE_LOGGING){
+    $app['monolog.handler'] = function () use ($app) {
+        return new NullHandler();
+    };
+}
+   
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array (
             'driver'    => 'pdo_mysql',

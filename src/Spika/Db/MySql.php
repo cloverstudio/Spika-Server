@@ -75,7 +75,7 @@ class MySQL implements DbInterface
     public function doSpikaAuth($email,$password)
     {
 		$user = $this->DB->fetchAssoc('select * from user where email = ? and password = ?',array($email,$password));
-		
+
 		if (empty($user['_id'])) {
 		    $arr = array('message' => 'User not found!', 'error' => 'logout');
 		    return json_encode($arr);
@@ -85,6 +85,8 @@ class MySQL implements DbInterface
 		    $arr = array('message' => 'Wrong password!', 'error' => 'logout');
 		    return json_encode($arr);
 		}
+		
+
 
 		$token = \Spika\Utils::randString(40, 40);
 		
@@ -192,8 +194,6 @@ class MySQL implements DbInterface
 				
     	$user['contacts'] = $contactIds;
     	$user['favorite_groups'] = $groupIds;
-    	
-    	$this->logger->addDebug(print_r($user,true));
     	
     	$user = $this->reformatUserData($user,$deletePersonalInfo);
 				
@@ -457,6 +457,41 @@ class MySQL implements DbInterface
         
      }
 
+    /**
+     * create a user with detailed params
+     *
+     * @param  string $json
+     * @return id
+     */
+    public function createUserDetail($userName,$password,$email,$about,$onlineStatus,$maxContacts,$maxFavorites,$birthday,$gender,$avatarFile,$thumbFile)
+    {
+    	
+    	$now = time();
+ 
+        $valueArray = array();
+        $valueArray['name'] = $userName;
+        $valueArray['email'] = $email;
+        $valueArray['password'] = $password;
+        $valueArray['about'] = $about;
+		$valueArray['online_status'] =$onlineStatus;
+		$valueArray['max_contact_count'] = $maxContacts;
+		$valueArray['max_favorite_count'] = $maxFavorites;
+		$valueArray['birthday'] = $birthday;
+		$valueArray['gender'] = $gender;
+		$valueArray['avatar_file_id'] = $avatarFile;
+		$valueArray['avatar_thumb_file_id'] = $thumbFile;
+		$valueArray['created'] = $now;
+		$valueArray['modified'] = $now;
+		
+        if($this->DB->insert('user',$valueArray)){
+	        return $this->DB->lastInsertId("_id");
+        }else{
+	        return null;
+        }
+        
+     }
+
+    
     public function updateUser($userId,$user){
 
         $originalData = $this->findUserById($userId,false);
@@ -465,6 +500,9 @@ class MySQL implements DbInterface
 
 		if(!isset($user['name']))
 			$user['name'] = $originalData['name'];
+			
+		if(!isset($user['email']))
+			$user['email'] = $originalData['email'];
 			
 		if(!isset($user['about']))
 			$user['about'] = $originalData['about'];
@@ -490,9 +528,19 @@ class MySQL implements DbInterface
  		if(!isset($user['android_push_token']))
 			$user['android_push_token'] = $originalData['android_push_token'];
     	
+ 		if(!isset($user['max_contact_count']))
+			$user['max_contact_count'] = $originalData['max_contact_count'];
+    	
+ 		if(!isset($user['max_favorite_count']))
+			$user['max_favorite_count'] = $originalData['max_favorite_count'];
+    	
+ 		if(!isset($user['token']))
+			$user['token'] = $originalData['token'];
+    	
 		$result = $this->DB->executeupdate(
 				'update user set 
 					name = ?,
+					email = ?,
 					about = ?,
 					online_status = ?,
 					birthday = ?,
@@ -500,11 +548,15 @@ class MySQL implements DbInterface
 					avatar_file_id = ?,
 					avatar_thumb_file_id = ?,
 					ios_push_token = ?,
-					ios_push_token = ?,
+					android_push_token = ?,
+					max_contact_count = ?,
+					max_favorite_count = ?,
+					token = ?,
 					modified = ?
 					WHERE _id = ?', 
 				array(
 					$user['name'],
+					$user['email'],
 					$user['about'],
 					$user['online_status'],
 					$user['birthday'],
@@ -513,16 +565,21 @@ class MySQL implements DbInterface
 					$user['avatar_thumb_file_id'],
 					$user['ios_push_token'],
 					$user['android_push_token'],
+					$user['max_contact_count'],
+					$user['max_favorite_count'],
+					$user['token'],
 					$now,
 					$userId));
+
+		$this->logger->addDebug("user id is {$userId}");
 
         if($result){
             return $this->findUserById($userId,false);
         }else
             $arr = array('message' => 'update user error!', 'error' => 'logout');
-            return json_encode($arr);;
+            return json_encode($arr);
     }
-
+    
     public function getUserById($userId){
     	return $this->findUserById($userId);
     }
@@ -817,7 +874,9 @@ class MySQL implements DbInterface
     		'description' => $description,
     		'user_id' => $ownerId,
     		'avatar_file_id' => $avatarURL,
-    		'avatar_thumb_file_id' => $thumbURL
+    		'avatar_thumb_file_id' => $thumbURL,
+    		'created' => time(),
+    		'modified' => time()
     	);
     
         if($this->DB->insert('`group`',$groupData)){
@@ -918,10 +977,17 @@ class MySQL implements DbInterface
 		
     	return $this->formatResult($formatedGroups);
     }
-
-   public function findAllGroups()
+    
+   public function findAllGroups($offset = 0,$count=0)
     {
-    	$result = $this->DB->fetchAll('select * from `group`');
+    	$query = "select * from `group` order by _id  ";
+    	
+    	if($count != 0){
+	    	$query .= " limit {$count} offset {$offset} ";
+    	}
+    	
+	    
+    	$result = $this->DB->fetchAll($query);
 		
 		$formatedGroups = array();
 		foreach($result as $group){
@@ -930,6 +996,15 @@ class MySQL implements DbInterface
 		}
 		
     	return $this->formatResult($formatedGroups);
+    }
+    
+   public function findGroupCount()
+    {
+    	$query = "select count(*) as count from `group`";
+	    
+    	$result = $this->DB->fetchColumn($query);
+
+    	return $result;
     }
     
     public function findGroupsByName($name)
@@ -1277,14 +1352,26 @@ class MySQL implements DbInterface
 			unset($user['token']);
 		}
 		
-	    $user['birthday'] = intval($user['birthday']);
-    	$user['last_login'] = intval($user['last_login']);
-    	$user['max_contact_count'] = intval($user['max_contact_count']);
-    	$user['max_favorite_count'] = intval($user['max_contact_count']);
-    	$user['type'] = 'user';
+		if(isset($user['birthday']))
+	    	$user['birthday'] = intval($user['birthday']);
 
-	    $user['created'] = intval($user['created']);
-	    $user['modified'] = intval($user['modified']);
+		if(isset($user['last_login']))
+	    	$user['last_login'] = intval($user['last_login']);
+
+		if(isset($user['max_contact_count']))
+	    	$user['max_contact_count'] = intval($user['max_contact_count']);
+
+		if(isset($user['max_favorite_count']))
+	    	$user['max_favorite_count'] = intval($user['max_favorite_count']);
+
+
+		if(isset($user['created']))
+		    $user['created'] = intval($user['created']);
+
+		if(isset($user['modified']))
+		    $user['modified'] = intval($user['modified']);
+
+	    $user['type'] = 'user';
 	    $user['_rev'] = 'tmprev';
     	
     	return $user;
@@ -1314,6 +1401,211 @@ class MySQL implements DbInterface
 	    $gourp['type'] = 'group';
 
     	return $gourp;
+    }
+    
+   public function findAllUsersWithPaging($offset = 0,$count=0)
+   {
+    	$query = "select * from user order by _id  ";
+    	
+    	if($count != 0){
+	    	$query .= " limit {$count} offset {$offset} ";
+    	}
+    	
+	    
+    	$result = $this->DB->fetchAll($query);
+		
+		$formatedUsers = array();
+		foreach($result as $user){
+			$user = $this->reformatUserData($user,false);
+			$formatedUsers[] = $user;
+		}
+		
+    	return $this->formatResult($formatedUsers);
+    }
+    
+   public function findUserCount()
+    {
+    	$query = "select count(*) as count from user";
+	    
+    	$result = $this->DB->fetchColumn($query);
+
+    	return $result;
+    }
+
+    public function deleteUser($userId){
+
+		$this->DB->delete('user', array('_id' => $userId));
+		
+        return array(
+            	'ok' => 1,
+            	'id' => $groupId,
+            	'rev' => 'tmprev' 
+        );
+    }
+    
+    public function createGroupCategory($title,$picture){
+        
+            	
+    	$now = time();
+ 
+        $valueArray = array();
+        $valueArray['title'] = $title;
+		$valueArray['avatar_file_id'] = $picture;
+		$valueArray['created'] = $now;
+		$valueArray['modified'] = $now;
+		
+        if($this->DB->insert('group_category',$valueArray)){
+	        return $this->DB->lastInsertId("_id");
+        }else{
+	        return null;
+        }
+        
+    }
+    
+	public function findAllGroupCategoryWithPaging($offset = 0,$count){
+	    
+    	$query = "select * from group_category order by _id ";
+    	
+    	if($count != 0){
+	    	$query .= " limit {$count} offset {$offset} ";
+    	}
+	    
+	    
+    	$result = $this->DB->fetchAll($query);
+    	
+    	return $this->formatResult($result);
+    	
+	}
+    
+    public function findGroupCategoryCount()
+    {
+    	$query = "select count(*) as count from group_category";
+    	$result = $this->DB->fetchColumn($query);
+    	return $result;
+    }
+
+    public function findGroupCategoryById($id){
+        
+    	$groupCategory = $this->DB->fetchAssoc('select * from group_category where _id = ?',array($id));				
+    	return $groupCategory;
+        
+    }
+    
+    public function updateGroupCategory($id,$title,$picture){
+
+		$result = $this->DB->executeupdate(
+				'update group_category set 
+					title = ?,
+					avatar_file_id = ?,
+					modified = ?
+					WHERE _id = ?', 
+				array(
+				    $title,
+				    $picture,
+					time(),
+					$id));
+        
+        return $result;
+    }
+
+    public function deleteGroupCategory($id){
+
+		$this->DB->delete('group_category', array('_id' => $id));
+		
+        return array(
+            	'ok' => 1,
+            	'id' => $groupId,
+            	'rev' => 'tmprev' 
+        );
+    }
+    
+    
+    public function createEmoticon($idenfier,$picture){
+        
+    	$now = time();
+ 
+        $valueArray = array();
+        $valueArray['identifier'] = $idenfier;
+		$valueArray['file_id'] = $picture;
+		$valueArray['created'] = $now;
+		$valueArray['modified'] = $now;
+		
+        if($this->DB->insert('emoticon',$valueArray)){
+	        return $this->DB->lastInsertId("_id");
+        }else{
+	        return null;
+        }
+        
+    }
+
+	public function findAllEmoticonsWithPaging($offset = 0,$count){
+	    
+    	$query = "select * from emoticon order by _id ";
+    	
+    	if($count != 0){
+	    	$query .= " limit {$count} offset {$offset} ";
+    	}
+	    
+	    
+    	$result = $this->DB->fetchAll($query);
+    	
+    	return $this->formatResult($result);
+    	
+	}
+    
+    public function findEmoticonCount()
+    {
+    	$query = "select count(*) as count from emoticon";
+    	$result = $this->DB->fetchColumn($query);
+    	return $result;
+    }
+
+    public function findEmoticonById($id){
+        
+    	$groupCategory = $this->DB->fetchAssoc('select * from emoticon where _id = ?',array($id));				
+    	return $groupCategory;
+        
+    }
+    
+    public function updateEmoticon($id,$title,$picture){
+
+		$result = $this->DB->executeupdate(
+				'update emoticon set 
+					identifier = ?,
+					file_id = ?,
+					modified = ?
+					WHERE _id = ?', 
+				array(
+				    $title,
+				    $picture,
+					time(),
+					$id));
+        
+        return $result;
+    }
+
+    public function deleteEmoticon($id){
+
+		$this->DB->delete('emoticon', array('_id' => $id));
+		
+        return array(
+            	'ok' => 1,
+            	'id' => $groupId,
+            	'rev' => 'tmprev' 
+        );
+    }
+
+    public function getMessageCount(){
+    	$query = "select count(*) as count from message";
+    	$result = $this->DB->fetchColumn($query);
+    	return $result;
+    }
+    
+    public function getLastLoginedUsersCount(){
+        $timeFrom = time() - 60 * 60 * 24;
+    	$query = "select count(*) as count from message where created > {$timeFrom}";
+    	$result = $this->DB->fetchColumn($query);
+    	return $result;
     }
     
 }

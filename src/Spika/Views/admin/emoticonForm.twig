@@ -1,0 +1,91 @@
+{% extends "admin/adminBase.twig" %}
+
+{% block content %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        {% if mode == 'new' %}
+                    		{{lang.labelAddEmoticon}}
+                        {% elseif mode == 'view' %}
+                        	{{lang.labelViewEmoticon}}
+                        {% elseif mode == 'edit' %}
+                        	{{lang.labelEditEmoticon}}
+                        {% endif %}                    
+                    </h1>
+                </div>
+            </div>
+             
+            <div class="row">
+                <div class="col-lg-8">
+					
+					{% include "admin/alerts.twig" %}
+					
+                    {% if mode == 'edit' %}
+                        <form role="form" method="post" action="{{ROOT_URL}}/admin/emoticon/edit/{{id}}" enctype="multipart/form-data">
+                    {% else %}
+                        <form role="form" method="post" action="{{ROOT_URL}}/admin/emoticon/add" enctype="multipart/form-data">
+                    {% endif %}
+
+						{% if mode == 'view' or mode == 'edit' %}
+						
+							<div class="panel panel-default">
+			                    <div class="panel-heading">
+			                        {{lang.formGroupEmoticonPicture}}
+			                    </div>
+			                    <div class="panel-body">									
+									{% if formValues.file_id != '' %}
+										<img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.file_id}}"/>
+									{% else %}
+										<img class="img-thumbnail" src="http://dummyimage.com/640x640/e2e2e2/7a7a7a&text=nopicture"/>
+									{% endif %}
+			                    </div>
+			                </div>
+                        
+                        {% endif %}
+
+                       	<div class="form-group">
+                            <label>{{lang.formGroupEmoticonIdentifier}}</label>
+                            	{% if mode == 'new' or mode == 'edit' %}<span class="text-danger">{{lang.noteRequired}}</span>{% endif %}
+                            
+                            {% if mode == 'new' or mode == 'edit'%}
+                            	<input class="form-control" name="identifier" value="{{formValues.identifier}}">
+                            {% else %}
+                            	<div class="well">{{formValues.identifier}}</div>
+                            {% endif %}
+                            
+                        </div>
+						
+						{% if mode == 'new' or mode == 'edit' %}
+							<div class="form-group">
+	                            <label>{{lang.formGroupCategoryAvatar}}</label>
+	                            {% if mode == 'new' or mode == 'edit' %}<span class="text-danger">{{lang.noteRequired}}</span>{% endif %}
+	                            <input type="file" name="file">
+	                        </div>
+						{% endif %}
+
+                        {% if mode == 'view'%}
+                            <div class="form-group">
+                                <label>{{lang.labelCreated}}</label>
+                                <div class="well">{{formValues.created|date('Y.m.d H:i:s')}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>{{lang.labelModified}}</label>
+                                <div class="well">{{formValues.modified|date('Y.m.d H:i:s')}}</div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if mode == 'new' or mode == 'edit' %}
+                        	<button type="submit" class="btn btn-primary btn-lg btn-block">{{lang.btnSave}}</button>
+                        {% else %}
+
+                        {% endif %}
+                        
+                    </form>
+                    
+                </div>
+            </div>
+             
+</script>
+       
+{% endblock %}

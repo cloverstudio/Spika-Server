@@ -67,12 +67,15 @@ class AsyncTaskController extends SpikaBaseController
 					$payload = json_encode($body);
 					
 					$result = $self->sendAPNDev($toUser['ios_push_token'],$payload,$app);
+					$result = $self->sendAPNProd($toUser['ios_push_token'],$payload,$app);
 					
 				}else{
 					// dev push is disabled
 				}
 			
 			}
+			
+			$app['monolog']->addDebug(print_r($toUser,true));
 			
 			// send Android push notification
 			if(!empty($toUser['android_push_token'])){

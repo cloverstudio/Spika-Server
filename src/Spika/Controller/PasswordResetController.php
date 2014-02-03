@@ -18,12 +18,12 @@ class PasswordResetController implements ControllerProviderInterface
 		$controllers->get('/resetPassword/{resetCode}', function (Request $request,$resetCode) use ($app,$self) {
 			
 			if(!$self->checkResetCode($app,$resetCode)){
-				return $app['twig']->render('passwordResetError.twig', array(
+				return $app['twig']->render('passwordReset/passwordResetError.twig', array(
 					'ROOT_URL' => ROOT_URL,
 				));
 			}
 
-			return $app['twig']->render('passwordReset.twig', array(
+			return $app['twig']->render('passwordReset/passwordReset.twig', array(
 				'ROOT_URL' => ROOT_URL,
 				'resetCode' => $resetCode,
 			));
@@ -35,7 +35,7 @@ class PasswordResetController implements ControllerProviderInterface
 			
 			$resetCode = $request->get('resetCode');
 			if(!$self->checkResetCode($app,$resetCode)){
-				return $app['twig']->render('passwordResetError.twig', array(
+				return $app['twig']->render('passwordReset/passwordResetError.twig', array(
 					'ROOT_URL' => ROOT_URL,
 				));
 			}
@@ -55,7 +55,7 @@ class PasswordResetController implements ControllerProviderInterface
 			}
 			
 			if(strlen($errorMessage) > 0){
-				return $app['twig']->render('passwordReset.twig', array(
+				return $app['twig']->render('passwordReset/passwordReset.twig', array(
 					'ROOT_URL' => ROOT_URL,
 					'error' => $errorMessage,
 					'resetCode' => $resetCode
@@ -65,7 +65,7 @@ class PasswordResetController implements ControllerProviderInterface
 				// change password
 				$resetData = $app['spikadb']->getPassworResetRequest($resetCode);
 				$app['spikadb']->changePassword($resetData['user_id'],md5($newPassword));
-				return $app['twig']->render('passwordResetSucceed.twig', array(
+				return $app['twig']->render('passwordReset/passwordResetSucceed.twig', array(
 					'ROOT_URL' => ROOT_URL
 				));
 			}

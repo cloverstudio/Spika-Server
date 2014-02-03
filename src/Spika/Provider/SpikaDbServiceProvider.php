@@ -2,7 +2,7 @@
 namespace Spika\Provider;
 
 use Spika\Db\CouchDb;
-use Spika\Db\MySQL;
+use Spika\Db\MySql;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 

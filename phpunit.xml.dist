@@ -22,6 +22,7 @@
       <includePath>./vendor/phpunit/phpunit/</includePath>
       <env name="SPIKA_COUCH_DB_URL" value="http://localhost:5984/spikatest"/>
       <env name="SPIKA_ADMIN_EMAIL" value="admin@example.com"/>
+      <env name="SPIKA_ENABLE_LOGGING" value="false"/>
     </php>
 
     <filter>
@@ -33,4 +34,5 @@
     <logging>
       <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
+
 </phpunit>

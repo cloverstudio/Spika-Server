@@ -23,47 +23,47 @@ class CheckUniqueController implements ControllerProviderInterface
     {
         $controllers = $app['controllers_factory'];
 
-		// check unique controller
-		$controllers->get('/checkUnique', function (Request $request) use ($app) {
-			
-			$email = $request->get('email');
-			$username = $request->get('username');
-			$groupname = $request->get('groupname');
-			
-			if(!empty($email)){
-			    $result = $app['spikadb']->checkEmailIsUnique($email);
-				if(count($result) == 0){
-    				return "[]";
-				}else{
-    				return json_encode($result);
-				}
-			}
-			
-			if(!empty($username)){
-			    $result = $app['spikadb']->checkUserNameIsUnique($email);
-				if(count($result) == 0){
-    				return "[]";
-				}else{
-    				return json_encode($result);
-				}
-			}
-			
-			if(!empty($groupname)){
-			    $result = $app['spikadb']->checkGroupNameIsUnique($email);
-				if(count($result) == 0){
-    				return "[]";
-				}else{
-    				return json_encode($result);
-				}
-			}
-			
-			return '';
-		
-		});
-        
+        // check unique controller
+        $controllers->get('/checkUnique', function (Request $request) use ($app) {
+
+            $email = $request->get('email');
+            $username = $request->get('username');
+            $groupname = $request->get('groupname');
+
+            if(!empty($email)){
+                $result = $app['spikadb']->checkEmailIsUnique($email);
+                if(count($result) == 0){
+                    return "[]";
+                }else{
+                    return json_encode($result);
+                }
+            }
+
+            if(!empty($username)){
+                $result = $app['spikadb']->checkUserNameIsUnique($email);
+                if(count($result) == 0){
+                    return "[]";
+                }else{
+                    return json_encode($result);
+                }
+            }
+
+            if(!empty($groupname)){
+                $result = $app['spikadb']->checkGroupNameIsUnique($email);
+                if(count($result) == 0){
+                    return "[]";
+                }else{
+                    return json_encode($result);
+                }
+            }
+
+            return '';
+
+        });
+
         return $controllers;
     }
-    
+
 }
 
 ?>

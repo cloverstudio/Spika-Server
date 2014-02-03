@@ -20,10 +20,10 @@ use Guzzle\Plugin\Async\AsyncPlugin;
 
 class SpikaBaseController implements ControllerProviderInterface
 {
-	
+    
     public function connect(Application $app)
     {
-    	$this->app = $app;
+        $this->app = $app;
         $controllers = $app['controllers_factory'];
         return $controllers;        
     }
@@ -32,48 +32,48 @@ class SpikaBaseController implements ControllerProviderInterface
     public function validateRequestParams($requestBody,$requiredParams){
         $requestParams = json_decode($requestBody,true);
 
-	    if(!is_array($requestParams))
-	    	return false;
-	    	
-	    foreach($requiredParams as $param){
-		    if(!isset($requestParams[$param]) || empty($requestParams[$param]))
-		    	return false;
-	    }
-	    
-	    return true;
+        if(!is_array($requestParams))
+            return false;
+            
+        foreach($requiredParams as $param){
+            if(!isset($requestParams[$param]) || empty($requestParams[$param]))
+                return false;
+        }
+        
+        return true;
     }
 
     public function returnErrorResponse($errorMessage,$httpCode = 500){
-	    $arr  = array('message' => $errorMessage, 'error' => 'error');
+        $arr  = array('message' => $errorMessage, 'error' => 'error');
         $json = json_encode($arr);
         return new Response($json, $httpCode);
     }
     
     public function doAsyncRequest($app,$request,$apiName,$params = null){
     
-		$client = new Client();
-		$client->addSubscriber(new AsyncPlugin());
-		
-		$currentURL =  $request->getBasePath() . $request->getPathInfo();
-		$tmp = explode("/",$currentURL);
-		$fileName = $tmp[count($tmp) - 1];
-		$currentUrlDir = str_replace("/{$fileName}", "", $currentURL);
-		
-		$port = HTTP_PORT;
-		$protocol = "http";
-		if($request->isSecure()){
-			$protocol = "https";
-		}
-		
-		$requestURL = "{$protocol}://localhost:{$port}{$currentUrlDir}/{$apiName}";
-		$request = $client->post($requestURL);
-		$json = json_encode($params);
-		$request->setBody($json,'application/json');
-		
-		$request->send();
-	    
-    }	
-    		
+        $client = new Client();
+        $client->addSubscriber(new AsyncPlugin());
+        
+        $currentURL =  $request->getBasePath() . $request->getPathInfo();
+        $tmp = explode("/",$currentURL);
+        $fileName = $tmp[count($tmp) - 1];
+        $currentUrlDir = str_replace("/{$fileName}", "", $currentURL);
+        
+        $port = HTTP_PORT;
+        $protocol = "http";
+        if($request->isSecure()){
+            $protocol = "https";
+        }
+        
+        $requestURL = "{$protocol}://localhost:{$port}{$currentUrlDir}/{$apiName}";
+        $request = $client->post($requestURL);
+        $json = json_encode($params);
+        $request->setBody($json,'application/json');
+        
+        $request->send();
+        
+    }   
+            
 }
 
 ?>

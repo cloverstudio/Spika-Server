@@ -13,47 +13,47 @@
              
             <div class="row">
                 <div class="col-lg-8">
-					
-					{% include "admin/alerts.twig" %}
-					
+                    
+                    {% include "admin/alerts.twig" %}
+                    
                         <form role="form" method="post" action="{{ROOT_URL}}/admin/group/delete/{{id}}" enctype="multipart/form-data">
  
-							<div class="panel panel-default">
-			                    <div class="panel-heading">
-			                        {{lang.labelpicture}}
-			                    </div>
-			                    <div class="panel-body">
-									{% if formValues.avatar_thumb_file_id != '' %}
-										<img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_thumb_file_id}}" width="120" />
-									{% else %}
-										<img class="img-thumbnail" src="http://dummyimage.com/120x120/e2e2e2/7a7a7a&text=nopicture" width="120"/>
-									{% endif %}
-									
-			                    </div>
-			                </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    {{lang.labelpicture}}
+                                </div>
+                                <div class="panel-body">
+                                    {% if formValues.avatar_thumb_file_id != '' %}
+                                        <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_thumb_file_id}}" width="120" />
+                                    {% else %}
+                                        <img class="img-thumbnail" src="http://dummyimage.com/120x120/e2e2e2/7a7a7a&text=nopicture" width="120"/>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
                         
                         <div class="form-group">
                             <label>{{lang.formGroupCategory}}</label>                           
-                            	<div class="well">{{formValues.categoryName}}</div>
+                                <div class="well">{{formValues.categoryName}}</div>
                         </div>
 
-                       	<div class="form-group">
+                        <div class="form-group">
                             <label>{{lang.formGroupName}}</label>
                             <div class="well">{{formValues.name}}</div>
                         </div>
 
-						<div class="form-group">
+                        <div class="form-group">
                             <label>{{lang.formGroupPassword}}</label>
                             <div class="well">{% if formValues.group_password != "" %}Yes{% else %}No{% endif %}</div>
                         </div>
-						
+                        
                         <div class="form-group">
                             <label>{{lang.formGroupDescription}}</label>
                             <div class="well">{{formValues.description}}</div> 
                         </div>
                             
-                    	<input type="submit" name="submit_cancel" class="btn btn-success btn-lg btn-block" value="{{lang.btnCancel}}" />
-                    	<input type="submit" name="submit_delete" class="btn btn-danger btn-lg btn-block" value="{{lang.btnDelete}}" />
+                        <input type="submit" name="submit_cancel" class="btn btn-success btn-lg btn-block" value="{{lang.btnCancel}}" />
+                        <input type="submit" name="submit_delete" class="btn btn-danger btn-lg btn-block" value="{{lang.btnDelete}}" />
 
                     </form>
                     

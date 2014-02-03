@@ -16,67 +16,67 @@
                     
            <div class="row">
                 <div class="col-lg-12">
-					
-					<div style="text-align:right">
-						{% include "admin/pager.twig" %}
-					</div>
-					
-					<table class="table table-striped">
-						
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>{{lang.formUserAvatar}}</th>
-								<th>{{lang.formUserName}}</th>
-								<th>{{lang.formUserEmail}}</th>
-								<th>{{lang.labelCreated}}</th>
-								<th>{{lang.labelModified}}</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-						
-							{% for user in users %}
+                    
+                    <div style="text-align:right">
+                        {% include "admin/pager.twig" %}
+                    </div>
+                    
+                    <table class="table table-striped">
+                        
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>{{lang.formUserAvatar}}</th>
+                                <th>{{lang.formUserName}}</th>
+                                <th>{{lang.formUserEmail}}</th>
+                                <th>{{lang.labelCreated}}</th>
+                                <th>{{lang.labelModified}}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        
+                            {% for user in users %}
 
-								<tr>
-									<td>{{user.value._id}}</td>
-									<td>
-										{% if user.value.avatar_thumb_file_id != '' %}
-											<img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{user.value.avatar_thumb_file_id}}" width="60"/>
-										{% else %}
-											<img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
-											
-										{% endif %}
-									</td>
-									<td>{{user.value.name}}</td>
-									<td>{{user.value.email}}</td>
-									<td>{{user.value.created}}</td>
-									<td>{{user.value.modified}}</td>
-									<td>
-										
-										<a href="{{ROOT_URL}}/admin/user/view/{{user.value._id}}" class="btn btn-primary">
-											<i class="fa fa-search"></i> {{lang.labelView}}
-										</a>
-										
-										<a href="{{ROOT_URL}}/admin/user/edit/{{user.value._id}}" class="btn btn-success">
-											<i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
-										</a>
-										
-										<a href="{{ROOT_URL}}/admin/user/delete/{{user.value._id}}" class="btn btn-danger">
-											<i class="fa fa-eraser"></i> {{lang.labelDelete}}
-										</a>
-										
-									</td>
-								</tr>
+                                <tr>
+                                    <td>{{user.value._id}}</td>
+                                    <td>
+                                        {% if user.value.avatar_thumb_file_id != '' %}
+                                            <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{user.value.avatar_thumb_file_id}}" width="60"/>
+                                        {% else %}
+                                            <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
+                                            
+                                        {% endif %}
+                                    </td>
+                                    <td>{{user.value.name}}</td>
+                                    <td>{{user.value.email}}</td>
+                                    <td>{{user.value.created}}</td>
+                                    <td>{{user.value.modified}}</td>
+                                    <td>
+                                        
+                                        <a href="{{ROOT_URL}}/admin/user/view/{{user.value._id}}" class="btn btn-primary">
+                                            <i class="fa fa-search"></i> {{lang.labelView}}
+                                        </a>
+                                        
+                                        <a href="{{ROOT_URL}}/admin/user/edit/{{user.value._id}}" class="btn btn-success">
+                                            <i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
+                                        </a>
+                                        
+                                        <a href="{{ROOT_URL}}/admin/user/delete/{{user.value._id}}" class="btn btn-danger">
+                                            <i class="fa fa-eraser"></i> {{lang.labelDelete}}
+                                        </a>
+                                        
+                                    </td>
+                                </tr>
 
-							{% endfor %}
+                            {% endfor %}
 
-						</tbody>
-					</table>
+                        </tbody>
+                    </table>
 
-					<div style="text-align:right">
-						{% include "admin/pager.twig" %}
-					</div>
+                    <div style="text-align:right">
+                        {% include "admin/pager.twig" %}
+                    </div>
 
                 </div>
             </div>

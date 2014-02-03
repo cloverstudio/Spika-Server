@@ -25,17 +25,17 @@ class StaticPageController extends SpikaWebBaseController
 
     public function connect(Application $app)
     {
-    	ExceptionHandler::register(false);
+        ExceptionHandler::register(false);
         $controllers = $app['controllers_factory'];
-		$self = $this;
-		
-		// first screen
-		$controllers->get('/eula/{language}', function (Request $request,$language) use ($app,$self) {
-			
-			return $app['twig']->render("static/eula_{$language}.twig", array(
-			));
-			
-		});
+        $self = $this;
+        
+        // first screen
+        $controllers->get('/eula/{language}', function (Request $request,$language) use ($app,$self) {
+            
+            return $app['twig']->render("static/eula_{$language}.twig", array(
+            ));
+            
+        });
         
         return $controllers;
     }

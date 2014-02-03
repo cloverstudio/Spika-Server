@@ -30,8 +30,8 @@ interface DbInterface
     public function getUserMessages($ownerUserId,$targetUserId,$count,$offset);
     public function getCommentCount($messageId);
     public function findMessageById($messageId);
-	public function addNewComment($messageId,$userId,$comment);
-	public function getComments($messageId,$count,$offset);
+    public function addNewComment($messageId,$userId,$comment);
+    public function getComments($messageId,$count,$offset);
     public function getGroupMessages($targetGroupId,$count,$offset);
     public function findGroupById($id);
     public function findGroupByName($name);
@@ -45,13 +45,13 @@ interface DbInterface
     public function watchGroup($groupId,$userId);
     public function unWatchGroup($userId);
     public function findAllGroupCategory();
-	public function updateActivitySummaryByDirectMessage($toUserId, $fromUserId);
-	public function updateActivitySummaryByGroupMessage($toUserId, $fromUserId);
-	public function clearActivitySummary($toUserId, $type, $fieldKey);
-	public function addPassworResetRequest($toUserId);
-	public function getPassworResetRequest($requestCode);
-	public function changePassword($userId,$newPassword);
-	
+    public function updateActivitySummaryByDirectMessage($toUserId, $fromUserId);
+    public function updateActivitySummaryByGroupMessage($toUserId, $fromUserId);
+    public function clearActivitySummary($toUserId, $type, $fieldKey);
+    public function addPassworResetRequest($toUserId);
+    public function getPassworResetRequest($requestCode);
+    public function changePassword($userId,$newPassword);
+    
     public function findUserCount();
     public function findAllUsersWithPaging($offect,$count);
     public function deleteUser($id);

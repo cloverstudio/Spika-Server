@@ -32,6 +32,10 @@ class SearchUserControllerTest extends WebTestCase
             ->method('searchUserByAge')
             ->will($this->returnValue('[]'));
                         
+        $spikadb->expects($this->any())
+            ->method('searchUser')
+            ->will($this->returnValue('[]'));
+                        
         $app['spikadb'] = $spikadb;
         
         return $app;

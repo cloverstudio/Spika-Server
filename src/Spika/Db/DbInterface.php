@@ -23,6 +23,7 @@ interface DbInterface
     public function searchUserByName($name);
     public function searchUserByGender($gender);
     public function searchUserByAge($ageFrom,$ageTo);
+    public function searchUser($name,$agefrom,$ageTo,$gender);
     public function addContact($userId,$targetUserId);
     public function removeContact($userId,$targetUserId);
     public function addNewUserMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);

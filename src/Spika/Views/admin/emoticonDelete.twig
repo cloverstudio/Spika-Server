@@ -12,29 +12,29 @@
              
             <div class="row">
                 <div class="col-lg-8">
-					
-					{% include "admin/alerts.twig" %}
-					
+                    
+                    {% include "admin/alerts.twig" %}
+                    
                         <form role="form" method="post" action="{{ROOT_URL}}/admin/emoticon/delete/{{id}}" enctype="multipart/form-data">
 
-						<div class="panel panel-default">
-		                    <div class="panel-heading">
-		                        {{lang.formGroupEmoticonPicture}}
-		                    </div>
-		                    <div class="panel-body">									
-								{% if formValues.file_id != '' %}
-									<img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.file_id}}"/>
-								{% else %}
-									<img class="img-thumbnail" src="http://dummyimage.com/640x640/e2e2e2/7a7a7a&text=nopicture"/>
-								{% endif %}
-		                    </div>
-		                </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {{lang.formGroupEmoticonPicture}}
+                            </div>
+                            <div class="panel-body">                                    
+                                {% if formValues.file_id != '' %}
+                                    <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.file_id}}"/>
+                                {% else %}
+                                    <img class="img-thumbnail" src="http://dummyimage.com/640x640/e2e2e2/7a7a7a&text=nopicture"/>
+                                {% endif %}
+                            </div>
+                        </div>
 
-                       	<div class="form-group">
+                        <div class="form-group">
                             <label>{{lang.formGroupEmoticonIdentifier}}</label>
                             <div class="well">{{formValues.identifier}}</div>
                         </div>
-						
+                        
                         <div class="form-group">
                             <label>{{lang.labelCreated}}</label>
                             <div class="well">{{formValues.created|date('Y.m.d H:i:s')}}</div>
@@ -44,8 +44,8 @@
                             <div class="well">{{formValues.modified|date('Y.m.d H:i:s')}}</div>
                         </div>
 
-                    	<input type="submit" name="submit_cancel" class="btn btn-success btn-lg btn-block" value="{{lang.btnCancel}}" />
-                    	<input type="submit" name="submit_delete" class="btn btn-danger btn-lg btn-block" value="{{lang.btnDelete}}" />
+                        <input type="submit" name="submit_cancel" class="btn btn-success btn-lg btn-block" value="{{lang.btnCancel}}" />
+                        <input type="submit" name="submit_delete" class="btn btn-danger btn-lg btn-block" value="{{lang.btnDelete}}" />
  
                         
                     </form>

@@ -26,25 +26,25 @@
     
     <style>
     
-		body {
-		  padding-top: 20px;
-		}
-		
-		.form-database {
-		  padding: 15px;
-		  margin: 0 auto;
-		}
+        body {
+          padding-top: 20px;
+        }
+        
+        .form-database {
+          padding: 15px;
+          margin: 0 auto;
+        }
 
-		.form-database .form-control {
-		  position: relative;
-		  font-size: 16px;
-		  height: auto;
-		  padding: 10px;
-		  -webkit-box-sizing: border-box;
-		     -moz-box-sizing: border-box;
-		          box-sizing: border-box;
-		  margin-bottom: 10px;
-		}
+        .form-database .form-control {
+          position: relative;
+          font-size: 16px;
+          height: auto;
+          padding: 10px;
+          -webkit-box-sizing: border-box;
+             -moz-box-sizing: border-box;
+                  box-sizing: border-box;
+          margin-bottom: 10px;
+        }
 
     </style>
   </head>
@@ -52,77 +52,77 @@
   <body>
 
     <div class="container">
-		
-				
+        
+                
       <div class="jumbotron">
         <h1>Welcome to Spika server installer</h1>
         <p class="lead">
-	        Spika is opensource mobile messenger system. Please follow this setup to install Spika backend to your server.
+            Spika is opensource mobile messenger system. Please follow this setup to install Spika backend to your server.
         </p>
       </div>
       
-		<div class="row">
-			<div class="col-md-4">
-				
-				<div class="panel panel-primary">
-				  <div class="panel-heading">
-				    Sotfware Requirements
-				  </div>
-					  
-				  <div class="panel-body">
-					<ul>
-						<li>
-							PHP 5.3.3+</br>
-							<strong>Modules required</strong>
-							<ul>
-								<li>PDO</li>
-								<li>cURL</li>
-							</ul>
-						</li>
-						<li>
-							MySQL 5.0.0+
-						</li>						
-						<li>
-							curl 7.16.2+
-						</li>						
-						<li>
-							postfix 2.0.0+
-						</li>						
-					</ul>	  
-					  
-				  </div>
-				</div>				
-				
-				<div class="list-group">
-					<a class="list-group-item active">
-						Installation Steps
-					</a>
-					<a href="{{ROOT_URL}}/installer" class="list-group-item "><span class="glyphicon glyphicon-chevron-down"></span>
-						Input information to connect database.</a>
-					<a href="" class="list-group-item"><span class="glyphicon glyphicon-chevron-down"></span>
-						Create database schema.</a>
-					<a href="" class="list-group-item">Create initial data.</a>
-					<a href="" class="list-group-item">Finish.</a>
-				</div>
+        <div class="row">
+            <div class="col-md-4">
+                
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    Sotfware Requirements
+                  </div>
+                      
+                  <div class="panel-body">
+                    <ul>
+                        <li>
+                            PHP 5.3.3+</br>
+                            <strong>Modules required</strong>
+                            <ul>
+                                <li>PDO</li>
+                                <li>cURL</li>
+                            </ul>
+                        </li>
+                        <li>
+                            MySQL 5.0.0+
+                        </li>                       
+                        <li>
+                            curl 7.16.2+
+                        </li>                       
+                        <li>
+                            postfix 2.0.0+
+                        </li>                       
+                    </ul>     
+                      
+                  </div>
+                </div>              
+                
+                <div class="list-group">
+                    <a class="list-group-item active">
+                        Installation Steps
+                    </a>
+                    <a href="{{ROOT_URL}}/installer" class="list-group-item "><span class="glyphicon glyphicon-chevron-down"></span>
+                        Input information to connect database.</a>
+                    <a href="" class="list-group-item"><span class="glyphicon glyphicon-chevron-down"></span>
+                        Create database schema.</a>
+                    <a href="" class="list-group-item">Create initial data.</a>
+                    <a href="" class="list-group-item">Finish.</a>
+                </div>
 
 
-			</div>
-			<div class="col-md-8">
-					<div class="alert alert-success">
-						Succeed to create database schema.
-					</div>
+            </div>
+            <div class="col-md-8">
+                    <div class="alert alert-success">
+                        Succeed to create database schema.
+                    </div>
 
-					<div class="alert alert-warning">
-						<strong>Next step is to create initial data. Default emoticons and group categories and support user account will be generated.</strong>
-					</div>
+                    <div class="alert alert-warning">
+                        <strong>Next step is to create initial data. Default emoticons and group categories and support user account will be generated.</strong>
+                    </div>
 
-				      <form class="form-database" method="post" action="{{ROOT_URL}}/installer/step3">
-				        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Initial Data</button>
-				      </form>
+                      <form class="form-database" method="post" action="{{ROOT_URL}}/installer/step3">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Initial Data</button>
+                      </form>
 
 
-			</div>
-		</div>
+            </div>
+        </div>
 
 
     </div> 

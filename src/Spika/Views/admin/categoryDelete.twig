@@ -13,27 +13,27 @@
              
             <div class="row">
                 <div class="col-lg-8">
-					
-					{% include "admin/alerts.twig" %}
-					
+                    
+                    {% include "admin/alerts.twig" %}
+                    
                         <form role="form" method="post" action="{{ROOT_URL}}/admin/groupcategory/delete/{{id}}" enctype="multipart/form-data">
 
-						<div class="panel panel-default">
-		                    <div class="panel-heading">
-		                        {{lang.labelpicture}}
-		                    </div>
-		                    <div class="panel-body">									
-								{% if formValues.avatar_file_id != '' %}
-									<img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_file_id}}"/>
-								{% else %}
-									<img class="img-thumbnail" src="http://dummyimage.com/640x640/e2e2e2/7a7a7a&text=nopicture"/>
-								{% endif %}
-		                    </div>
-		                </div>
-						
-                       	<div class="form-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {{lang.labelpicture}}
+                            </div>
+                            <div class="panel-body">                                    
+                                {% if formValues.avatar_file_id != '' %}
+                                    <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_file_id}}"/>
+                                {% else %}
+                                    <img class="img-thumbnail" src="http://dummyimage.com/640x640/e2e2e2/7a7a7a&text=nopicture"/>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
                             <label>{{lang.formGroupName}}</label>
-                          	<div class="well">{{formValues.title}}</div>
+                            <div class="well">{{formValues.title}}</div>
                         </div>
 
                         <div class="form-group">
@@ -45,8 +45,8 @@
                             <div class="well">{{formValues.modified|date('Y.m.d H:i:s')}}</div>
                         </div>
                         
-                    	<input type="submit" name="submit_cancel" class="btn btn-success btn-lg btn-block" value="{{lang.btnCancel}}" />
-                    	<input type="submit" name="submit_delete" class="btn btn-danger btn-lg btn-block" value="{{lang.btnDelete}}" />
+                        <input type="submit" name="submit_cancel" class="btn btn-success btn-lg btn-block" value="{{lang.btnCancel}}" />
+                        <input type="submit" name="submit_delete" class="btn btn-danger btn-lg btn-block" value="{{lang.btnDelete}}" />
                         
                     </form>
                     

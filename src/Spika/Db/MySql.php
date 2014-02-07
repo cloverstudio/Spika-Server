@@ -1090,8 +1090,18 @@ class MySQL implements DbInterface
 
     }
 
-
     public function subscribeGroup($groupId,$userId){
+        
+        $valueArray = array();
+        $valueArray['user_id'] = $userId;
+        $valueArray['group_id'] = $groupId;
+        $valueArray['created'] = time();
+        
+        if($this->DB->insert('user_group',$valueArray)){
+            return true;
+        }else{
+            return false;
+        }
                 
         return true;
 
@@ -1099,10 +1109,14 @@ class MySQL implements DbInterface
     
     public function unSubscribeGroup($groupId,$userId){
 
+        $contact = $this->DB->fetchAssoc('select _id from user_group where user_id = ? and group_id = ?',
+                                        array($userId,$groupId));
+        
+        $this->DB->delete('user_group', array('_id' => $contact['_id']));
+
         return true;
         
     }
-    
     
     
     public function watchGroup($groupId,$userId){

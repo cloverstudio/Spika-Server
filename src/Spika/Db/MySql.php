@@ -222,7 +222,7 @@ class MySQL implements DbInterface
      */
     public function findUserByName($name)
     {
-        $user = $this->DB->fetchAssoc('select * from user where name = ?',array($name));
+        $user = $this->DB->fetchAssoc('select * from user where LOWER(name) = LOWER(?)',array($name));
         $user = $this->reformatUserData($user);
         return $user;
     }
@@ -956,7 +956,7 @@ class MySQL implements DbInterface
 
     public function findGroupByName($name)
     {
-        $group = $this->DB->fetchAssoc('select * from `group` where name = ?',array($name));
+        $group = $this->DB->fetchAssoc('select * from `group` where LOWER(name) = LOWER(?)',array($name));
         
         if(isset($group['_id']))
             $group = $this->reformatGroupData($group);
@@ -980,14 +980,8 @@ class MySQL implements DbInterface
     
    public function findAllGroups($offset = 0,$count=0)
     {
-        $query = "select * from `group` order by _id  ";
-        
-        if($count != 0){
-            $query .= " limit {$count} offset {$offset} ";
-        }
-        
-        
-        $result = $this->DB->fetchAll($query);
+    
+        $result = $this->DB->fetchAll('select * from `group` order by _id');
         
         $formatedGroups = array();
         foreach($result as $group){
@@ -995,7 +989,8 @@ class MySQL implements DbInterface
             $formatedGroups[] = $group;
         }
         
-        return $this->formatResult($formatedGroups);
+        return $formatedGroups;
+
     }
     
    public function findGroupCount()
@@ -1009,7 +1004,7 @@ class MySQL implements DbInterface
     
     public function findGroupsByName($name)
     {
-        $result = $this->DB->fetchAll('select * from `group` where name like ?',array("%{$name}%"));
+        $result = $this->DB->fetchAll('select * from `group` where LOWER(name) like LOWER(?)',array("%{$name}%"));
         
         $formatedGroups = array();
         foreach($result as $group){

@@ -52,15 +52,15 @@ class GroupController extends SpikaWebBaseController
             $groups = $self->app['spikadb']->findAllGroups(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT);
             
             // convert timestamp to date
-            for($i = 0 ; $i < count($groups['rows']) ; $i++){
-                $groups['rows'][$i]['value']['created'] = date("Y.m.d",$groups['rows'][$i]['value']['created']);
-                $groups['rows'][$i]['value']['modified'] = date("Y.m.d",$groups['rows'][$i]['value']['modified']);
+            for($i = 0 ; $i < count($groups) ; $i++){
+                $groups[$i]['created'] = date("Y.m.d",$groups[$i]['created']);
+                $groups[$i]['modified'] = date("Y.m.d",$groups[$i]['modified']);
             }
 
             
             return $self->render('admin/groupList.twig', array(
                 'categoryList' => $self->getGroupCategoryList(),
-                'groups' => $groups['rows'],
+                'groups' => $groups,
                 'pager' => array(
                     'baseURL' => ROOT_URL . "/admin/group/list?page=",
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,

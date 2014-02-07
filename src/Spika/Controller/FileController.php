@@ -20,46 +20,46 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class FileController extends SpikaBaseController
 {
 
-	static $paramName = 'file';
-	static $fileDirName = 'uploads';
-	
+    static $paramName = 'file';
+    static $fileDirName = 'uploads';
+        
     public function connect(Application $app)
     {
-    	global $beforeTokenCheker;
-    	
+        global $beforeTokenCheker;
+        
         $controllers = $app['controllers_factory'];
         $self = $this;
         
         // ToDo: Add token check
-		$controllers->get('/filedownloader', function (Request $request) use ($app,$self) {
-			
-			$fileID = $request->get('file');
-			$filePath = __DIR__.'/../../../'.FileController::$fileDirName."/".basename($fileID);
-			
-			if(file_exists($filePath)){
-				return $app->sendFile($filePath);
-			}else{
-				return $self->returnErrorResponse("file doesn't exists.");
-			}
-		});
-			
-		//})->before($app['beforeTokenChecker']);
+        $controllers->get('/filedownloader', function (Request $request) use ($app,$self) {
+                
+            $fileID = $request->get('file');
+            $filePath = __DIR__.'/../../../'.FileController::$fileDirName."/".basename($fileID);
+            
+            if(file_exists($filePath)){
+                    return $app->sendFile($filePath);
+            }else{
+                    return $self->returnErrorResponse("file doesn't exists.");
+            }
+        });
+                
+        //})->before($app['beforeTokenChecker']);
         
         // ToDo: Add token check
-		$controllers->post('/fileuploader', function (Request $request) use ($app,$self) {
-			
-			$file = $request->files->get(FileController::$paramName); 
-			$fineName = \Spika\Utils::randString(20, 20) . time();
-			
-			if(!is_writable(__DIR__.'/../../../'.FileController::$fileDirName))
-				return $self->returnErrorResponse(FileController::$fileDirName ." dir is not writable.");
-				
-			$file->move(__DIR__.'/../../../'.FileController::$fileDirName, $fineName); 
-			return $fineName; 
-					
-		});
-		
-		//})->before($app['beforeTokenChecker']);
+        $controllers->post('/fileuploader', function (Request $request) use ($app,$self) {
+                
+            $file = $request->files->get(FileController::$paramName); 
+            $fineName = \Spika\Utils::randString(20, 20) . time();
+            
+            if(!is_writable(__DIR__.'/../../../'.FileController::$fileDirName))
+                    return $self->returnErrorResponse(FileController::$fileDirName ." dir is not writable.");
+                    
+            $file->move(__DIR__.'/../../../'.FileController::$fileDirName, $fineName); 
+            return $fineName; 
+                                
+        });
+        
+        //})->before($app['beforeTokenChecker']);
         
         return $controllers;
     }

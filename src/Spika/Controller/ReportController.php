@@ -22,9 +22,9 @@ class ReportController implements ControllerProviderInterface
     {
         $controllers = $app['controllers_factory'];
 
-		// check unique controller
-		$controllers->get('/reportViolation.php', function (Request $request) use ($app) {
-			$documentId = $request->get('docment_id');
+        // check unique controller
+        $controllers->get('/reportViolation.php', function (Request $request) use ($app) {
+            $documentId = $request->get('docment_id');
 
             $message = \Swift_Message::newInstance()
                 ->setSubject("SpilaViolationReport")
@@ -33,8 +33,8 @@ class ReportController implements ControllerProviderInterface
                 ->setBody($documentId);
             $app['mailer']->send($message);
 
-			return 'OK';
-		})->before($app['beforeTokenChecker']);
+            return 'OK';
+        })->before($app['beforeTokenChecker']);
 
         return $controllers;
     }

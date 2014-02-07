@@ -19,16 +19,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 class SearchUserController implements ControllerProviderInterface
 {
-	var $app;
-	var $name,$ageFrom,$ageTo,$gender;
-	
+    var $app;
+    var $name,$ageFrom,$ageTo,$gender;
+    
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
         $this->app = $app;
         $self = $this;
         
-		$controllers->get('/searchUsers', function (Request $request) use ($app,$self) {
+        $controllers->get('/searchUsers', function (Request $request) use ($app,$self) {
             $searchResult = $self->app['spikadb']->searchUser($request->get('n'),$request->get('af'),$request->get('at'),$request->get('g'));
             return json_encode($searchResult);
         });

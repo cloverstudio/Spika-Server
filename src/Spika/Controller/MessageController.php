@@ -36,11 +36,11 @@ class MessageController extends SpikaBaseController
 
                 $result = $app['spikadb']->getEmoticons();
 
-				if($result == null){
+                if($result == null){
                     return $self->returnErrorResponse("load emoticons error");
                 }
 
-				if(!isset($result['rows'])){
+                if(!isset($result['rows'])){
                     return $self->returnErrorResponse("load emoticons error");
                 }
 
@@ -51,20 +51,20 @@ class MessageController extends SpikaBaseController
         $controllers->get('/Emoticon/{id}',
             function ($id = "") use ($app,$self) {
 
-				if(empty($id)){
+                if(empty($id)){
                     return $self->returnErrorResponse("please specify emoticon id");
                 }
 
                 $result = $app['spikadb']->getEmoticonImage($id);
 
-				if($result == null){
+                if($result == null){
                     return $self->returnErrorResponse("load emoticon error");
                 }
                 
                 return new Response(
-                	$result,
-                	200,
-                	array('Content-Type' => 'image/png')
+                    $result,
+                    200,
+                    array('Content-Type' => 'image/png')
                 );
 
             }
@@ -83,7 +83,7 @@ class MessageController extends SpikaBaseController
                 }
 
                 $result = $app['spikadb']->getCommentCount($messageId);
-				
+                
                 return json_encode($result);
             }
             
@@ -102,18 +102,18 @@ class MessageController extends SpikaBaseController
                 ))){
                     return $self->returnErrorResponse("insufficient params");
                 }
-				
-				$messageDataArray=json_decode($messageData,true);
-				
-				$messageId = $messageDataArray['message_id'];
-				$comment = $messageDataArray['comment'];
-				$fromUserId = $currentUser['_id'];
-				
+                
+                $messageDataArray=json_decode($messageData,true);
+                
+                $messageId = $messageDataArray['message_id'];
+                $comment = $messageDataArray['comment'];
+                $fromUserId = $currentUser['_id'];
+                
                 $result = $app['spikadb']->addNewComment($messageId,$fromUserId,$comment);
 
-				if($result == null)
-					return $self->returnErrorResponse("failed to add comment");
-					
+                if($result == null)
+                    return $self->returnErrorResponse("failed to add comment");
+                    
                 return json_encode($result);
             }
             
@@ -122,15 +122,15 @@ class MessageController extends SpikaBaseController
 
         $controllers->get('/comments/{messageId}/{count}/{offset}',
             function ($messageId = "",$count = 30,$offset = 0) use ($app,$self) {
-				
-				if(empty($messageId))
-					return $self->returnErrorResponse("failed to get message");
-				
+                
+                if(empty($messageId))
+                    return $self->returnErrorResponse("failed to get message");
+                
                 $result = $app['spikadb']->getComments($messageId,$count,$offset);
 
-				if($result == null)
-					 return $self->returnErrorResponse("failed to get message");
-					 
+                if($result == null)
+                     return $self->returnErrorResponse("failed to get message");
+                     
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
@@ -152,65 +152,65 @@ class MessageController extends SpikaBaseController
                 }
 
                 $messageDataArray=json_decode($messageData,true);
-				
-				
-				$fromUserId = $currentUser['_id'];
-				$toUserId = trim($messageDataArray['to_user_id']);
-				
-				if(isset($messageDataArray['body']))
-					$message = $messageDataArray['body'];
-				else
-					$message = "";
-				
-				if(isset($messageDataArray['message_type'])){
-					$messageType = $messageDataArray['message_type'];
-				} else {
-					$messageType = 'text';
-				}
-				
-				$additionalParams = array();
-				
-				// emoticon message
-				if(isset($messageDataArray['emoticon_image_url'])){
-					$additionalParams['emoticon_image_url'] = $messageDataArray['emoticon_image_url'];
-				}
-				
-				// pitcure message
-				if(isset($messageDataArray['picture_file_id'])){
-					$additionalParams['picture_file_id'] = $messageDataArray['picture_file_id'];
-				}
-				if(isset($messageDataArray['picture_thumb_file_id'])){
-					$additionalParams['picture_thumb_file_id'] = $messageDataArray['picture_thumb_file_id'];
-				}
+                
+                
+                $fromUserId = $currentUser['_id'];
+                $toUserId = trim($messageDataArray['to_user_id']);
+                
+                if(isset($messageDataArray['body']))
+                    $message = $messageDataArray['body'];
+                else
+                    $message = "";
+                
+                if(isset($messageDataArray['message_type'])){
+                    $messageType = $messageDataArray['message_type'];
+                } else {
+                    $messageType = 'text';
+                }
+                
+                $additionalParams = array();
+                
+                // emoticon message
+                if(isset($messageDataArray['emoticon_image_url'])){
+                    $additionalParams['emoticon_image_url'] = $messageDataArray['emoticon_image_url'];
+                }
+                
+                // pitcure message
+                if(isset($messageDataArray['picture_file_id'])){
+                    $additionalParams['picture_file_id'] = $messageDataArray['picture_file_id'];
+                }
+                if(isset($messageDataArray['picture_thumb_file_id'])){
+                    $additionalParams['picture_thumb_file_id'] = $messageDataArray['picture_thumb_file_id'];
+                }
 
-				// voice message
-				if(isset($messageDataArray['voice_file_id'])){
-					$additionalParams['voice_file_id'] = $messageDataArray['voice_file_id'];
-				}
-				
-				// video message
-				if(isset($messageDataArray['video_file_id'])){
-					$additionalParams['video_file_id'] = $messageDataArray['video_file_id'];
-				}
-				
-				// location message
-				if(isset($messageDataArray['longitude'])){
-					$additionalParams['longitude'] = $messageDataArray['longitude'];
-				}
-				if(isset($messageDataArray['latitude'])){
-					$additionalParams['latitude'] = $messageDataArray['latitude'];
-				}
-				
+                // voice message
+                if(isset($messageDataArray['voice_file_id'])){
+                    $additionalParams['voice_file_id'] = $messageDataArray['voice_file_id'];
+                }
+                
+                // video message
+                if(isset($messageDataArray['video_file_id'])){
+                    $additionalParams['video_file_id'] = $messageDataArray['video_file_id'];
+                }
+                
+                // location message
+                if(isset($messageDataArray['longitude'])){
+                    $additionalParams['longitude'] = $messageDataArray['longitude'];
+                }
+                if(isset($messageDataArray['latitude'])){
+                    $additionalParams['latitude'] = $messageDataArray['latitude'];
+                }
+                
                 $result = $app['spikadb']->addNewUserMessage($messageType,$fromUserId,$toUserId,$message,$additionalParams);
 
-				if($result == null)
-					 return $self->returnErrorResponse("failed to send message");
-				
-				$newMessageId = $result['id'];
-				
-				// send async request
-				$self->doAsyncRequest($app,$request,"notifyNewDirectMessage",array('messageId' => $newMessageId));
-				
+                if($result == null)
+                     return $self->returnErrorResponse("failed to send message");
+                
+                $newMessageId = $result['id'];
+                
+                // send async request
+                $self->doAsyncRequest($app,$request,"notifyNewDirectMessage",array('messageId' => $newMessageId));
+                
                 return json_encode($result);
             }
             
@@ -219,22 +219,22 @@ class MessageController extends SpikaBaseController
         $controllers->get('/userMessages/{toUserId}/{count}/{offset}',
             function ($toUserId = "",$count = 30,$offset = 0) use ($app,$self) {
 
-   				$currentUser = $app['currentUser'];
-				$ownerUserId = $currentUser['_id'];
-				
-				$count = intval($count);
-				$offset = intval($offset);
-				
-				if(empty($ownerUserId) || empty($toUserId))
-					return $self->returnErrorResponse("failed to get message");
-					
+                $currentUser = $app['currentUser'];
+                $ownerUserId = $currentUser['_id'];
+                
+                $count = intval($count);
+                $offset = intval($offset);
+                
+                if(empty($ownerUserId) || empty($toUserId))
+                    return $self->returnErrorResponse("failed to get message");
+                    
                 $result = $app['spikadb']->getUserMessages($ownerUserId,$toUserId,$count,$offset);
 
-				if($result == null)
-					 return $self->returnErrorResponse("failed to get message");
-					 
-				$app['spikadb']->clearActivitySummary($ownerUserId, ACTIVITY_SUMMARY_DIRECT_MESSAGE, $toUserId);
-				
+                if($result == null)
+                     return $self->returnErrorResponse("failed to get message");
+                     
+                $app['spikadb']->clearActivitySummary($ownerUserId, ACTIVITY_SUMMARY_DIRECT_MESSAGE, $toUserId);
+                
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
@@ -242,17 +242,17 @@ class MessageController extends SpikaBaseController
         $controllers->get('/findMessageById/{id}',
             function ($id) use ($app,$self) {
 
-   				$currentUser = $app['currentUser'];
-				$ownerUserId = $currentUser['_id'];
-				
-				if(empty($ownerUserId) || empty($id))
-					return $self->returnErrorResponse("failed to get message");
-					
+                $currentUser = $app['currentUser'];
+                $ownerUserId = $currentUser['_id'];
+                
+                if(empty($ownerUserId) || empty($id))
+                    return $self->returnErrorResponse("failed to get message");
+                    
                 $result = $app['spikadb']->findMessageById($id);
 
-				if($result == null)
-					 return $self->returnErrorResponse("failed to get message");
-					 
+                if($result == null)
+                     return $self->returnErrorResponse("failed to get message");
+                     
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
@@ -272,64 +272,64 @@ class MessageController extends SpikaBaseController
 
                 $messageDataArray=json_decode($messageData,true);
 
-				$fromUserId = $currentUser['_id'];
-				$toGroupId = trim($messageDataArray['to_group_id']);
-				
-				if(isset($messageDataArray['body']))
-					$message = $messageDataArray['body'];
-				else
-					$message = "";
-				
-				if(isset($messageDataArray['message_type'])){
-					$messageType = $messageDataArray['message_type'];
-				} else {
-					$messageType = 'text';
-				}
-				
-				$additionalParams = array();
-				
-				// emoticon message
-				if(isset($messageDataArray['emoticon_image_url'])){
-					$additionalParams['emoticon_image_url'] = $messageDataArray['emoticon_image_url'];
-				}
-				
-				// pitcure message
-				if(isset($messageDataArray['picture_file_id'])){
-					$additionalParams['picture_file_id'] = $messageDataArray['picture_file_id'];
-				}
-				if(isset($messageDataArray['picture_thumb_file_id'])){
-					$additionalParams['picture_thumb_file_id'] = $messageDataArray['picture_thumb_file_id'];
-				}
+                $fromUserId = $currentUser['_id'];
+                $toGroupId = trim($messageDataArray['to_group_id']);
+                
+                if(isset($messageDataArray['body']))
+                    $message = $messageDataArray['body'];
+                else
+                    $message = "";
+                
+                if(isset($messageDataArray['message_type'])){
+                    $messageType = $messageDataArray['message_type'];
+                } else {
+                    $messageType = 'text';
+                }
+                
+                $additionalParams = array();
+                
+                // emoticon message
+                if(isset($messageDataArray['emoticon_image_url'])){
+                    $additionalParams['emoticon_image_url'] = $messageDataArray['emoticon_image_url'];
+                }
+                
+                // pitcure message
+                if(isset($messageDataArray['picture_file_id'])){
+                    $additionalParams['picture_file_id'] = $messageDataArray['picture_file_id'];
+                }
+                if(isset($messageDataArray['picture_thumb_file_id'])){
+                    $additionalParams['picture_thumb_file_id'] = $messageDataArray['picture_thumb_file_id'];
+                }
 
-				// voice message
-				if(isset($messageDataArray['voice_file_id'])){
-					$additionalParams['voice_file_id'] = $messageDataArray['voice_file_id'];
-				}
-				
-				// video message
-				if(isset($messageDataArray['video_file_id'])){
-					$additionalParams['video_file_id'] = $messageDataArray['video_file_id'];
-				}
-				
-				// location message
-				if(isset($messageDataArray['longitude'])){
-					$additionalParams['longitude'] = $messageDataArray['longitude'];
-				}
-				if(isset($messageDataArray['latitude'])){
-					$additionalParams['latitude'] = $messageDataArray['latitude'];
-				}
+                // voice message
+                if(isset($messageDataArray['voice_file_id'])){
+                    $additionalParams['voice_file_id'] = $messageDataArray['voice_file_id'];
+                }
+                
+                // video message
+                if(isset($messageDataArray['video_file_id'])){
+                    $additionalParams['video_file_id'] = $messageDataArray['video_file_id'];
+                }
+                
+                // location message
+                if(isset($messageDataArray['longitude'])){
+                    $additionalParams['longitude'] = $messageDataArray['longitude'];
+                }
+                if(isset($messageDataArray['latitude'])){
+                    $additionalParams['latitude'] = $messageDataArray['latitude'];
+                }
 
-				
+                
                 $result = $app['spikadb']->addNewGroupMessage($messageType,$fromUserId,$toGroupId,$message,$additionalParams);
 
-				if($result == null)
-					 return $self->returnErrorResponse("failed to send message");
-					 
-				$newGroupMessageId = $result['id'];
-				
-				// send async request
-				$self->doAsyncRequest($app,$request,"notifyNewGroupMessage",array('messageId' => $newGroupMessageId));
-				
+                if($result == null)
+                     return $self->returnErrorResponse("failed to send message");
+                     
+                $newGroupMessageId = $result['id'];
+                
+                // send async request
+                $self->doAsyncRequest($app,$request,"notifyNewGroupMessage",array('messageId' => $newGroupMessageId));
+                
                 return json_encode($result);
             }
             
@@ -337,18 +337,18 @@ class MessageController extends SpikaBaseController
 
         $controllers->get('/groupMessages/{toGroupId}/{count}/{offset}',
             function ($toGroupId = "",$count = 30,$offset = 0) use ($app,$self) {
-				
-				if(empty($toGroupId))
-					return $self->returnErrorResponse("failed to get message");
-					
+                
+                if(empty($toGroupId))
+                    return $self->returnErrorResponse("failed to get message");
+                    
                 $result = $app['spikadb']->getGroupMessages($toGroupId,$count,$offset);
 
-				if($result == null)
-					 return $self->returnErrorResponse("failed to get message");
-					 
-				$currentUser = $app['currentUser'];
-				$app['spikadb']->clearActivitySummary($currentUser['_id'], ACTIVITY_SUMMARY_GROUP_MESSAGE, $toGroupId);
-				
+                if($result == null)
+                     return $self->returnErrorResponse("failed to get message");
+                     
+                $currentUser = $app['currentUser'];
+                $app['spikadb']->clearActivitySummary($currentUser['_id'], ACTIVITY_SUMMARY_GROUP_MESSAGE, $toGroupId);
+                
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);

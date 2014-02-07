@@ -25,7 +25,7 @@ class StaticPageController extends SpikaWebBaseController
 
     public function connect(Application $app)
     {
-    	ExceptionHandler::register(false);
+        ExceptionHandler::register(false);
         $controllers = $app['controllers_factory'];
 		$self = $this;
 		

@@ -37,15 +37,15 @@ class UserController extends SpikaBaseController
 
     private function setupAuthMethod($self,$app,$controllers){
 
-		// Auth controller
-		$controllers->post('/auth', function (Request $request) use ($app) {
-			
-			$requestBody = $request->getContent();
-    		$requestBodyAry = json_decode($requestBody,true);
+        // Auth controller
+        $controllers->post('/auth', function (Request $request) use ($app) {
+            
+            $requestBody = $request->getContent();
+            $requestBodyAry = json_decode($requestBody,true);
     
-    		$email = trim($requestBodyAry['email']);
-    		$password = trim($requestBodyAry['password']);
-		
+            $email = trim($requestBodyAry['email']);
+            $password = trim($requestBodyAry['password']);
+        
             if(empty($email))
                 return $self->returnErrorResponse("Email is empty");
             
@@ -53,68 +53,68 @@ class UserController extends SpikaBaseController
                 return $self->returnErrorResponse("Password is empty");
 
             
-			$authResult = $app['spikadb']->doSpikaAuth($email,$password);
-					
-		    return $authResult;
-		
-		});
+            $authResult = $app['spikadb']->doSpikaAuth($email,$password);
+                    
+            return $authResult;
+        
+        });
 
     }
 
 
     private function setupCreateUserMethod($self,$app,$controllers){
 
-		$controllers->post('/createUser', function (Request $request) use ($app,$self) {
-	
-	
-			$requestBody = $request->getContent();
-			
-			if(!$self->validateRequestParams($requestBody,array(
-				'name',
-				'email',
-				'password'
-			))){
-	            return $self->returnErrorResponse("insufficient params");
-			}
-			
-			$requestBodyAry = json_decode($requestBody,true);
-	
-			$email = trim($requestBodyAry['email']);
-			$username = trim($requestBodyAry['name']);
-			$password = trim($requestBodyAry['password']);
-			
-			if(empty($email))
-			  return $self->returnErrorResponse("Email is empty");
-			  
-			if(empty($username))
-			  return $self->returnErrorResponse("Name is empty");
-			  
-			if(empty($password))
-			  return $self->returnErrorResponse("Password is empty");
-			  
-			$checkUniqueName = $app['spikadb']->checkUserNameIsUnique($username);
-			$checkUniqueEmail = $app['spikadb']->checkEmailIsUnique($email);
-	
-			if(is_array($checkUniqueName))
-			  return $self->returnErrorResponse("The name is already taken.");
-			  
-			if(is_array($checkUniqueEmail))
-			  return $self->returnErrorResponse("You are already signed up.");
-	
-			$newUserId = $app['spikadb']->createUser(
-			  $username,
-			  $email,
-			  $password);
-			  
-			$responseBodyAry = array(
-				'ok' => true,
-				'id' => $newUserId,
-				'rev' => 'tmprev'
-			);
-			
-			return json_encode($responseBodyAry);
-			
-		});
+        $controllers->post('/createUser', function (Request $request) use ($app,$self) {
+    
+    
+            $requestBody = $request->getContent();
+            
+            if(!$self->validateRequestParams($requestBody,array(
+                'name',
+                'email',
+                'password'
+            ))){
+                return $self->returnErrorResponse("insufficient params");
+            }
+            
+            $requestBodyAry = json_decode($requestBody,true);
+    
+            $email = trim($requestBodyAry['email']);
+            $username = trim($requestBodyAry['name']);
+            $password = trim($requestBodyAry['password']);
+            
+            if(empty($email))
+              return $self->returnErrorResponse("Email is empty");
+              
+            if(empty($username))
+              return $self->returnErrorResponse("Name is empty");
+              
+            if(empty($password))
+              return $self->returnErrorResponse("Password is empty");
+              
+            $checkUniqueName = $app['spikadb']->checkUserNameIsUnique($username);
+            $checkUniqueEmail = $app['spikadb']->checkEmailIsUnique($email);
+    
+            if(is_array($checkUniqueName))
+              return $self->returnErrorResponse("The name is already taken.");
+              
+            if(is_array($checkUniqueEmail))
+              return $self->returnErrorResponse("You are already signed up.");
+    
+            $newUserId = $app['spikadb']->createUser(
+              $username,
+              $email,
+              $password);
+              
+            $responseBodyAry = array(
+                'ok' => true,
+                'id' => $newUserId,
+                'rev' => 'tmprev'
+            );
+            
+            return json_encode($responseBodyAry);
+            
+        });
 
 
     }
@@ -135,11 +135,11 @@ class UserController extends SpikaBaseController
 
                 $userDataArray=json_decode($userData,true);
 
-				// prevent change password and token
-				unset($userDataArray['password']);
-				unset($userDataArray['token']);
-				unset($userDataArray['token_timestamp']);
-				
+                // prevent change password and token
+                unset($userDataArray['password']);
+                unset($userDataArray['token']);
+                unset($userDataArray['token_timestamp']);
+                
                 $result = $app['spikadb']->updateUser($currentUser['_id'],$userDataArray);
                 
                 return json_encode($result);
@@ -151,13 +151,13 @@ class UserController extends SpikaBaseController
     private function setupFindUserMethod($self,$app,$controllers){
         $controllers->get('/findUser/{type}/{value}',
             function ($type,$value) use ($app,$self) {
-				
+                
                 if(empty($value) || empty($type)){
                     return $self->returnErrorResponse("insufficient params");
                 }
 
-				$value = urldecode($value);
-				
+                $value = urldecode($value);
+                
                 switch ($type){
                     case "id":
                         $result = $app['spikadb']->findUserById($value);
@@ -172,8 +172,8 @@ class UserController extends SpikaBaseController
                         return $self->returnErrorResponse("unknown search key");
 
                 }
-				
-			
+                
+            
                 if($result == null)
                     return "{}";
                     
@@ -188,10 +188,10 @@ class UserController extends SpikaBaseController
 
         $controllers->get('/activitySummary',
             function () use ($app,$self) {
-				
-				$user = $app['currentUser'];
-				$userId = $user['_id'];
-				
+                
+                $user = $app['currentUser'];
+                $userId = $user['_id'];
+                
                 if(empty($userId)){
                     return $self->returnErrorResponse("insufficient params");
                 }
@@ -242,10 +242,10 @@ class UserController extends SpikaBaseController
                 $result = $app['spikadb']->addContact($currentUser['_id'],$userId);
                 
                 if($result == null)
-                	return $self->returnErrorResponse("failed to add contact");
-                	
-				$userData = $app['spikadb']->findUserById($currentUser['_id']);
-				
+                    return $self->returnErrorResponse("failed to add contact");
+                    
+                $userData = $app['spikadb']->findUserById($currentUser['_id']);
+                
                 return json_encode($userData);
                 
             }
@@ -270,10 +270,10 @@ class UserController extends SpikaBaseController
                 $result = $app['spikadb']->removeContact($currentUser['_id'],$userId);
                 
                 if($result == null)
-                	return $self->returnErrorResponse("failed to remove contact");
-                	
-				$userData = $app['spikadb']->findUserById($currentUser['_id']);
-				
+                    return $self->returnErrorResponse("failed to remove contact");
+                    
+                $userData = $app['spikadb']->findUserById($currentUser['_id']);
+                
                 return json_encode($userData);
                 
             }
@@ -282,7 +282,7 @@ class UserController extends SpikaBaseController
 
     }
 
-	
+    
 }
 
 

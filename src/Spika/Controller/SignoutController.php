@@ -23,13 +23,13 @@ class SignoutController implements ControllerProviderInterface
     {
         $controllers = $app['controllers_factory'];
 
-		// logout controller
-		$controllers->get('/unregistToken', function (Request $request) use ($app) {
-			
-			$userId = $request->get('user_id');
-			return $app['spikadb']->unregistToken($userId);
-		
-		});
+        // logout controller
+        $controllers->get('/unregistToken', function (Request $request) use ($app) {
+            
+            $userId = $request->get('user_id');
+            return $app['spikadb']->unregistToken($userId);
+        
+        });
 
         return $controllers;
         

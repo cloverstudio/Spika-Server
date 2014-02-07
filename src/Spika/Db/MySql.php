@@ -775,7 +775,30 @@ class MySQL implements DbInterface
     public function getGroupMessages($targetGroupId,$count,$offset){
         
         $result = $this->DB->fetchAll("
-            select * from message 
+            select 
+                message._id,
+                message.from_user_id,
+                message.to_user_id,
+                message.to_group_id,
+                message.to_group_name,
+                message.body,
+                message.message_target_type,
+                message.message_type,
+                message.emoticon_image_url,
+                message.picture_file_id,
+                message.picture_thumb_file_id,
+                message.voice_file_id, 
+                message.video_file_id,
+                message.longitude,
+                message.latitude,
+                message.valid,
+                message.from_user_name,
+                message.to_user_name,
+                message.created as created,
+                message.modified,
+                user.avatar_thumb_file_id as avatar_thumb_file_id
+            from message 
+                left join user on user._id = message.from_user_id
                 where 
                     message_target_type = ? 
                     and to_group_id = ?

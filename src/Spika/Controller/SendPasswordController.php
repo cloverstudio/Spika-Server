@@ -39,19 +39,22 @@ class SendPasswordController extends SpikaBaseController
                 $resetPasswordUrl = ROOT_URL . "/page/resetPassword/" . $resetCode;
                 
                 $body = "Please reset password here {$resetPasswordUrl}";
-                
+
                 try{
                     $message = \Swift_Message::newInstance()
                         ->setSubject("Spika Reset Password")
                         ->setFrom(AdministratorEmail)
                         ->setTo($user['email'])
                         ->setBody($body);
+                        
+                    $mailer = \Swift_Mailer::newInstance($transport);
+                    
+                    $mailer->send($message);
+                    
                 } catch(\Exception $e){
                     
-                    
-                    
                 }
-                    
+                
                 return 'OK';
 
             }else{

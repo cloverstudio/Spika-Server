@@ -928,9 +928,12 @@ class MySQL implements DbInterface
 
     public function getAvatarFileId($user_id){
         $user = $this->findUserById($user_id);
-        return array('rows'=>array(array('key'=>"",'value'=>$user['avatar_file_id'])));
+        if(!isset($user['_id']))
+            return array('rows'=>array(array('key'=>"",'value'=>"")));
+        else
+            return array('rows'=>array(array('key'=>"",'value'=>$user['avatar_file_id'])));
+        
     }
-
 
     public function createGroup($name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL){
 

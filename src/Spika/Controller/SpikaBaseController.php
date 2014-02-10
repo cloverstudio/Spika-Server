@@ -54,19 +54,9 @@ class SpikaBaseController implements ControllerProviderInterface
         $client = new Client();
         $client->addSubscriber(new AsyncPlugin());
         
-        $currentURL =  $request->getBasePath() . $request->getPathInfo();
-        $tmp = explode("/",$currentURL);
-        $fileName = $tmp[count($tmp) - 1];
-        $currentUrlDir = str_replace("/{$fileName}", "", $currentURL);
-        
-        $port = HTTP_PORT;
-        $protocol = "http";
-        if($request->isSecure()){
-            $protocol = "https";
-        }
-        
-        $requestURL = "{$protocol}://localhost:{$port}{$currentUrlDir}/{$apiName}";
+        $requestURL = LOCAL_ROOT_URL . "api/{$apiName}";
         $request = $client->post($requestURL);
+                
         $json = json_encode($params);
         $request->setBody($json,'application/json');
         

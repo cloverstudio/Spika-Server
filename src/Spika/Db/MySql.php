@@ -501,8 +501,8 @@ class MySQL implements DbInterface
         if(!isset($user['name']))
             $user['name'] = $originalData['name'];
             
-        if(!isset($user['email']))
-            $user['email'] = $originalData['email'];
+        // prevent to updating email
+        $user['email'] = $originalData['email'];
             
         if(!isset($user['about']))
             $user['about'] = $originalData['about'];

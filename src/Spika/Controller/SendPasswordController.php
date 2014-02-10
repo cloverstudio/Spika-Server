@@ -41,16 +41,41 @@ class SendPasswordController extends SpikaBaseController
                 $body = "Please reset password here {$resetPasswordUrl}";
 
                 try{
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject("Spika Reset Password")
-                        ->setFrom(AdministratorEmail)
-                        ->setTo($user['email'])
-                        ->setBody($body);
+                
+                
+                    if(SEND_EMAIL_METHOD == 1){
                         
-                    $mailer = \Swift_Mailer::newInstance($transport);
+                        $message = \Swift_Message::newInstance()
+                            ->setSubject("Spika Reset Password")
+                            ->setFrom(AdministratorEmail)
+                            ->setTo($user['email'])
+                            ->setBody($body);
+                        
+                        $mailer = \Swift_Mailer::newInstance();
+                        
+                        $mailer->send($message);
+                        
+                    }
                     
-                    $mailer->send($message);
+                    if(SEND_EMAIL_METHOD == 2){
+                        
+                        $transport = \Swift_SmtpTransport::newInstance('smtp.googlemail.com', 465, 'ssl')
+                            ->setUsername(GMAIL_USER)
+                            ->setPassword(GMAIL_PASSWORD);
+
+                        $message = \Swift_Message::newInstance()
+                            ->setSubject("Spika Reset Password")
+                            ->setFrom(AdministratorEmail)
+                            ->setTo($user['email'])
+                            ->setBody($body);
+                        
+                        $mailer = \Swift_Mailer::newInstance($transport);
+                        
+                        $mailer->send($message);
+
+                    }
                     
+                                        
                 } catch(\Exception $e){
                     
                 }

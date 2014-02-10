@@ -15,7 +15,8 @@ define('AdministratorEmail', isset($_ENV['SPIKA_ADMIN_EMAIL']) ? $_ENV['SPIKA_AD
 define('TOKEN_VALID_TIME', isset($_ENV['SPIKA_TOKEN_VALID_TIME']) ? $_ENV['SPIKA_TOKEN_VALID_TIME'] : 60*60*24);
 define('PW_RESET_CODE_VALID_TIME', isset($_ENV['SPIKA_PW_RESET_CODE_VALID_TIME']) ? $_ENV['SPIKA_PW_RESET_CODE_VALID_TIME'] : 60*5);
 
-define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://officialapi.spikaapp.com/");
+define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://localhost:8080/wwwroot/");
+define('LOCAL_ROOT_URL', isset($_ENV['SPIKA_LOCAL_ROOT_URL']) ? $_ENV['SPIKA_LOCAL_ROOT_URL'] : "http://localhost:8080/wwwroot/");
 
 define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "localhost");
 define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "spikadb");
@@ -40,6 +41,6 @@ define("APN_DEV_CERT_PATH", "files/apns-dev.pem");
 define("APN_PROD_CERT_PATH", "files/apns-prod.pem");
 define("GCM_API_KEY","AIzaSyDOkqeO0MZ_igwH_zGyy95DO1ahM8-Ebrw");
 
-define("SEND_EMAIL_METHOD",2); // 0: dont send 1:local smtp 2:gmail
-define("GMAIL_USER","spika@clover-studio.com"); 
-define("GMAIL_PASSWORD","cloverpass013"); 
+define("SEND_EMAIL_METHOD",1); // 0: dont send 1:local smtp 2:gmail
+define("GMAIL_USER",""); 
+define("GMAIL_PASSWORD",""); 

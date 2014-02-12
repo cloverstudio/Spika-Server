@@ -1,0 +1,1 @@
+ALTER TABLE `message` ADD `delete_at` INT NOT NULL DEFAULT '0' AFTER `modified`, ADD `delete_flagged_at` INT NOT NULL DEFAULT '0' AFTER `delete_at`, ADD `delete_after_shown` BOOLEAN NOT NULL DEFAULT FALSE AFTER `delete_flagged_at`;

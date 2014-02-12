@@ -132,6 +132,7 @@
                     <p>Add database connection settings to <strong>init.php</strong>.</p>
                         <pre>
 define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "{{ROOT_URL}}");
+define('LOCAL_ROOT_URL', isset($_ENV['SPIKA_LOCAL_ROOT_URL']) ? $_ENV['SPIKA_LOCAL_ROOT_URL'] : "{{ROOT_URL}}");
 
 define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "{{DbParams.host}}");
 define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "{{DbParams.dbname}}");
@@ -139,11 +140,9 @@ define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'
 define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "{{DbParams.password}}");
                         </pre>
 
-                    
-                    
 
-                      <form class="form-database" method="post" action="{{ROOT_URL}}/installer/step3">
-                        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Initial Data</button>
+                      <form class="form-database" method="get" action="{{ROOT_URL}}/admin/">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Open Spika Admin</button>
                       </form>
 
 

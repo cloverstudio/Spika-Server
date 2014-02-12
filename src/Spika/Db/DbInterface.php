@@ -74,4 +74,7 @@ interface DbInterface
     public function getMessageCount();
     public function getLastLoginedUsersCount();
 
+    public function setMessageDelete($messageId,$deleteAt,$deleteAfterShownFlag);
+    public function deleteMessage($messageId);
+    
 }

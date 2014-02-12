@@ -239,6 +239,10 @@
 	)),array(
 		'token' => $token
 	));
+	
+	$resultAry = json_decode($result,true);
+
+
 	//////// send text message
 	$result = HU_postRequest(API_URL . "/sendMessageToUser",json_encode(array(
 	  "to_user_id" => $targetUserId,
@@ -246,10 +250,10 @@
 	)),array(
 		'token' => $token
 	));
-	
-	$resultAry = json_decode($result,true);
-	
-	
+		
+    $resultAry = json_decode($result,true);
+
+
 	if(empty($resultAry['id']))
 	   die("send message failed {$result}");
 
@@ -284,7 +288,7 @@
 	));
 	
 	$resultAry = json_decode($result,true);
-		
+    
 	if(empty($resultAry['rows'][0]))
 	   die("read message failed {$result}");
 	   
@@ -450,6 +454,15 @@
 	
 	$resultAry = json_decode($result,true);
 	
+
+	//setDelete
+	$result = HU_postRequest(API_URL . "/setDelete",json_encode(array(
+	  "delete_type" => 2,
+	  "message_id" => $resultAry['id']
+	)),array(
+		'token' => $token
+	));
+	
 	if(empty($resultAry['id']))
 	   die("send group message failed {$result}");
 	   
@@ -465,6 +478,9 @@
 	));
 	
 	$resultAry = json_decode($result,true);
+	
+	print_r($resultAry);
+	die();
 	
 	$targetUserId = $resultAry['id'];
 	

@@ -1,0 +1,12 @@
+<?php
+
+define('DELETE_TYPE_NOTDELETE', "0");
+define('DELETE_TYPE_NOW', "1");
+define('DELETE_TYPE_FIVEMIN', "2");
+define('DELETE_TYPE_ONEDAY', "3");
+define('DELETE_TYPE_ONEWEEK', "4");
+define('DELETE_TYPE_AFTERSHOWN', "5");
+
+define("EMAIL_METHOD_NOTSEND",0); 
+define("EMAIL_METHOD_LOCALSMTP",1); 
+define("EMAIL_METHOD_GMAIL",2); 

@@ -711,6 +711,9 @@ class MySQL implements DbInterface
                 message.to_user_name,
                 message.created as created,
                 message.modified,
+                message.delete_at,
+                message.delete_flagged_at,
+                message.delete_after_shown,
                 user.avatar_thumb_file_id as avatar_thumb_file_id
             from message
                 left join user on user._id = message.from_user_id
@@ -742,6 +745,9 @@ class MySQL implements DbInterface
                 message.to_user_name,
                 message.created as created,
                 message.modified,
+                message.delete_at,
+                message.delete_flagged_at,
+                message.delete_after_shown,
                 user.avatar_thumb_file_id as avatar_thumb_file_id
             from message 
                 left join user on user._id = message.from_user_id
@@ -767,7 +773,7 @@ class MySQL implements DbInterface
             $message = $this->reformatMessageData($message);
             $formatedMessages[] = $message;
         }
-
+        
         return $this->formatResult($formatedMessages,$offset);
         
     }
@@ -796,6 +802,9 @@ class MySQL implements DbInterface
                 message.to_user_name,
                 message.created as created,
                 message.modified,
+                message.delete_at,
+                message.delete_flagged_at,
+                message.delete_after_shown,
                 user.avatar_thumb_file_id as avatar_thumb_file_id
             from message 
                 left join user on user._id = message.from_user_id
@@ -1383,7 +1392,7 @@ class MySQL implements DbInterface
             unset($user['email']);
             unset($user['token']);
         }
-        
+
         if(isset($user['birthday']))
             $user['birthday'] = intval($user['birthday']);
 
@@ -1395,7 +1404,6 @@ class MySQL implements DbInterface
 
         if(isset($user['max_favorite_count']))
             $user['max_favorite_count'] = intval($user['max_favorite_count']);
-
 
         if(isset($user['created']))
             $user['created'] = intval($user['created']);
@@ -1639,5 +1647,37 @@ class MySQL implements DbInterface
         $result = $this->DB->fetchColumn($query);
         return $result;
     }
+ 
+    public function setMessageDelete($messageId,$deleteAt,$deleteAfterShownFlag = 0){
+        
+        $now = time();
+        
+        $result = $this->DB->executeupdate(
+                'update message set 
+                    delete_at = ?,
+                    delete_flagged_at = ?,
+                    delete_after_shown = ?
+                    WHERE _id = ?',
+                array(
+                    $deleteAt,
+                    $now,
+                    $deleteAfterShownFlag,
+                    $messageId));
+        
+        return $result;
+
+    }
     
+    public function deleteMessage($messageId){
+        
+        $this->DB->delete('message', array('_id' => $messageId));
+        
+        return array(
+                'ok' => 1,
+                'id' => $messageId,
+                'rev' => 'tmprev' 
+        );
+
+    }
+   
 }

@@ -42,8 +42,7 @@ class SendPasswordController extends SpikaBaseController
 
                 try{
                 
-                
-                    if(SEND_EMAIL_METHOD == 1){
+                    if(SEND_EMAIL_METHOD == EMAIL_METHOD_LOCALSMTP){
                         
                         $message = \Swift_Message::newInstance()
                             ->setSubject("Spika Reset Password")
@@ -57,7 +56,7 @@ class SendPasswordController extends SpikaBaseController
                         
                     }
                     
-                    if(SEND_EMAIL_METHOD == 2){
+                    if(SEND_EMAIL_METHOD == EMAIL_METHOD_GMAIL){
                         
                         $transport = \Swift_SmtpTransport::newInstance('smtp.googlemail.com', 465, 'ssl')
                             ->setUsername(GMAIL_USER)

@@ -36,7 +36,7 @@ class SpikaBaseController implements ControllerProviderInterface
             return false;
             
         foreach($requiredParams as $param){
-            if(!isset($requestParams[$param]) || empty($requestParams[$param]))
+            if(!isset($requestParams[$param]))
                 return false;
         }
         

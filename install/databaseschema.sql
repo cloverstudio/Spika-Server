@@ -89,6 +89,9 @@ CREATE TABLE IF NOT EXISTS `message` (
   `to_user_name` varchar(255) COLLATE utf8_bin NOT NULL,
   `created` int(11) NOT NULL,
   `modified` int(11) NOT NULL,
+  `delete_at` int(11) NOT NULL DEFAULT '0',
+  `delete_flagged_at` int(11) NOT NULL DEFAULT '0',
+  `delete_after_shown` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`_id`),
   KEY `from_user_id` (`from_user_id`,`to_user_id`,`message_target_type`,`message_type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

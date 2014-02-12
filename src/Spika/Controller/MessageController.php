@@ -235,6 +235,9 @@ class MessageController extends SpikaBaseController
                      
                 $app['spikadb']->clearActivitySummary($ownerUserId, ACTIVITY_SUMMARY_DIRECT_MESSAGE, $toUserId);
                 
+                if(count($result['rows']) > 0)
+                    $result['rows'] = $self->fileterMessage($result['rows'],$app['spikadb']);
+                
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
@@ -349,12 +352,109 @@ class MessageController extends SpikaBaseController
                 $currentUser = $app['currentUser'];
                 $app['spikadb']->clearActivitySummary($currentUser['_id'], ACTIVITY_SUMMARY_GROUP_MESSAGE, $toGroupId);
                 
+                if(count($result['rows']) > 0)
+                    $result['rows'] = $self->fileterMessage($result['rows'],$app['spikadb']);
+
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
 
+        $controllers->post('/setDelete',
+        
+            function (Request $request)use($app,$self) {
+
+                $now = time();
+                
+                $currentUser = $app['currentUser'];
+                $requestData = $request->getContent();
+
+                if(!$self->validateRequestParams($requestData,array(
+                    'delete_type',
+                    'message_id'
+                ))){
+                    return $self->returnErrorResponse("insufficient params");
+                }
+                
+                $requestAry=json_decode($requestData,true);
+                
+                $deleteType = $requestAry['delete_type'];
+                $messageId = $requestAry['message_id'];
+                
+                if($deleteType == DELETE_TYPE_NOTDELETE){
+                    
+                    $app['spikadb']->setMessageDelete($messageId,0,0);
+                    
+                } else if ($deleteType == DELETE_TYPE_NOW){
+                    
+                    $app['spikadb']->deleteMessage($messageId);
+                    
+                } else if ($deleteType == DELETE_TYPE_FIVEMIN){
+                    
+                    $app['spikadb']->setMessageDelete($messageId,$now+60*5,0);                    
+                    
+                } else if ($deleteType == DELETE_TYPE_ONEDAY){
+                    
+                    $app['spikadb']->setMessageDelete($messageId,$now+60*60*24,0);                    
+                    
+                } else if ($deleteType == DELETE_TYPE_ONEWEEK){
+                    
+                    $app['spikadb']->setMessageDelete($messageId,$now+60*60*24*7,0);                    
+                    
+                } else if ($deleteType == DELETE_TYPE_AFTERSHOWN){
+                    
+                    $app['spikadb']->setMessageDelete($messageId,0,1);                    
+                    
+                } else {
+                
+                   return $self->returnErrorResponse("invalid params"); 
+                   
+                }
+                                
+                $app['spikadb']->setDeleteTime($messageId);
+                                
+                return 'OK';  
+                 
+            }        
+
+        )->before($app['beforeTokenChecker']);
 
     }
     
+    public function fileterMessage($messages,$database){
+        
+        $newResult = array();
+        
+        $now = time();
+        
+        foreach($messages as $message){
+            
+            if(!isset($message['value']['delete_at']) || !isset($message['value']['delete_flagged_at']) || !isset($message['value']['delete_after_shown'])){
+                $newResult[] = $message;
+                continue;                
+            }
+                
+            $messageId = $message['value']['_id'];
+            $deleteAt = $message['value']['delete_at'];
+            $deleteFlaggedAt = $message['value']['delete_flagged_at'];
+            $deleteAterShown = $message['value']['delete_after_shown'];
+            
+            // if delete time passed from flagged time delete from ary and delete from db
+            if($deleteAt != 0 && $deleteAt < $now){
+                $database->deleteMessage($messageId);
+                continue;
+            }
+            
+            // if delete after shown flag is true add to ary delete from db so next time will not show
+            if($deleteAterShown == 1){
+                $database->deleteMessage($messageId);
+            }
+            
+            $newResult[] = $message;
+            
+        }
+        
+        return $newResult;
+        
+    }
 
 }

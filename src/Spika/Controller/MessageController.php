@@ -410,8 +410,6 @@ class MessageController extends SpikaBaseController
                    
                 }
                                 
-                $app['spikadb']->setDeleteTime($messageId);
-                                
                 return 'OK';  
                  
             }        

@@ -61,6 +61,7 @@
     
     function renderChat(data){
         
+        
         var html = "";
         
         for(chatRowIndex in data.rows){
@@ -91,7 +92,7 @@
                                                 <i class="fa fa-clock-o fa-fw"></i>%%time%%
                                             </small>
                                         </div>
-                                        <p>
+                                        <p style="text-align:right">
                                             %%message%%
                                         </p>
                                     </div>
@@ -112,7 +113,7 @@
                                                 <i class="fa fa-clock-o fa-fw"></i> %%time%%</small>
                                             <strong class="pull-right primary-font">%%name%%</strong>
                                         </div>
-                                        <p>
+                                        <p style="text-align:left">
                                             %%message%%
                                         </p>
                                     </div>
@@ -131,7 +132,7 @@
         var formattedTime = (1900 + date.getYear()) + "/" + date.getMonth() + "/" + date.getDate() + " " + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
 
         templateChatRow = templateChatRow.replace(/%%name%%/,chatRow.from_user_name);
-        templateChatRow = templateChatRow.replace(/%%message%%/,chatRow.body);
+        templateChatRow = templateChatRow.replace(/%%message%%/,renderChatBody(chatRow));
         templateChatRow = templateChatRow.replace(/%%time%%/,formattedTime);
         
         if(chatRow.avatar_thumb_file_id != ""){
@@ -146,9 +147,62 @@
         
     }
     
+    function renderChatBody(chatRow){
+        
+        
+        var templateImage = '{{'
+            <a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg%%id%%"><img src="%%ThumbUrl%%" width="150"/></a>
+
+            <div class="modal fade bs-example-modal-lg%%id%%" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <img src="%%ImageUrl%%"/>
+                </div>
+              </div>
+            </div>'
+        
+        | raw | replace({"\n":""}) }}';
+        
+        console.log(chatRow);
+        if(chatRow.message_type == 'text')
+            return chatRow.body;
+        
+        if(chatRow.message_type == 'image'){
+            var html = templateImage;
+            html = html.replace(/%%id%%/g,chatRow._id);
+            html = html.replace(/%%ThumbUrl%%/,'{{ROOT_URL}}/api/filedownloader?file=' + chatRow.picture_thumb_file_id);
+            html = html.replace(/%%ImageUrl%%/,'{{ROOT_URL}}/api/filedownloader?file=' + chatRow.picture_file_id);
+            return html;
+        }
+        
+        if(chatRow.message_type == 'emoticon'){
+            var html = '<img src="' + chatRow.emoticon_image_url + '" width="150"/>';
+            return html;
+        }  
+            
+        if(chatRow.message_type == 'voice'){
+            var html = '<a href="{{ROOT_URL}}/api/filedownloader?file=' + chatRow.voice_file_id + '" target="_blank"><i class="fa fa-microphone"></i> ' + chatRow.body + '</a>';
+            return html;
+        }  
+            
+        if(chatRow.message_type == 'video'){
+            var html = '<a href="{{ROOT_URL}}/api/filedownloader?file=' + chatRow.video_file_id + '" target="_blank"><i class="fa fa-video-camera"></i>' + chatRow.body + '</a>';
+            return html;
+        }  
+        
+        if(chatRow.message_type == 'location'){
+            var html = '<a href="https://www.google.com/maps/@' + chatRow.latitude + ',' + chatRow.longitude + ',11z" target="_blank"><i class="fa fa-map-marker"></i> {{lang.openLocation}}</a>';
+            return html;
+        }  
+            
+       
+        
+    }
+    
     $(document).ready(function() {
         
-        $('#chatbox').height($('#list').height());       
+        $('#chatbox').height($('#list').height());
+        $('.lightbox').lightbox(options)
     });
     
 </script>
@@ -233,14 +287,14 @@
                 
                 <div class="col-lg-4">
                     
-                     <div id="chatbox" class="chat-panel panel panel-default" style="overflow-y: scroll">
+                     <div class="chat-panel panel panel-default" style="overflow-y: scroll">
                         <div class="panel-heading">
                             <i class="fa fa-comments fa-fw"></i>
                             {{lang.labelChatWindowTitle}}
                         </div>
                         
                         <!-- /.panel-heading -->
-                        <div class="panel-body">
+                        <div id="chatbox" class="panel-body">
                             <ul id="chat-window" class="chat">
           
                                 <div class="alert alert-danger alert-dismissable">

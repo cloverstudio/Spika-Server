@@ -318,7 +318,7 @@ class UserController extends SpikaWebBaseController
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),
-                'user' => $self->app['spikadb']->findUserById($userId)
+                'user' => $self->app['spikadb']->findUserById($userId,false)
                 
             ));
             

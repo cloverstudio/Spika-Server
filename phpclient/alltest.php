@@ -289,6 +289,9 @@
 	
 	$resultAry = json_decode($result,true);
     
+    print_r($resultAry);
+    die();
+    
 	if(empty($resultAry['rows'][0]))
 	   die("read message failed {$result}");
 	   

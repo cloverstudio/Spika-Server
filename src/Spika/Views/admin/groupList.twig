@@ -48,7 +48,11 @@
                                             
                                         {% endif %}
                                     </td>
-                                    <td>{{categoryList[group.category_id].title}}</td>
+                                    <td>
+                                        {% if categoryList[group.category_id] is defined %}
+                                            {{categoryList[group.category_id].title}}
+                                        {% endif %}
+                                    </td>
                                     <td>{{group.name}}</td>
                                     <td>{{group.created}}</td>
                                     <td>{{group.modified}}</td>

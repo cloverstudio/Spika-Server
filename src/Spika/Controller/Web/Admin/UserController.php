@@ -292,7 +292,6 @@ class UserController extends SpikaWebBaseController
         $controllers->get('user/conversation/{userId}', function (Request $request,$userId) use ($app,$self) {
             
             
-            
             $count = $self->app['spikadb']->getConversationHistoryCount($userId);
             
             $page = $request->get('page');
@@ -310,6 +309,8 @@ class UserController extends SpikaWebBaseController
                 $conversationHistory[$i]['created'] = date("Y.m.d H:i:s",$conversationHistory[$i]['created']);
             }
 
+            $user = $self->app['spikadb']->findUserById($userId);
+            
             return $self->render('admin/userConversationHistory.twig', array(
                 'conversations' => $conversationHistory,
                 'pager' => array(
@@ -317,6 +318,7 @@ class UserController extends SpikaWebBaseController
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),
+                'user' => $self->app['spikadb']->findUserById($userId)
                 
             ));
             

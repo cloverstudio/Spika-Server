@@ -1,6 +1,6 @@
 <?php
 	
-	define("API_URL","http://officialapi.spikaapp.com/api");
+	define("API_URL","http://localhost:8080/wwwroot/api");
 	$APP = "spikademo";
 	
 	//------------------------ low level functions

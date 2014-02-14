@@ -382,7 +382,7 @@ class MessageController extends SpikaBaseController
                 
                 if($deleteType == DELETE_TYPE_NOTDELETE){
                     
-                    $app['spikadb']->setMessageDelete($messageId,0,0);
+                    $app['spikadb']->setMessageDelete($messageId,$deleteType,0,0);
                     
                 } else if ($deleteType == DELETE_TYPE_NOW){
                     
@@ -390,19 +390,19 @@ class MessageController extends SpikaBaseController
                     
                 } else if ($deleteType == DELETE_TYPE_FIVEMIN){
                     
-                    $app['spikadb']->setMessageDelete($messageId,$now+60*5,0);                    
+                    $app['spikadb']->setMessageDelete($messageId,$deleteType,$now+60*5,0);                    
                     
                 } else if ($deleteType == DELETE_TYPE_ONEDAY){
                     
-                    $app['spikadb']->setMessageDelete($messageId,$now+60*60*24,0);                    
+                    $app['spikadb']->setMessageDelete($messageId,$deleteType,$now+60*60*24,0);                    
                     
                 } else if ($deleteType == DELETE_TYPE_ONEWEEK){
                     
-                    $app['spikadb']->setMessageDelete($messageId,$now+60*60*24*7,0);                    
+                    $app['spikadb']->setMessageDelete($messageId,$deleteType,$now+60*60*24*7,0);                    
                     
                 } else if ($deleteType == DELETE_TYPE_AFTERSHOWN){
                     
-                    $app['spikadb']->setMessageDelete($messageId,0,1);                    
+                    $app['spikadb']->setMessageDelete($messageId,$deleteType,0,1);                    
                     
                 } else {
                 

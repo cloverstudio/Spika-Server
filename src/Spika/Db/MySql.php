@@ -491,19 +491,25 @@ class MySQL implements DbInterface
         
      }
 
-    
-    public function updateUser($userId,$user){
+    public function updateUser($userId,$user,$secure = true){
 
         $originalData = $this->findUserById($userId,false);
         
         $now = time();
-
+        
         if(!isset($user['name']))
             $user['name'] = $originalData['name'];
-            
-        // prevent to updating email
-        $user['email'] = $originalData['email'];
-            
+
+        if(!$secure){
+        
+            if(!isset($user['email']))
+                $user['email'] = $originalData['email'];
+                
+            if(!isset($user['password']))
+                $user['password'] = $originalData['password'];
+                
+        }
+                    
         if(!isset($user['about']))
             $user['about'] = $originalData['about'];
             
@@ -537,10 +543,46 @@ class MySQL implements DbInterface
         if(!isset($user['token']))
             $user['token'] = $originalData['token'];
         
-        $result = $this->DB->executeupdate(
+        if($secure){
+        
+            $result = $this->DB->executeupdate(
+                'update user set 
+                    name = ?,
+                    about = ?,
+                    online_status = ?,
+                    birthday = ?,
+                    gender = ?,
+                    avatar_file_id = ?,
+                    avatar_thumb_file_id = ?,
+                    ios_push_token = ?,
+                    android_push_token = ?,
+                    max_contact_count = ?,
+                    max_favorite_count = ?,
+                    token = ?,
+                    modified = ?
+                    WHERE _id = ?', 
+                array(
+                    $user['name'],
+                    $user['about'],
+                    $user['online_status'],
+                    $user['birthday'],
+                    $user['gender'],
+                    $user['avatar_file_id'],
+                    $user['avatar_thumb_file_id'],
+                    $user['ios_push_token'],
+                    $user['android_push_token'],
+                    $user['max_contact_count'],
+                    $user['max_favorite_count'],
+                    $user['token'],
+                    $now,
+                    $userId));
+        }else{
+            
+            $result = $this->DB->executeupdate(
                 'update user set 
                     name = ?,
                     email = ?,
+                    password = ?,
                     about = ?,
                     online_status = ?,
                     birthday = ?,
@@ -557,6 +599,7 @@ class MySQL implements DbInterface
                 array(
                     $user['name'],
                     $user['email'],
+                    $user['password'],
                     $user['about'],
                     $user['online_status'],
                     $user['birthday'],
@@ -570,8 +613,8 @@ class MySQL implements DbInterface
                     $user['token'],
                     $now,
                     $userId));
-
-        $this->logger->addDebug("user id is {$userId}");
+                    
+        }
 
         if($result){
             return $this->findUserById($userId,false);
@@ -663,7 +706,7 @@ class MySQL implements DbInterface
         }
 
         if(isset($toGroupId)){
-            $toGroupData=$this->findUserById($toGroupId);
+            $toGroupData=$this->findGroupById($toGroupId);
             $messageData['to_group_name']=$toGroupData['name'];
         }else{
             return null;
@@ -1679,5 +1722,39 @@ class MySQL implements DbInterface
         );
 
     }
-   
+    
+    public function getConversationHistory($userId,$offset = 0,$count=10){
+        
+        $result = $this->DB->fetchAll("
+            select * from message where _id in 
+            (
+                select max(_id) from message where from_user_id = ? group by to_user_id
+                union
+                select max(_id) from message where from_user_id = ? group by to_group_id
+            )
+            order by created desc
+            limit {$count}
+            offset {$offset}
+            ",array($userId,$userId));
+            
+        return $result;
+        
+    }
+    
+    public function getConversationHistoryCount($userId){
+        
+        $result = $this->DB->fetchColumn("
+            select count(*) as count from message where _id in 
+            (
+                select max(_id) from message where from_user_id = ? group by to_user_id
+                union
+                select max(_id) from message where from_user_id = ? group by to_group_id
+            )
+            ",array($userId,$userId));
+            
+        return $result;
+        
+    }
+    
+    
 }

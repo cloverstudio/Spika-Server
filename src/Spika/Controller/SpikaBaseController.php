@@ -54,7 +54,11 @@ class SpikaBaseController implements ControllerProviderInterface
         $client = new Client();
         $client->addSubscriber(new AsyncPlugin());
         
-        $requestURL = LOCAL_ROOT_URL . "api/{$apiName}";
+        $requestURL = LOCAL_ROOT_URL . "/api/{$apiName}";
+        
+        $app['monolog']->addDebug($requestURL);
+
+
         $request = $client->post($requestURL);
                 
         $json = json_encode($params);

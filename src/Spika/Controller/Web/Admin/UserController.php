@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+ 
 namespace Spika\Controller\Web\Admin;
 
 use Silex\Application;
@@ -219,11 +219,12 @@ class UserController extends SpikaWebBaseController
                 $password = $user['password'];
                 
                 if(isset($formValues['chkbox_change_password'])){
+                
                     if(!empty($formValues['password']))
                         $password = md5($formValues['password']);
-                }else
                 
-
+                }
+                
                 $self->app['spikadb']->updateUser(
                     $id,
                     array(
@@ -238,7 +239,8 @@ class UserController extends SpikaWebBaseController
                         'avatar_thumb_file_id' => $thumbFileName,
                         'max_contact_count' => $formValues['max_contact_count'],
                         'max_favorite_count' => $formValues['max_favorite_count']
-                    )
+                    ),
+                    false // allow to change password and email
                 );
                 
                 return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageUserChanged');
@@ -283,6 +285,40 @@ class UserController extends SpikaWebBaseController
             }else{
                 return $app->redirect(ROOT_URL . '/admin/user/list');
             }
+            
+        })->before($app['adminBeforeTokenChecker']);
+
+    
+        $controllers->get('user/conversation/{userId}', function (Request $request,$userId) use ($app,$self) {
+            
+            
+            
+            $count = $self->app['spikadb']->getConversationHistoryCount($userId);
+            
+            $page = $request->get('page');
+            if(empty($page))
+                $page = 1;
+            
+            $msg = $request->get('msg');
+            if(!empty($msg))
+                $self->setInfoAlert($self->language[$msg]);
+            
+            $conversationHistory = $self->app['spikadb']->getConversationHistory($userId,($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT);
+            
+            // convert timestamp to date
+            for($i = 0 ; $i < count($conversationHistory) ; $i++){
+                $conversationHistory[$i]['created'] = date("Y.m.d H:i:s",$conversationHistory[$i]['created']);
+            }
+
+            return $self->render('admin/userConversationHistory.twig', array(
+                'conversations' => $conversationHistory,
+                'pager' => array(
+                    'baseURL' => ROOT_URL . "/admin/user/conversateion/{$userId}?page=",
+                    'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
+                    'page' => $page,
+                ),
+                
+            ));
             
         })->before($app['adminBeforeTokenChecker']);
 

@@ -16,7 +16,7 @@ interface DbInterface
     public function findUserByEmail($email);
     public function findUserByName($name);
     public function getActivitySummary($user_id);
-    public function updateUser($userId,$user);
+    public function updateUser($userId,$user,$secure);
     public function getEmoticons();
     public function getEmoticonImage($emoticonId);
     public function getAvatarFileId($user_id);
@@ -76,5 +76,8 @@ interface DbInterface
 
     public function setMessageDelete($messageId,$deleteAt,$deleteAfterShownFlag);
     public function deleteMessage($messageId);
+    
+    public function getConversationHistory($user,$offset = 0,$count);
+    public function getConversationHistoryCount($user);
     
 }

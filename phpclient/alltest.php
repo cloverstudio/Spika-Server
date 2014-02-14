@@ -442,8 +442,6 @@
       //die("/searchGroups/name {$result}");
 	}
 
-
-    
 	//////// send text message to group
 	$result = HU_postRequest(API_URL . "/sendMessageToGroup",json_encode(array(
 	  "to_group_id" => $newGroupId,
@@ -463,13 +461,8 @@
 		'token' => $token
 	));
 	
-	if(empty($resultAry['id']))
-	   die("send group message failed {$result}");
-	   
-    print "send group message : OK {$resultAry['id']}\n";
-
-	$newMessageId = $resultAry['id'];
-	
+    print_r($result);
+    die();
 
 	
     //////// get group messages

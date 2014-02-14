@@ -38,11 +38,11 @@ class UserController extends SpikaBaseController
     private function setupAuthMethod($self,$app,$controllers){
 
         // Auth controller
-        $controllers->post('/auth', function (Request $request) use ($app) {
+        $controllers->post('/auth', function (Request $request) use ($app,$self) {
             
             $requestBody = $request->getContent();
             $requestBodyAry = json_decode($requestBody,true);
-    
+
             $email = trim($requestBodyAry['email']);
             $password = trim($requestBodyAry['password']);
         

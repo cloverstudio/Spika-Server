@@ -2,39 +2,146 @@
 
 {% block content %}
 
+{% autoescape false %}
 <script type="text/javascript">
     
     var loginAttempCount = 0;
+    var user = {{ user|json_encode()|raw }};
+
     
     function openChat(from_user_id,to_user_id){
         
         var request = $.ajax({
             url: '{{ROOT_URL}}/api/userMessages/' + to_user_id + '/30/0',
             type: "GET",
+            headers: { 'token': user.token }
         });
         
         request.done(function( data ) {
-            alert(data);
+            
+            try{
+                eval("var receivedData = " + data);
+                renderChat(receivedData);
+            }catch(e){
+                console.log(e);
+            }
+            
         });
         
         request.fail(function( jqXHR, textStatus ) {
-            var resoonseText = jqXHR.responseText;;
+            var resoonseText = jqXHR.responseText;
             
             if(resoonseText.match(/expired/)){
                 
                 // login
-                alert('token expired');
-                
+                var postData = {'email':user.email,'password':user.password};
+
                 var requestLogin = $.ajax({
                     url: '{{ROOT_URL}}/api/auth',
-                    type: "POST",
+                    type: 'POST',
+                    dataType:'json',
+                    data:JSON.stringify(postData)
                 });
                 
+                requestLogin.done(function( data ) {
+                    user = eval(data);
+                });
+                
+                requestLogin.fail(function( jqXHR, textStatus ) {
+                    alert('{{lang.alertFailedToGetConversation}}');
+                });
             }
             
         });
 
 
+        
+    }
+    
+    function renderChat(data){
+        
+        var html = "";
+        
+        for(chatRowIndex in data.rows){
+            
+            var chatData = data.rows[chatRowIndex].value;
+            html += renderChatRow(user._id,chatData);
+
+        }
+        
+        $('#chat-window').html(html);
+        
+    }
+    
+    function renderChatRow(fromUserId,chatRow){
+        
+        console.log(chatRow);
+
+
+        var templateChatRowLeft = '{{'
+                                <li class="left clearfix">
+                                    <span class="chat-img pull-left">
+                                        %%avatarImage%%
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">%%name%%</strong> 
+                                            <small class="pull-right text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i>%%time%%
+                                            </small>
+                                        </div>
+                                        <p>
+                                            %%message%%
+                                        </p>
+                                    </div>
+                                </li>'
+        
+        | raw | replace({"\n":""}) }}';
+        
+        
+        var templateChatRowRight = '{{'
+                                                                    
+                                <li class="right clearfix">
+                                    <span class="chat-img pull-right">
+                                         %%avatarImage%%
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <small class=" text-muted">
+                                                <i class="fa fa-clock-o fa-fw"></i> %%time%%</small>
+                                            <strong class="pull-right primary-font">%%name%%</strong>
+                                        </div>
+                                        <p>
+                                            %%message%%
+                                        </p>
+                                    </div>
+                                </li>'
+        
+        | raw | replace({"\n":""}) }}';
+        
+
+        var templateAvatarImage = '<img src="%%imageURL%%" alt="User Avatar" class="img-circle" width="50"/>';
+
+        var templateChatRow = templateChatRowLeft;
+        if(fromUserId == chatRow.from_user_id)
+            templateChatRow = templateChatRowRight;
+        
+        var date = new Date(chatRow.created*1000);
+        var formattedTime = (1900 + date.getYear()) + "/" + date.getMonth() + "/" + date.getDate() + " " + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+
+        templateChatRow = templateChatRow.replace(/%%name%%/,chatRow.from_user_name);
+        templateChatRow = templateChatRow.replace(/%%message%%/,chatRow.body);
+        templateChatRow = templateChatRow.replace(/%%time%%/,formattedTime);
+        
+        if(chatRow.avatar_thumb_file_id != ""){
+            templateAvatarImage = templateAvatarImage.replace(/%%imageURL%%/,'{{ROOT_URL}}/api/filedownloader?file=' + chatRow.avatar_thumb_file_id);
+        }else{
+            templateAvatarImage = templateAvatarImage.replace(/%%imageURL%%/,'http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture');
+        }
+
+        templateChatRow = templateChatRow.replace(/%%avatarImage%%/,templateAvatarImage);
+        
+        return templateChatRow;
         
     }
     
@@ -44,8 +151,8 @@
     });
     
 </script>
+{% endautoescape %}
 
-{{ debug(user) }}
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
@@ -125,79 +232,20 @@
                 
                 <div class="col-lg-4">
                     
-                    <div class="alert alert-danger alert-dismissable">
-                        {{lang.conversationNotSelected}}
-                    </div>
-                    
-                    <div id="chatbox" class="chat-panel panel panel-default" style="overflow-y: scroll">
+                     <div id="chatbox" class="chat-panel panel panel-default" style="overflow-y: scroll">
                         <div class="panel-heading">
                             <i class="fa fa-comments fa-fw"></i>
-                            Chat
+                            {{lang.labelChatWindowTitle}}
                         </div>
+                        
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <ul class="chat">
-                                <li class="left clearfix">
-                                    <span class="chat-img pull-left">
-                                        <img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">Jack Sparrow</strong> 
-                                            <small class="pull-right text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
-                                            </small>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="right clearfix">
-                                    <span class="chat-img pull-right">
-                                        <img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle" />
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <small class=" text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i> 13 mins ago</small>
-                                            <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="left clearfix">
-                                    <span class="chat-img pull-left">
-                                        <img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">Jack Sparrow</strong> 
-                                            <small class="pull-right text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i> 14 mins ago</small>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="right clearfix">
-                                    <span class="chat-img pull-right">
-                                        <img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle" />
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <small class=" text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i> 15 mins ago</small>
-                                            <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
+                            <ul id="chat-window" class="chat">
+          
+                                <div class="alert alert-danger alert-dismissable">
+                                    {{lang.conversationNotSelected}}
+                                </div>
+                    
                             </ul>
                         </div>
 

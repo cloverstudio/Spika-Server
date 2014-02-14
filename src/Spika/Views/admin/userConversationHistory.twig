@@ -45,6 +45,7 @@
                 
                 requestLogin.done(function( data ) {
                     user = eval(data);
+                    openChat(from_user_id,to_user_id);
                 });
                 
                 requestLogin.fail(function( jqXHR, textStatus ) {

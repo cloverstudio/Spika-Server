@@ -68,7 +68,7 @@ class MessageController extends SpikaBaseController
                 );
 
             }
-        )->before($app['beforeTokenChecker']);
+        );
 
 
     }

@@ -754,6 +754,7 @@ class MySQL implements DbInterface
                 message.to_user_name,
                 message.created as created,
                 message.modified,
+                message.delete_type,
                 message.delete_at,
                 message.delete_flagged_at,
                 message.delete_after_shown,
@@ -788,6 +789,7 @@ class MySQL implements DbInterface
                 message.to_user_name,
                 message.created as created,
                 message.modified,
+                message.delete_type,
                 message.delete_at,
                 message.delete_flagged_at,
                 message.delete_after_shown,
@@ -845,6 +847,7 @@ class MySQL implements DbInterface
                 message.to_user_name,
                 message.created as created,
                 message.modified,
+                message.delete_type,
                 message.delete_at,
                 message.delete_flagged_at,
                 message.delete_after_shown,
@@ -1691,7 +1694,7 @@ class MySQL implements DbInterface
         return $result;
     }
  
-    public function setMessageDelete($messageId,$deleteAt,$deleteAfterShownFlag = 0){
+    public function setMessageDelete($messageId,$deleteType,$deleteAt,$deleteAfterShownFlag = 0){
         
         $now = time();
         
@@ -1699,12 +1702,14 @@ class MySQL implements DbInterface
                 'update message set 
                     delete_at = ?,
                     delete_flagged_at = ?,
-                    delete_after_shown = ?
+                    delete_after_shown = ?,
+                    delete_type = ?
                     WHERE _id = ?',
                 array(
                     $deleteAt,
                     $now,
                     $deleteAfterShownFlag,
+                    $deleteType,
                     $messageId));
         
         return $result;

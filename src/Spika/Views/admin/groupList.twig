@@ -39,30 +39,30 @@
                             {% for group in groups %}
 
                                 <tr>
-                                    <td>{{group.value._id}}</td>
+                                    <td>{{group._id}}</td>
                                     <td>
-                                        {% if group.value.avatar_thumb_file_id != '' %}
-                                            <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{group.value.avatar_thumb_file_id}}" width="60"/>
+                                        {% if group.avatar_thumb_file_id != '' %}
+                                            <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{group.avatar_thumb_file_id}}" width="60"/>
                                         {% else %}
                                             <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
                                             
                                         {% endif %}
                                     </td>
-                                    <td>{{categoryList[group.value.category_id].title}}</td>
-                                    <td>{{group.value.name}}</td>
-                                    <td>{{group.value.created}}</td>
-                                    <td>{{group.value.modified}}</td>
+                                    <td>{{categoryList[group.category_id].title}}</td>
+                                    <td>{{group.name}}</td>
+                                    <td>{{group.created}}</td>
+                                    <td>{{group.modified}}</td>
                                     <td>
                                         
-                                        <a href="{{ROOT_URL}}/admin/group/view/{{group.value._id}}" class="btn btn-primary">
+                                        <a href="{{ROOT_URL}}/admin/group/view/{{group._id}}" class="btn btn-primary">
                                             <i class="fa fa-search"></i> {{lang.labelView}}
                                         </a>
                                         
-                                        <a href="{{ROOT_URL}}/admin/group/edit/{{group.value._id}}" class="btn btn-success">
+                                        <a href="{{ROOT_URL}}/admin/group/edit/{{group._id}}" class="btn btn-success">
                                             <i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
                                         </a>
                                         
-                                        <a href="{{ROOT_URL}}/admin/group/delete/{{group.value._id}}" class="btn btn-danger">
+                                        <a href="{{ROOT_URL}}/admin/group/delete/{{group._id}}" class="btn btn-danger">
                                             <i class="fa fa-eraser"></i> {{lang.labelDelete}}
                                         </a>
                                         

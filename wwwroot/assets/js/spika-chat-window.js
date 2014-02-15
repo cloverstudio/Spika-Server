@@ -369,7 +369,7 @@ SpikaChatWindow.prototype.renderChatBody = function(chatRow){
         }  
             
         if(chatRow.message_type == 'video'){
-            var html = '<a href="' + this.apiEndPointUrl + '/api/filedownloader?file=' + chatRow.video_file_id + '" target="_blank"><i class="fa fa-video-camera"></i> ' + chatRow.body + '</a>';
+            var html = '<a href="' + this.apiEndPointUrl + '/filedownloader?file=' + chatRow.video_file_id + '" target="_blank"><i class="fa fa-video-camera"></i> ' + chatRow.body + '</a>';
             return html;
         }  
         

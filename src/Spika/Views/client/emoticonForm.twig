@@ -1,4 +1,4 @@
-{% extends "admin/adminBase.twig" %}
+{% extends "client/adminBase.twig" %}
 
 {% block content %}
 
@@ -19,12 +19,12 @@
             <div class="row">
                 <div class="col-lg-8">
                     
-                    {% include "admin/alerts.twig" %}
+                    {% include "client/alerts.twig" %}
                     
                     {% if mode == 'edit' %}
-                        <form role="form" method="post" action="{{ROOT_URL}}/admin/emoticon/edit/{{id}}" enctype="multipart/form-data">
+                        <form role="form" method="post" action="{{ROOT_URL}}/client/emoticon/edit/{{id}}" enctype="multipart/form-data">
                     {% else %}
-                        <form role="form" method="post" action="{{ROOT_URL}}/admin/emoticon/add" enctype="multipart/form-data">
+                        <form role="form" method="post" action="{{ROOT_URL}}/client/emoticon/add" enctype="multipart/form-data">
                     {% endif %}
 
                         {% if mode == 'view' or mode == 'edit' %}

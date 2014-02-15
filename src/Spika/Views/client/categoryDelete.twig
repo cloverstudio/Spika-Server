@@ -1,4 +1,4 @@
-{% extends "admin/adminBase.twig" %}
+{% extends "client/adminBase.twig" %}
 
 {% block content %}
 
@@ -14,9 +14,9 @@
             <div class="row">
                 <div class="col-lg-8">
                     
-                    {% include "admin/alerts.twig" %}
+                    {% include "client/alerts.twig" %}
                     
-                        <form role="form" method="post" action="{{ROOT_URL}}/admin/groupcategory/delete/{{id}}" enctype="multipart/form-data">
+                        <form role="form" method="post" action="{{ROOT_URL}}/client/groupcategory/delete/{{id}}" enctype="multipart/form-data">
 
                         <div class="panel panel-default">
                             <div class="panel-heading">

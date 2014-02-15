@@ -1,4 +1,4 @@
-{% extends "admin/adminBase.twig" %}
+{% extends "client/adminBase.twig" %}
 
 {% block content %}
 
@@ -52,7 +52,7 @@
 
              <div class="row">
                 <div class="col-lg-12">
-                     {% include "admin/alerts.twig" %}
+                     {% include "client/alerts.twig" %}
                 </div>
             </div>
                     
@@ -60,7 +60,7 @@
                 <div id="list" class="col-lg-8" style="min-height:500px">
                     
                     <div style="text-align:right">
-                        {% include "admin/pager.twig" %}
+                        {% include "client/pager.twig" %}
                     </div>
                     
                     <table class="table table-striped">
@@ -126,7 +126,7 @@
                     </table>
 
                     <div style="text-align:right">
-                        {% include "admin/pager.twig" %}
+                        {% include "client/pager.twig" %}
                     </div>
 
                 </div>

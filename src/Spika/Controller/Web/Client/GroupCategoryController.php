@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spika\Controller\Web\Admin;
+namespace Spika\Controller\Web\Client;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -22,7 +22,7 @@ use Spika\Controller\Web\SpikaWebBaseController;
 use Spika\Controller\FileController;
 use Symfony\Component\HttpFoundation\Cookie;
 
-class EmoticonController extends SpikaWebBaseController
+class GroupCategoryController extends SpikaWebBaseController
 {
 
     
@@ -37,9 +37,9 @@ class EmoticonController extends SpikaWebBaseController
         // List/paging logics
         //
 
-        $controllers->get('emoticon/list', function (Request $request) use ($app,$self) {
+        $controllers->get('groupcategory/list', function (Request $request) use ($app,$self) {
             
-            $count = $self->app['spikadb']->findEmoticonCount();
+            $count = $self->app['spikadb']->findGroupCategoryCount();
             
             $page = $request->get('page');
             if(empty($page))
@@ -49,28 +49,29 @@ class EmoticonController extends SpikaWebBaseController
             if(!empty($msg))
                 $self->setInfoAlert($self->language[$msg]);
             
-            $emoticons = $self->app['spikadb']->findAllEmoticonsWithPaging(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT);
+            $categories = $self->app['spikadb']->findAllGroupCategoryWithPaging(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT);
             
             // convert timestamp to date
-            for($i = 0 ; $i < count($emoticons['rows']) ; $i++){
-                $emoticons['rows'][$i]['value']['created'] = date("Y.m.d",$emoticons['rows'][$i]['value']['created']);
-                $emoticons['rows'][$i]['value']['modified'] = date("Y.m.d",$emoticons['rows'][$i]['value']['modified']);
+            for($i = 0 ; $i < count($categories['rows']) ; $i++){
+                $categories['rows'][$i]['value']['created'] = date("Y.m.d",$categories['rows'][$i]['value']['created']);
+                $categories['rows'][$i]['value']['modified'] = date("Y.m.d",$categories['rows'][$i]['value']['modified']);
             }
 
-            return $self->render('admin/emoticonList.twig', array(
-                'emoticons' => $emoticons['rows'],
+            return $self->render('client/categoryList.twig', array(
+                'categories' => $categories['rows'],
                 'pager' => array(
-                    'baseURL' => ROOT_URL . "/admin/emoticon/list?page=",
+                    'baseURL' => ROOT_URL . "/client/groupcategory/list?page=",
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),
+                
             ));
                         
         })->before($app['adminBeforeTokenChecker']);
 
-        $controllers->get('emoticon/add', function (Request $request) use ($app,$self) {
+        $controllers->get('groupcategory/add', function (Request $request) use ($app,$self) {
             
-            return $self->render('admin/emoticonForm.twig', array(
+            return $self->render('client/categoryForm.twig', array(
                 'mode' => 'new',
                 'formValues' => $self->getEmptyFormData(),
             ));
@@ -80,7 +81,8 @@ class EmoticonController extends SpikaWebBaseController
         //
         // create new logics
         //
-        $controllers->post('emoticon/add', function (Request $request) use ($app,$self) {
+
+        $controllers->post('groupcategory/add', function (Request $request) use ($app,$self) {
             
             $formValues = $request->request->all();
             $validationError = false;
@@ -102,16 +104,16 @@ class EmoticonController extends SpikaWebBaseController
                     }
                     
                 }
-
-                $self->app['spikadb']->createEmoticon(
-                    $formValues['identifier'],
+                    
+                $self->app['spikadb']->createGroupCategory(
+                    $formValues['title'],
                     $fileName
                 );
                 
-                return $app->redirect(ROOT_URL . '/admin/emoticon/list?msg=messageEmoticonAdded');
+                return $app->redirect(ROOT_URL . '/client/groupcategory/list?msg=messageGroupCategoryAdded');
             }
             
-            return $self->render('admin/emoticonForm.twig', array(
+            return $self->render('admin/categoryForm.twig', array(
                 'mode' => 'new',
                 'formValues' => $formValues
             ));
@@ -121,13 +123,13 @@ class EmoticonController extends SpikaWebBaseController
         //
         // Detail logics
         //
-        $controllers->get('emoticon/view/{id}', function (Request $request,$id) use ($app,$self) {
+        $controllers->get('groupcategory/view/{id}', function (Request $request,$id) use ($app,$self) {
             
-            $emoticon = $self->app['spikadb']->findEmoticonById($id);
+            $category = $self->app['spikadb']->findGroupCategoryById($id);
 
-            return $self->render('admin/emoticonForm.twig', array(
+            return $self->render('client/categoryForm.twig', array(
                 'mode' => 'view',
-                'formValues' => $emoticon
+                'formValues' => $category
             ));
             
         })->before($app['adminBeforeTokenChecker']);
@@ -136,26 +138,26 @@ class EmoticonController extends SpikaWebBaseController
         // Edit logics
         //
 
-        $controllers->get('emoticon/edit/{id}', function (Request $request,$id) use ($app,$self) {
+        $controllers->get('groupcategory/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
-            $emoticon = $self->app['spikadb']->findEmoticonById($id);
+            $category = $self->app['spikadb']->findGroupCategoryById($id,false);
             
-            return $self->render('admin/emoticonForm.twig', array(
+            return $self->render('client/categoryForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
-                'formValues' => $emoticon
+                'formValues' => $category
             ));
             
         })->before($app['adminBeforeTokenChecker']);
 
-        $controllers->post('emoticon/edit/{id}', function (Request $request,$id) use ($app,$self) {
+        $controllers->post('groupcategory/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
             $validationError = false;
             $fileName = "";
-            $emoticon = $self->app['spikadb']->findEmoticonById($id);
+            $category = $self->app['spikadb']->findGroupCategoryById($id,false);
             $formValues = $request->request->all();
 
-            $fileName = $emoticon['file_id'];
+            $fileName = $category['avatar_file_id'];
             
             $validationResult = $self->validate($request,true,$id);
             
@@ -172,21 +174,25 @@ class EmoticonController extends SpikaWebBaseController
                     }
                     
                 }
+
+                if(isset($formValues['chkbox_delete_picture'])){
+                    $fileName = '';
+                }
                 
-                $self->app['spikadb']->updateEmoticon(
+                $self->app['spikadb']->updateGroupCategory(
                     $id,
-                    $formValues['identifier'],
+                    $formValues['title'],
                     $fileName
                 );
                 
-                return $app->redirect(ROOT_URL . '/admin/emoticon/list?msg=messageEmoticonChanged');
+                return $app->redirect(ROOT_URL . '/client/groupcategory/list?msg=messageGroupCategoryChanged');
 
             }
     
-            return $self->render('admin/emoticonForm.twig', array(
+            return $self->render('client/categoryForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
-                'formValues' => $emoticon
+                'formValues' => $category
             ));
                         
         })->before($app['adminBeforeTokenChecker']);    
@@ -194,27 +200,27 @@ class EmoticonController extends SpikaWebBaseController
         //
         // Delete logics
         //
-        $controllers->get('emoticon/delete/{id}', function (Request $request,$id) use ($app,$self) {
+        $controllers->get('groupcategory/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
-            $emoticon = $self->app['spikadb']->findEmoticonById($id);
+            $category = $self->app['spikadb']->findGroupCategoryById($id,false);
             
-            return $self->render('admin/emoticonDelete.twig', array(
+            return $self->render('client/categoryDelete.twig', array(
                 'id' => $id,
                 'mode' => 'delete',
-                'formValues' => $emoticon
+                'formValues' => $category
             ));
             
         })->before($app['adminBeforeTokenChecker']);
 
-        $controllers->post('emoticon/delete/{id}', function (Request $request,$id) use ($app,$self) {
+        $controllers->post('groupcategory/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
             $formValues = $request->request->all();
             
             if(isset($formValues['submit_delete'])){
-                $self->app['spikadb']->deleteEmoticon($id);
-                return $app->redirect(ROOT_URL . '/admin/emoticon/list?msg=messageEmoticonDeleted');
+                $self->app['spikadb']->deleteGroupCategory($id);
+                return $app->redirect(ROOT_URL . '/client/groupcategory/list?msg=messageGroupCategoryDeleted');
             }else{
-                return $app->redirect(ROOT_URL . '/admin/emoticon/list');
+                return $app->redirect(ROOT_URL . '/client/groupcategory/list');
             }
             
         })->before($app['adminBeforeTokenChecker']);
@@ -231,15 +237,9 @@ class EmoticonController extends SpikaWebBaseController
         $validationResult = true;
         
         // required field check
-        if(empty($formValues['identifier'])){
+        if(empty($formValues['title'])){
             $this->setErrorAlert($this->language['messageValidationErrorRequired']);
             $validationResult = false;
-        }
-
-        // format check
-        if(!preg_match("/^[a-zA-Z0-9_-]+$/", $formValues['identifier'])){
-              $this->setErrorAlert($this->language['formGroupEmoticonIdentifier'] . " " . $this->language['messageValidationErrorAlphaNumeric']);
-              $validationResult = false;
         }
 
         if($request->files->has("file")){
@@ -250,36 +250,38 @@ class EmoticonController extends SpikaWebBaseController
             
                 $mimeType = $file->getClientMimeType();
                 
-                if(!preg_match("/png/", $mimeType)){
-                    $this->setErrorAlert($this->language['messageValidationErrorFormatPng']);
+                if(!preg_match("/jpeg/", $mimeType)){
+                    $this->setErrorAlert($this->language['messageValidationErrorFormat']);
                     $validationResult = false;
                     
                 }else{
                                         
                 }
             
-            }else{
-                if(!$editmode){
-                    $this->setErrorAlert($this->language['messageValidationErrorRequired']);
-                    $validationResult = false;
-                }
             }
             
-        }else{
-            if(!$editmode){
-                $this->setErrorAlert($this->language['messageValidationErrorRequired']);
-                $validationResult = false;
-            }
         }
         
-
         return $validationResult;
         
     }
     
+    
+    public function getGroupCategoryList(){
+    
+        $result = $this->app['spikadb']->findAllGroupCategory();
+        $list = array();
+        
+        foreach($result['rows'] as $row){
+            $list[$row['value']['_id']] = $row['value'];
+        }
+        
+        return $list;
+    }
+    
     public function getEmptyFormData(){
         return  array(
-                    'identifier'=>'',
+                    'title'=>'',
                 );
     }
     

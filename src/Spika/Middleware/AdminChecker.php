@@ -21,7 +21,7 @@ class AdminChecker
     public function __invoke(Request $request,\Silex\Application $app)
     {
         if ($app['session']->get('user') === null) {
-            return $app->redirect(ROOT_URL . '/admin/login');
+            return $app->redirect(ROOT_URL . '/client/login');
         }
     }
 

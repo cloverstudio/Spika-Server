@@ -29,9 +29,9 @@
                     </div>
                     <div class="panel-body">
                         
-                        {% include "admin/alerts.twig" %}
+                        {% include "client/alerts.twig" %}
                             
-                        <form role="form" method="post" action="{{ROOT_URL}}/admin/login">
+                        <form role="form" method="post" action="{{ROOT_URL}}/client/login">
                             <fieldset>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="{{lang.formEmailPlaceHolder}}" name="username" type="username" value="{{formValues.username}}" autofocus>

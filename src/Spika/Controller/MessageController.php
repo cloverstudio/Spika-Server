@@ -237,7 +237,7 @@ class MessageController extends SpikaBaseController
                 
                 if(count($result['rows']) > 0)
                     $result['rows'] = $self->fileterMessage($result['rows'],$app['spikadb']);
-                
+                    
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);

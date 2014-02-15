@@ -3,206 +3,33 @@
 {% block content %}
 
 {% autoescape false %}
+
 <script type="text/javascript">
-    
-    var loginAttempCount = 0;
+
     var user = {{ user|json_encode()|raw }};
-
+    var lastUserId = 0;
     
-    function openChat(from_user_id,to_user_id){
-        
-        var request = $.ajax({
-            url: '{{ROOT_URL}}/api/userMessages/' + to_user_id + '/30/0',
-            type: "GET",
-            headers: { 'token': user.token }
-        });
-        
-        request.done(function( data ) {
-            
-            try{
-                eval("var receivedData = " + data);
-                renderChat(receivedData);
-            }catch(e){
-                console.log(e);
-            }
-            
-        });
-        
-        request.fail(function( jqXHR, textStatus ) {
-            var resoonseText = jqXHR.responseText;
-            
-            if(resoonseText.match(/expired/)){
-                
-                // login
-                var postData = {'email':user.email,'password':user.password};
-
-                var requestLogin = $.ajax({
-                    url: '{{ROOT_URL}}/api/auth',
-                    type: 'POST',
-                    dataType:'json',
-                    data:JSON.stringify(postData)
-                });
-                
-                requestLogin.done(function( data ) {
-                    user = eval(data);
-                    openChat(from_user_id,to_user_id);
-                });
-                
-                requestLogin.fail(function( jqXHR, textStatus ) {
-                    alert('{{lang.alertFailedToGetConversation}}');
-                });
-            }
-            
-        });
-
-
-        
+    function openChat(to_user_id){
+        chatWindow.initialize();
+        chatWindow.loadUserConversation(to_user_id);
     }
     
-    function renderChat(data){
-        
-        
-        var html = "";
-        
-        for(chatRowIndex in data.rows){
-            
-            var chatData = data.rows[chatRowIndex].value;
-            html += renderChatRow(user._id,chatData);
-
-        }
-        
-        $('#chat-window').html(html);
-        
-    }
-    
-    function renderChatRow(fromUserId,chatRow){
-        
-        console.log(chatRow);
-
-
-        var templateChatRowLeft = '{{'
-                                <li class="left clearfix">
-                                    <span class="chat-img pull-left">
-                                        %%avatarImage%%
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">%%name%%</strong> 
-                                            <small class="pull-right text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i>%%time%%
-                                            </small>
-                                        </div>
-                                        <p style="text-align:right">
-                                            %%message%%
-                                        </p>
-                                    </div>
-                                </li>'
-        
-        | raw | replace({"\n":""}) }}';
-        
-        
-        var templateChatRowRight = '{{'
-                                                                    
-                                <li class="right clearfix">
-                                    <span class="chat-img pull-right">
-                                         %%avatarImage%%
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <small class=" text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i> %%time%%</small>
-                                            <strong class="pull-right primary-font">%%name%%</strong>
-                                        </div>
-                                        <p style="text-align:left">
-                                            %%message%%
-                                        </p>
-                                    </div>
-                                </li>'
-        
-        | raw | replace({"\n":""}) }}';
-        
-
-        var templateAvatarImage = '<img src="%%imageURL%%" alt="User Avatar" class="img-circle" width="50"/>';
-
-        var templateChatRow = templateChatRowLeft;
-        if(fromUserId == chatRow.from_user_id)
-            templateChatRow = templateChatRowRight;
-        
-        var date = new Date(chatRow.created*1000);
-        var formattedTime = (1900 + date.getYear()) + "/" + date.getMonth() + "/" + date.getDate() + " " + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-
-        templateChatRow = templateChatRow.replace(/%%name%%/,chatRow.from_user_name);
-        templateChatRow = templateChatRow.replace(/%%message%%/,renderChatBody(chatRow));
-        templateChatRow = templateChatRow.replace(/%%time%%/,formattedTime);
-        
-        if(chatRow.avatar_thumb_file_id != ""){
-            templateAvatarImage = templateAvatarImage.replace(/%%imageURL%%/,'{{ROOT_URL}}/api/filedownloader?file=' + chatRow.avatar_thumb_file_id);
-        }else{
-            templateAvatarImage = templateAvatarImage.replace(/%%imageURL%%/,'http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture');
-        }
-
-        templateChatRow = templateChatRow.replace(/%%avatarImage%%/,templateAvatarImage);
-        
-        return templateChatRow;
-        
-    }
-    
-    function renderChatBody(chatRow){
-        
-        
-        var templateImage = '{{'
-            <a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg%%id%%"><img src="%%ThumbUrl%%" width="150"/></a>
-
-            <div class="modal fade bs-example-modal-lg%%id%%" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <img src="%%ImageUrl%%"/>
-                </div>
-              </div>
-            </div>'
-        
-        | raw | replace({"\n":""}) }}';
-        
-        console.log(chatRow);
-        if(chatRow.message_type == 'text')
-            return chatRow.body;
-        
-        if(chatRow.message_type == 'image'){
-            var html = templateImage;
-            html = html.replace(/%%id%%/g,chatRow._id);
-            html = html.replace(/%%ThumbUrl%%/,'{{ROOT_URL}}/api/filedownloader?file=' + chatRow.picture_thumb_file_id);
-            html = html.replace(/%%ImageUrl%%/,'{{ROOT_URL}}/api/filedownloader?file=' + chatRow.picture_file_id);
-            return html;
-        }
-        
-        if(chatRow.message_type == 'emoticon'){
-            var html = '<img src="' + chatRow.emoticon_image_url + '" width="150"/>';
-            return html;
-        }  
-            
-        if(chatRow.message_type == 'voice'){
-            var html = '<a href="{{ROOT_URL}}/api/filedownloader?file=' + chatRow.voice_file_id + '" target="_blank"><i class="fa fa-microphone"></i> ' + chatRow.body + '</a>';
-            return html;
-        }  
-            
-        if(chatRow.message_type == 'video'){
-            var html = '<a href="{{ROOT_URL}}/api/filedownloader?file=' + chatRow.video_file_id + '" target="_blank"><i class="fa fa-video-camera"></i>' + chatRow.body + '</a>';
-            return html;
-        }  
-        
-        if(chatRow.message_type == 'location'){
-            var html = '<a href="https://www.google.com/maps/@' + chatRow.latitude + ',' + chatRow.longitude + ',11z" target="_blank"><i class="fa fa-map-marker"></i> {{lang.openLocation}}</a>';
-            return html;
-        }  
-            
-       
-        
-    }
+    var chatWindow = null;
     
     $(document).ready(function() {
         
         $('#chatbox').height($('#list').height());
-        $('.lightbox').lightbox(options)
+        
+        chatWindow = new SpikaChatWindow('{{ROOT_URL}}/api',user,{
+            title:'{{lang.labelChatWindowTitle}}',
+            conversationNotSelected:'{{lang.conversationNotSelected}}',
+            btnReload:'{{lang.btnReload}}',
+            openLocation:'{{lang.openLocation}}',
+        });
+
+        chatWindow.attach($('#chatWindow'));
+        chatWindow.showAlert('{{lang.conversationNotSelected}}');
+        chatWindow.setUser(user);
     });
     
 </script>
@@ -223,7 +50,7 @@
             </div>
                     
            <div class="row" >
-                <div id="list" class="col-lg-8" style="min-height:800px">
+                <div id="list" class="col-lg-8" style="min-height:500px">
                     
                     <div style="text-align:right">
                         {% include "admin/pager.twig" %}
@@ -268,7 +95,7 @@
                                     </td>
                                     <td>{{conversation.created}}</td>
                                     <td>
-                                        <a href="javascript:openChat({{conversation.from_user_id}},{{conversation.to_user_id}})" class="btn btn-primary">
+                                        <a href="javascript:openChat({{conversation.to_user_id}})" class="btn btn-primary">
                                             <i class="fa fa-comments"></i> {{lang.labelOpenWall}}
                                         </a>
                                     </td>
@@ -277,6 +104,7 @@
                             {% endfor %}
 
                         </tbody>
+                        
                     </table>
 
                     <div style="text-align:right">
@@ -285,28 +113,10 @@
 
                 </div>
                 
-                <div class="col-lg-4">
+                <div id="chatWindow" class="col-lg-4">
                     
-                     <div class="chat-panel panel panel-default" style="overflow-y: scroll">
-                        <div class="panel-heading">
-                            <i class="fa fa-comments fa-fw"></i>
-                            {{lang.labelChatWindowTitle}}
-                        </div>
-                        
-                        <!-- /.panel-heading -->
-                        <div id="chatbox" class="panel-body">
-                            <ul id="chat-window" class="chat">
-          
-                                <div class="alert alert-danger alert-dismissable">
-                                    {{lang.conversationNotSelected}}
-                                </div>
-                    
-                            </ul>
-                        </div>
-
-                    </div>
-                    <!-- /.panel .chat-panel -->
                 </div>
+                
             </div>
                          
 {% endblock %}

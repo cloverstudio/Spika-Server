@@ -27,9 +27,7 @@ class AsyncTaskController extends SpikaBaseController
         $self = $this;
 
         $controllers->post('/notifyNewDirectMessage', function (Request $request) use ($self,$app) {
-            
-            $app['monolog']->addDebug("---------------------------------------------------r");
-            
+                        
             $host = $request->getHttpHost();
             
             $requestBody = $request->getContent();

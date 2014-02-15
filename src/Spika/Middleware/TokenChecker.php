@@ -30,11 +30,11 @@ class TokenChecker
         $tokenReceived  = $request->headers->get('token');
         
         $user = $this->db->findUserByToken($tokenReceived);
-        
-        if ($tokenReceived !== $user['token']) {
+
+        if (empty($user['token']) || $tokenReceived !== $user['token']) {
             return $this->abortManually("Invalid token");
         }
-
+        
         $tokenTimestamp = $user['token_timestamp'];
         $currentTimestamp = time();
         $tokenTime = $tokenTimestamp + TOKEN_VALID_TIME;

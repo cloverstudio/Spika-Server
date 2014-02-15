@@ -1,4 +1,4 @@
-{% extends "admin/adminBase.twig" %}
+{% extends "client/adminBase.twig" %}
 
 {% block content %}
 
@@ -16,7 +16,7 @@
                     
                     {% include "admin/alerts.twig" %}
                     
-                    <form role="form" method="post" action="{{ROOT_URL}}/admin/user/delete/{{id}}" enctype="multipart/form-data">
+                    <form role="form" method="post" action="{{ROOT_URL}}/client/user/delete/{{id}}" enctype="multipart/form-data">
 
                             <div class="panel panel-default">
                                 <div class="panel-heading">

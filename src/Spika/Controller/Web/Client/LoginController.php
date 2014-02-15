@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spika\Controller\Web\Admin;
+namespace Spika\Controller\Web\Client;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -32,7 +32,7 @@ class LoginController extends SpikaWebBaseController
         $self = $this;
     
         $controllers->get('/', function (Request $request) use ($app,$self) {
-            return $app->redirect(ROOT_URL . '/admin/login');   
+            return $app->redirect(ROOT_URL . '/client/login');   
         }); 
         
         $controllers->get('/login', function (Request $request) use ($app,$self) {
@@ -50,7 +50,7 @@ class LoginController extends SpikaWebBaseController
                 $password = $cookies->get('password');
             }
     
-            return $self->render('admin/login.twig', array(
+            return $self->render('client/login.twig', array(
                 'ROOT_URL' => ROOT_URL,
                 'formValues' => array(
                     'username'  => $username,
@@ -77,7 +77,7 @@ class LoginController extends SpikaWebBaseController
             
             if(isset($authData['token'])){
                 
-                $html = $self->render('admin/login.twig', array(
+                $html = $self->render('client/login.twig', array(
                     'ROOT_URL' => ROOT_URL,
                     'formValues' => array(
                         'username'  => $username,
@@ -103,7 +103,7 @@ class LoginController extends SpikaWebBaseController
                 
                 $self->setErrorAlert($self->language['messageLoginFailed']);
                 
-                return $self->render('admin/login.twig', array(
+                return $self->render('client/login.twig', array(
                     'ROOT_URL' => ROOT_URL,
                     'formValues' => array(
                         'username'  => $username,
@@ -123,7 +123,7 @@ class LoginController extends SpikaWebBaseController
             $countMessages = $self->app['spikadb']->getMessageCount();
             $countLastLoginedUsers = $self->app['spikadb']->getLastLoginedUsersCount();
 
-            return $self->render('admin/dashboard.twig', array(
+            return $self->render('client/dashboard.twig', array(
                 'countUsers' => $countUsers,
                 'countMessages' => $countMessages,
                 'countLastLoginedUsers' => $countLastLoginedUsers

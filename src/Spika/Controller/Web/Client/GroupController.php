@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spika\Controller\Web\Admin;
+namespace Spika\Controller\Web\Client;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -58,11 +58,11 @@ class GroupController extends SpikaWebBaseController
             }
 
             
-            return $self->render('admin/groupList.twig', array(
+            return $self->render('client/groupList.twig', array(
                 'categoryList' => $self->getGroupCategoryList(),
                 'groups' => $groups,
                 'pager' => array(
-                    'baseURL' => ROOT_URL . "/admin/group/list?page=",
+                    'baseURL' => ROOT_URL . "/client/group/list?page=",
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),
@@ -73,7 +73,7 @@ class GroupController extends SpikaWebBaseController
 
         $controllers->get('group/add', function (Request $request) use ($app,$self) {
             
-            return $self->render('admin/groupForm.twig', array(
+            return $self->render('client/groupForm.twig', array(
                 'mode' => 'new',
                 'categoryList' => $self->getGroupCategoryList(),
                 'formValues' => $self->getEmptyFormData(),
@@ -145,10 +145,10 @@ class GroupController extends SpikaWebBaseController
                     $thumbFileName
                 );
                 
-                return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageGroupAdded');
+                return $app->redirect(ROOT_URL . '/client/group/list?msg=messageGroupAdded');
             }
             
-            return $self->render('admin/groupForm.twig', array(
+            return $self->render('client/groupForm.twig', array(
                 'mode' => 'new',
                 'categoryList' => $self->getGroupCategoryList(),
                 'formValues' => $formValues
@@ -167,7 +167,7 @@ class GroupController extends SpikaWebBaseController
             $categoryName = $categoryList[$group['category_id']]['title'];
             $group['categoryName'] = $categoryName;
             
-            return $self->render('admin/groupForm.twig', array(
+            return $self->render('client/groupForm.twig', array(
                 'mode' => 'view',
                 'categoryList' => $self->getGroupCategoryList(),
                 'formValues' => $group
@@ -191,7 +191,7 @@ class GroupController extends SpikaWebBaseController
                 
             $group['categoryName'] = $categoryName;
             
-            return $self->render('admin/groupForm.twig', array(
+            return $self->render('client/groupForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'categoryList' => $self->getGroupCategoryList(),
@@ -278,11 +278,11 @@ class GroupController extends SpikaWebBaseController
                     $thumbFileName
                 );
                 
-                return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageGroupChanged');
+                return $app->redirect(ROOT_URL . '/client/group/list?msg=messageGroupChanged');
 
             }
             
-            return $self->render('admin/groupForm.twig', array(
+            return $self->render('client/groupForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'categoryList' => $self->getGroupCategoryList(),
@@ -302,7 +302,7 @@ class GroupController extends SpikaWebBaseController
             $categoryName = $categoryList[$group['category_id']]['title'];
             $group['categoryName'] = $categoryName;
 
-            return $self->render('admin/groupDelete.twig', array(
+            return $self->render('client/groupDelete.twig', array(
                 'id' => $id,
                 'mode' => 'delete',
                 'categoryList' => $self->getGroupCategoryList(),
@@ -317,9 +317,9 @@ class GroupController extends SpikaWebBaseController
             
             if(isset($formValues['submit_delete'])){
                 $self->app['spikadb']->deleteGroup($id);
-                return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageGroupDeleted');
+                return $app->redirect(ROOT_URL . '/client/group/list?msg=messageGroupDeleted');
             }else{
-                return $app->redirect(ROOT_URL . '/admin/group/list');
+                return $app->redirect(ROOT_URL . '/client/group/list');
             }
             
         })->before($app['adminBeforeTokenChecker']);

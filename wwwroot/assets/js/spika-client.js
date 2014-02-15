@@ -140,3 +140,65 @@ SpikaClient.prototype.postTextMessageToUser = function(userId,message,succeessLi
     });
 
 }
+
+
+SpikaClient.prototype.getActivitySummary = function(succeessListener,failedListener)
+{
+    var requestLogin = $.ajax({
+        url: this.apiEndPointUrl + '/activitySummary',
+        type: 'GET',
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    requestLogin.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    requestLogin.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+
+
+SpikaClient.prototype.getUser = function(userId,succeessListener,failedListener)
+{
+    var requestLogin = $.ajax({
+        url: this.apiEndPointUrl + '/findUser/id/' + userId,
+        type: 'GET',
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    requestLogin.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    requestLogin.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+
+
+SpikaClient.prototype.getGroup = function(groupId,succeessListener,failedListener)
+{
+    var requestLogin = $.ajax({
+        url: this.apiEndPointUrl + '/findGroup/id/' + groupId,
+        type: 'GET',
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    requestLogin.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    requestLogin.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+
+

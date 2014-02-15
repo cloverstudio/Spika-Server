@@ -1244,8 +1244,10 @@ class MySQL implements DbInterface
             $notificationRow = $this->DB->fetchAssoc('
                 select _id from notification where target_type = \'' . $type . '\' and user_id = ? and to_group_id = ? and from_user_id = ?',
                 array($toUserId,$toGroupId,$fromUserId));
-                
+            
             if(!$notificationRow){
+                
+                $this->logger->adddebug('iiiiinnnnsssseeeeerrrrrrttt');
                 
                 $data = array(
                     'user_id' => $toUserId,

@@ -20,13 +20,11 @@ use Doctrine\DBAL\Connection;
 class MySQL implements DbInterface
 
 {
-    private $couchDBURL = "";
     private $logger;
     private $DB;
 
 
-    public function __construct($URL, LoggerInterface $logger,Connection $DB){
-        $this->couchDBURL = $URL;
+    public function __construct(LoggerInterface $logger,Connection $DB){
         $this->logger     = $logger;
         $this->DB         = $DB;
     }

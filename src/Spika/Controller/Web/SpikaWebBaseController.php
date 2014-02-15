@@ -51,9 +51,13 @@ class SpikaWebBaseController implements ControllerProviderInterface
     
     public function render($tempalteFile,$params){
         
+        $user = $this->app['session']->get('user');
+
+        $params['loginedUser'] = $user;
+
         $params['lang'] = $this->language;
         $params['ROOT_URL'] = ROOT_URL;
-
+        
         if(isset($this->messages['info']))
             $params['infoMessage'] = $this->messages['info'];
             

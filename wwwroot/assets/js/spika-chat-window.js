@@ -1,6 +1,6 @@
-function SpikaChatWindow(apiEndPointUrl,user,lang)
+function SpikaChatWindow(apiEndPointUrl,user,lang,enableSending,chatMode)
 { 
-    this.templateBaseHtml = '<div class="chat-panel panel panel-default"><div class="panel-heading"><i class="fa fa-comments fa-fw"></i>%%title%% <div class="btn-group pull-right"><button id="btnReload" type="button" class="btn btn-primary btn-xs" disabled="disabled">%%btnReload%%</button> </div></div><div id="chatbox" class="panel-body"><ul id="chat-window" class="chat"></ul></div></div>'
+    this.templateBaseHtml = '<div id="chat-window-top" class="chat-panel panel panel-default"><div class="panel-heading"><i class="fa fa-comments fa-fw"></i>%%title%% <div class="btn-group pull-right"><button id="btnReload" type="button" class="btn btn-primary btn-xs" disabled="disabled">%%btnReload%%</button> </div></div><div id="chatbox" class="panel-body"><ul id="chat-window" class="chat"></ul></div></div>'
     
     this.templateAlert = '<div class="alert alert-danger alert-dismissable">%%alertmessage%%</div>'
     
@@ -12,13 +12,24 @@ function SpikaChatWindow(apiEndPointUrl,user,lang)
 
     this.templateImageMessage = '<a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg%%id%%"><img src="%%ThumbUrl%%" width="150"/></a><div class="modal fade bs-example-modal-lg%%id%%" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="%%ImageUrl%%"/></div></div></div>'
     
+    this.templateTextBox = '<div class="panel-footer"><div class="input-group"><input id="btn-input" type="text" class="form-control input-sm" placeholder="%%chatTextBoxPlaceHolder%%"><span class="input-group-btn"><button class="btn btn-warning btn-sm" id="btn-chat">%%chatTextBoxSend%%</button></span></div></div>';
+    
+    
     this.spikaClient = new SpikaClient(apiEndPointUrl);
     this.lang = lang;
     this.currentPage = 0;
     this.rows = 30;
     this.apiEndPointUrl = apiEndPointUrl;
     this.lastUserId = 0;
+    this.lastGroupId = 0;
     this.isLastPage = false;
+    this.isLoading = false;
+    this.chatMode = 0; // 1:private chat 2:group chat
+    this.enableSending = enableSending;
+    
+    if(chatMode != undefined){
+        this.chatMode = chatMode;
+    }
     
     this.setUser(user);
 }
@@ -28,6 +39,8 @@ SpikaChatWindow.prototype.initialize = function()
 {
     this.currentPage = 0;
     this.lastUserId = 0;
+    this.lastGroupId = 0;
+    this.isLastPage = false;
     $('#chat-window').html('');
 }
 
@@ -45,6 +58,76 @@ SpikaChatWindow.prototype.attach = function(htmlElement,title)
     html = html.replace(/%%btnReload%%/,this.lang.btnReload);
     
     $(htmlElement).html(html);
+    
+    if(this.enableSending){
+        var textBoxHtml = this.templateTextBox;
+        textBoxHtml = textBoxHtml.replace(/%%chatTextBoxPlaceHolder%%/,this.lang.chatTextBoxPlaceHolder);
+        textBoxHtml = textBoxHtml.replace(/%%chatTextBoxSend%%/,this.lang.chatTextBoxSend);
+        
+        $('#chat-window-top').append(textBoxHtml);
+        
+        $('#btn-chat').unbind("click");
+        
+        var self = this;
+        $('#btn-chat').click(function(){
+            
+            var text = $('#btn-input').val();
+            
+            if(text == '' || self.chatMode == 0)
+                return;
+             
+            if(self.chatMode == 1){
+            
+                if(self.lastUserId == 0)
+                    return;
+
+                self.spikaClient.postTextMessageToUser(self.lastUserId,text,function(data){
+                    
+                    var userId = self.lastUserId;
+
+                    self.initialize();
+                    
+                    self.lastUserId = userId;
+                    
+                    self.loadUserConversation(self.lastUserId);
+                    
+                },function(errorString){
+                    
+                    alert('Failed to post message');
+                    self.hideLoading();
+                    
+                });
+                
+            } 
+            
+            if(self.chatMode == 2){
+            
+                if(self.lastGroupId == 0)
+                    return;
+
+                self.spikaClient.postTextMessageToGroup(self.lastGroupId,text,function(data){
+                    
+                    var groupId = self.lastGroupId;
+                    
+                    self.initialize();
+                    
+                    self.lastGroupId = groupId;
+                    
+                    self.loadGroupConversation(self.lastGroupId);
+                    
+                },function(errorString){
+                    
+                    alert('Failed to post message');
+                    self.hideLoading();
+                    
+                });
+                
+            } 
+            
+
+            
+        });
+    }
     
     var self = this;
 
@@ -75,9 +158,57 @@ SpikaChatWindow.prototype.hideLoading = function()
     $('.loader').remove();
 }
 
+SpikaChatWindow.prototype.loadGroupConversation = function(groupId)
+{
+    this.isLoading = true;
+    this.chatMode = 2;
+    
+    var self = this;
+    this.lastGroupId = groupId;
+    this.showLoading();
+    
+    var offset = this.currentPage  * this.rows;
+    
+    if(this.currentPage == 0)
+        $('#chat-window').html('');
+
+    this.spikaClient.loadGroupChat(groupId,this.rows,offset,function(data){
+        
+        self.renderConversation(data);
+        self.isLoading = false;
+        self.hideLoading();
+        
+    },function(errorString){
+        
+        if(errorString.match(/expired|invalid/i)){
+            
+            self.spikaClient.login(self.user.email,self.user.password,function(data){
+
+                self.setUser(data);
+                self.spikaClient.setCurrentUser(self.user);
+                self.loadGroupConversation(toUserId);
+            
+            },function(errorString){
+            
+                console.log(errorString);
+                self.hideLoading();
+                self.isLoading = false;
+            });
+            
+        }
+        
+        self.isLoading = false;
+        self.hideLoading();
+        
+    });
+}
+
 
 SpikaChatWindow.prototype.loadUserConversation = function(toUserId)
 {
+    this.isLoading = true;
+    this.chatMode = 1;
+    
     var self = this;
     this.lastUserId = toUserId;
     this.showLoading();
@@ -89,8 +220,8 @@ SpikaChatWindow.prototype.loadUserConversation = function(toUserId)
 
     this.spikaClient.loadUserChat(toUserId,this.rows,offset,function(data){
         
-        self.renderUserConversation(data);
-        
+        self.renderConversation(data);
+        self.isLoading = false;
         self.hideLoading();
         
     },function(errorString){
@@ -107,19 +238,20 @@ SpikaChatWindow.prototype.loadUserConversation = function(toUserId)
             
                 console.log(errorString);
                 self.hideLoading();
+                self.isLoading = false;
             });
             
         }
         
+        self.isLoading = false;
         self.hideLoading();
         
     });
 }
 
-SpikaChatWindow.prototype.renderUserConversation = function(data)
+SpikaChatWindow.prototype.renderConversation = function(data)
 {
 
-    data.rows.reverse();
     if(data.rows.length != this.rows)
         this.isLastPage = true;
         
@@ -135,8 +267,19 @@ SpikaChatWindow.prototype.renderUserConversation = function(data)
     var self = this;
     
     $('#btnReload').unbind( "click" );
+    
     $('#btnReload').click(function(){
-        self.loadUserConversation(self.lastUserId);
+        lastUserIdTmp = self.lastUserId;
+        
+        self.initialize();
+        
+        self.lastUserId = lastUserIdTmp;
+
+        if(this.chatMode == 1)
+            self.loadUserConversation(self.lastUserId);
+        else
+            self.loadGroupConversation(self.lastGroupId);
+
     });
     
     // scroll to bottom
@@ -145,13 +288,20 @@ SpikaChatWindow.prototype.renderUserConversation = function(data)
 
     
     $('#chatbox').scroll(function(){
-    
+ 
         if(self.isLastPage)
+            return;
+            
+        if(self.isLoading)
             return;
             
         if($('#chatbox').scrollTop() == 0){
             self.currentPage++;
-            self.loadUserConversation(self.lastUserId);
+            
+            if(this.chatMode == 1)
+                self.loadUserConversation(self.lastUserId);
+            else
+                self.loadGroupConversation(self.lastGroupId);
         }
     });
 }
@@ -210,7 +360,7 @@ SpikaChatWindow.prototype.renderChatBody = function(chatRow){
         }  
         
         if(chatRow.message_type == 'location'){
-            var html = '<a href="https://www.google.com/maps/@' + chatRow.latitude + ',' + chatRow.longitude + ',11z" target="_blank"><i class="fa fa-map-marker"></i>' + this.lang.openLocation + '</a>';
+            var html = '<a href="https://www.google.com/maps/@' + chatRow.latitude + ',' + chatRow.longitude + ',11z" target="_blank"><i class="fa fa-map-marker"></i> ' + this.lang.openLocation + '</a>';
             return html;
         }  
             

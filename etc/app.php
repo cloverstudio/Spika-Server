@@ -54,7 +54,6 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 ));
 
 $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
-    'couchdb.couchDBURL' => CouchDBURL
 ));
 
 $app->register(new SwiftmailerServiceProvider());

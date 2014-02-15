@@ -65,3 +65,78 @@ SpikaClient.prototype.loadUserChat = function(toUserId,count,page,succeessListen
     });
 
 }
+
+SpikaClient.prototype.loadGroupChat = function(groupId,count,page,succeessListener,failedListener)
+{
+    
+    if(this.currentUser == null)
+        return null;
+    
+    var request = $.ajax({
+        url: this.apiEndPointUrl + '/groupMessages/' + groupId + '/' + count + '/' + page,
+        type: "GET",
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    request.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    request.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+
+SpikaClient.prototype.postTextMessageToGroup = function(groupId,message,succeessListener,failedListener)
+{
+    
+    if(this.currentUser == null)
+        return null;
+    
+    var postData = {'to_group_id':groupId,'message_type':'text','body':message};
+
+    var requestLogin = $.ajax({
+        url: this.apiEndPointUrl + '/sendMessageToGroup',
+        type: 'POST',
+        dataType:'json',
+        data:JSON.stringify(postData),
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    requestLogin.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    requestLogin.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+
+SpikaClient.prototype.postTextMessageToUser = function(userId,message,succeessListener,failedListener)
+{
+    
+    if(this.currentUser == null)
+        return null;
+    
+    var postData = {'to_user_id':userId,'message_type':'text','body':message};
+
+    var requestLogin = $.ajax({
+        url: this.apiEndPointUrl + '/sendMessageToUser',
+        type: 'POST',
+        dataType:'json',
+        data:JSON.stringify(postData),
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    requestLogin.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    requestLogin.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}

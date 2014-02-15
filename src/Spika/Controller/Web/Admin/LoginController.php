@@ -72,7 +72,10 @@ class LoginController extends SpikaWebBaseController
                 $rememberChecked = "checked=\"checked\"";
             }
             
-            if(ADMIN_USERNAME == $username && ADMIN_PASSWORD == $password){
+            $authData = $self->app['spikadb']->doSpikaAuth($username,md5($password));
+            $authData = json_decode($authData,true);
+            
+            if(isset($authData['token'])){
                 
                 $html = $self->render('admin/login.twig', array(
                     'ROOT_URL' => ROOT_URL,
@@ -90,7 +93,9 @@ class LoginController extends SpikaWebBaseController
                     $response->headers->setCookie(new Cookie("password", $password));
                 }
                 
-                $app['session']->set('user', array('username' => $username));
+                
+                
+                $app['session']->set('user', $authData);
                 
                 return $response;
                 

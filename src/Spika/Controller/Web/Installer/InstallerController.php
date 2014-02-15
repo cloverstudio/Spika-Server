@@ -293,10 +293,10 @@ class InstallerController implements ControllerProviderInterface
             }
             
             // create support user
-            $password = \Spika\Utils::randString(6, 6);
+            $password = 'password';
             $userData = array();
-            $userData['name'] = "Support";
-            $userData['email'] = "change@spikaapp.com";
+            $userData['name'] = "Administrator";
+            $userData['email'] = "admin@spikaapp.com";
             $userData['password'] = md5($password);
             $userData['online_status'] = "online";
             $userData['max_contact_count'] = 100;

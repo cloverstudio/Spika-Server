@@ -184,7 +184,11 @@ class GroupController extends SpikaWebBaseController
             $group = $self->app['spikadb']->findGroupById($id);
             $categoryList = $self->getGroupCategoryList();
             
-            $categoryName = $categoryList[$group['category_id']]['title'];
+            if(isset($categoryList[$group['category_id']]['title']))
+                $categoryName = $categoryList[$group['category_id']]['title'];
+            else
+                $categoryName = '';
+                
             $group['categoryName'] = $categoryName;
             
             return $self->render('admin/groupForm.twig', array(

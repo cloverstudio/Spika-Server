@@ -142,7 +142,7 @@
 
                         <div class="form-group">
                             <label>{{lang.formGroupDescription}}</label>
-                                {% if mode == 'new' %}<span class="text-danger">{{lang.noteRequired}}</span>{% endif %}
+                                {% if mode == 'new' or mode == 'edit' %}<span class="text-danger">{{lang.noteRequired}}</span>{% endif %}
                             
                             {% if mode == 'new' or mode == 'edit' %}
                                 <textarea class="form-control" rows="3" name="description">{{formValues.description}}</textarea>

@@ -1,6 +1,6 @@
 function SpikaChatWindow(apiEndPointUrl,user,lang,enableSending,chatMode)
 { 
-    this.templateBaseHtml = '<div id="chat-window-top" class="chat-panel panel panel-default"><div class="panel-heading"><i class="fa fa-comments fa-fw"></i>%%title%% <div class="btn-group pull-right"><button id="btnReload" type="button" class="btn btn-primary btn-xs" disabled="disabled">%%btnReload%%</button> </div></div><div id="chatbox" class="panel-body"><ul id="chat-window" class="chat"></ul></div></div>'
+    this.templateBaseHtml = '<div id="chat-window-top" class="chat-panel panel panel-default"><div class="panel-heading"><span id="chat-window-header">&nbsp;</span> <div class="btn-group pull-right"><button id="btnReload" type="button" class="btn btn-primary btn-xs" disabled="disabled">%%btnReload%%</button> </div></div><div id="chatbox" class="panel-body"><ul id="chat-window" class="chat"></ul></div></div>'
     
     this.templateAlert = '<div class="alert alert-danger alert-dismissable">%%alertmessage%%</div>'
     
@@ -172,6 +172,13 @@ SpikaChatWindow.prototype.loadGroupConversation = function(groupId)
     if(this.currentPage == 0)
         $('#chat-window').html('');
 
+    this.spikaClient.getGroup(groupId,function(data){
+        console.log(data);
+        $('#chat-window-header').html('<span class="btn btn-warning btn-circle"><i class="fa fa-users"></i></span>  <strong>' + data.name + '</strong>');
+        
+    },function(errorString){
+    });
+    
     this.spikaClient.loadGroupChat(groupId,this.rows,offset,function(data){
         
         self.renderConversation(data);
@@ -218,6 +225,13 @@ SpikaChatWindow.prototype.loadUserConversation = function(toUserId)
     if(this.currentPage == 0)
         $('#chat-window').html('');
 
+    this.spikaClient.getUser(toUserId,function(data){
+        console.log(data);
+                            
+        $('#chat-window-header').html('<span class="btn btn-warning btn-circle"><i class="fa fa-user"></i></span> <strong>' + data.name + '</strong>');
+    },function(errorString){
+    });
+    
     this.spikaClient.loadUserChat(toUserId,this.rows,offset,function(data){
         
         self.renderConversation(data);

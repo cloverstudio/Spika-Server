@@ -38,6 +38,156 @@
     <script src="{{ROOT_URL}}/assets/js/spika-client.js"></script>
     <script src="{{ROOT_URL}}/assets/js/spika-chat-window.js"></script>
 
+<script type="text/javascript">
+
+    var spikaClient = new SpikaClient('{{ROOT_URL}}/api');
+    var loginedUser = {{ loginedUser|json_encode()|raw }};
+    var templateNotificationRow = '<li><a href="javascript:%%javascript%%"><div><strong>%%messageType%%</strong></div><div>%%message%%</div></a></li>';
+    
+    function loadActivitySummary(){
+        
+        spikaClient.getActivitySummary(function(data){
+            
+            parseActivityData(data);
+            
+            setTimeout(function(){loadActivitySummary()},3000);
+
+        },function(errorString){
+
+            if(errorString.match(/expired|invalid/i)){
+                
+                self.spikaClient.login(loginedUser.email,loginedUser.password,function(data){
+                    
+                    loginedUser = data;
+                    spikaClient.setCurrentUser(loginedUser);
+                    loadActivitySummary();
+                
+                },function(errorString){
+                
+                    console.log(errorString);
+
+                });
+                
+            }
+        
+        });
+        
+    }
+    
+    function parseActivityData(data){
+        
+        var totalUnreadMessage = 0;
+        
+        var notificationData = [];
+        
+        if(data.rows[0].value.recent_activity != undefined){
+            if(data.rows[0].value.recent_activity.direct_messages != undefined){
+                var directMessages = data.rows[0].value.recent_activity.direct_messages.notifications;
+                
+                for(index in directMessages){
+                    directMessageRow = directMessages[index];
+                    totalUnreadMessage += (directMessageRow.count - 0);
+                    
+                    directMessageRow.type = 'directMessage';
+                    notificationData.push(directMessageRow);
+                }
+            }
+            
+            if(data.rows[0].value.recent_activity.group_posts != undefined){
+                var groupMessages = data.rows[0].value.recent_activity.group_posts.notifications;
+                for(index in groupMessages){
+                    groupMessageRow = groupMessages[index];
+                    totalUnreadMessage += ( groupMessageRow.count - 0);
+
+                    groupMessageRow.type = 'groupChat';
+                    notificationData.push(groupMessageRow);
+                }       
+            }
+        }
+
+        $('#notificationButton').removeClass('btn-danger');
+        $('#notificationButton').removeClass('btn-info');
+
+        if(totalUnreadMessage > 0){
+            
+            $('#notificationButton').html(totalUnreadMessage);
+            $('#notificationButton').addClass('btn-danger');
+            
+        }else{
+
+            $('#notificationButton').html('<i class="fa fa-check"></i>');
+            $('#notificationButton').addClass('btn-info');
+           
+        } 
+        
+        var html = "";
+        
+        for(index in notificationData){
+            
+            var notification = notificationData[index];
+            var rowHtml = templateNotificationRow;
+            
+            if(notification.type == 'directMessage'){
+                rowHtml = rowHtml.replace(/%%messageType%%/,'{{lang.notificationTypeMessage}}');
+                rowHtml = rowHtml.replace(/%%javascript%%/,'openUserChat(' + notification.target_id + ')');
+            }
+            
+            if(notification.type == 'groupChat'){
+                rowHtml = rowHtml.replace(/%%messageType%%/,'{{lang.notificationTypeGroup}}');
+                rowHtml = rowHtml.replace(/%%javascript%%/,'openGroupChat(' + notification.target_id + ')');
+            }
+
+            rowHtml = rowHtml.replace(/%%message%%/,notification.messages[0].message);
+            
+            html += rowHtml;
+        }
+        
+        $('#notificationList').html(html);
+        
+    }
+    
+    function openUserChat(userId){
+    
+        chatWindow = new SpikaChatWindow('{{ROOT_URL}}/api',loginedUser,{
+            title:'{{lang.labelChatWindowTitle}}',
+            conversationNotSelected:'{{lang.conversationNotSelected}}',
+            btnReload:'{{lang.btnReload}}',
+            openLocation:'{{lang.openLocation}}',
+            chatTextBoxPlaceHolder:'{{lang.chatTextBoxPlaceHolder}}',
+            chatTextBoxSend:'{{lang.chatTextBoxSend}}'
+        },true,1);
+
+        chatWindow.attach($('#chatWindow'));
+        chatWindow.setUser(loginedUser);
+        chatWindow.loadUserConversation(userId);
+    }
+    
+    function openGroupChat(groupId){
+    
+        chatWindow = new SpikaChatWindow('{{ROOT_URL}}/api',loginedUser,{
+            title:'{{lang.labelChatWindowTitle}}',
+            conversationNotSelected:'{{lang.conversationNotSelected}}',
+            btnReload:'{{lang.btnReload}}',
+            openLocation:'{{lang.openLocation}}',
+            chatTextBoxPlaceHolder:'{{lang.chatTextBoxPlaceHolder}}',
+            chatTextBoxSend:'{{lang.chatTextBoxSend}}'
+        },true,2);
+
+        chatWindow.attach($('#chatWindow'));
+        chatWindow.setUser(loginedUser);
+        chatWindow.loadGroupConversation(groupId);
+    }
+    
+    
+    $(document).ready(function() {
+        
+        spikaClient.setCurrentUser(loginedUser);
+        
+        setTimeout(function(){loadActivitySummary()},3000);
+
+    });
+    
+</script>
 
 </head>
 
@@ -52,57 +202,6 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-messages">
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>Yesterday</em>
-                                    </span>
-                                </div>
-                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>Yesterday</em>
-                                    </span>
-                                </div>
-                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>Yesterday</em>
-                                    </span>
-                                </div>
-                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
-                                <strong>Read All Messages</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-messages -->
-                    
-                </li>
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -113,12 +212,25 @@
                             <a href="{{ROOT_URL}}/admin/user/edit/{{loginedUser._id}}">{{lang.menuEditProfile}}</a>
                         </li>
                         <li>
-                            <a href="login.html"><i class="fa fa-sign-out fa-fw"></i>{{lang.btnLogout}}</a>
+                            <a href="{{ROOT_URL}}/admin/logout"><i class="fa fa-sign-out fa-fw"></i>{{lang.btnLogout}}</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>
                 <!-- /.dropdown -->
+                
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <button id="notificationButton" type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button>
+                    </a>
+                    <ul id="notificationList" class="dropdown-menu dropdown-messages">
+
+                    </ul>
+                    <!-- /.dropdown-messages -->
+                    
+                </li>
+
+
             </ul>
             <!-- /.navbar-top-links -->
 

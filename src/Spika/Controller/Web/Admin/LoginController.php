@@ -132,6 +132,13 @@ class LoginController extends SpikaWebBaseController
                         
         })->before($app['adminBeforeTokenChecker']);
         
+        $controllers->get('/logout', function (Request $request) use ($app,$self) {
+            
+            $app['session']->remove('user');
+            $response = new RedirectResponse("login");
+            
+            return $response;        
+        });
         
         return $controllers;
     }

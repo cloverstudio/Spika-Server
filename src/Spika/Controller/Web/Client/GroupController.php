@@ -38,7 +38,7 @@ class GroupController extends SpikaWebBaseController
         //
 
         $controllers->get('group/list', function (Request $request) use ($app,$self) {
-            
+        
             $count = $self->app['spikadb']->findGroupCount();
             
             $page = $request->get('page');
@@ -135,15 +135,21 @@ class GroupController extends SpikaWebBaseController
                 if(!empty($formValues['group_password']))
                     $password = md5($formValues['group_password']);
                     
-                $self->app['spikadb']->createGroup(
+                $result = $self->app['spikadb']->createGroup(
                     $formValues['name'],
-                    SUPPORT_USER_ID,
+                    $self->loginedUser['_id'],
                     $formValues['category_id'],
                     $formValues['description'],
                     $password,
                     $fileName,
                     $thumbFileName
                 );
+                
+                $self->app['spikadb']->subscribeGroup(
+                    $result['id'],
+                    $self->loginedUser['_id']
+                );
+
                 
                 return $app->redirect(ROOT_URL . '/client/group/list?msg=messageGroupAdded');
             }
@@ -180,8 +186,14 @@ class GroupController extends SpikaWebBaseController
         //
 
         $controllers->get('group/edit/{id}', function (Request $request,$id) use ($app,$self) {
-            
+
             $group = $self->app['spikadb']->findGroupById($id);
+
+            if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
+                return $app->redirect(ROOT_URL . '/client/group/list?msg=messageNoPermission');
+            }
+
+
             $categoryList = $self->getGroupCategoryList();
             
             if(isset($categoryList[$group['category_id']]['title']))
@@ -202,10 +214,14 @@ class GroupController extends SpikaWebBaseController
 
         $controllers->post('group/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $group = $self->app['spikadb']->findGroupById($id);
+            if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
+                return $app->redirect(ROOT_URL . '/client/group/list?msg=messageNoPermission');
+            }
+
             $validationError = false;
             $fileName = "";
             $thumbFileName = "";
-            $group = $self->app['spikadb']->findGroupById($id);
             $formValues = $request->request->all();
 
             $fileName = $group['avatar_file_id'];
@@ -297,6 +313,10 @@ class GroupController extends SpikaWebBaseController
         $controllers->get('group/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
             $group = $self->app['spikadb']->findGroupById($id);
+            if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
+                return $app->redirect(ROOT_URL . '/client/group/list?msg=messageNoPermission');
+            }
+
             $categoryList = $self->getGroupCategoryList();
             
             $categoryName = $categoryList[$group['category_id']]['title'];
@@ -313,6 +333,11 @@ class GroupController extends SpikaWebBaseController
 
         $controllers->post('group/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $group = $self->app['spikadb']->findGroupById($id);
+            if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
+                return $app->redirect(ROOT_URL . '/client/group/list?msg=messageNoPermission');
+            }
+
             $formValues = $request->request->all();
             
             if(isset($formValues['submit_delete'])){

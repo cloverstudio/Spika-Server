@@ -39,6 +39,10 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->get('emoticon/list', function (Request $request) use ($app,$self) {
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+            }
+
             $count = $self->app['spikadb']->findEmoticonCount();
             
             $page = $request->get('page');
@@ -70,6 +74,10 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->get('emoticon/add', function (Request $request) use ($app,$self) {
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+            }
+
             return $self->render('client/emoticonForm.twig', array(
                 'mode' => 'new',
                 'formValues' => $self->getEmptyFormData(),
@@ -82,6 +90,10 @@ class EmoticonController extends SpikaWebBaseController
         //
         $controllers->post('emoticon/add', function (Request $request) use ($app,$self) {
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+            }
+
             $formValues = $request->request->all();
             $validationError = false;
             $fileName = "";
@@ -123,6 +135,10 @@ class EmoticonController extends SpikaWebBaseController
         //
         $controllers->get('emoticon/view/{id}', function (Request $request,$id) use ($app,$self) {
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+            }
+
             $emoticon = $self->app['spikadb']->findEmoticonById($id);
 
             return $self->render('client/emoticonForm.twig', array(
@@ -138,6 +154,10 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->get('emoticon/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+            }
+
             $emoticon = $self->app['spikadb']->findEmoticonById($id);
             
             return $self->render('client/emoticonForm.twig', array(
@@ -150,6 +170,10 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->post('emoticon/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+            }
+
             $validationError = false;
             $fileName = "";
             $emoticon = $self->app['spikadb']->findEmoticonById($id);
@@ -196,6 +220,10 @@ class EmoticonController extends SpikaWebBaseController
         //
         $controllers->get('emoticon/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+            }
+
             $emoticon = $self->app['spikadb']->findEmoticonById($id);
             
             return $self->render('client/emoticonDelete.twig', array(
@@ -208,6 +236,10 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->post('emoticon/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+            }
+
             $formValues = $request->request->all();
             
             if(isset($formValues['submit_delete'])){

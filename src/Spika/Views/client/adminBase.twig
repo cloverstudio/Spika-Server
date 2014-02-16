@@ -249,24 +249,27 @@
                     <li>
                         <a href="{{ROOT_URL}}/client/group/list"><i class="fa fa-users"></i> {{lang.menuGroups}}</a>
                     </li>
-                    <!-- <li>
-                        <a href="{{ROOT_URL}}/admin/reports"><i class="fa fa-edit fa-fw"></i> {{lang.menuReports}}</a>
-                    </li> -->
-                    <li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i> {{lang.menuSettings}}<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="{{ROOT_URL}}/client/groupcategory/list">{{lang.menuManageGroupCategory}}</a>
-                            </li>
-                            <li>
-                                <a href="{{ROOT_URL}}/client/emoticon/list">{{lang.menuManageEmoji}}</a>
-                            </li>
-                            <!-- <li>
-                                <a href="buttons.html">{{lang.menuEditEULA}}</a>
-                            </li> -->
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
+                    
+                    {% if isAdmin %}
+                    
+                        <li>
+                            <a href="#"><i class="fa fa-wrench fa-fw"></i> {{lang.menuSettings}}<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{{ROOT_URL}}/client/groupcategory/list">{{lang.menuManageGroupCategory}}</a>
+                                </li>
+                                <li>
+                                    <a href="{{ROOT_URL}}/client/emoticon/list">{{lang.menuManageEmoji}}</a>
+                                </li>
+                                <!-- <li>
+                                    <a href="buttons.html">{{lang.menuEditEULA}}</a>
+                                </li> -->
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                    
+                    {% endif %}
+                    
                 </ul>
                 <!-- /#side-menu -->
             </div>

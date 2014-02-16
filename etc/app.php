@@ -62,9 +62,6 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../src/Spika/Views',
 ));
 
-$app->register(new Silex\Provider\SessionServiceProvider(), array(
-));
-
 $app['adminBeforeTokenChecker'] = $app->share(function () use ($app) {
     return new Spika\Middleware\AdminChecker(
         $app

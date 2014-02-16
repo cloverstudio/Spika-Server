@@ -420,6 +420,9 @@ class MessageController extends SpikaBaseController
     
     public function fileterMessage($messages,$database){
         
+        if(empty($messages))
+            return;
+            
         $newResult = array();
         
         $now = time();

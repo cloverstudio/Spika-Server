@@ -12,12 +12,13 @@
  
 /* change here */
 define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://localhost:8080/wwwroot");
-define('LOCAL_ROOT_URL', isset($_ENV['SPIKA_LOCAL_ROOT_URL']) ? $_ENV['SPIKA_LOCAL_ROOT_URL'] : "http://localhost:8080/wwwroot");
+define('LOCAL_ROOT_URL', isset($_ENV['SPIKA_LOCAL_ROOT_URL']) ? $_ENV['SPIKA_LOCAL_ROOT_URL'] : "http://localhost/wwwroot");
 define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "localhost");
 define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "spikadb");
 define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "root");
 define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "yourpassword");
 /* end change here */
+define('AdministratorEmail', isset($_ENV['SPIKA_AdministratorEmail']) ? $_ENV['SPIKA_AdministratorEmail'] : "admin@spikaapp.com");
 
 define('ENABLE_LOGGING', isset($_ENV['SPIKA_ENABLE_LOGGING']) ? $_ENV['SPIKA_ENABLE_LOGGING'] : true);
 
@@ -39,6 +40,6 @@ define("APN_DEV_CERT_PATH", "files/apns-dev.pem");
 define("APN_PROD_CERT_PATH", "files/apns-prod.pem");
 define("GCM_API_KEY","AIzaSyDOkqeO0MZ_igwH_zGyy95DO1ahM8-Ebrw");
 
-define("SEND_EMAIL_METHOD",1); // 0: dont send 1:local smtp 2:gmail
+define("SEND_EMAIL_METHOD",0); // 0: dont send 1:local smtp 2:gmail
 define("GMAIL_USER",""); 
 define("GMAIL_PASSWORD",""); 

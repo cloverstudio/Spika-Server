@@ -52,6 +52,8 @@ class UserController extends SpikaWebBaseController
 
         $controllers->get('user/list', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+            
             $count = $self->app['spikadb']->findUserCount();
             
             $page = $request->get('page');
@@ -85,6 +87,8 @@ class UserController extends SpikaWebBaseController
 
         $controllers->get('user/add', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -104,6 +108,8 @@ class UserController extends SpikaWebBaseController
 
         $controllers->post('user/add', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -161,6 +167,8 @@ class UserController extends SpikaWebBaseController
         //
         $controllers->get('user/view/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             $user = $self->app['spikadb']->findUserById($id,false);
 
             return $self->render('client/userForm.twig', array(
@@ -178,6 +186,8 @@ class UserController extends SpikaWebBaseController
 
         $controllers->get('user/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission() && $self->loginedUser['_id'] != $id){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }            
@@ -197,6 +207,8 @@ class UserController extends SpikaWebBaseController
 
         $controllers->post('user/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission() && $self->loginedUser['_id'] != $id){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -281,6 +293,8 @@ class UserController extends SpikaWebBaseController
         //
         $controllers->get('user/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -315,6 +329,7 @@ class UserController extends SpikaWebBaseController
     
         $controllers->get('user/conversation/{userId}', function (Request $request,$userId) use ($app,$self) {
             
+            $self->setVariables();
             
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');

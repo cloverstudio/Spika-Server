@@ -235,7 +235,7 @@ class MessageController extends SpikaBaseController
                      
                 $app['spikadb']->clearActivitySummary($ownerUserId, ACTIVITY_SUMMARY_DIRECT_MESSAGE, $toUserId);
                 
-                if(count($result['rows']) > 0)
+                if(is_array($result) && count($result['rows']) > 0)
                     $result['rows'] = $self->fileterMessage($result['rows'],$app['spikadb']);
                     
                 return json_encode($result);
@@ -352,7 +352,7 @@ class MessageController extends SpikaBaseController
                 $currentUser = $app['currentUser'];
                 $app['spikadb']->clearActivitySummary($currentUser['_id'], ACTIVITY_SUMMARY_GROUP_MESSAGE, $toGroupId);
                 
-                if(count($result['rows']) > 0)
+                if(is_array($result) && count($result['rows']) > 0)
                     $result['rows'] = $self->fileterMessage($result['rows'],$app['spikadb']);
 
                 return json_encode($result);

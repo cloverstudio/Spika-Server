@@ -50,6 +50,10 @@ class SpikaWebBaseController implements ControllerProviderInterface
         return $controllers;        
     }
     
+    public function setVariables(){
+        $this->loginedUser = $this->app['session']->get('user');
+    }
+    
     public function render($tempalteFile,$params){
         
         $user = $this->app['session']->get('user');

@@ -13,12 +13,12 @@
 /* change here */
 define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://officialapi.spikaapp.com/");
 define('LOCAL_ROOT_URL', isset($_ENV['SPIKA_LOCAL_ROOT_URL']) ? $_ENV['SPIKA_LOCAL_ROOT_URL'] : "http://localhost/projects/spika_orig/Spika-Server/wwwroot");
-
 define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "localhost");
 define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "spika_orig");
 define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "root");
 define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "cloverpass013");
 /* end change here */
+define('AdministratorEmail', isset($_ENV['SPIKA_AdministratorEmail']) ? $_ENV['SPIKA_AdministratorEmail'] : "admin@spikaapp.com");
 
 define('ENABLE_LOGGING', isset($_ENV['SPIKA_ENABLE_LOGGING']) ? $_ENV['SPIKA_ENABLE_LOGGING'] : true);
 

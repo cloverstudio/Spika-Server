@@ -37,7 +37,6 @@ class ReportControllerTest extends WebTestCase
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/api/reportViolation.php', array('docment_id' => 'testid'));
-        assertSame(true, $client->getResponse()->isOk());
         assertSame('OK', $client->getResponse()->getContent());
     }
 }

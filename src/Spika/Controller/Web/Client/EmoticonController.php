@@ -39,6 +39,8 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->get('emoticon/list', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -74,6 +76,8 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->get('emoticon/add', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -90,6 +94,8 @@ class EmoticonController extends SpikaWebBaseController
         //
         $controllers->post('emoticon/add', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -135,6 +141,8 @@ class EmoticonController extends SpikaWebBaseController
         //
         $controllers->get('emoticon/view/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -154,6 +162,8 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->get('emoticon/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -170,6 +180,8 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->post('emoticon/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -220,6 +232,8 @@ class EmoticonController extends SpikaWebBaseController
         //
         $controllers->get('emoticon/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -236,6 +250,8 @@ class EmoticonController extends SpikaWebBaseController
 
         $controllers->post('emoticon/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }

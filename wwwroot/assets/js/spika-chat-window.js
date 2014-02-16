@@ -329,13 +329,16 @@ SpikaChatWindow.prototype.renderConversation = function(data)
     $('#btnReload').unbind( "click" );
     
     $('#btnReload').click(function(){
+    
         lastUserIdTmp = self.lastUserId;
+        lastGroupIdTmp = self.lastGroupId;
         
         self.initialize();
         
         self.lastUserId = lastUserIdTmp;
+        self.lastGroupId = lastGroupIdTmp;
 
-        if(this.chatMode == 1)
+        if(self.chatMode == 1)
             self.loadUserConversation(self.lastUserId);
         else
             self.loadGroupConversation(self.lastGroupId);

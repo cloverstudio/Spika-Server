@@ -39,6 +39,8 @@ class GroupCategoryController extends SpikaWebBaseController
 
         $controllers->get('groupcategory/list', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -75,6 +77,8 @@ class GroupCategoryController extends SpikaWebBaseController
 
         $controllers->get('groupcategory/add', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             return $self->render('client/categoryForm.twig', array(
                 'mode' => 'new',
                 'formValues' => $self->getEmptyFormData(),
@@ -88,6 +92,8 @@ class GroupCategoryController extends SpikaWebBaseController
 
         $controllers->post('groupcategory/add', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -133,6 +139,8 @@ class GroupCategoryController extends SpikaWebBaseController
         //
         $controllers->get('groupcategory/view/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -152,6 +160,8 @@ class GroupCategoryController extends SpikaWebBaseController
 
         $controllers->get('groupcategory/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -168,6 +178,8 @@ class GroupCategoryController extends SpikaWebBaseController
 
         $controllers->post('groupcategory/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -222,6 +234,8 @@ class GroupCategoryController extends SpikaWebBaseController
         //
         $controllers->get('groupcategory/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }
@@ -238,6 +252,8 @@ class GroupCategoryController extends SpikaWebBaseController
 
         $controllers->post('groupcategory/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
             }

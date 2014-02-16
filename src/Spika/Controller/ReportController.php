@@ -26,13 +26,35 @@ class ReportController implements ControllerProviderInterface
         $controllers->get('/reportViolation.php', function (Request $request) use ($app) {
             $documentId = $request->get('docment_id');
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject("SpilaViolationReport")
-                ->setFrom(AdministratorEmail)
-                ->setTo(AdministratorEmail)
-                ->setBody($documentId);
-            $app['mailer']->send($message);
 
+            if(SEND_EMAIL_METHOD == EMAIL_METHOD_LOCALSMTP){
+                
+                $message = \Swift_Message::newInstance()
+                    ->setSubject("SpilaViolationReport")
+                    ->setFrom(AdministratorEmail)
+                    ->setTo(AdministratorEmail)
+                    ->setBody($documentId);
+                    
+                $app['mailer']->send($message);
+                
+            }
+            
+            if(SEND_EMAIL_METHOD == EMAIL_METHOD_GMAIL){
+                
+                $transport = \Swift_SmtpTransport::newInstance('smtp.googlemail.com', 465, 'ssl')
+                    ->setUsername(GMAIL_USER)
+                    ->setPassword(GMAIL_PASSWORD);
+
+                $message = \Swift_Message::newInstance($transport)
+                    ->setSubject("Spika Reset Password")
+                    ->setFrom(AdministratorEmail)
+                    ->setTo(AdministratorEmail)
+                    ->setBody($documentId);
+                
+                $mailer->send($message);
+
+            }
+                    
             return 'OK';
         })->before($app['beforeTokenChecker']);
 

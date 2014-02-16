@@ -63,6 +63,8 @@ class LoginController extends SpikaWebBaseController
         
         $controllers->post('/login', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             $username = $request->get('username');
             $password = $request->get('password');
             $remember = $request->get('remember');
@@ -119,6 +121,8 @@ class LoginController extends SpikaWebBaseController
         
         $controllers->get('/dashboard', function (Request $request) use ($app,$self) {
             
+            $self->setVariables();
+
             $countUsers = $self->app['spikadb']->findUserCount();
             $countMessages = $self->app['spikadb']->getMessageCount();
             $countLastLoginedUsers = $self->app['spikadb']->getLastLoginedUsersCount();

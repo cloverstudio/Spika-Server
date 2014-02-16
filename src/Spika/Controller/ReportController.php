@@ -48,8 +48,8 @@ class ReportController implements ControllerProviderInterface
                 $message = \Swift_Message::newInstance($transport)
                     ->setSubject("Spika Reset Password")
                     ->setFrom(AdministratorEmail)
-                    ->setTo($user['email'])
-                    ->setBody($body);
+                    ->setTo(AdministratorEmail)
+                    ->setBody($documentId);
                 
                 $mailer->send($message);
 

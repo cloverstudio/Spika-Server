@@ -443,7 +443,7 @@ class MessageController extends SpikaBaseController
             }
             
             // if delete after shown flag is true add to ary delete from db so next time will not show
-            if($deleteAterShown == 1){
+            if($deleteAterShown == 1 && $message['value']['from_user_id'] != $app['currentUser']['_id'] ){
                 $database->deleteMessage($messageId);
             }
             

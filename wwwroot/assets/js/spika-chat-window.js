@@ -12,8 +12,9 @@ function SpikaChatWindow(apiEndPointUrl,user,lang,enableSending,chatMode)
 
     this.templateImageMessage = '<a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg%%id%%"><img src="%%ThumbUrl%%" width="150"/></a><div class="modal fade bs-example-modal-lg%%id%%" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="%%ImageUrl%%"/></div></div></div>'
     
-    this.templateTextBox = '<div class="panel-footer"><div class="input-group"><input id="btn-input" type="text" class="form-control input-sm" placeholder="%%chatTextBoxPlaceHolder%%"><span class="input-group-btn"><button class="btn btn-warning btn-sm" id="btn-chat">%%chatTextBoxSend%%</button></span></div></div>';
+    this.templateTextBox = '<div class="panel-footer"><div id="media-box"></div><div class="input-group"><span class="input-group-btn"><button id="btn-tuggl-mediabox" class="btn btn-default btn-sm" type="button"><i class="fa fa-chevron-down"></i></button></span><input id="btn-input" type="text" class="form-control input-sm" placeholder="%%chatTextBoxPlaceHolder%%"><span class="input-group-btn"><button class="btn btn-warning btn-sm" id="btn-chat">%%chatTextBoxSend%%</button></span></div></div>';
     
+    this.templateMediaPanel = '<div class="media-buttons"><button id="mediabtn-emoji" type="button" class="btn btn-outline btn-default"><i class="fa fa-smile-o fa-4x"></i></button><button id="mediabtn-picture" type="button" class="btn btn-outline btn-default"><i class="fa fa-picture-o fa-4x"></i></button></div>';
     
     this.spikaClient = new SpikaClient(apiEndPointUrl);
     this.lang = lang;
@@ -26,6 +27,7 @@ function SpikaChatWindow(apiEndPointUrl,user,lang,enableSending,chatMode)
     this.isLoading = false;
     this.chatMode = 0; // 1:private chat 2:group chat
     this.enableSending = enableSending;
+    this.mediaboxOpened = false;
     
     if(chatMode != undefined){
         this.chatMode = chatMode;
@@ -66,7 +68,13 @@ SpikaChatWindow.prototype.attach = function(htmlElement,title)
         
         $('#chat-window-top').append(textBoxHtml);
         
+        // build media box panel
+        this.buildMediaBox();
+        
         $('#btn-chat').unbind("click");
+        $('#btn-tuggl-mediabox').unbind("click");
+        $('#mediabtn-emoji').unbind("click");
+        $('#mediabtn-picture').unbind("click");
         
         var self = this;
         $('#btn-chat').click(function(){
@@ -127,11 +135,49 @@ SpikaChatWindow.prototype.attach = function(htmlElement,title)
 
             
         });
+        
+        $('#btn-tuggl-mediabox').click(function(){
+            self.tuggleMediaBox();
+        });
     }
     
     var self = this;
 
 }
+
+SpikaChatWindow.prototype.buildMediaBox = function(message)
+{
+    $('#media-box').html(this.templateMediaPanel); 
+    $('#media-box').hide();
+
+    $('#mediabtn-emoji').click(function(){
+        
+        
+        
+    });
+    
+    $('#mediabtn-picture').click(function(){
+        
+        
+        
+    });
+}
+
+SpikaChatWindow.prototype.tuggleMediaBox = function(message)
+{
+            
+    if(this.mediaboxOpened == false){
+        $('#media-box').show();
+        this.mediaboxOpened = true;     
+        $('#btn-tuggl-mediabox').html('<i class="fa fa-chevron-up "></i>');
+               
+    }else{
+        $('#media-box').hide();
+        this.mediaboxOpened = false;                
+        $('#btn-tuggl-mediabox').html('<i class="fa fa-chevron-down "></i>');           
+    }
+}
+
 
 SpikaChatWindow.prototype.showAlert = function(message)
 {

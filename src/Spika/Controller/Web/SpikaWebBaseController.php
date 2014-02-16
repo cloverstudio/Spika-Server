@@ -27,6 +27,7 @@ class SpikaWebBaseController implements ControllerProviderInterface
     
     var $language = array();
     var $messages = array();
+    var $loginedUser = null;
     
     public function __construct(){
         
@@ -38,7 +39,7 @@ class SpikaWebBaseController implements ControllerProviderInterface
         $languageFile = __DIR__."/../../../../config/i18n/{$currentLanguage}.ini";
         
         $this->language = parse_ini_file($languageFile);
-            
+        
     }
     
     public function connect(Application $app)
@@ -46,15 +47,18 @@ class SpikaWebBaseController implements ControllerProviderInterface
 
         $this->app = $app;
         $controllers = $app['controllers_factory'];
+        $this->loginedUser = $this->app['session']->get('user');
         return $controllers;        
     }
     
     public function render($tempalteFile,$params){
         
         $user = $this->app['session']->get('user');
-
         $params['loginedUser'] = $user;
-
+        
+        $params['isAdmin'] = $user['_id'] == 1;
+        
+        
         $params['lang'] = $this->language;
         $params['ROOT_URL'] = ROOT_URL;
         
@@ -130,7 +134,11 @@ class SpikaWebBaseController implements ControllerProviderInterface
 
     }
     
-    
+    public function checkPermission(){
+        
+        return $this->loginedUser['_id'] == SUPPORT_USER_ID;
+        
+    }
             
 }
 

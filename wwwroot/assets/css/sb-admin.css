@@ -305,3 +305,8 @@ table.dataTable thead .sorting:after {
 .show-grid {
     margin: 15px 0;
 }
+
+.media-buttons button{
+    margin-bottom:10px;
+    margin-right:10px;
+}

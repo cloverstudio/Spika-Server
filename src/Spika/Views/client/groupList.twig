@@ -90,24 +90,37 @@
                                     <td>{{group.created}}</td>
                                     <td>
                                         
-                                        <a href="{{ROOT_URL}}/client/group/view/{{group._id}}" class="btn btn-primary">
-                                            <i class="fa fa-search"></i> {{lang.labelView}}
-                                        </a>
-                                        
-                                        <a href="{{ROOT_URL}}/client/group/edit/{{group._id}}" class="btn btn-success">
-                                            <i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
-                                        </a>
-                                        
-                                        <a href="{{ROOT_URL}}/client/group/delete/{{group._id}}" class="btn btn-danger">
-                                            <i class="fa fa-eraser"></i> {{lang.labelDelete}}
-                                        </a>
-                                        
-                                        <div style="margin-top:5px">
-                                            
-                                            <a href="javascript:openChat({{group._id}});" class="btn btn-primary">
-                                                <i class="fa fa-comments-o"></i> {{lang.labelConversation}}
-                                            </a>
-                                        
+                                        <div class="btn-group text-left" >
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                {{lang.labelAction}} <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li>
+                                                    <a href="{{ROOT_URL}}/client/group/view/{{group._id}}">
+                                                        <i class="fa fa-search"></i> {{lang.labelView}}
+                                                    </a>
+                                                </li>
+                                                
+                                                {% if isAdmin or group.user_id == loginedUser._id%}
+                                                    <li>
+                                                        <a href="{{ROOT_URL}}/client/group/edit/{{group._id}}">
+                                                            <i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ROOT_URL}}/client/group/delete/{{group._id}}">
+                                                            <i class="fa fa-eraser"></i> {{lang.labelDelete}}
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                                
+                                                <li>
+                                                    <a href="javascript:openChat({{group._id}});">
+                                                        <i class="fa fa-comments-o"></i> {{lang.labelConversation}}
+                                                    </a>
+                                                </li>
+                                                
+                                            </ul>
                                         </div>
 
                                     </td>

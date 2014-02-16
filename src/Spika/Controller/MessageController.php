@@ -420,8 +420,8 @@ class MessageController extends SpikaBaseController
     
     public function fileterMessage($messages,$database){
         
-        if(empty($messages))
-            return;
+        if(empty($messages) || !is_array($messages))
+            return array();
             
         $newResult = array();
         

@@ -19,6 +19,8 @@ class MessageController extends SpikaBaseController
 {
     public function connect(Application $app)
     {
+        parent::connect($app);
+        
         $controllers = $app['controllers_factory'];
         $self = $this;
 

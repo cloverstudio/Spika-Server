@@ -21,6 +21,8 @@ use Guzzle\Plugin\Async\AsyncPlugin;
 class SpikaBaseController implements ControllerProviderInterface
 {
     
+    public $app = null;
+    
     public function connect(Application $app)
     {
         $this->app = $app;

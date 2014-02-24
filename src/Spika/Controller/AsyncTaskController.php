@@ -28,8 +28,6 @@ class AsyncTaskController extends SpikaBaseController
 
         $controllers->post('/notifyNewDirectMessage', function (Request $request) use ($self,$app) {
             
-            $app['monolog']->addDebug('__________notifyNewDirectMessage');
-            
             $host = $request->getHttpHost();
             if($host != "localhost"){
                 return $self->returnErrorResponse("invalid access to internal API");

@@ -289,9 +289,6 @@
 	
 	$resultAry = json_decode($result,true);
     
-    print_r($resultAry);
-    die();
-    
 	if(empty($resultAry['rows'][0]))
 	   die("read message failed {$result}");
 	   
@@ -454,18 +451,15 @@
 	));
 	
 	$resultAry = json_decode($result,true);
-	
 
-	//setDelete
+    //setDelete
 	$result = HU_postRequest(API_URL . "/setDelete",json_encode(array(
-	  "delete_type" => 2,
+	  "delete_type" => 5,
 	  "message_id" => $resultAry['id']
 	)),array(
 		'token' => $token
 	));
-	
-    print_r($result);
-    die();
+
 
 	
     //////// get group messages
@@ -475,7 +469,7 @@
 	
 	$resultAry = json_decode($result,true);
 	
-	print_r($resultAry);
+	print_r($result);
 	die();
 	
 	$targetUserId = $resultAry['id'];

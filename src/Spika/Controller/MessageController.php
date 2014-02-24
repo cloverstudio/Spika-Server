@@ -239,7 +239,18 @@ class MessageController extends SpikaBaseController
                 
                 if(is_array($result) && count($result['rows']) > 0)
                     $result['rows'] = $self->fileterMessage($result['rows'],$app['spikadb']);
+
+                // set read_at
+                foreach($result['rows'] as $message){
+                
+                    $toUserId = $message['value']['to_user_id'];
+                    $readAt = $message['value']['read_at'];
                     
+                    if($readAt == 0 && $toUserId = $ownerUserId){
+                        $app['spikadb']->updateReadAt($message['id']);
+                    }
+                }
+                
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
@@ -440,6 +451,7 @@ class MessageController extends SpikaBaseController
             $deleteAt = $message['value']['delete_at'];
             $deleteFlaggedAt = $message['value']['delete_flagged_at'];
             $deleteAterShown = $message['value']['delete_after_shown'];
+            $readAt = $message['value']['read_at'];
             
             // if delete time passed from flagged time delete from ary and delete from db
             if($deleteAt != 0 && $deleteAt < $now){
@@ -451,6 +463,10 @@ class MessageController extends SpikaBaseController
             if($deleteAterShown == 1 && $message['value']['from_user_id'] != $this->app['currentUser']['_id'] ){
                 $database->deleteMessage($messageId);
             }
+            
+            // force decimal
+            $message['value']['read_at'] = intval($message['value']['read_at']);
+            $message['value']['delete_at'] = intval($message['value']['delete_at']);
             
             $newResult[] = $message;
             

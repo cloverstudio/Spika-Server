@@ -336,7 +336,7 @@ class MySQL implements DbInterface
     public function getActivitySummary($user_id)
     {
 
-        $myNotifications = $this->DB->fetchAll('select * from notification where user_id = ? ',array($user_id));
+        $myNotifications = $this->DB->fetchAll('select * from notification where user_id = ? order by modified desc',array($user_id));
         
         $directMessages = array();
         $groupMessages = array();
@@ -387,9 +387,10 @@ class MySQL implements DbInterface
                     'messages' => array(array(
                         'from_user_id' => $row['from_user_id'],
                         'message' => $row['message'],
-                        'user_image_url' => $row['user_image_url']
+                        'user_image_url' => $row['user_image_url'],
+                        'modified' => intval($row['modified'])
                     )),
-                    'lastupdate' => $row['modified']
+                    'lastupdate' => intval($row['modified'])
                                     
                 );
             }
@@ -412,9 +413,10 @@ class MySQL implements DbInterface
                     'messages' => array(array(
                         'from_user_id' => $row['from_user_id'],
                         'message' => $row['message'],
-                        'user_image_url' => $row['user_image_url']
+                        'user_image_url' => $row['user_image_url'],
+                        'modified' => intval($row['modified'])
                     )),
-                    'lastupdate' => $row['modified']
+                    'lastupdate' => intval($row['modified'])
                                     
                 );
             }
@@ -756,6 +758,7 @@ class MySQL implements DbInterface
                 message.delete_at,
                 message.delete_flagged_at,
                 message.delete_after_shown,
+                message.read_at,
                 user.avatar_thumb_file_id as avatar_thumb_file_id
             from message
                 left join user on user._id = message.from_user_id
@@ -791,6 +794,7 @@ class MySQL implements DbInterface
                 message.delete_at,
                 message.delete_flagged_at,
                 message.delete_after_shown,
+                message.read_at,
                 user.avatar_thumb_file_id as avatar_thumb_file_id
             from message 
                 left join user on user._id = message.from_user_id
@@ -849,6 +853,7 @@ class MySQL implements DbInterface
                 message.delete_at,
                 message.delete_flagged_at,
                 message.delete_after_shown,
+                message.read_at,
                 user.avatar_thumb_file_id as avatar_thumb_file_id
             from message 
                 left join user on user._id = message.from_user_id
@@ -1205,7 +1210,8 @@ class MySQL implements DbInterface
                 'count' => 1,
                 'target_type' => $type,
                 'message' => $message,
-                'created' => time()
+                'created' => time(),
+                'modified' => time()
             );
             
             $this->DB->insert('notification',$data);
@@ -1247,8 +1253,6 @@ class MySQL implements DbInterface
             
             if(!$notificationRow){
                 
-                $this->logger->adddebug('iiiiinnnnsssseeeeerrrrrrttt');
-                
                 $data = array(
                     'user_id' => $toUserId,
                     'from_user_id' => $fromUserId,
@@ -1256,7 +1260,8 @@ class MySQL implements DbInterface
                     'count' => 1,
                     'target_type' => $type,
                     'message' => $message,
-                    'created' => time()
+                    'created' => time(),
+                    'modified' => time()
                 );
                 
                 $this->DB->insert('notification',$data);
@@ -1288,7 +1293,9 @@ class MySQL implements DbInterface
             $fromUserId = $fieldKey;
             
             $this->DB->executeUpdate(
-                    'delete from notification where 
+                    'update notification 
+                        set count = 0
+                        where 
                         user_id = ?
                         and from_user_id = ?
                         and target_type = ?
@@ -1306,7 +1313,9 @@ class MySQL implements DbInterface
             $toGroupId = $fieldKey;
             
             $this->DB->executeUpdate(
-                    'delete from notification where 
+                    'update notification 
+                        set count = 0
+                        where 
                         user_id = ?
                         and to_group_id = ?
                         and target_type = ?
@@ -1761,5 +1770,20 @@ class MySQL implements DbInterface
         
     }
     
+    public function updateReadAt($messageId){
+        
+        $result = $this->DB->executeupdate(
+                'update message set 
+                    read_at = ?,
+                    modified = ?
+                    WHERE _id = ?',
+                array(
+                    time(),
+                    time(),
+                    $messageId));
+        
+        return $result;
+        
+    }
     
 }

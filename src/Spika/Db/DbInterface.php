@@ -79,5 +79,5 @@ interface DbInterface
     
     public function getConversationHistory($user,$offset = 0,$count);
     public function getConversationHistoryCount($user);
-    
+    public function updateReadAt($messageId);
 }

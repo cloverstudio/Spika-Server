@@ -269,6 +269,10 @@ class MessageController extends SpikaBaseController
                 if($result == null)
                      return $self->returnErrorResponse("failed to get message");
                      
+                //$result = $self->fileterMessage($result,$app['spikadb']);
+                $app['monolog']->addDebug(print_r($result,true));
+                $result = $this->fileterOneMessage($result);
+                
                 return json_encode($result);
             }
         )->before($app['beforeTokenChecker']);
@@ -446,7 +450,7 @@ class MessageController extends SpikaBaseController
                 $newResult[] = $message;
                 continue;                
             }
-                
+            
             $messageId = $message['value']['_id'];
             $deleteAt = $message['value']['delete_at'];
             $deleteFlaggedAt = $message['value']['delete_flagged_at'];
@@ -464,15 +468,23 @@ class MessageController extends SpikaBaseController
                 $database->deleteMessage($messageId);
             }
             
-            // force decimal
-            $message['value']['read_at'] = intval($message['value']['read_at']);
-            $message['value']['delete_at'] = intval($message['value']['delete_at']);
+            $message['value'] = $this->fileterOneMessage($message['value']);
             
             $newResult[] = $message;
             
         }
         
         return $newResult;
+        
+    }
+
+    public function fileterOneMessage($message){
+        
+        // force decimal
+        $message['read_at'] = intval($message['read_at']);
+        $message['delete_at'] = intval($message['delete_at']);
+        
+        return $message;
         
     }
 

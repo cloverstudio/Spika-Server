@@ -1786,4 +1786,114 @@ class MySQL implements DbInterface
         
     }
     
+    public function findStoriesCount()
+    {
+    	$query = "select count(*) as count from `news`";
+    
+    	$result = $this->DB->fetchColumn($query);
+    
+    	return $result;
+    }
+    
+    public function findAllNews($offset = 0,$count=0)
+    {
+    	
+    	$query = "select * from news order by created desc  ";
+    	
+    	if($count != 0){
+    		$query .= " limit {$count} offset {$offset} ";
+    	}
+    	
+    	$result = $this->DB->fetchAll($query);
+    	
+    	$formatedNews = array();
+    	foreach($result as $story){
+    		$story = $this->reformatStoryData($story);
+    		$formatedNews[] = $story;
+    	}
+    
+    	return $formatedNews;
+    
+    }
+    
+    public function reformatStoryData($story){
+    
+    	$story['created'] = intval($story['created']);
+    	$story['modified'] = intval($story['modified']);
+    
+    	return $story;
+    }
+    
+    public function createStory($title,$content,$user_id){
+    
+    
+    	$newsData = array(
+    			'title' => $title,
+    			'content' => $content,
+    			'user_id' => $user_id,
+    			'modified' => time(),
+    			'created' => time()
+    	);
+    
+    	if($this->DB->insert('`news`',$newsData)){
+    		return array(
+    				'ok' => 1,
+    				'id' => $this->DB->lastInsertId("_id")
+    		);
+    	}else{
+    		return null;
+    	}
+    
+    }
+    
+    public function findStoryById($id)
+    {
+    	$story = $this->DB->fetchAssoc('select * from `news` where _id = ?',array($id));
+    	$story = $this->reformatStoryData($story);
+    
+    	return $this->formatRow($story);
+    }
+    
+    public function updateStory($storyId,$title,$content){
+    
+    	$now = time();
+    
+    	$result = $this->DB->executeupdate(
+    			'update `news` set
+                    title = ?,
+                    content = ?,
+    				modified = ?
+                    WHERE _id = ?',
+    			array(
+    					$title,
+    					$content,
+    					time(),
+    					$storyId));
+    
+    	if($result){
+    		return array(
+    				'ok' => 1,
+    				'id' => $storyId,
+    				'rev' => 'tmprev'
+    		);
+    	}else{
+    		$arr = array('message' => 'update story error!', 'error' => 'logout');
+    		return json_encode($arr);;
+    	}
+    
+    	return null;
+    
+    }
+    
+    public function deleteStory($storyId){
+    
+    	$this->DB->delete('`news`', array('_id' => $storyId));
+    
+    	return array(
+    			'ok' => 1,
+    			'id' => $storyId,
+    			'rev' => 'tmprev'
+    	);
+    }
+    
 }

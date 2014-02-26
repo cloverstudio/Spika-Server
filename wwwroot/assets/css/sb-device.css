@@ -1,0 +1,22 @@
+/* Global Styles */
+
+/* ------------------------------- */
+
+body {
+   background-color: #f8f8f8;
+}
+
+#wrapper {
+   width: 100%;
+}
+
+.panel{
+   margin: 20px;
+}
+
+.panel-heading{
+   font-weight: bold;
+}
+.panel-body button{
+   float: right;
+}

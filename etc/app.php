@@ -82,12 +82,14 @@ $app->mount('/api/', new Spika\Controller\MessageController());
 $app->mount('/api/', new Spika\Controller\GroupController());
 $app->mount('/api/', new Spika\Controller\CheckUniqueController());
 $app->mount('/api/', new Spika\Controller\AsyncTaskController());
+$app->mount('/api/', new Spika\Controller\WebViewController());
 $app->mount('/page/', new Spika\Controller\PasswordResetController());
 $app->mount('/page/', new Spika\Controller\Web\StaticPageController());
 
 $app->mount('/', new Spika\Controller\Web\Installer\InstallerController());
 $app->mount('/client', new Spika\Controller\Web\Client\LoginController());
 $app->mount('/client/', new Spika\Controller\Web\Client\GroupController());
+$app->mount('/client/', new Spika\Controller\Web\Client\NewsController());
 $app->mount('/client/', new Spika\Controller\Web\Client\UserController());
 $app->mount('/client/', new Spika\Controller\Web\Client\GroupCategoryController());
 $app->mount('/client/', new Spika\Controller\Web\Client\EmoticonController());

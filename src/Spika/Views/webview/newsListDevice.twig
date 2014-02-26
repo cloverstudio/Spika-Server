@@ -1,0 +1,18 @@
+{% extends "webview/webViewBaseForDevice.twig" %}
+
+{% block content %}
+    
+        {% for story in news %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ story.title }}<span style="float: right; font-weight: normal;">{{ story.created }}</span></div>
+                <div class="panel-body">{{ story.content }}<br />
+                    <button type="button" class="btn btn-info btn-xs" onclick="gotoStory({{ story._id }})">{{lang.labelReadMore}}</button>
+                </div>
+            </div>
+        {% endfor %}
+        
+        <div style="text-align:center">
+            {% include "webview/pager.twig" %}
+        </div>
+
+{% endblock %}

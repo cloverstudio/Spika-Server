@@ -1,0 +1,11 @@
+{% extends "webview/webViewBaseForDevice.twig" %}
+
+{% block content %}
+    
+        <div class="panel panel-default">
+            <div class="panel-heading">{{ story.title }}<span style="float: right; font-weight: normal;">{{ story.created }}</span></div>
+            <div class="panel-body">{{ story.content }}</div>
+        </div>
+        
+{% endblock %}
+

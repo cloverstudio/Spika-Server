@@ -1,0 +1,127 @@
+{% extends "client/adminBase.twig" %}
+
+{% block content %}
+
+<script type="text/javascript">
+
+    var loginedUser = {{ loginedUser|json_encode()|raw }};
+    var lastUserId = 0;
+    
+    function openChat(groupId){
+        console.log(groupId);
+        chatWindow.initialize();
+        chatWindow.loadGroupConversation(groupId);
+    }
+    
+    var chatWindow = null;
+    
+    $(document).ready(function() {
+        
+        $('#chatbox').height($('#list').height());
+        
+        chatWindow = new SpikaChatWindow('{{ROOT_URL}}/api',loginedUser,{
+            title:'{{lang.labelChatWindowTitle}}',
+            conversationNotSelected:'{{lang.conversationNotSelected}}',
+            btnReload:'{{lang.btnReload}}',
+            openLocation:'{{lang.openLocation}}',
+            chatTextBoxPlaceHolder:'{{lang.chatTextBoxPlaceHolder}}',
+            chatTextBoxSend:'{{lang.chatTextBoxSend}}'
+        },true,2);
+
+        chatWindow.attach($('#chatWindow'));
+        chatWindow.showAlert('{{lang.conversationNotSelected}}');
+        chatWindow.setUser(loginedUser);
+        
+    });
+    
+</script>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{lang.labelNews}} <a href="add" class="btn btn-primary btn-lg">{{lang.btnNewNews}}</a></h1>
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-lg-12">
+                     {% include "client/alerts.twig" %}
+                </div>
+            </div>
+                    
+           <div class="row">
+                <div id="list" class="col-lg-8" style="min-height:500px">
+                    
+                    <div style="text-align:right">
+                        {% include "client/pager.twig" %}
+                    </div>
+                    
+                    <table class="table table-striped">
+                        
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>{{lang.formNewsTitle}}</th>
+                                <th>{{lang.formNewsBody}}</th>
+                                <th>{{lang.formNewsCreated}}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        
+                            {% for story in news %}
+
+                                <tr>
+                                    <td>{{story._id}}</td>
+                                    <td>{{story.title}}</td>
+                                    <td>{{story.content}}</td>
+                                    <td>{{story.created}}</td>
+                                    <td>
+                                        
+                                        <div class="btn-group text-left" >
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                {{lang.labelAction}} <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li>
+                                                    <a href="{{ROOT_URL}}/client/news/view/{{story._id}}">
+                                                        <i class="fa fa-search"></i> {{lang.labelView}}
+                                                    </a>
+                                                </li>
+                                                
+                                                {% if isAdmin  or story.user_id == loginedUser._id%}
+                                                    <li>
+                                                        <a href="{{ROOT_URL}}/client/news/edit/{{story._id}}">
+                                                            <i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ROOT_URL}}/client/news/delete/{{story._id}}">
+                                                            <i class="fa fa-eraser"></i> {{lang.labelDelete}}
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                                
+                                            </ul>
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                    <div style="text-align:right">
+                        {% include "client/pager.twig" %}
+                    </div>
+
+                </div>
+                
+                <div id="chatWindow" class="col-lg-4">
+                    
+                </div>
+                
+            </div>
+                         
+{% endblock %}

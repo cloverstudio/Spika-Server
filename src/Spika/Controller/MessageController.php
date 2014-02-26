@@ -219,23 +219,24 @@ class MessageController extends SpikaBaseController
         )->before($app['beforeTokenChecker']);
         
         $controllers->get('/userMessages/{toUserId}/{count}/{offset}',
+        
             function ($toUserId = "",$count = 30,$offset = 0) use ($app,$self) {
 
                 $currentUser = $app['currentUser'];
-                $ownerUserId = $currentUser['_id'];
+                $loginedUserId = $currentUser['_id'];
                 
                 $count = intval($count);
                 $offset = intval($offset);
                 
-                if(empty($ownerUserId) || empty($toUserId))
+                if(empty($loginedUserId) || empty($toUserId))
                     return $self->returnErrorResponse("failed to get message");
                     
-                $result = $app['spikadb']->getUserMessages($ownerUserId,$toUserId,$count,$offset);
+                $result = $app['spikadb']->getUserMessages($loginedUserId,$toUserId,$count,$offset);
 
                 if($result == null)
                      return $self->returnErrorResponse("failed to get message");
                      
-                $app['spikadb']->clearActivitySummary($ownerUserId, ACTIVITY_SUMMARY_DIRECT_MESSAGE, $toUserId);
+                $app['spikadb']->clearActivitySummary($loginedUserId, ACTIVITY_SUMMARY_DIRECT_MESSAGE, $toUserId);
                 
                 if(is_array($result) && count($result['rows']) > 0)
                     $result['rows'] = $self->fileterMessage($result['rows'],$app['spikadb']);
@@ -246,9 +247,10 @@ class MessageController extends SpikaBaseController
                     $toUserId = $message['value']['to_user_id'];
                     $readAt = $message['value']['read_at'];
                     
-                    if($readAt == 0 && $toUserId = $ownerUserId){
+                    if($readAt == 0 && $toUserId == $loginedUserId){                        
                         $app['spikadb']->updateReadAt($message['id']);
                     }
+                    
                 }
                 
                 return json_encode($result);

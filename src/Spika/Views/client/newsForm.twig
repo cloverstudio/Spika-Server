@@ -65,6 +65,17 @@
                         </div>
                         
                         <div class="form-group">
+                            <label>{{lang.formStoryUrl}}</label>
+                            
+                            {% if mode == 'new' or mode == 'edit'%}
+                                <input class="form-control" name="story_url" value="{{formValues.story_url}}">
+                            {% else %}
+                                <div class="well">{{formValues.story_url}}</div>
+                            {% endif %}
+                            
+                        </div>
+                        
+                        <div class="form-group">
                             <label>{{lang.formStoryContent}}</label>
                                 {% if mode == 'new' or mode == 'edit' %}<span class="text-danger">{{lang.noteRequired}}</span>{% endif %}
                             

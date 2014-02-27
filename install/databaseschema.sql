@@ -166,6 +166,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `user_id` int(11) NOT NULL,
   `title` varchar(255) COLLATE utf8_bin NOT NULL,
   `content` text COLLATE utf8_bin NOT NULL,
+  `story_url` text COLLATE utf8_bin NOT NULL,
   `created` int(11) NOT NULL,
   `modified` int(11) NOT NULL,
   PRIMARY KEY (`_id`),

@@ -1786,6 +1786,7 @@ class MySQL implements DbInterface
         
     }
     
+    //************************NEWS database logic
     public function findStoriesCount()
     {
     	$query = "select count(*) as count from `news`";
@@ -1824,12 +1825,13 @@ class MySQL implements DbInterface
     	return $story;
     }
     
-    public function createStory($title,$content,$user_id){
+    public function createStory($title,$content,$user_id,$story_url){
     
     
     	$newsData = array(
     			'title' => $title,
     			'content' => $content,
+    			'story_url' => $story_url,
     			'user_id' => $user_id,
     			'modified' => time(),
     			'created' => time()
@@ -1854,7 +1856,7 @@ class MySQL implements DbInterface
     	return $this->formatRow($story);
     }
     
-    public function updateStory($storyId,$title,$content){
+    public function updateStory($storyId,$title,$content,$story_url){
     
     	$now = time();
     
@@ -1862,11 +1864,13 @@ class MySQL implements DbInterface
     			'update `news` set
                     title = ?,
                     content = ?,
+    				story_url = ?,
     				modified = ?
                     WHERE _id = ?',
     			array(
     					$title,
     					$content,
+    					$story_url,
     					time(),
     					$storyId));
     

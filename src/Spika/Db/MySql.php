@@ -336,7 +336,17 @@ class MySQL implements DbInterface
     public function getActivitySummary($user_id)
     {
 
-        $myNotifications = $this->DB->fetchAll('select * from notification where user_id = ? order by modified desc',array($user_id));
+        $myNotifications = $this->DB->fetchAll('
+            select 
+                notification.*,
+                user.avatar_thumb_file_id,
+                user.name
+            from notification  
+                left join user on notification.from_user_id = user._id
+            where user_id = ?
+            order by modified desc',array($user_id));
+        
+        $this->logger->addDebug(print_r($myNotifications,true));
         
         $directMessages = array();
         $groupMessages = array();
@@ -386,6 +396,7 @@ class MySQL implements DbInterface
                     'count' => $row['count'],
                     'messages' => array(array(
                         'from_user_id' => $row['from_user_id'],
+                        'avatar_thumb_file_id' => $row['avatar_thumb_file_id'],
                         'message' => $row['message'],
                         'user_image_url' => $row['user_image_url'],
                         'modified' => intval($row['modified'])
@@ -412,6 +423,7 @@ class MySQL implements DbInterface
                     'count' => $row['count'],
                     'messages' => array(array(
                         'from_user_id' => $row['from_user_id'],
+                        'avatar_thumb_file_id' => $row['avatar_thumb_file_id'],
                         'message' => $row['message'],
                         'user_image_url' => $row['user_image_url'],
                         'modified' => intval($row['modified'])

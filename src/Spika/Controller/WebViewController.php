@@ -58,11 +58,13 @@ class WebViewController extends SpikaBaseController
         			$news[$i]['content'] = substr($news[$i]['content'], 0, 200)."...";
         		}
         	}
-        
+        	
+        	$lang=$self->language;
+        	
         	return $app['twig']->render('webview/newsListDevice.twig', array(
         			'news' => $news,
         			'ROOT_URL' => ROOT_URL,
-        			'lang' => $this->language,
+        			'lang' => $lang,
         			'pager' => array(
         					'baseURL' => ROOT_URL . "/api/webview/news/list?page=",
         					'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
@@ -83,7 +85,7 @@ class WebViewController extends SpikaBaseController
         	return $app['twig']->render('webview/newsViewDevice.twig', array(
         			'story' => $story,
         			'ROOT_URL' => ROOT_URL,
-        			'lang' => $this->language
+        			'lang' => $self->language
         	));
         
         });

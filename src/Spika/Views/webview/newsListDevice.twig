@@ -4,14 +4,16 @@
     
         {% for story in news %}
             <div class="panel panel-default">
-                <div class="panel-heading">{{ story.title }}<span style="float: right; font-weight: normal;">{{ story.created }}</span></div>
-                <div class="panel-body">{{ story.content }}<br />
-                    {% if story.story_url == '' %}
-                        <button type="button" class="btn btn-info btn-xs" onclick="gotoStory({{ story._id }})">{{lang.labelReadMore}}</button>
-                    {% else %}
-                        <button type="button" class="btn btn-info btn-xs" onclick="gotoLink('{{ story.story_url }}')">{{lang.labelReadMore}}</button>
-                    {% endif %}
-                </div>
+           		{% autoescape false %}
+	                <div class="panel-heading">{{ story.title }}<span style="float: right; font-weight: normal;">{{ story.created }}</span></div>
+	                <div class="panel-body">{{ story.content }}<br />
+	                    {% if story.story_url == '' %}
+	                        <button type="button" class="btn btn-info btn-xs" onclick="gotoStory({{ story._id }})">{{lang.labelReadMore}}</button>
+	                    {% else %}
+	                        <button type="button" class="btn btn-info btn-xs" onclick="gotoLink('{{ story.story_url }}')">{{lang.labelReadMore}}</button>
+	                    {% endif %}
+	                </div>
+                {% endautoescape %}
             </div>
         {% endfor %}
         

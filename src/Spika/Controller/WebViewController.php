@@ -70,7 +70,7 @@ class WebViewController extends SpikaBaseController
         			),
         	));
         
-        })->before($app['beforeTokenChecker']);
+        });
         
         $controllers->get('webview/news/view/{id}', function (Request $request, $id) use ($app,$self) {
         
@@ -86,7 +86,7 @@ class WebViewController extends SpikaBaseController
         			'lang' => $this->language
         	));
         
-        })->before($app['beforeTokenChecker']);
+        });
         
         return $controllers;
         

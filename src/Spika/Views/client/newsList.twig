@@ -60,8 +60,9 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>{{lang.formNewsTitle}}</th>
+                                <th style="width: 150px;">{{lang.formNewsTitle}}</th>
                                 <th>{{lang.formNewsBody}}</th>
+                                <th  style="width: 90px;">{{lang.formNewsUrl}}</th>
                                 <th>{{lang.formNewsCreated}}</th>
                                 <th></th>
                             </tr>
@@ -74,6 +75,11 @@
                                     <td>{{story._id}}</td>
                                     <td>{{story.title}}</td>
                                     <td>{{story.content}}</td>
+                                    {% if story.story_url != '' %}
+                                        <td><a href="{{story.story_url}}">Story Url</a>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
                                     <td>{{story.created}}</td>
                                     <td>
                                         

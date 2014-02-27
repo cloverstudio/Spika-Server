@@ -108,7 +108,8 @@ class NewsController extends SpikaWebBaseController
                 $result = $self->app['spikadb']->createStory(
                     $formValues['title'],
                     $formValues['content'],
-                	$self->loginedUser['_id']
+                	$self->loginedUser['_id'],
+                	$formValues['story_url']
                 );
                 
                 return $app->redirect(ROOT_URL . '/client/news/list?msg=messageNewsAdded');
@@ -183,7 +184,7 @@ class NewsController extends SpikaWebBaseController
                     $id,
                     $formValues['title'],
                     $formValues['content'],
-                    $formValues['description']
+                    $formValues['story_url']
                 );
                 
                 return $app->redirect(ROOT_URL . '/client/news/list?msg=messageNewsChanged');
@@ -249,6 +250,7 @@ class NewsController extends SpikaWebBaseController
         			'user_id'=>'',
                     'title'=>'',
                     'content'=>'',
+        			'story_url'=>'',
         			'modified'=>'',
                     'created'=>'',                  
                 );

@@ -1099,7 +1099,7 @@ class MySQL implements DbInterface
     public function findGroupByName($name)
     {
         $name = strtolower($name);
-        $group = $this->DB->fetchAssoc('select * from `group` where LOWER(name) = )',array($name));
+        $group = $this->DB->fetchAssoc('select * from `group` where LOWER(name) = ?',array($name));
         
         if(isset($group['_id']))
             $group = $this->reformatGroupData($group);

@@ -237,9 +237,9 @@ class MySQL implements DbInterface
         
         //calc birthday range ( can be better )
         $toDate = time() - $yearIntervalInSec * $agefrom;
-
+        
         if(!empty($name)){
-            $query .= " and name like :name "; 
+            $query .= " and LOWER(name) like :name "; 
         }
         
         if(!empty($gender)){
@@ -257,6 +257,7 @@ class MySQL implements DbInterface
         $stmt = $this->DB->prepare($query);
 
         if(!empty($name)){
+            $name = strtolower($name);
             $stmt->bindValue("name", "%{$name}%");
         }
         
@@ -1097,7 +1098,8 @@ class MySQL implements DbInterface
 
     public function findGroupByName($name)
     {
-        $group = $this->DB->fetchAssoc('select * from `group` where LOWER(name) = LOWER(?)',array($name));
+        $name = strtolower($name);
+        $group = $this->DB->fetchAssoc('select * from `group` where LOWER(name) = )',array($name));
         
         if(isset($group['_id']))
             $group = $this->reformatGroupData($group);

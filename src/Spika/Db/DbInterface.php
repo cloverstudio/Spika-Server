@@ -52,32 +52,28 @@ interface DbInterface
     public function addPassworResetRequest($toUserId);
     public function getPassworResetRequest($requestCode);
     public function changePassword($userId,$newPassword);
-    
     public function findUserCount();
     public function findAllUsersWithPaging($offect,$count);
     public function deleteUser($id);
-
     public function createGroupCategory($title,$picture);
     public function findAllGroupCategoryWithPaging($offect,$count);
     public function findGroupCategoryCount();
     public function findGroupCategoryById($id);
     public function updateGroupCategory($id,$title,$picture);
     public function deleteGroupCategory($id);
-    
     public function createEmoticon($identifier,$picture);
     public function findAllEmoticonsWithPaging($offect,$count);
     public function findEmoticonCount();
     public function findEmoticonById($id);
     public function updateEmoticon($id,$title,$picture);
     public function deleteEmoticon($id);
-
     public function getMessageCount();
     public function getLastLoginedUsersCount();
-
     public function setMessageDelete($messageId,$deleteType,$deleteAt,$deleteAfterShownFlag);
     public function deleteMessage($messageId);
-    
     public function getConversationHistory($user,$offset = 0,$count);
     public function getConversationHistoryCount($user);
     public function updateReadAt($messageId);
+    public function getAllUsersByGroupId($groupId);
+    
 }

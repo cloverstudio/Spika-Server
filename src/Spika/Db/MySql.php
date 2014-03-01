@@ -346,9 +346,7 @@ class MySQL implements DbInterface
                 left join user on notification.from_user_id = user._id
             where user_id = ?
             order by modified desc',array($user_id));
-        
-        $this->logger->addDebug(print_r($myNotifications,true));
-        
+                
         $directMessages = array();
         $groupMessages = array();
         
@@ -1914,4 +1912,10 @@ class MySQL implements DbInterface
     	);
     }
     
+    public function getAllUsersByGroupId($groupId){
+        $users = $this->DB->fetchAll('select * from user where _id in (select user_id from user_group where group_id = ?)',
+                                        array($groupId));
+                                        
+        return $users;
+    }
 }

@@ -53,6 +53,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     )
 ));
 
+
 $app->register(new Spika\Provider\SpikaDbServiceProvider(), array(
 ));
 
@@ -64,6 +65,16 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app->register(new Silex\Provider\SessionServiceProvider(), array(
 ));
+
+$app->register(new Spika\Provider\PushNotificationProvider(), array(
+    'pushnotification.options' => array (
+            'GCMAPIKey'    => GCM_API_KEY,
+            'APNProdPem'   => __DIR__.'/../'.APN_DEV_CERT_PATH,
+            'APNDevPem'    => __DIR__.'/../'.APN_DEV_CERT_PATH
+    )
+));
+
+
 
 $app['adminBeforeTokenChecker'] = $app->share(function () use ($app) {
     return new Spika\Middleware\AdminChecker(

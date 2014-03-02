@@ -1,10 +1,13 @@
 <?php
+
 namespace Spika\Provider;
 
 use Spika\Db\CouchDb;
 use Spika\Db\MySql;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
+
+define('SP_TIMEOUT',10);
 
 class PushNotificationProvider implements ServiceProviderInterface
 {
@@ -13,11 +16,13 @@ class PushNotificationProvider implements ServiceProviderInterface
         
         $self = $this;
         
-        $app['sendProdAPN'] = $app->protect(function($tokens,$payload) use ($self,$app) {           
+        $app['sendProdAPN'] = $app->protect(function($tokens,$payload) use ($self,$app) {     
+            $app['monolog']->addDebug("start sending production APN");      
             $self->sendAPN($app['pushnotification.options']['APNProdPem'],$tokens,$payload,'ssl://gateway.push.apple.com:2195',$app);
         });
        
         $app['sendDevAPN'] = $app->protect(function($tokens,$payload) use ($self,$app) {           
+            $app['monolog']->addDebug("start sending dev APN");      
             $self->sendAPN($app['pushnotification.options']['APNDevPem'],$tokens,$payload,'ssl://gateway.sandbox.push.apple.com:2195',$app);
         });
        
@@ -29,6 +34,28 @@ class PushNotificationProvider implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
+    }
+    
+    public function connectToAPN($cert,$host,$app){
+        
+        $app['monolog']->addDebug("connecting to APN");
+        
+        $ctx = stream_context_create();
+        stream_context_set_option($ctx, 'ssl', 'local_cert', $cert);
+        $fp = stream_socket_client($host, $err, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
+
+        if (!$fp) {
+            $app['monolog']->addDebug("Failed to connect $err $errstr");
+            $app['monolog']->addDebug("Try to recconect");
+            return $this->connectToAPN($cert,$host);
+        }
+        else {
+            //stream_set_blocking($fp, 0);
+            //stream_set_timeout($fp,SP_TIMEOUT);
+        }
+        
+        $app['monolog']->addDebug("connecting to APN - success !");
+        return $fp;
     }
     
     public function sendAPN($cert, $deviceTokens, $payload, $host, $app){
@@ -47,24 +74,14 @@ class PushNotificationProvider implements ServiceProviderInterface
                         );
 
         if(count($deviceTokens) == 0) return;
-
-        $ctx = stream_context_create();
-        stream_context_set_option($ctx, 'ssl', 'local_cert', $cert);
-        $fp = stream_socket_client($host, $err, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
-
-        if (!$fp) {
-            $app['monolog']->addDebug("Failed to connect $err $errstr");
-            return;
-        }
-        else {
-            stream_set_blocking($fp, 0);
-            stream_set_timeout($fp,SP_TIMEOUT);
-        }
-
+        
+        $fp = $this->connectToAPN($cert,$host,$app);
+        $size = 0;
+        
         foreach($deviceTokens as $index => $deviceToken){
             
-            $app['monolog']->addDebug("sending " . $index . "/" . count($deviceTokens));
-            
+            $app['monolog']->addDebug("sending " . $index . "/" . count($deviceTokens) . " size : {$size}");
+
             $identifiers = array();
             for ($i = 0; $i < 4; $i++) {
                 $identifiers[$i] = rand(1, 100);
@@ -73,56 +90,47 @@ class PushNotificationProvider implements ServiceProviderInterface
             $msg = chr(1) . chr($identifiers[0]) . chr($identifiers[1]) . chr($identifiers[2]) . chr($identifiers[3]) . pack('N', time() + 3600) 
                     . chr(0) . chr(32) . pack('H*', str_replace(' ', '', $deviceToken)) . pack("n",strlen($payload)) . $payload;
     
+            $size += strlen($payload);
             
             $result = fwrite($fp, $msg);
             
+            if($size >= 5120){
+                // if sent more than 5120B reconnect again
+                $fp = $this->connectToAPN($cert,$host,$app);
+                sleep(1);
+            }
+
             if(!$result){
                 
             }else{
-    
+            
                 $read = array($fp);
                 $null = null;
                 $changedStreams = stream_select($read, $null, $null, 0, 1000000);
     
                 if ($changedStreams === false) {    
                     $app['monolog']->addDebug("Error: Unabled to wait for a stream availability");
-                    return false;
     
                 } elseif ($changedStreams > 0) {
     
-                    $responseBinary = fread($fp, 6);
-    
-                    if ($responseBinary !== false || strlen($responseBinary) == 6) {
-    
-                            $response = unpack('Ccommand/Cstatus_code/Nidentifier', $responseBinary);
-                            $response['error_message'] = $apn_status[$response['status_code']];
-                            $result = json_encode($response);
-    
-                    }
-                    
-                    // if failed connect again
-                    $ctx = stream_context_create();
-                    stream_context_set_option($ctx, 'ssl', 'local_cert', $cert);
-                    $fp = stream_socket_client($host, $err, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
-                    
-                    if (!$fp) {
-                        $app['monolog']->addDebug("Failed to connect $err $errstr");
-                        return;
-                    }
-                    else {
-                        $app['monolog']->addDebug("connect again");
-                        stream_set_blocking($fp, 0);
-                        stream_set_timeout($fp,SP_TIMEOUT);
-                    }
+                    $result = "failed";
 
 
                 } else {
                     $result = "succeed";
                 }
+                
+                if($result != 'succeed'){
+                    // if failed connect again
+                    $fp = $this->connectToAPN($cert,$host,$app);
+                    sleep(1);
+                }
+
     
             }
 
             $app['monolog']->addDebug("{$deviceToken}   " . $result);
+            
         }
         
 

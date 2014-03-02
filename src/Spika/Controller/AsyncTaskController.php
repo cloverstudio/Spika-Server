@@ -28,6 +28,8 @@ class AsyncTaskController extends SpikaBaseController
 
         $controllers->post('/notifyNewDirectMessage', function (Request $request) use ($self,$app) {
             
+            set_time_limit(60 * 10);
+            
             $host = $request->getHttpHost();
             if($host != "localhost"){
                 return $self->returnErrorResponse("invalid access to internal API");
@@ -60,8 +62,8 @@ class AsyncTaskController extends SpikaBaseController
                 $body['data'] =array('from' => $fromUserId);
                 $payload = json_encode($body);
 
-                $app['sendDevAPN'](array($toUser['ios_push_token']),$payload);
                 $app['sendProdAPN'](array($toUser['ios_push_token']),$payload);
+                $app['sendDevAPN'](array($toUser['ios_push_token']),$payload);
             }
 
             // send Android push notification
@@ -89,6 +91,8 @@ class AsyncTaskController extends SpikaBaseController
         });
 
         $controllers->post('/notifyNewGroupMessage', function (Request $request) use ($self,$app) {
+
+            set_time_limit(60 * 10);
 
             $host = $request->getHttpHost();
             if($host != "localhost"){
@@ -122,8 +126,6 @@ class AsyncTaskController extends SpikaBaseController
                         
             }
             
-            $app['monolog']->addDebug(print_r($androidTokens,true));
-            
             $fromUserData = $app['spikadb']->findUserById($message['from_user_id']);
             $toGroupData = $app['spikadb']->findGroupById($message['to_group_id']);
             $pushMessage = sprintf(GROUPMESSAGE_NOTIFICATION_MESSAGE . "  test ",$fromUserData['name'],$toGroupData['name']);
@@ -147,9 +149,8 @@ class AsyncTaskController extends SpikaBaseController
             $body['data'] =array('type' => 'group','to_group' => $message['to_group_id']);
             $payload = json_encode($body);
 
-            $app['sendDevAPN']($iosTokens,$payload);
             $app['sendProdAPN']($iosTokens,$payload);
-            
+            $app['sendDevAPN']($iosTokens,$payload);
             
             
             return "";

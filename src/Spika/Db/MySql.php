@@ -1912,6 +1912,64 @@ class MySQL implements DbInterface
     	);
     }
     
+    public function addCommentForStory($comment,$user_id,$user_name,$story_id){
+    	
+    	$commentData = array();
+    	$commentData['story_id'] = $story_id;
+    	$commentData['user_id'] = $user_id;
+    	$commentData['comment'] = $comment;
+    	$commentData['user_name'] = $user_name;
+    	$commentData['created'] = time();
+    	
+    	if($this->DB->insert('news_comment',$commentData)){
+    		return array(
+    				'ok' => 1,
+    				'id' => $this->DB->lastInsertId("_id")
+    		);
+    	}else{
+    		return null;
+    	}
+    }
+    
+    public function getStoryCommentCount($storyId){
+    	$query = "select count(*) as count from news_comment where story_id = ?";
+    	
+    	$result = $this->DB->fetchColumn($query, array($storyId));
+    	
+    	return $result;
+    }
+    
+    public function getCommentsForStory($storyId,$offset = 0,$count=0)
+    {
+    	 
+    	$query = "select * from news_comment where story_id =? ";
+    	 
+    	if($count != 0){
+    		$query .= " limit {$count} offset {$offset} ";
+    	}
+    	 
+    	$result = $this->DB->fetchAll($query, array($storyId));
+    	 
+    	$formatedComments = array();
+    	
+    	foreach($result as $comment){
+    		$comment = $this->reformatCommentData($comment);
+    		$formatedComments[] = $comment;
+    	}
+    
+    	return $formatedComments;
+    
+    }
+    
+    public function getAvatarOfUser($user_id){
+
+    	$query = "select avatar_thumb_file_id from user where _id =? ";
+    	
+    	$result=$this->DB->fetchAssoc($query, array($user_id));
+    	
+    	return $result['avatar_thumb_file_id'];
+    }
+    
     public function getAllUsersByGroupId($groupId){
         $users = $this->DB->fetchAll('select * from user where _id in (select user_id from user_group where group_id = ?)',
                                         array($groupId));

@@ -173,3 +173,15 @@ CREATE TABLE IF NOT EXISTS `news` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+DROP TABLE IF EXISTS `news_comment`;
+CREATE TABLE IF NOT EXISTS `news_comment` (
+  `_id` int(11) NOT NULL AUTO_INCREMENT,
+  `story_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `comment` text COLLATE utf8_bin NOT NULL,
+  `created` int(11) NOT NULL,
+  PRIMARY KEY (`_id`),
+  KEY `story_id` (`story_id`,`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+

@@ -55,6 +55,7 @@ class StaticPageController extends SpikaWebBaseController
     			));
             }
         
+            $app['session']->set('user', $user);
 			
 			return $app['twig']->render("static/information.twig", array(
 			    'ROOT_URL' => ROOT_URL,

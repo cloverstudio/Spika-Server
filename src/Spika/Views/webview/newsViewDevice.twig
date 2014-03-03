@@ -2,12 +2,53 @@
 
 {% block content %}
     
+        {% set isNew=1 %}
+        {% include "webview/nav_bar.twig" %}
+      
         <div class="panel panel-default">
          	{% autoescape false %}
-	            <div class="panel-heading">{{ story.title }}<span style="float: right; font-weight: normal;">{{ story.created }}</span></div>
+	            <div class="panel-heading"  style="overflow: hidden;">{{ story.title }}<span style="float: right; font-weight: normal;">{{ story.created }}</span></div>
 	            <div class="panel-body">{{ story.content }}</div>
 	        {% endautoescape %}
         </div>
+        
+        <div class="alert_wrapper">
+            {% include "webview/alerts.twig" %}
+        </div>
+        
+        <div style="margin: 20px;" id="comment_wrapper">
+            {% for com in comments %}
+                <div class="media">
+                    <a class="pull-left" href="#">
+                        {% if com.avatar != '' %}
+                            <img class="media-object" src="{{ROOT_URL}}/api/filedownloader?file={{com.avatar}}" alt="" title="" />
+                        {% else %}
+                            <img class="media-object" src="http://dummyimage.com/120x120/e2e2e2/7a7a7a&text=nopicture" alt="" title="" />
+                        {% endif %}
+                    </a>
+                    <div class="media-body">
+                        <div style="overflow: hidden;">
+                            <h5 class="media-heading" style="font-weight: bold;float: left">{{com.user_name}}</h5>
+                            <span style="float: right; font-weight: normal; font-size: 10px; line-height: 15px; vertical-align: middle; color: #A0A0A0">{{ com.created }}</span>
+                        </div>
+                        {{com.comment}}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div style="text-align:center">
+            {% include "webview/pager.twig" %}
+        </div>
+        
+        <form method="post" action="{{ROOT_URL}}/api/webview/news/sendComment/storyid/{{story._id}}?list_page={{list_page}}">
+            <div class="input-group" style="margin-left: 20px; margin-right: 20px; margin-bottom: 20px;">    
+                <input type="text" class="form-control" name="comment_text" placeholder="{{lang.labelEnterComment}}">
+                <span class="input-group-btn">
+                    <button class="btn btn-success" type="submit">{{lang.chatTextBoxSend}}</button>
+                </span>
+            </div>
+        </form>
         
 {% endblock %}
 

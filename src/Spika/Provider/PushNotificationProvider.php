@@ -16,13 +16,11 @@ class PushNotificationProvider implements ServiceProviderInterface
         
         $self = $this;
         
-        $app['sendProdAPN'] = $app->protect(function($tokens,$payload) use ($self,$app) {     
-            $app['monolog']->addDebug("start sending production APN");      
+        $app['sendProdAPN'] = $app->protect(function($tokens,$payload) use ($self,$app) {
             $self->sendAPN($app['pushnotification.options']['APNProdPem'],$tokens,$payload,'ssl://gateway.push.apple.com:2195',$app);
         });
        
         $app['sendDevAPN'] = $app->protect(function($tokens,$payload) use ($self,$app) {           
-            $app['monolog']->addDebug("start sending dev APN");      
             $self->sendAPN($app['pushnotification.options']['APNDevPem'],$tokens,$payload,'ssl://gateway.sandbox.push.apple.com:2195',$app);
         });
        
@@ -38,7 +36,7 @@ class PushNotificationProvider implements ServiceProviderInterface
     
     public function connectToAPN($cert,$host,$app){
         
-        $app['monolog']->addDebug("connecting to APN");
+        $app['monolog']->addDebug("connecting to APN cert : {$cert}");
         
         $ctx = stream_context_create();
         stream_context_set_option($ctx, 'ssl', 'local_cert', $cert);
@@ -54,7 +52,6 @@ class PushNotificationProvider implements ServiceProviderInterface
             //stream_set_timeout($fp,SP_TIMEOUT);
         }
         
-        $app['monolog']->addDebug("connecting to APN - success !");
         return $fp;
     }
     
@@ -80,8 +77,6 @@ class PushNotificationProvider implements ServiceProviderInterface
         
         foreach($deviceTokens as $index => $deviceToken){
             
-            $app['monolog']->addDebug("sending " . $index . "/" . count($deviceTokens) . " size : {$size}");
-
             $identifiers = array();
             for ($i = 0; $i < 4; $i++) {
                 $identifiers[$i] = rand(1, 100);
@@ -99,11 +94,14 @@ class PushNotificationProvider implements ServiceProviderInterface
                 $fp = $this->connectToAPN($cert,$host,$app);
                 sleep(1);
             }
-
-            if(!$result){
-                
-            }else{
             
+            
+            if(!$result){
+                 $app['monolog']->addDebug("{$deviceToken} succeed");
+                 
+            }else{
+                
+                
                 $read = array($fp);
                 $null = null;
                 $changedStreams = stream_select($read, $null, $null, 0, 1000000);
@@ -112,12 +110,25 @@ class PushNotificationProvider implements ServiceProviderInterface
                     $app['monolog']->addDebug("Error: Unabled to wait for a stream availability");
     
                 } elseif ($changedStreams > 0) {
+                    
+                    $responseBinary = fread($fp, 6);
     
-                    $result = "failed";
-
-
+                    if ($responseBinary !== false || strlen($responseBinary) == 6) {
+                        $response = unpack('Ccommand/Cstatus_code/Nidentifier', $responseBinary);
+                        $result = $apn_status[$response['status_code']];
+                        $app['monolog']->addDebug("{$deviceToken} failed {$result}");
+                        
+                    } else {
+                        
+                        $app['monolog']->addDebug("{$deviceToken} failed");
+                        
+                    }
+                    
                 } else {
-                    $result = "succeed";
+                    
+                    $result = 'succeed';
+                    $app['monolog']->addDebug("{$deviceToken} succeed");
+                    
                 }
                 
                 if($result != 'succeed'){
@@ -129,7 +140,6 @@ class PushNotificationProvider implements ServiceProviderInterface
     
             }
 
-            $app['monolog']->addDebug("{$deviceToken}   " . $result);
             
         }
         

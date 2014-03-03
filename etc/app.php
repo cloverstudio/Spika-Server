@@ -69,7 +69,7 @@ $app->register(new Silex\Provider\SessionServiceProvider(), array(
 $app->register(new Spika\Provider\PushNotificationProvider(), array(
     'pushnotification.options' => array (
             'GCMAPIKey'    => GCM_API_KEY,
-            'APNProdPem'   => __DIR__.'/../'.APN_DEV_CERT_PATH,
+            'APNProdPem'   => __DIR__.'/../'.APN_PROD_CERT_PATH,
             'APNDevPem'    => __DIR__.'/../'.APN_DEV_CERT_PATH
     )
 ));

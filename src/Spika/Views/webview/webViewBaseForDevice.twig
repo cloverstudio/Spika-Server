@@ -17,13 +17,27 @@
     <link href="{{ROOT_URL}}/assets/css/sb-device.css" rel="stylesheet">
         
     <script type="text/javascript">
-        function gotoStory(id){
-            window.location = "{{ROOT_URL}}/api/webview/news/view/"+id;
+        function gotoStory(id, page){
+            window.location = "{{ROOT_URL}}/api/webview/news/view/"+id+"?list_page="+page;
         }
-        function gotoLink(link){
-            window.location = link;
+        function backToList(page){
+            window.location = "{{ROOT_URL}}/api/webview/news/list?page="+page;
+        }
+        function backToInfo(token){
+            window.location = "{{ROOT_URL}}/page/information/"+token;
+        }
+        function gotoLink(link, id, page){
+            if(link.indexOf("http") != -1){
+                window.location = link;
+                return;
+            }
+            window.location = "{{ROOT_URL}}/api/webview/news/view/"+id+"?list_page="+page;
         }
     </script>
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="{{ROOT_URL}}/assets/js/jquery-1.10.2.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/bootstrap.min.js"></script>
 
 </head>
 

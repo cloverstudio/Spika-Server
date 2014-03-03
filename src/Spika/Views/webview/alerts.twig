@@ -1,0 +1,14 @@
+                        
+                        {% if infoMessage != '' %}
+                            <div class="alert alert-success alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                {{infoMessage}}
+                            </div>                      
+                        {% endif %}
+                        
+                        {% if errorMessage != '' %}
+                            <div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                {{errorMessage}}
+                            </div>
+                        {% endif %}

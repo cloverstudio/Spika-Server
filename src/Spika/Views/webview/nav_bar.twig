@@ -1,0 +1,15 @@
+	
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+            <div class="container-fluid" style="padding: 15px 20px 15px 20px; text-align: center;">
+		{% if isNew is defined %}
+                    <button type="button" class="btn btn-default btn-xs navbar-left" style="float: left;" onclick="backToList({{list_page}})">{{lang.labelBack}}</button>
+		    <span style="margin-left: 20px; margin-right: 60px;">Story</span>
+	        {% else %}
+                    <button type="button" class="btn btn-default btn-xs navbar-left" style="float: left;" onclick="backToInfo('{{token}}')">{{lang.labelBack}}</button>
+		    <span style="margin-left: 20px; margin-right: 60px;">News</span>
+	        {% endif %}
+                
+		<!-- is use this button then set margin right off span to 20px -->
+                <!--<button type="button" class="btn btn-default btn-xs navbar-right" style="float: right;">Back</button>-->
+            </div>
+        </nav>

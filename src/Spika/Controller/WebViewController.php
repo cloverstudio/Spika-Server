@@ -54,7 +54,8 @@ class WebViewController extends SpikaWebBaseController
         	
         	$lang=$self->language;
         	
-        	$token=$app['session']->get('user')['token'];
+        	$user = $app['session']->get('user');
+        	$token=$user['token'];
         	
         	return $app['twig']->render('webview/newsListDevice.twig', array(
         			'news' => $news,

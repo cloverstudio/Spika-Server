@@ -11,12 +11,12 @@
  
  
 /* change here */
-define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://localhost:8080/wwwroot");
-define('LOCAL_ROOT_URL', isset($_ENV['SPIKA_LOCAL_ROOT_URL']) ? $_ENV['SPIKA_LOCAL_ROOT_URL'] : "http://localhost/wwwroot");
+define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://officialapi.spikaapp.com/");
+define('LOCAL_ROOT_URL', isset($_ENV['SPIKA_LOCAL_ROOT_URL']) ? $_ENV['SPIKA_LOCAL_ROOT_URL'] : "http://localhost/projects/spika_orig/Spika-Server/wwwroot");
 define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "localhost");
-define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "spikadb");
+define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "spika_orig");
 define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "root");
-define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "yourpassword");
+define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "cloverpass013");
 /* end change here */
 define('AdministratorEmail', isset($_ENV['SPIKA_AdministratorEmail']) ? $_ENV['SPIKA_AdministratorEmail'] : "admin@spikaapp.com");
 
@@ -40,6 +40,6 @@ define("APN_DEV_CERT_PATH", "files/apns-dev.pem");
 define("APN_PROD_CERT_PATH", "files/apns-prod.pem");
 define("GCM_API_KEY","AIzaSyDOkqeO0MZ_igwH_zGyy95DO1ahM8-Ebrw");
 
-define("SEND_EMAIL_METHOD",1); // 0: dont send 1:local smtp 2:gmail
-define("GMAIL_USER",""); 
-define("GMAIL_PASSWORD",""); 
+define("SEND_EMAIL_METHOD",2); // 0: dont send 1:local smtp 2:gmail
+define("GMAIL_USER","spika@clover-studio.com"); 
+define("GMAIL_PASSWORD","cloverpass013"); 

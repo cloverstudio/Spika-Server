@@ -237,9 +237,9 @@ class MySQL implements DbInterface
         
         //calc birthday range ( can be better )
         $toDate = time() - $yearIntervalInSec * $agefrom;
-
+        
         if(!empty($name)){
-            $query .= " and name like :name "; 
+            $query .= " and LOWER(name) like :name "; 
         }
         
         if(!empty($gender)){
@@ -257,6 +257,7 @@ class MySQL implements DbInterface
         $stmt = $this->DB->prepare($query);
 
         if(!empty($name)){
+            $name = strtolower($name);
             $stmt->bindValue("name", "%{$name}%");
         }
         
@@ -345,9 +346,7 @@ class MySQL implements DbInterface
                 left join user on notification.from_user_id = user._id
             where user_id = ?
             order by modified desc',array($user_id));
-        
-        $this->logger->addDebug(print_r($myNotifications,true));
-        
+                
         $directMessages = array();
         $groupMessages = array();
         
@@ -1097,7 +1096,8 @@ class MySQL implements DbInterface
 
     public function findGroupByName($name)
     {
-        $group = $this->DB->fetchAssoc('select * from `group` where LOWER(name) = LOWER(?)',array($name));
+        $name = strtolower($name);
+        $group = $this->DB->fetchAssoc('select * from `group` where LOWER(name) = ?',array($name));
         
         if(isset($group['_id']))
             $group = $this->reformatGroupData($group);
@@ -1970,4 +1970,10 @@ class MySQL implements DbInterface
     	return $result['avatar_thumb_file_id'];
     }
     
+    public function getAllUsersByGroupId($groupId){
+        $users = $this->DB->fetchAll('select * from user where _id in (select user_id from user_group where group_id = ?)',
+                                        array($groupId));
+                                        
+        return $users;
+    }
 }

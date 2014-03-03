@@ -28,11 +28,12 @@ class AsyncTaskController extends SpikaBaseController
 
         $controllers->post('/notifyNewDirectMessage', function (Request $request) use ($self,$app) {
             
+            set_time_limit(60 * 10);
+            
             $host = $request->getHttpHost();
             if($host != "localhost"){
                 return $self->returnErrorResponse("invalid access to internal API");
             }
-
 
             $requestBody = $request->getContent();
             $requestData = json_decode($requestBody,true);
@@ -56,26 +57,14 @@ class AsyncTaskController extends SpikaBaseController
 
             // send iOS push notification
             if(!empty($toUser['ios_push_token'])){
+                $body = array();
+                $body['aps'] = array('alert' => $pushnotificationMessage, 'badge' => 0, 'sound' => 'default', 'value' => "");
+                $body['data'] =array('from' => $fromUserId);
+                $payload = json_encode($body);
 
-                $iosDevCertPath = __DIR__.'/../../../'.APN_DEV_CERT_PATH;
-
-                if(file_exists($iosDevCertPath)){
-
-                    $body = array();
-                    $body['aps'] = array('alert' => $pushnotificationMessage, 'badge' => 0, 'sound' => 'default', 'value' => "");
-                    $body['data'] =array('from' => $fromUserId);
-                    $payload = json_encode($body);
-
-                    $result = $self->sendAPNDev($toUser['ios_push_token'],$payload,$app);
-                    $result = $self->sendAPNProd($toUser['ios_push_token'],$payload,$app);
-
-                }else{
-                    // dev push is disabled
-                }
-
+                $app['sendProdAPN'](array($toUser['ios_push_token']),$payload);
+                $app['sendDevAPN'](array($toUser['ios_push_token']),$payload);
             }
-
-            $app['monolog']->addDebug(print_r($toUser,true));
 
             // send Android push notification
             if(!empty($toUser['android_push_token'])){
@@ -94,8 +83,7 @@ class AsyncTaskController extends SpikaBaseController
                                );
 
                 $payload = json_encode($fields);
-                $result = $self->sendGCM($payload,$app);                
-
+                $app['sendGCM']($payload,$app);
             }
 
             return "";
@@ -103,6 +91,8 @@ class AsyncTaskController extends SpikaBaseController
         });
 
         $controllers->post('/notifyNewGroupMessage', function (Request $request) use ($self,$app) {
+
+            set_time_limit(60 * 10);
 
             $host = $request->getHttpHost();
             if($host != "localhost"){
@@ -117,118 +107,57 @@ class AsyncTaskController extends SpikaBaseController
 
             $messageId = $requestData['messageId'];
             $message = $app['spikadb']->findMessageById($messageId);
-
+            
             $app['spikadb']->updateActivitySummaryByGroupMessage($message['to_group_id'],$message['from_user_id']);
+            
+            // send pushnotification too all subscribed members
+            
+            $users = $app['spikadb']->getAllUsersByGroupId($message['to_group_id']);
+            $iosTokens = array();
+            $androidTokens = array();
+            
+            foreach($users as $user){
+            
+                if(!empty($user['ios_push_token']))
+                    $iosTokens[] = $user['ios_push_token'];
+                        
+                if(!empty($user['android_push_token']))
+                    $androidTokens[] = $user['android_push_token'];
+                        
+            }
+            
+            $fromUserData = $app['spikadb']->findUserById($message['from_user_id']);
+            $toGroupData = $app['spikadb']->findGroupById($message['to_group_id']);
+            $pushMessage = sprintf(GROUPMESSAGE_NOTIFICATION_MESSAGE . "  test ",$fromUserData['name'],$toGroupData['name']);
+            
+            $fields = array(
+                            'registration_ids' => $androidTokens,
+                            'data' => array( 
+                                    "message" => $pushMessage, 
+                                    "fromUser" => $message['from_user_id'],
+                                    "fromUserName"=>$fromUserData['name'],
+                                    "type" => "group", 
+                                    "groupId" => $message['to_group_id']
+                                    ),
+                           );
 
+            $payload = json_encode($fields);
+            $app['sendGCM']($payload,$app);
+            
+            $body = array();
+            $body['aps'] = array('alert' => $pushMessage, 'badge' => 0, 'sound' => 'default', 'value' => "");
+            $body['data'] =array('type' => 'group','to_group' => $message['to_group_id']);
+            $payload = json_encode($body);
+
+            $app['sendProdAPN']($iosTokens,$payload);
+            $app['sendDevAPN']($iosTokens,$payload);
+            
+            
             return "";
 
         });
 
         return $controllers;
-
-    }
-
-
-    function sendAPNProd($deviceToken, $json) {
-        $filePath = __DIR__.'/../../../'.APN_PROD_CERT_PATH;
-        return $this->sendAPN($deviceToken,$json,$filePath,'ssl://gateway.push.apple.com:2195');
-    }
-
-    function sendAPNDev($deviceToken, $json, $app = null) {
-        $filePath = __DIR__.'/../../../'.APN_DEV_CERT_PATH;
-        return $this->sendAPN($deviceToken,$json,$filePath,'ssl://gateway.sandbox.push.apple.com:2195',$app);
-    }
-
-
-    function sendAPN($deviceToken, $json,$cert,$host,$app = null){
-
-        $apn_status = array(
-                        '0' => "No errors encountered",
-                        '1' => "Processing error",
-                        '2' => "Missing device token",
-                        '3' => "Missing topic",
-                        '4' => "Missing payload",
-                        '5' => "Invalid token size",
-                        '6' => "Invalid topic size",
-                        '7' => "Invalid payload size",
-                        '8' => "Invalid token",
-                        '255' => "unknown"
-                        );
-
-        if(strlen($deviceToken) == 0) return;
-
-        $ctx = stream_context_create();
-        stream_context_set_option($ctx, 'ssl', 'local_cert', $cert);
-
-        $fp = stream_socket_client($host, $err, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
-
-        if (!$fp) {
-            $app['monolog']->addDebug("Failed to connect $err $errstr");
-            return;
-        }
-        else {
-            stream_set_blocking($fp, 0);
-        }
-
-        $identifiers = array();
-        for ($i = 0; $i < 4; $i++) {
-            $identifiers[$i] = rand(1, 100);
-        }
-
-        $msg = chr(1) . chr($identifiers[0]) . chr($identifiers[1]) . chr($identifiers[2]) . chr($identifiers[3]) . pack('N', time() + 3600) 
-                . chr(0) . chr(32) . pack('H*', str_replace(' ', '', $deviceToken)) . pack("n",strlen($json)) . $json;
-
-        stream_set_timeout($fp,SP_TIMEOUT);
-        $result = fwrite($fp, $msg);
-
-        if(!$result){
-
-        }else{
-
-            $read = array($fp);
-            $null = null;
-            $changedStreams = stream_select($read, $null, $null, 0, 1000000);
-
-            if ($changedStreams === false) {    
-                $app['monolog']->addDebug("Error: Unabled to wait for a stream availability");
-                return false;
-
-            } elseif ($changedStreams > 0) {
-
-                $responseBinary = fread($fp, 6);
-
-                if ($responseBinary !== false || strlen($responseBinary) == 6) {
-
-                        $response = unpack('Ccommand/Cstatus_code/Nidentifier', $responseBinary);
-                        $response['error_message'] = $apn_status[$response['status_code']];
-                        $result = json_encode($response);
-
-                }
-
-            } else {
-                $result = "succeed";
-            }
-
-        }
-
-        fclose($fp);
-
-        return $result;
-
-    }
-
-    function getAPNResult($response){
-
-        if($response === false)
-            return false;
-
-        $responseAry = json_decode($response,true);
-
-        if(isset($responseAry['status_code']) && $responseAry['status_code'] != 0){
-            return false;
-        }
-
-        return true;
 
     }
 
@@ -240,36 +169,6 @@ class AsyncTaskController extends SpikaBaseController
 
     }
 
-    function sendGCM($json, $app = null) {
-
-        $apiKey = GCM_API_KEY;
-
-        // Set POST variables
-        $url = 'https://android.googleapis.com/gcm/send';
-
-        $headers = array( 
-                        'Authorization: key=' . $apiKey,
-                        'Content-Type: application/json'
-                        );
-        // Open connection
-        $ch = curl_init();
-
-        // Set the url, number of POST vars, POST data
-        curl_setopt( $ch, CURLOPT_URL, $url );
-        curl_setopt( $ch, CURLOPT_POST, true );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch, CURLOPT_POSTFIELDS,$json);
-        curl_setopt( $ch, CURLOPT_TIMEOUT,SP_TIMEOUT);
-
-        // Execute post
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        return $result;
-
-    }
 }
 
 ?>

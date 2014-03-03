@@ -61,7 +61,7 @@ class SpikaBaseController implements ControllerProviderInterface
         $app['monolog']->addDebug($requestURL);
 
 
-        $request = $client->post($requestURL);
+        $request = $client->post($requestURL,array(),array('timeout'=>0,'connect_timeout'=>0));
                 
         $json = json_encode($params);
         $request->setBody($json,'application/json');

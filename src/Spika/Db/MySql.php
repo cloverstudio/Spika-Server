@@ -976,7 +976,8 @@ class MySQL implements DbInterface
     public function getComments($messageId,$count,$offset){
         
         $result = $this->DB->fetchAll("
-            select * from media_comment 
+            select media_comment.*,user.avatar_thumb_file_id from media_comment 
+            left join user on user._id = media_comment.user_id
                 where 
                     message_id = ? 
                 limit {$count}

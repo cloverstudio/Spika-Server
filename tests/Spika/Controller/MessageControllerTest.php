@@ -64,7 +64,7 @@ class MessageControllerTest extends WebTestCase
 
         $spikadb->expects($this->any())
             ->method('findMessageById')
-            ->will($this->returnValue('OK'));
+            ->will($this->returnValue(array('test'=>'OK')));
 
 
                         

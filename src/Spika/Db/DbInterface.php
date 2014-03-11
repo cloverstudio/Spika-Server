@@ -75,5 +75,6 @@ interface DbInterface
     public function getConversationHistoryCount($user);
     public function updateReadAt($messageId);
     public function getAllUsersByGroupId($groupId);
+    public function reportMessage($messageId);
     
 }

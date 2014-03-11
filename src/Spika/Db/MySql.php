@@ -1965,4 +1965,14 @@ class MySQL implements DbInterface
                                         
         return $users;
     }
+    
+    public function reportMessage($messageId){
+        
+    	$result = $this->DB->executeupdate(
+    			'update message
+                    set report_count = report_count + 1
+                    WHERE _id = ?',
+    			array($messageId));
+
+    }
 }

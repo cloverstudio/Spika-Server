@@ -436,6 +436,14 @@ class MessageController extends SpikaBaseController
 
         )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
+        $controllers->get('/reportViolation',
+            function (Request $request) use ($app,$self) {
+                $messageId = $request->get('message_id');
+                $app['spikadb']->reportMessage($messageId); 
+                return 'OK';
+            }
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
+
     }
     
     public function fileterMessage($messages,$database){

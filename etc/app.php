@@ -75,12 +75,20 @@ $app->register(new Spika\Provider\PushNotificationProvider(), array(
 ));
 
 
+$app['beforeApiGeneral'] = $app->share(function () use ($app) {
+    return new Spika\Middleware\APIGeneralBeforeHandler(
+        $app['spikadb'],
+        $app['logger'],
+        $app
+    );
+});
 
 $app['adminBeforeTokenChecker'] = $app->share(function () use ($app) {
     return new Spika\Middleware\AdminChecker(
         $app
     );
 });
+
 
 $app->mount('/api/', new Spika\Controller\SendPasswordController());
 $app->mount('/api/', new Spika\Controller\ReportController());
@@ -96,7 +104,6 @@ $app->mount('/api/', new Spika\Controller\AsyncTaskController());
 $app->mount('/api/', new Spika\Controller\WebViewController());
 $app->mount('/page/', new Spika\Controller\PasswordResetController());
 $app->mount('/page/', new Spika\Controller\Web\StaticPageController());
-
 $app->mount('/', new Spika\Controller\Web\Installer\InstallerController());
 $app->mount('/client', new Spika\Controller\Web\Client\LoginController());
 $app->mount('/client/', new Spika\Controller\Web\Client\GroupController());

@@ -6,7 +6,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class APIGeneralHandler
+class APIGeneralBeforeHandler
 {
     /**
      * @var Spika\Db\DbInterface

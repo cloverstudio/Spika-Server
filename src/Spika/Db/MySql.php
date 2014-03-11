@@ -46,28 +46,17 @@ class MySQL implements DbInterface
     
     public function checkEmailIsUnique($email){
         $user = $this->DB->fetchAssoc('select * from user where email = ?',array($email));
-        
-        if(!isset($user['_id']))
-            return false;
-            
         return $user;
     }
     
     public function checkUserNameIsUnique($name){
         $user = $this->DB->fetchAssoc('select * from user where name = ?',array($name));
-        
-        if(!isset($user['_id']))
-            return false;
-            
         return $user;
     }
     
-    public function checkGroupNameIsUnique($name){
-        
+    public function checkGroupNameIsUnique($name){        
         $group = $this->DB->fetchAssoc('select * from `group` where name = ?',array($name));
-        
         return $group;
-        
     }
     
     public function doSpikaAuth($email,$password)
@@ -980,6 +969,7 @@ class MySQL implements DbInterface
             left join user on user._id = media_comment.user_id
                 where 
                     message_id = ? 
+                order by created desc
                 limit {$count}
                 offset {$offset}
             ",
@@ -1787,11 +1777,9 @@ class MySQL implements DbInterface
         
         $result = $this->DB->executeupdate(
                 'update message set 
-                    read_at = ?,
-                    modified = ?
+                    read_at = ?
                     WHERE _id = ?',
                 array(
-                    time(),
                     time(),
                     $messageId));
         

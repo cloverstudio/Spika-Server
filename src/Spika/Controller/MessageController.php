@@ -275,7 +275,9 @@ class MessageController extends SpikaBaseController
                 $result = $self->fileterOneMessage($result);
                 
                 return json_encode($result);
+                
             }
+            
         )->before($app['beforeTokenChecker']);
 
 

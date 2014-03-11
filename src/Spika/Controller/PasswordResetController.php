@@ -70,7 +70,7 @@ class PasswordResetController implements ControllerProviderInterface
                 ));
             }
             
-        });
+        })->before($app['beforeApiGeneral']);
 
 
         return $controllers;

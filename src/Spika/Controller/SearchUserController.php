@@ -31,7 +31,7 @@ class SearchUserController implements ControllerProviderInterface
         $controllers->get('/searchUsers', function (Request $request) use ($app,$self) {
             $searchResult = $self->app['spikadb']->searchUser($request->get('n'),$request->get('af'),$request->get('at'),$request->get('g'));
             return json_encode($searchResult);
-        });
+        })->before($app['beforeApiGeneral']);
         
         return $controllers;
     }

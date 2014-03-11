@@ -152,7 +152,6 @@ class AsyncTaskController extends SpikaBaseController
             $app['sendProdAPN']($iosTokens,$payload);
             $app['sendDevAPN']($iosTokens,$payload);
             
-            
             return "";
 
         });

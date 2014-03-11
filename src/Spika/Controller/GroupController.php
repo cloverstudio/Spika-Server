@@ -98,7 +98,8 @@ class GroupController extends SpikaBaseController
                                 
                 return json_encode($result);
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeTokenChecker'])
+         ->before($app['beforeApiGeneral']);
     }
 
     private function setupUpdateGroupMethod($self,$app,$controllers){
@@ -157,7 +158,8 @@ class GroupController extends SpikaBaseController
             $result = $app['spikadb']->updateGroup($groupId,$name,$ownerId,$categoryId,$description,$password,$avatarURL,$thumbURL);
                 
             return json_encode($result);
-        })->before($app['beforeTokenChecker']);
+        })->before($app['beforeApiGeneral'])
+          ->before($app['beforeTokenChecker']);
     }
 
     private function setupDeleteGroupMethod($self,$app,$controllers){
@@ -204,7 +206,8 @@ class GroupController extends SpikaBaseController
                 return json_encode($result);
                 
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])
+         ->before($app['beforeTokenChecker']);
         
     }
 
@@ -239,14 +242,14 @@ class GroupController extends SpikaBaseController
                 return json_encode($result);
                 
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
         $controllers->get('/searchGroups/{type}/',
             function ($type) use ($app,$self) {
                 $result = $app['spikadb']->findAllGroups();
                 return json_encode($result);
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
         
         $controllers->get('/searchGroups/{type}/{value}',
             function ($type,$value) use ($app,$self) {
@@ -267,7 +270,7 @@ class GroupController extends SpikaBaseController
                 return json_encode($result);
                 
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
         
 
     }
@@ -301,7 +304,7 @@ class GroupController extends SpikaBaseController
                 
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
         
         $controllers->post('/unSubscribeGroup',
             function (Request $request) use ($app,$self) {
@@ -329,7 +332,7 @@ class GroupController extends SpikaBaseController
                 
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
     }
 
     private function setupWatchMethod($self,$app,$controllers){
@@ -359,7 +362,7 @@ class GroupController extends SpikaBaseController
                 
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
                 
         $controllers->post('/unWatchGroup',
         
@@ -376,7 +379,7 @@ class GroupController extends SpikaBaseController
                 
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
             
     }
             

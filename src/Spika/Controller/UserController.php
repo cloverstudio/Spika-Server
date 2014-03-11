@@ -114,7 +114,7 @@ class UserController extends SpikaBaseController
             
             return json_encode($responseBodyAry);
             
-        });
+        })->before($app['beforeApiGeneral']);
 
 
     }
@@ -145,7 +145,7 @@ class UserController extends SpikaBaseController
                 return json_encode($result);
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
     }
 
     private function setupFindUserMethod($self,$app,$controllers){
@@ -181,7 +181,7 @@ class UserController extends SpikaBaseController
                 return json_encode($result);
                 
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
     }
 
     private function setupActivitySummaryMethod($self,$app,$controllers){
@@ -200,7 +200,7 @@ class UserController extends SpikaBaseController
 
                 return json_encode($result);
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
     }
 
     private function setupGetAvatarFileIdMethod($self,$app,$controllers){
@@ -217,7 +217,7 @@ class UserController extends SpikaBaseController
 
                 return json_encode($result);
             }
-        );
+        )->before($app['beforeApiGeneral']);
     }
 
     private function setupContactsMethod($self,$app,$controllers){
@@ -250,7 +250,7 @@ class UserController extends SpikaBaseController
                 
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
         
         $controllers->post('/removeContact',
             function (Request $request) use ($app,$self) {
@@ -278,7 +278,7 @@ class UserController extends SpikaBaseController
                 
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
     }
 

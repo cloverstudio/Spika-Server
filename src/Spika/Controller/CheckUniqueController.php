@@ -31,8 +31,9 @@ class CheckUniqueController implements ControllerProviderInterface
             $groupname = $request->get('groupname');
 
             if(!empty($email)){
+
                 $result = $app['spikadb']->checkEmailIsUnique($email);
-                if(count($result) == 0){
+                if(count($result) == 0 || $result == false){
                     return "[]";
                 }else{
                     return json_encode($result);
@@ -41,7 +42,7 @@ class CheckUniqueController implements ControllerProviderInterface
 
             if(!empty($username)){
                 $result = $app['spikadb']->checkUserNameIsUnique($email);
-                if(count($result) == 0){
+                if(count($result) == 0 || $result == false){
                     return "[]";
                 }else{
                     return json_encode($result);
@@ -50,7 +51,7 @@ class CheckUniqueController implements ControllerProviderInterface
 
             if(!empty($groupname)){
                 $result = $app['spikadb']->checkGroupNameIsUnique($email);
-                if(count($result) == 0){
+                if(count($result) == 0 || $result == false){
                     return "[]";
                 }else{
                     return json_encode($result);
@@ -59,7 +60,7 @@ class CheckUniqueController implements ControllerProviderInterface
 
             return '';
 
-        });
+        })->before($app['beforeApiGeneral']);
 
         return $controllers;
     }

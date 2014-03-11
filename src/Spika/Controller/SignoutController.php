@@ -29,7 +29,7 @@ class SignoutController implements ControllerProviderInterface
             $userId = $request->get('user_id');
             return $app['spikadb']->unregistToken($userId);
         
-        });
+        })->before($app['beforeApiGeneral']);
 
         return $controllers;
         

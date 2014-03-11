@@ -57,7 +57,7 @@ class FileController extends SpikaBaseController
             $file->move(__DIR__.'/../../../'.FileController::$fileDirName, $fineName); 
             return $fineName; 
                                 
-        });
+        })->before($app['beforeApiGeneral']);
         
         //})->before($app['beforeTokenChecker']);
         

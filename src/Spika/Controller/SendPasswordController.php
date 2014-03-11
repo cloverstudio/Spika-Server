@@ -89,7 +89,7 @@ class SendPasswordController extends SpikaBaseController
     
             return 'OK';
             
-        });
+        })->before($app['beforeApiGeneral']);
         
         return $controllers;
     }

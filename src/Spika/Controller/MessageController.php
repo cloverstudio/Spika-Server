@@ -48,7 +48,7 @@ class MessageController extends SpikaBaseController
 
                 return json_encode($result);
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
         $controllers->get('/Emoticon/{id}',
             function ($id = "") use ($app,$self) {
@@ -70,7 +70,7 @@ class MessageController extends SpikaBaseController
                 );
 
             }
-        );
+        )->before($app['beforeApiGeneral']);
 
 
     }
@@ -89,7 +89,7 @@ class MessageController extends SpikaBaseController
                 return json_encode($result);
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
         $controllers->post('/sendComment',
         
@@ -119,7 +119,7 @@ class MessageController extends SpikaBaseController
                 return json_encode($result);
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
 
         $controllers->get('/comments/{messageId}/{count}/{offset}',
@@ -135,7 +135,7 @@ class MessageController extends SpikaBaseController
                      
                 return json_encode($result);
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
         
     }
 
@@ -216,7 +216,7 @@ class MessageController extends SpikaBaseController
                 return json_encode($result);
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
         
         $controllers->get('/userMessages/{toUserId}/{count}/{offset}',
         
@@ -255,7 +255,7 @@ class MessageController extends SpikaBaseController
                 
                 return json_encode($result);
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
         $controllers->get('/findMessageById/{id}',
             function ($id) use ($app,$self) {
@@ -278,7 +278,7 @@ class MessageController extends SpikaBaseController
                 
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
 
         $controllers->post('/sendMessageToGroup',
@@ -356,7 +356,7 @@ class MessageController extends SpikaBaseController
                 return json_encode($result);
             }
             
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
         $controllers->get('/groupMessages/{toGroupId}/{count}/{offset}',
             function ($toGroupId = "",$count = 30,$offset = 0) use ($app,$self) {
@@ -377,7 +377,7 @@ class MessageController extends SpikaBaseController
 
                 return json_encode($result);
             }
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
         $controllers->post('/setDelete',
         
@@ -434,7 +434,7 @@ class MessageController extends SpikaBaseController
                  
             }        
 
-        )->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
     }
     

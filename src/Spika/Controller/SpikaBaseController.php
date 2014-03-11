@@ -27,6 +27,7 @@ class SpikaBaseController implements ControllerProviderInterface
     {
         $this->app = $app;
         $controllers = $app['controllers_factory'];
+        
         return $controllers;        
     }
     

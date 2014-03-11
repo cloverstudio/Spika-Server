@@ -56,7 +56,7 @@ class ReportController implements ControllerProviderInterface
             }
                     
             return 'OK';
-        })->before($app['beforeTokenChecker']);
+        })->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
         return $controllers;
     }

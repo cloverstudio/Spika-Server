@@ -272,7 +272,7 @@ class MessageController extends SpikaBaseController
                      return $self->returnErrorResponse("failed to get message");
                      
                 //$result = $self->fileterMessage($result,$app['spikadb']);
-                $result = $this->fileterOneMessage($result);
+                $result = $self->fileterOneMessage($result);
                 
                 return json_encode($result);
             }

@@ -57,7 +57,7 @@ class UserController extends SpikaBaseController
                     
             return $authResult;
         
-        });
+        })->before($app['beforeApiGeneral']);;
 
     }
 

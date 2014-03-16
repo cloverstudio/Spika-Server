@@ -1975,4 +1975,34 @@ class MySQL implements DbInterface
     			array($messageId));
 
     }
+    
+   public function findAllUsersWithPagingWithCriteria($offset = 0,$count=0,$criteria='')
+   {
+        $query = "select * from user where 1 = 1 {$criteria} order by _id ";
+        
+        if($count != 0){
+            $query .= " limit {$count} offset {$offset} ";
+        }
+        
+        $result = $this->DB->fetchAll($query);
+        
+        $formatedUsers = array();
+        foreach($result as $user){
+            $user = $this->reformatUserData($user,false);
+            $formatedUsers[] = $user;
+        }
+        
+        return $this->formatResult($formatedUsers);
+    }
+
+   public function findUserCountWithCriteria($criteria = '')
+    {
+        $query = "select count(*) as count from user where 1 = 1 {$criteria}";
+        
+        $result = $this->DB->fetchColumn($query);
+
+        return $result;
+    }
+
+
 }

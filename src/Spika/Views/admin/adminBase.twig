@@ -42,7 +42,7 @@
 
     var spikaClient = new SpikaClient('{{ROOT_URL}}/api');
     var loginedUser = {{ loginedUser|json_encode()|raw }};
-    var templateNotificationRow = '<li><a href="javascript:%%javascript%%"><div><strong>%%messageType%%</strong></div><div>%%message%%</div></a></li>';
+    var templateNotificationRow = '<li><a href="javascript:%%javascript%%"><div><strong>%%messageType%%</strong></div><div>%%message%% <span class="text-danger">%%unreadnum%%</span></div></a></li>';
     
     function loadActivitySummary(){
         
@@ -138,6 +138,11 @@
             }
 
             rowHtml = rowHtml.replace(/%%message%%/,notification.messages[0].message);
+            
+            if(notification.count > 0)
+                rowHtml = rowHtml.replace(/%%unreadnum%%/,"(" + notification.count + ")");
+            else
+                rowHtml = rowHtml.replace(/%%unreadnum%%/,'');
             
             html += rowHtml;
         }

@@ -54,7 +54,16 @@ class UserController extends SpikaWebBaseController
             
             $self->setVariables();
             
-            $count = $self->app['spikadb']->findUserCount();
+            // search criteria
+            $searchCriteriaUserName = $app['session']->get('usernameCriteria');
+            $searchCriteriaUserName = trim($searchCriteriaUserName);
+            
+            $criteria = "";
+            if(!empty($searchCriteriaUserName)){
+                $criteria .= " and LOWER(name) like LOWER('%{$searchCriteriaUserName}%')";
+            }
+            
+            $count = $self->app['spikadb']->findUserCountWithCriteria($criteria);
             
             $page = $request->get('page');
             if(empty($page))
@@ -64,14 +73,14 @@ class UserController extends SpikaWebBaseController
             if(!empty($msg))
                 $self->setInfoAlert($self->language[$msg]);
             
-            $users = $self->app['spikadb']->findAllUsersWithPaging(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT);
+            $users = $self->app['spikadb']->findAllUsersWithPagingWithCriteria(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT,$criteria);
             
             // convert timestamp to date
             for($i = 0 ; $i < count($users['rows']) ; $i++){
                 $users['rows'][$i]['value']['created'] = date("Y.m.d",$users['rows'][$i]['value']['created']);
                 $users['rows'][$i]['value']['modified'] = date("Y.m.d",$users['rows'][$i]['value']['modified']);
             }
-
+            
             return $self->render('admin/userList.twig', array(
                 'categoryList' => $self->getGroupCategoryList(),
                 'users' => $users['rows'],
@@ -80,10 +89,31 @@ class UserController extends SpikaWebBaseController
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),
+                'searchCriteria' => array(
+                    'username' => $searchCriteriaUserName
+                )
                 
             ));
                         
         })->before($app['adminBeforeTokenChecker']);
+
+        $controllers->post('user/list', function (Request $request) use ($app,$self) {
+            
+            $usernameCriteria = $request->get('search-username');
+            $clearButton = $request->get('clear');
+            
+            if(!empty($clearButton)){
+                $app['session']->set('usernameCriteria', '');
+            } else {
+                $app['session']->set('usernameCriteria', $usernameCriteria);
+            }
+            
+            
+            return $app->redirect(ROOT_URL . '/admin/user/list'); 
+                        
+        })->before($app['adminBeforeTokenChecker']);
+
+
 
         $controllers->get('user/add', function (Request $request) use ($app,$self) {
             

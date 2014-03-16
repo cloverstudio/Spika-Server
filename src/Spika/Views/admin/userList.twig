@@ -53,7 +53,18 @@
                 <div class="col-lg-8">
                     
                     <div style="text-align:right">
-                        {% include "admin/pager.twig" %}
+
+                        <form class="form-inline" role="form" method="post" action="{{ROOT_URL}}/admin/user/list" >
+                          <div class="form-group">
+                            <input type="text" name="search-username" value="{{searchCriteria.username}}" class="form-control" id="exampleInputEmail2" placeholder="{{lang.formUserName}}">
+                          </div>
+                          <button type="submit" class="btn btn-primary">{{lang.search}}</button>
+                          {% if searchCriteria.username != '' %}
+                                <input type="submit" class="btn btn-danger" name="clear" value="{{lang.clearCriteria}}" />
+                          {% endif %}
+                          
+                        </form>
+                    
                     </div>
                     
                     <table class="table table-striped">

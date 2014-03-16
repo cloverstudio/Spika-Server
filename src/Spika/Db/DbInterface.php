@@ -76,5 +76,7 @@ interface DbInterface
     public function updateReadAt($messageId);
     public function getAllUsersByGroupId($groupId);
     public function reportMessage($messageId);
-    
+    public function findAllUsersWithPagingWithCriteria($offect,$count,$criteria);
+    public function findUserCountWithCriteria($criteria);
+
 }

@@ -1,4 +1,4 @@
-{% extends "client/adminBase.twig" %}
+{% extends "admin/adminBase.twig" %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
 
              <div class="row">
                 <div class="col-lg-12">
-                     {% include "client/alerts.twig" %}
+                     {% include "admin/alerts.twig" %}
                 </div>
             </div>
                     
@@ -18,7 +18,7 @@
                 <div class="col-lg-8">
 					
 					<div style="text-align:right">
-						{% include "client/pager.twig" %}
+						{% include "admin/pager.twig" %}
 					</div>
 					
 					<table class="table table-striped">
@@ -52,15 +52,15 @@
 									<td>{{emoticon.value.modified}}</td>
 									<td>
 										
-										<a href="{{ROOT_URL}}/client/emoticon/view/{{emoticon.value._id}}" class="btn btn-primary">
+										<a href="{{ROOT_URL}}/admin/emoticon/view/{{emoticon.value._id}}" class="btn btn-primary">
 											<i class="fa fa-search"></i> {{lang.labelView}}
 										</a>
 										
-										<a href="{{ROOT_URL}}/client/emoticon/edit/{{emoticon.value._id}}" class="btn btn-success">
+										<a href="{{ROOT_URL}}/admin/emoticon/edit/{{emoticon.value._id}}" class="btn btn-success">
 											<i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
 										</a>
 										
-										<a href="{{ROOT_URL}}/client/emoticon/delete/{{emoticon.value._id}}" class="btn btn-danger">
+										<a href="{{ROOT_URL}}/admin/emoticon/delete/{{emoticon.value._id}}" class="btn btn-danger">
 											<i class="fa fa-eraser"></i> {{lang.labelDelete}}
 										</a>
 										
@@ -73,7 +73,7 @@
 					</table>
 
 					<div style="text-align:right">
-						{% include "client/pager.twig" %}
+						{% include "admin/pager.twig" %}
 					</div>
 
                 </div>

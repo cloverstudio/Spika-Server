@@ -1,16 +1,14 @@
-{% extends "client/adminBase.twig" %}
+{% extends "admin/adminBase.twig" %}
 
 {% block content %}
 
 <script type="text/javascript">
 
     var loginedUser = {{ loginedUser|json_encode()|raw }};
-    var lastUserId = 0;
-    
-    function openChat(groupId){
-        console.log(groupId);
+
+    function openChat(userId){
         chatWindow.initialize();
-        chatWindow.loadGroupConversation(groupId);
+        chatWindow.loadUserConversation(userId);
     }
     
     var chatWindow = null;
@@ -26,7 +24,7 @@
             openLocation:'{{lang.openLocation}}',
             chatTextBoxPlaceHolder:'{{lang.chatTextBoxPlaceHolder}}',
             chatTextBoxSend:'{{lang.chatTextBoxSend}}'
-        },true,2);
+        },true,1);
 
         chatWindow.attach($('#chatWindow'));
         chatWindow.showAlert('{{lang.conversationNotSelected}}');
@@ -38,21 +36,24 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">{{lang.labelNews}} <a href="add" class="btn btn-primary btn-lg">{{lang.btnNewNews}}</a></h1>
+                    <h1 class="page-header">{{lang.labelUser}} 
+                    {% if isAdmin %}
+                        <a href="add" class="btn btn-primary btn-lg">{{lang.btnNewUser}}</a></h1>
+                    {% endif %}
                 </div>
             </div>
 
              <div class="row">
                 <div class="col-lg-12">
-                     {% include "client/alerts.twig" %}
+                     {% include "admin/alerts.twig" %}
                 </div>
             </div>
                     
            <div class="row">
-                <div id="list" class="col-lg-8" style="min-height:500px">
+                <div class="col-lg-8">
                     
                     <div style="text-align:right">
-                        {% include "client/pager.twig" %}
+                        {% include "admin/pager.twig" %}
                     </div>
                     
                     <table class="table table-striped">
@@ -60,28 +61,31 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th style="width: 150px;">{{lang.formNewsTitle}}</th>
-                                <th>{{lang.formNewsBody}}</th>
-                                <th  style="width: 90px;">{{lang.formNewsUrl}}</th>
-                                <th>{{lang.formNewsCreated}}</th>
-                                <th></th>
+                                <th>{{lang.formUserAvatar}}</th>
+                                <th>{{lang.formUserName}}</th>
+                                <th>{{lang.formUserEmail}}</th>
+                                <th class="text-right">{{lang.labelCreated}}</th>
+                                <th width="100px"></th>
                             </tr>
                         </thead>
                         <tbody>
                         
-                            {% for story in news %}
+                            {% for user in users %}
 
                                 <tr>
-                                    <td>{{story._id}}</td>
-                                    <td>{{story.title}}</td>
-                                    <td>{{story.content}}</td>
-                                    {% if story.story_url != '' %}
-                                        <td><a href="{{story.story_url}}">Story Url</a>
-                                    {% else %}
-                                        <td></td>
-                                    {% endif %}
-                                    <td>{{story.created}}</td>
+                                    <td>{{user.value._id}}</td>
                                     <td>
+                                        {% if user.value.avatar_thumb_file_id != '' %}
+                                            <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{user.value.avatar_thumb_file_id}}" width="60"/>
+                                        {% else %}
+                                            <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
+                                            
+                                        {% endif %}
+                                    </td>
+                                    <td>{{user.value.name}}</td>
+                                    <td>{{user.value.email}}</td>
+                                    <td class="text-right">{{user.value.created}}</td>
+                                    <td class="text-right">
                                         
                                         <div class="btn-group text-left" >
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -89,28 +93,40 @@
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
                                                 <li>
-                                                    <a href="{{ROOT_URL}}/client/news/view/{{story._id}}">
+                                                    <a href="{{ROOT_URL}}/admin/user/view/{{user.value._id}}">
                                                         <i class="fa fa-search"></i> {{lang.labelView}}
                                                     </a>
                                                 </li>
                                                 
-                                                {% if isAdmin  or story.user_id == loginedUser._id%}
+                                                {% if isAdmin %}
                                                     <li>
-                                                        <a href="{{ROOT_URL}}/client/news/edit/{{story._id}}">
+                                                        <a href="{{ROOT_URL}}/admin/user/edit/{{user.value._id}}">
                                                             <i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="{{ROOT_URL}}/client/news/delete/{{story._id}}">
+                                                        <a href="{{ROOT_URL}}/admin/user/delete/{{user.value._id}}">
                                                             <i class="fa fa-eraser"></i> {{lang.labelDelete}}
                                                         </a>
                                                     </li>
+                                                    <li>
+                                                        <a href="{{ROOT_URL}}/admin/user/conversation/{{user.value._id}}">
+                                                            <i class="fa fa-comments-o"></i> {{lang.labelConversation}}
+                                                        </a>
+                                                    </li>
                                                 {% endif %}
+                                                
+                                                <li>
+                                                    <a href="javascript:openChat({{user.value._id}})">
+                                                        <i class="fa fa-comment-o"></i> {{lang.labelStartChat}}
+                                                    </a>
+                                                </li>
                                                 
                                             </ul>
                                         </div>
 
                                     </td>
+                                    
                                 </tr>
 
                             {% endfor %}
@@ -119,15 +135,15 @@
                     </table>
 
                     <div style="text-align:right">
-                        {% include "client/pager.twig" %}
+                        {% include "admin/pager.twig" %}
                     </div>
 
                 </div>
-                
+
                 <div id="chatWindow" class="col-lg-4">
                     
                 </div>
-                
+
             </div>
                          
 {% endblock %}

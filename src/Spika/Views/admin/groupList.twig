@@ -1,4 +1,4 @@
-{% extends "client/adminBase.twig" %}
+{% extends "admin/adminBase.twig" %}
 
 {% block content %}
 
@@ -44,7 +44,7 @@
 
              <div class="row">
                 <div class="col-lg-12">
-                     {% include "client/alerts.twig" %}
+                     {% include "admin/alerts.twig" %}
                 </div>
             </div>
                     
@@ -52,7 +52,7 @@
                 <div id="list" class="col-lg-8" style="min-height:500px">
                     
                     <div style="text-align:right">
-                        {% include "client/pager.twig" %}
+                        {% include "admin/pager.twig" %}
                     </div>
                     
                     <table class="table table-striped">
@@ -96,19 +96,19 @@
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
                                                 <li>
-                                                    <a href="{{ROOT_URL}}/client/group/view/{{group._id}}">
+                                                    <a href="{{ROOT_URL}}/admin/group/view/{{group._id}}">
                                                         <i class="fa fa-search"></i> {{lang.labelView}}
                                                     </a>
                                                 </li>
                                                 
                                                 {% if isAdmin or group.user_id == loginedUser._id%}
                                                     <li>
-                                                        <a href="{{ROOT_URL}}/client/group/edit/{{group._id}}">
+                                                        <a href="{{ROOT_URL}}/admin/group/edit/{{group._id}}">
                                                             <i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="{{ROOT_URL}}/client/group/delete/{{group._id}}">
+                                                        <a href="{{ROOT_URL}}/admin/group/delete/{{group._id}}">
                                                             <i class="fa fa-eraser"></i> {{lang.labelDelete}}
                                                         </a>
                                                     </li>
@@ -132,7 +132,7 @@
                     </table>
 
                     <div style="text-align:right">
-                        {% include "client/pager.twig" %}
+                        {% include "admin/pager.twig" %}
                     </div>
 
                 </div>

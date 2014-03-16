@@ -1,0 +1,86 @@
+ {% set showPages = 8 %}
+ 
+                        <ul class="pagination">
+                            
+                            {% set nextPage = pager.page + 1 %}
+                            {% set prevPage = pager.page - 1 %}
+                            
+                            {% if prevPage < 1 %}
+                                {% set prevPage = 1 %}
+                            {% endif %}
+                            
+                            {% if nextPage >= pager.pageCount + 1 %}
+                                {% set nextPage = pager.pageCount + 1%}
+                            {% endif %}
+                            
+                            
+                            {% if pager.pageCount < showPages %}
+
+                                <li><a href="{{pager.baseURL}}{{ prevPage }}">&laquo;</a></li>
+    
+                                {% for pageNum in range(0,pager.pageCount) %}
+                                    <li {%if pager.page - 1 == pageNum %}class="active"{% endif %}>
+                                        <a href="{{pager.baseURL}}{{ pageNum + 1}}">{{ pageNum + 1}}</a>
+                                    </li>
+                                {% endfor %}
+                                
+                                <li><a href="{{pager.baseURL}}{{ nextPage }}">&raquo;</a></li>
+
+                            {% else %}
+                                
+                                {% set showBeforeDots = true %}
+                                {% set showAfterDots = true %}
+                                
+                                {% set fromPage = pager.page - showPages / 2 %}
+                                
+                                {% if fromPage < 1 %}
+                                    {% set showBeforeDots = false %}
+                                    {% set fromPage = 1 %}
+                                {% endif %}
+                                
+                                {% if fromPage >= pager.pageCount - showPages %}
+                                    {% set showAfterDots = false %}
+                                    {% set fromPage = pager.pageCount - showPages - 1 %}
+                                {% endif %}
+                                
+                                {% set toPage = fromPage + showPages %}
+
+                                {% if fromPage < 2 %}
+                                    {% set showBeforeDots = false %}
+                                {% endif %}
+
+                                {% if toPage >= pager.pageCount - 1 %}
+                                    {% set showAfterDots = false %}
+                                {% endif %}
+                                 
+                                <li><a href="{{pager.baseURL}}{{ prevPage }}">&laquo;</a></li>
+
+                                <li {%if pager.page - 1 == 0 %}class="active"{% endif %}>
+                                    <a href="{{pager.baseURL}}1">1</a>
+                                </li>  
+                                
+                                {% if showBeforeDots == true %}
+                                    <li><a href="#">...</a></li>
+                                {% endif %}
+                                             
+                                {% for pageNum in range(fromPage,toPage) %}
+                                
+                                    <li {%if pager.page - 1 == pageNum %}class="active"{% endif %}>
+                                        <a href="{{pager.baseURL}}{{ pageNum + 1}}">{{ pageNum + 1}}</a>
+                                    </li>
+                                {% endfor %}
+                                
+                                {% if showAfterDots == true %}
+                                     <li><a href="#">...</a></li>
+                                {% endif %}
+                                
+                                <li {%if pager.page - 1 == pager.pageCount %}class="active"{% endif %}>
+                                    <a href="{{pager.baseURL}}{{ pager.pageCount + 1 }}">{{ pager.pageCount + 1 }}</a>
+                                </li>                                
+                                <li><a href="{{pager.baseURL}}{{ nextPage }}">&raquo;</a></li>
+                                
+                                
+                            {% endif %}
+                            
+                            
+                        </ul>

@@ -1,4 +1,4 @@
-{% extends "client/adminBase.twig" %}
+{% extends "admin/adminBase.twig" %}
 
 {% block content %}
 
@@ -19,12 +19,12 @@
             <div class="row">
                 <div class="col-lg-8">
                     
-                    {% include "client/alerts.twig" %}
+                    {% include "admin/alerts.twig" %}
                     
                     {% if mode == 'edit' %}
-                        <form role="form" method="post" action="{{ROOT_URL}}/client/groupcategory/edit/{{id}}" enctype="multipart/form-data">
+                        <form role="form" method="post" action="{{ROOT_URL}}/admin/groupcategory/edit/{{id}}" enctype="multipart/form-data">
                     {% else %}
-                        <form role="form" method="post" action="{{ROOT_URL}}/client/groupcategory/add" enctype="multipart/form-data">
+                        <form role="form" method="post" action="{{ROOT_URL}}/admin/groupcategory/add" enctype="multipart/form-data">
                     {% endif %}
 
                         {% if mode == 'view' or mode == 'edit' %}

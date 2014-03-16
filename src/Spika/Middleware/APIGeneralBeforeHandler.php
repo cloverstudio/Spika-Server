@@ -28,7 +28,7 @@ class APIGeneralBeforeHandler
     {
         
         // maintainance mode
-        //return new Response("maintainance mode", 503);
+        // return new Response("maintainance mode", 503);
 
     }
 

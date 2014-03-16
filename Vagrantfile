@@ -8,13 +8,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
-  #comment this to disable Futon for couchdb on http://localhost:5984/_utils/
-  config.vm.network :forwarded_port, guest: 5984, host: 5984
   config.vm.network :forwarded_port, guest: 80, host: 8080
-
   config.vm.synced_folder "./", "/vagrant_data", :owner=> 'vagrant', :group=>'www-data', :mount_options => ['dmode=775','fmode=775']
 
   config.vm.provision :shell, :inline => <<-EOS
+  
     sudo apt-get update
     sudo DEBIAN_FRONTEND=noninteractive apt-get install -y php5 php5-curl phpunit curl git-core php5-xdebug postfix mysql-server php5-mysql php5-gd
 

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spika\Controller\Web\Client;
+namespace Spika\Controller\Web\Admin;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -42,7 +42,7 @@ class GroupCategoryController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $count = $self->app['spikadb']->findGroupCategoryCount();
@@ -63,10 +63,10 @@ class GroupCategoryController extends SpikaWebBaseController
                 $categories['rows'][$i]['value']['modified'] = date("Y.m.d",$categories['rows'][$i]['value']['modified']);
             }
 
-            return $self->render('client/categoryList.twig', array(
+            return $self->render('admin/categoryList.twig', array(
                 'categories' => $categories['rows'],
                 'pager' => array(
-                    'baseURL' => ROOT_URL . "/client/groupcategory/list?page=",
+                    'baseURL' => ROOT_URL . "/admin/groupcategory/list?page=",
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),
@@ -79,7 +79,7 @@ class GroupCategoryController extends SpikaWebBaseController
             
             $self->setVariables();
 
-            return $self->render('client/categoryForm.twig', array(
+            return $self->render('admin/categoryForm.twig', array(
                 'mode' => 'new',
                 'formValues' => $self->getEmptyFormData(),
             ));
@@ -95,7 +95,7 @@ class GroupCategoryController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $formValues = $request->request->all();
@@ -124,7 +124,7 @@ class GroupCategoryController extends SpikaWebBaseController
                     $fileName
                 );
                 
-                return $app->redirect(ROOT_URL . '/client/groupcategory/list?msg=messageGroupCategoryAdded');
+                return $app->redirect(ROOT_URL . '/admin/groupcategory/list?msg=messageGroupCategoryAdded');
             }
             
             return $self->render('admin/categoryForm.twig', array(
@@ -142,12 +142,12 @@ class GroupCategoryController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $category = $self->app['spikadb']->findGroupCategoryById($id);
 
-            return $self->render('client/categoryForm.twig', array(
+            return $self->render('admin/categoryForm.twig', array(
                 'mode' => 'view',
                 'formValues' => $category
             ));
@@ -163,12 +163,12 @@ class GroupCategoryController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $category = $self->app['spikadb']->findGroupCategoryById($id,false);
             
-            return $self->render('client/categoryForm.twig', array(
+            return $self->render('admin/categoryForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'formValues' => $category
@@ -181,7 +181,7 @@ class GroupCategoryController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $validationError = false;
@@ -217,11 +217,11 @@ class GroupCategoryController extends SpikaWebBaseController
                     $fileName
                 );
                 
-                return $app->redirect(ROOT_URL . '/client/groupcategory/list?msg=messageGroupCategoryChanged');
+                return $app->redirect(ROOT_URL . '/admin/groupcategory/list?msg=messageGroupCategoryChanged');
 
             }
     
-            return $self->render('client/categoryForm.twig', array(
+            return $self->render('admin/categoryForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'formValues' => $category
@@ -237,12 +237,12 @@ class GroupCategoryController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $category = $self->app['spikadb']->findGroupCategoryById($id,false);
             
-            return $self->render('client/categoryDelete.twig', array(
+            return $self->render('admin/categoryDelete.twig', array(
                 'id' => $id,
                 'mode' => 'delete',
                 'formValues' => $category
@@ -255,16 +255,16 @@ class GroupCategoryController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $formValues = $request->request->all();
             
             if(isset($formValues['submit_delete'])){
                 $self->app['spikadb']->deleteGroupCategory($id);
-                return $app->redirect(ROOT_URL . '/client/groupcategory/list?msg=messageGroupCategoryDeleted');
+                return $app->redirect(ROOT_URL . '/admin/groupcategory/list?msg=messageGroupCategoryDeleted');
             }else{
-                return $app->redirect(ROOT_URL . '/client/groupcategory/list');
+                return $app->redirect(ROOT_URL . '/admin/groupcategory/list');
             }
             
         })->before($app['adminBeforeTokenChecker']);

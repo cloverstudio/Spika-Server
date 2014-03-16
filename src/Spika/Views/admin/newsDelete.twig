@@ -1,4 +1,4 @@
-{% extends "client/adminBase.twig" %}
+{% extends "admin/adminBase.twig" %}
 
 {% block content %}
 
@@ -14,9 +14,9 @@
             <div class="row">
                 <div class="col-lg-8">
                     
-                    {% include "client/alerts.twig" %}
+                    {% include "admin/alerts.twig" %}
                     
-                        <form role="form" method="post" action="{{ROOT_URL}}/client/news/delete/{{id}}" enctype="multipart/form-data">
+                        <form role="form" method="post" action="{{ROOT_URL}}/admin/news/delete/{{id}}" enctype="multipart/form-data">
                         
                         <div class="form-group">
                             <label>{{lang.formStoryTitle}}</label>                           

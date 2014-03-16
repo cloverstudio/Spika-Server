@@ -105,10 +105,10 @@ $app->mount('/api/', new Spika\Controller\WebViewController());
 $app->mount('/page/', new Spika\Controller\PasswordResetController());
 $app->mount('/page/', new Spika\Controller\Web\StaticPageController());
 $app->mount('/', new Spika\Controller\Web\Installer\InstallerController());
-$app->mount('/client', new Spika\Controller\Web\Client\LoginController());
-$app->mount('/client/', new Spika\Controller\Web\Client\GroupController());
-$app->mount('/client/', new Spika\Controller\Web\Client\NewsController());
-$app->mount('/client/', new Spika\Controller\Web\Client\UserController());
-$app->mount('/client/', new Spika\Controller\Web\Client\GroupCategoryController());
-$app->mount('/client/', new Spika\Controller\Web\Client\EmoticonController());
+$app->mount('/admin', new Spika\Controller\Web\Admin\LoginController());
+$app->mount('/admin/', new Spika\Controller\Web\Admin\GroupController());
+$app->mount('/admin/', new Spika\Controller\Web\Admin\NewsController());
+$app->mount('/admin/', new Spika\Controller\Web\Admin\UserController());
+$app->mount('/admin/', new Spika\Controller\Web\Admin\GroupCategoryController());
+$app->mount('/admin/', new Spika\Controller\Web\Admin\EmoticonController());
 

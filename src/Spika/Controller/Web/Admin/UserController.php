@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
  
-namespace Spika\Controller\Web\Client;
+namespace Spika\Controller\Web\Admin;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -72,11 +72,11 @@ class UserController extends SpikaWebBaseController
                 $users['rows'][$i]['value']['modified'] = date("Y.m.d",$users['rows'][$i]['value']['modified']);
             }
 
-            return $self->render('client/userList.twig', array(
+            return $self->render('admin/userList.twig', array(
                 'categoryList' => $self->getGroupCategoryList(),
                 'users' => $users['rows'],
                 'pager' => array(
-                    'baseURL' => ROOT_URL . "/client/user/list?page=",
+                    'baseURL' => ROOT_URL . "/admin/user/list?page=",
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),
@@ -90,10 +90,10 @@ class UserController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
             
-            return $self->render('client/userForm.twig', array(
+            return $self->render('admin/userForm.twig', array(
                 'mode' => 'new',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
@@ -111,7 +111,7 @@ class UserController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $formValues = $request->request->all();
@@ -150,10 +150,10 @@ class UserController extends SpikaWebBaseController
                     $thumbFileName
                 );
                 
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageUserAdded');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageUserAdded');
             }
             
-            return $self->render('client/userForm.twig', array(
+            return $self->render('admin/userForm.twig', array(
                 'mode' => 'new',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
@@ -171,7 +171,7 @@ class UserController extends SpikaWebBaseController
 
             $user = $self->app['spikadb']->findUserById($id,false);
 
-            return $self->render('client/userForm.twig', array(
+            return $self->render('admin/userForm.twig', array(
                 'mode' => 'view',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
@@ -189,13 +189,13 @@ class UserController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission() && $self->loginedUser['_id'] != $id){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }            
             
             $user = $self->app['spikadb']->findUserById($id,false);
             $user['birthday'] = date('Y-m-d',$user['birthday']);
             
-            return $self->render('client/userForm.twig', array(
+            return $self->render('admin/userForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'statusList' => $self->userStatusList,
@@ -210,7 +210,7 @@ class UserController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission() && $self->loginedUser['_id'] != $id){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $validationError = false;
@@ -271,14 +271,14 @@ class UserController extends SpikaWebBaseController
                     false // allow to change password and email
                 );
                 
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageUserChanged');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageUserChanged');
 
             }
     
             
             $user['birthday'] = date('Y-m-d',$user['birthday']);
 
-            return $self->render('client/userForm.twig', array(
+            return $self->render('admin/userForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'statusList' => $self->userStatusList,
@@ -296,12 +296,12 @@ class UserController extends SpikaWebBaseController
             $self->setVariables();
 
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $user = $self->app['spikadb']->findUserById($id,false);
             
-            return $self->render('client/userDelete.twig', array(
+            return $self->render('admin/userDelete.twig', array(
                 'id' => $id,
                 'mode' => 'delete',
                 'formValues' => $user
@@ -312,16 +312,16 @@ class UserController extends SpikaWebBaseController
         $controllers->post('user/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $formValues = $request->request->all();
             
             if(isset($formValues['submit_delete'])){
                 $self->app['spikadb']->deleteUser($id);
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageUserDeleted');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageUserDeleted');
             }else{
-                return $app->redirect(ROOT_URL . '/client/user/list');
+                return $app->redirect(ROOT_URL . '/admin/user/list');
             }
             
         })->before($app['adminBeforeTokenChecker']);
@@ -332,7 +332,7 @@ class UserController extends SpikaWebBaseController
             $self->setVariables();
             
             if(!$self->checkPermission()){
-                return $app->redirect(ROOT_URL . '/client/user/list?msg=messageNoPermission');
+                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
 
             $count = $self->app['spikadb']->getConversationHistoryCount($userId);
@@ -354,10 +354,10 @@ class UserController extends SpikaWebBaseController
 
             $user = $self->app['spikadb']->findUserById($userId);
             
-            return $self->render('client/userConversationHistory.twig', array(
+            return $self->render('admin/userConversationHistory.twig', array(
                 'conversations' => $conversationHistory,
                 'pager' => array(
-                    'baseURL' => ROOT_URL . "/client/user/conversateion/{$userId}?page=",
+                    'baseURL' => ROOT_URL . "/admin/user/conversateion/{$userId}?page=",
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),

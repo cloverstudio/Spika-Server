@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spika\Controller\Web\Client;
+namespace Spika\Controller\Web\Admin;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -59,10 +59,10 @@ class NewsController extends SpikaWebBaseController
                 $news[$i]['modified'] = date("Y.m.d",$news[$i]['modified']);
             }
             
-            return $self->render('client/newsList.twig', array(
+            return $self->render('admin/newsList.twig', array(
                 'news' => $news,
                 'pager' => array(
-                    'baseURL' => ROOT_URL . "/client/news/list?page=",
+                    'baseURL' => ROOT_URL . "/admin/news/list?page=",
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),
@@ -78,7 +78,7 @@ class NewsController extends SpikaWebBaseController
             
             $self->setVariables();
 
-            return $self->render('client/newsForm.twig', array(
+            return $self->render('admin/newsForm.twig', array(
                 'mode' => 'new',
                 'formValues' => $self->getEmptyFormData(),
             ));
@@ -112,10 +112,10 @@ class NewsController extends SpikaWebBaseController
                 	$formValues['story_url']
                 );
                 
-                return $app->redirect(ROOT_URL . '/client/news/list?msg=messageNewsAdded');
+                return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNewsAdded');
             }
             
-            return $self->render('client/newsForm.twig', array(
+            return $self->render('admin/newsForm.twig', array(
                 'mode' => 'new',
                 'formValues' => $formValues
             ));
@@ -131,7 +131,7 @@ class NewsController extends SpikaWebBaseController
 
             $story = $self->app['spikadb']->findStoryById($id);
             
-            return $self->render('client/newsForm.twig', array(
+            return $self->render('admin/newsForm.twig', array(
                 'mode' => 'view',
                 'formValues' => $story
             ));
@@ -148,10 +148,10 @@ class NewsController extends SpikaWebBaseController
 
             $story = $self->app['spikadb']->findStoryById($id);
             if($story['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
-            	return $app->redirect(ROOT_URL . '/client/news/list?msg=messageNoPermission');
+            	return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
             }
                   
-            return $self->render('client/newsForm.twig', array(
+            return $self->render('admin/newsForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'formValues' => $story
@@ -165,7 +165,7 @@ class NewsController extends SpikaWebBaseController
             
             $story = $self->app['spikadb']->findStoryById($id);
             if($story['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
-            	return $app->redirect(ROOT_URL . '/client/news/list?msg=messageNoPermission');
+            	return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
             }
 
             $formValues = $request->request->all();
@@ -187,11 +187,11 @@ class NewsController extends SpikaWebBaseController
                     $formValues['story_url']
                 );
                 
-                return $app->redirect(ROOT_URL . '/client/news/list?msg=messageNewsChanged');
+                return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNewsChanged');
 
             }
             
-            return $self->render('client/newsForm.twig', array(
+            return $self->render('admin/newsForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'formValues' => $story
@@ -208,12 +208,12 @@ class NewsController extends SpikaWebBaseController
             
             $story = $self->app['spikadb']->findStoryById($id);
             if($story['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
-            	return $app->redirect(ROOT_URL . '/client/news/list?msg=messageNoPermission');
+            	return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
             }
 
             $story = $self->app['spikadb']->findStoryById($id);
 
-            return $self->render('client/newsDelete.twig', array(
+            return $self->render('admin/newsDelete.twig', array(
                 'id' => $id,
                 'mode' => 'delete',
                 'formValues' => $story
@@ -227,16 +227,16 @@ class NewsController extends SpikaWebBaseController
             
             $story = $self->app['spikadb']->findStoryById($id);
             if($story['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
-            	return $app->redirect(ROOT_URL . '/client/news/list?msg=messageNoPermission');
+            	return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
             }
 
             $formValues = $request->request->all();
             
             if(isset($formValues['submit_delete'])){
                 $self->app['spikadb']->deleteStory($id);
-                return $app->redirect(ROOT_URL . '/client/news/list?msg=messageStoryDeleted');
+                return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageStoryDeleted');
             }else{
-                return $app->redirect(ROOT_URL . '/client/news/list');
+                return $app->redirect(ROOT_URL . '/admin/news/list');
             }
             
         })->before($app['adminBeforeTokenChecker']);

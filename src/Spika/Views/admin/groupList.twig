@@ -52,8 +52,21 @@
                 <div id="list" class="col-lg-8" style="min-height:500px">
                     
                     <div style="text-align:right">
-                        {% include "admin/pager.twig" %}
+
+                        <form class="form-inline" role="form" method="post" action="{{ROOT_URL}}/admin/group/list" >
+                          <div class="form-group">
+                            <input type="text" name="search-groupname" value="{{searchCriteria.groupName}}" class="form-control" id="exampleInputEmail2" placeholder="{{lang.formGroupName}}">
+                          </div>
+                          <button type="submit" class="btn btn-primary">{{lang.search}}</button>
+                          
+                          {% if searchCriteria.groupName != '' %}
+                                <input type="submit" class="btn btn-danger" name="clear" value="{{lang.clearCriteria}}" />
+                          {% endif %}
+                          
+                        </form>
+                    
                     </div>
+
                     
                     <table class="table table-striped">
                         

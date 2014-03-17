@@ -1113,7 +1113,7 @@ class MySQL implements DbInterface
    public function findAllGroups($offset = 0,$count=0)
     {
     
-        $result = $this->DB->fetchAll('select * from `group` order by _id');
+        $result = $this->DB->fetchAll("select * from `group` order by _id limit {$count} offset {$offset}");
         
         $formatedGroups = array();
         foreach($result as $group){
@@ -2011,5 +2011,29 @@ class MySQL implements DbInterface
         return $result;
     }
 
+    public function findAllGroupsWithPagingWithCriteria($offset,$count,$criteria){
+        
+        $result = $this->DB->fetchAll("select * from `group` where 1 = 1 {$criteria} order by _id limit {$count} offset {$offset}");
+        
+        $formatedGroups = array();
+        foreach($result as $group){
+            $group = $this->reformatGroupData($group);
+            $formatedGroups[] = $group;
+        }
+        
+        return $formatedGroups;
+
+        
+    }
+    
+    public function findGroupCountWithCriteria($criteria){
+        
+        $query = "select count(*) as count from `group` where 1 = 1 {$criteria} ";
+        
+        $result = $this->DB->fetchColumn($query);
+
+        return $result;
+        
+    }
 
 }

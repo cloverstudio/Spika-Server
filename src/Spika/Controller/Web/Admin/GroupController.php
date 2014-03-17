@@ -41,7 +41,17 @@ class GroupController extends SpikaWebBaseController
         
             $self->setVariables();
 
-            $count = $self->app['spikadb']->findGroupCount();
+            // search criteria
+            $searchCriteriaGroupName = $app['session']->get('groupnameCriteria');
+            $searchCriteriaGroupName = trim($searchCriteriaGroupName);
+            
+            $criteria = "";
+            if(!empty($searchCriteriaGroupName)){
+                $criteria .= " and LOWER(name) like LOWER('%{$searchCriteriaGroupName}%')";
+            }
+
+
+            $count = $self->app['spikadb']->findGroupCountWithCriteria($criteria);
             
             $page = $request->get('page');
             if(empty($page))
@@ -51,14 +61,13 @@ class GroupController extends SpikaWebBaseController
             if(!empty($msg))
                 $self->setInfoAlert($self->language[$msg]);
             
-            $groups = $self->app['spikadb']->findAllGroups(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT);
+            $groups = $self->app['spikadb']->findAllGroupsWithPagingWithCriteria(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT,$criteria);
             
             // convert timestamp to date
             for($i = 0 ; $i < count($groups) ; $i++){
                 $groups[$i]['created'] = date("Y.m.d",$groups[$i]['created']);
                 $groups[$i]['modified'] = date("Y.m.d",$groups[$i]['modified']);
             }
-
             
             return $self->render('admin/groupList.twig', array(
                 'categoryList' => $self->getGroupCategoryList(),
@@ -68,10 +77,29 @@ class GroupController extends SpikaWebBaseController
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 ),
+                'searchCriteria' => array(
+                    'groupName' => $searchCriteriaGroupName
+                )
                 
             ));
                         
         })->before($app['adminBeforeTokenChecker']);
+
+        $controllers->post('group/list', function (Request $request) use ($app,$self) {
+            
+            $groupnameCriteria = $request->get('search-groupname');
+            $clearButton = $request->get('clear');
+            
+            if(!empty($clearButton)){
+                $app['session']->set('groupnameCriteria', '');
+            } else {
+                $app['session']->set('groupnameCriteria', $groupnameCriteria);
+            }
+            
+            return $app->redirect(ROOT_URL . '/admin/group/list'); 
+                        
+        })->before($app['adminBeforeTokenChecker']);
+
 
         $controllers->get('group/add', function (Request $request) use ($app,$self) {
             

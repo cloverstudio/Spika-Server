@@ -78,5 +78,7 @@ interface DbInterface
     public function reportMessage($messageId);
     public function findAllUsersWithPagingWithCriteria($offect,$count,$criteria);
     public function findUserCountWithCriteria($criteria);
+    public function findAllGroupsWithPagingWithCriteria($offect,$count,$criteria);
+    public function findGroupCountWithCriteria($criteria);
 
 }

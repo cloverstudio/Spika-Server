@@ -1494,9 +1494,14 @@ class MySQL implements DbInterface
     
     public function reformatGroupData($gourp){
 
-        $gourp['created'] = intval($gourp['created']);
-        $gourp['modified'] = intval($gourp['modified']);
-        $gourp['type'] = 'group';
+        if(isset($gourp['created']))
+            $gourp['created'] = intval($gourp['created']);
+        
+        if(isset($gourp['modified']))
+            $gourp['modified'] = intval($gourp['modified']);
+        
+        if(isset($gourp['type']))
+            $gourp['type'] = 'group';
 
         return $gourp;
     }
@@ -1959,9 +1964,11 @@ class MySQL implements DbInterface
     	return $result['avatar_thumb_file_id'];
     }
     
-    public function getAllUsersByGroupId($groupId){
-        $users = $this->DB->fetchAll('select * from user where _id in (select user_id from user_group where group_id = ?)',
-                                        array($groupId));
+    public function getAllUsersByGroupId($groupId,$count = 30,$offset = 0){
+        $users = $this->DB->fetchAll("
+            select * from user where _id in 
+                (select user_id from user_group where group_id = ?) 
+                limit {$count} offset {$offset}",array($groupId));
                                         
         return $users;
     }
@@ -1973,7 +1980,7 @@ class MySQL implements DbInterface
                     set report_count = report_count + 1
                     WHERE _id = ?',
     			array($messageId));
-
+        
     }
     
    public function findAllUsersWithPagingWithCriteria($offset = 0,$count=0,$criteria='')

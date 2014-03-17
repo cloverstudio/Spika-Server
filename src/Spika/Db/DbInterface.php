@@ -74,7 +74,7 @@ interface DbInterface
     public function getConversationHistory($user,$offset = 0,$count);
     public function getConversationHistoryCount($user);
     public function updateReadAt($messageId);
-    public function getAllUsersByGroupId($groupId);
+    public function getAllUsersByGroupId($groupId,$count,$offset);
     public function reportMessage($messageId);
     public function findAllUsersWithPagingWithCriteria($offect,$count,$criteria);
     public function findUserCountWithCriteria($criteria);

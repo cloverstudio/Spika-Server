@@ -333,6 +333,25 @@ class GroupController extends SpikaBaseController
             }
             
         )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
+
+        $controllers->get('/groupUsers/{groupId}/{count}/{offset}',
+        
+            function (Request $request,$groupId,$count = 30,$offset = 0) use ($app,$self) {
+                
+                $groupData = $app['spikadb']->findGroupById($groupId);
+
+                if(!isset($groupData['_id'])){
+                    return $self->returnErrorResponse("invalid group id");
+                }
+                
+                $users = $app['spikadb']->getAllUsersByGroupId($groupId,$count,$offset);
+                
+                return json_encode($users);
+                
+            }
+            
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
+
     }
 
     private function setupWatchMethod($self,$app,$controllers){

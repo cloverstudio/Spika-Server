@@ -411,7 +411,7 @@ class GroupController extends SpikaWebBaseController
                 'groupId' => $groupId,
                 'users' => $users,
                 'pager' => array(
-                    'baseURL' => ROOT_URL . "/admin/user/list?page=",
+                    'baseURL' => ROOT_URL . "/admin/group/users/{$groupId}?page=",
                     'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
                     'page' => $page,
                 )                

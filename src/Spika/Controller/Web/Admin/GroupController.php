@@ -393,9 +393,47 @@ class GroupController extends SpikaWebBaseController
             
         })->before($app['adminBeforeTokenChecker']);
 
-    
-        
+        $controllers->get('group/users/{groupId}', function (Request $request,$groupId) use ($app,$self) {
+            
+            $page = $request->get('page');
+            
+            if(empty($page))
+                $page = 1;
+            
+            $msg = $request->get('msg');
+            if(!empty($msg))
+                $self->setInfoAlert($self->language[$msg]);
+                
+            $users = $self->app['spikadb']->getAllUsersByGroupId($groupId,($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT);
+            $count = $self->app['spikadb']->getAllUsersCountByGroupId($groupId);
+            
+            return $self->render('admin/groupUserList.twig', array(
+                'groupId' => $groupId,
+                'users' => $users,
+                'pager' => array(
+                    'baseURL' => ROOT_URL . "/admin/user/list?page=",
+                    'pageCount' => ceil($count / ADMIN_LISTCOUNT) - 1,
+                    'page' => $page,
+                )                
+            ));
+            
+        })->before($app['adminBeforeTokenChecker']);
+
+        $controllers->get('group/unsubscribeUser/{groupId}/{userId}', function (Request $request,$groupId,$userId) use ($app,$self) {
+            
+            $group = $self->app['spikadb']->findGroupById($id);
+            if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
+                return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageNoPermission');
+            }
+            
+            $self->app['spikadb']->unSubscribeGroup($groupId,$userId);
+            
+            return $app->redirect(ROOT_URL . "/admin/group/users/{$groupId}?msg=messageRemoveUser");
+            
+        })->before($app['adminBeforeTokenChecker']);
+
         return $controllers;
+
     }
     
     public function getGroupCategoryList(){

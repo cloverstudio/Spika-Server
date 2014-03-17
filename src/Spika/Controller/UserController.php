@@ -121,6 +121,7 @@ class UserController extends SpikaBaseController
 
 
     private function setupUpdateUserMethod($self,$app,$controllers){
+    
         $controllers->post('/updateUser',
             function (Request $request) use ($app,$self) {
                 
@@ -149,6 +150,7 @@ class UserController extends SpikaBaseController
     }
 
     private function setupFindUserMethod($self,$app,$controllers){
+    
         $controllers->get('/findUser/{type}/{value}',
             function ($type,$value) use ($app,$self) {
                 

@@ -1964,13 +1964,29 @@ class MySQL implements DbInterface
     	return $result['avatar_thumb_file_id'];
     }
     
-    public function getAllUsersByGroupId($groupId,$count = 30,$offset = 0){
-        $users = $this->DB->fetchAll("
+    public function getAllUsersByGroupId($groupId,$offset = 0,$count = 30){
+        $query = "
             select * from user where _id in 
                 (select user_id from user_group where group_id = ?) 
-                limit {$count} offset {$offset}",array($groupId));
-                                        
+                limit {$count} offset {$offset}";
+
+        $users = $this->DB->fetchAll($query,array($groupId));
+        
+        
+                      
         return $users;
+    }
+    
+    public function getAllUsersCountByGroupId($groupId){
+    
+        $query = "
+            select count(*) from user where _id in 
+                (select user_id from user_group where group_id = ?)";
+
+        $users = $this->DB->fetchColumn($query,array($groupId));
+
+        return $users;
+        
     }
     
     public function reportMessage($messageId){

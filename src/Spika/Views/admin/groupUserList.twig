@@ -5,12 +5,10 @@
 <script type="text/javascript">
 
     var loginedUser = {{ loginedUser|json_encode()|raw }};
-    var lastUserId = 0;
-    
-    function openChat(groupId){
-        console.log(groupId);
+
+    function openChat(userId){
         chatWindow.initialize();
-        chatWindow.loadGroupConversation(groupId);
+        chatWindow.loadUserConversation(userId);
     }
     
     var chatWindow = null;
@@ -26,7 +24,7 @@
             openLocation:'{{lang.openLocation}}',
             chatTextBoxPlaceHolder:'{{lang.chatTextBoxPlaceHolder}}',
             chatTextBoxSend:'{{lang.chatTextBoxSend}}'
-        },true,2);
+        },true,1);
 
         chatWindow.attach($('#chatWindow'));
         chatWindow.showAlert('{{lang.conversationNotSelected}}');
@@ -38,7 +36,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">{{lang.labelGroup}} <a href="add" class="btn btn-primary btn-lg">{{lang.btnNewGroup}}</a></h1>
+                    <h1 class="page-header">{{lang.labeSubscribedUser}} 
                 </div>
             </div>
 
@@ -49,92 +47,67 @@
             </div>
                     
            <div class="row">
-                <div id="list" class="col-lg-8" style="min-height:500px">
+                <div class="col-lg-8">
                     
                     <div style="text-align:right">
 
-                        <form class="form-inline" role="form" method="post" action="{{ROOT_URL}}/admin/group/list" >
-                          <div class="form-group">
-                            <input type="text" name="search-groupname" value="{{searchCriteria.groupName}}" class="form-control" id="exampleInputEmail2" placeholder="{{lang.formGroupName}}">
-                          </div>
-                          <button type="submit" class="btn btn-primary">{{lang.search}}</button>
-                          
-                          {% if searchCriteria.groupName != '' %}
-                                <input type="submit" class="btn btn-danger" name="clear" value="{{lang.clearCriteria}}" />
-                          {% endif %}
-                          
-                        </form>
-                    
                     </div>
-
                     
                     <table class="table table-striped">
                         
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>{{lang.formGroupAvatar}}</th>
-                                <th>{{lang.formGroupCategory}}</th>
-                                <th>{{lang.formGroupName}}</th>
-                                <th>{{lang.labelCreated}}</th>
-                                <th></th>
+                                <th>{{lang.formUserAvatar}}</th>
+                                <th>{{lang.formUserName}}</th>
+                                <th>{{lang.formUserEmail}}</th>
+                                <th class="text-right">{{lang.labelCreated}}</th>
+                                <th width="100px"></th>
                             </tr>
                         </thead>
                         <tbody>
                         
-                            {% for group in groups %}
+                            {% for user in users %}
 
                                 <tr>
-                                    <td>{{group._id}}</td>
+                                    <td>{{user._id}}</td>
                                     <td>
-                                        {% if group.avatar_thumb_file_id != '' %}
-                                            <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{group.avatar_thumb_file_id}}" width="60"/>
+                                        {% if user.avatar_thumb_file_id != '' %}
+                                            <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{user.avatar_thumb_file_id}}" width="60"/>
                                         {% else %}
                                             <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
                                             
                                         {% endif %}
                                     </td>
-                                    <td>
-                                        {% if categoryList[group.category_id] is defined %}
-                                            {{categoryList[group.category_id].title}}
-                                        {% endif %}
-                                    </td>
-                                    <td>{{group.name}}</td>
-                                    <td>{{group.created}}</td>
-                                    <td>
+                                    <td>{{user.name}}</td>
+                                    <td>{{user.email}}</td>
+                                    <td class="text-right">{{user.created|date("Y.m.d")}}</td>
+                                    <td class="text-right">
                                         
                                         <div class="btn-group text-left" >
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                                 {{lang.labelAction}} <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
+                                            
+                                            
                                                 <li>
-                                                    <a href="{{ROOT_URL}}/admin/group/view/{{group._id}}">
+                                                    <a href="{{ROOT_URL}}/admin/user/view/{{user._id}}">
                                                         <i class="fa fa-search"></i> {{lang.labelView}}
                                                     </a>
                                                 </li>
                                                 
-                                                {% if isAdmin or group.user_id == loginedUser._id%}
+                                                {% if isAdmin %}
                                                     <li>
-                                                        <a href="{{ROOT_URL}}/admin/group/edit/{{group._id}}">
-                                                            <i class="fa fa-pencil-square-o"></i> {{lang.labelEdit}}
+                                                    <a href="{{ROOT_URL}}/admin/group/unsubscribeUser/{{groupId}}/{{user._id}}">
+                                                            <i class="fa fa-minus-circle"></i> {{lang.labelDeleteFromGroup}}
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <a href="{{ROOT_URL}}/admin/group/delete/{{group._id}}">
-                                                            <i class="fa fa-eraser"></i> {{lang.labelDelete}}
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="{{ROOT_URL}}/admin/group/users/{{group._id}}">
-                                                            <i class="fa fa-users"></i> {{lang.labelViewGroupUsers}}
-                                                        </a>
-                                                    </li>
-                                                {% endif %}
+                                                {% endif %}        
                                                 
                                                 <li>
-                                                    <a href="javascript:openChat({{group._id}});">
-                                                        <i class="fa fa-comments-o"></i> {{lang.labelConversation}}
+                                                    <a href="javascript:openChat({{user._id}})">
+                                                        <i class="fa fa-comment-o"></i> {{lang.labelStartChat}}
                                                     </a>
                                                 </li>
                                                 
@@ -142,6 +115,7 @@
                                         </div>
 
                                     </td>
+                                    
                                 </tr>
 
                             {% endfor %}
@@ -154,11 +128,11 @@
                     </div>
 
                 </div>
-                
+
                 <div id="chatWindow" class="col-lg-4">
                     
                 </div>
-                
+
             </div>
                          
 {% endblock %}

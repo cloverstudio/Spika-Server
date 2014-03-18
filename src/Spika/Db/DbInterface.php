@@ -80,5 +80,8 @@ interface DbInterface
     public function findUserCountWithCriteria($criteria);
     public function findAllGroupsWithPagingWithCriteria($offect,$count,$criteria);
     public function findGroupCountWithCriteria($criteria);
+    public function getContactsByUserId($userId);
+    public function getContactedByUserId($userId);
+    public function getGroupsByUserId($userId);
 
 }

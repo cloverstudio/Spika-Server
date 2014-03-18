@@ -200,12 +200,19 @@ class UserController extends SpikaWebBaseController
             $self->setVariables();
 
             $user = $self->app['spikadb']->findUserById($id,false);
-
-            return $self->render('admin/userForm.twig', array(
+            
+            $contact = $self->app['spikadb']->getContactsByUserId($id);
+            $contacted = $self->app['spikadb']->getContactedByUserId($id);
+            $group = $self->app['spikadb']->getGroupsByUserId($id);
+            
+            return $self->render('admin/userProfile.twig', array(
                 'mode' => 'view',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
-                'formValues' => $user
+                'formValues' => $user,
+                'contacts' => $contact,
+                'contacted' => $contacted,
+                'groups' => $group,
             ));
             
         })->before($app['adminBeforeTokenChecker']);
@@ -443,6 +450,7 @@ class UserController extends SpikaWebBaseController
         }
 
         if($editmode){
+        
             // check name is unique
             $check = $this->app['spikadb']->findUserByName($formValues['name']);
             if(isset($check['_id']) && $check['_id'] != $userId){
@@ -456,7 +464,9 @@ class UserController extends SpikaWebBaseController
                 $this->setErrorAlert($this->language['messageValidationErrorUserEmailNotUnique']);
                 $validationResult = false;
             } 
+            
         }else{
+        
             // check name is unique
             $check = $this->app['spikadb']->findUserByName($formValues['name']);
             if(isset($check['_id'])){
@@ -470,8 +480,8 @@ class UserController extends SpikaWebBaseController
                 $this->setErrorAlert($this->language['messageValidationErrorUserEmailNotUnique']);
                 $validationResult = false;
             } 
+            
         }
-
 
         if($request->files->has("file")){
         

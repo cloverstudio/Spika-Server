@@ -2043,13 +2043,27 @@ class MySQL implements DbInterface
     }
     
     public function findGroupCountWithCriteria($criteria){
-        
         $query = "select count(*) as count from `group` where 1 = 1 {$criteria} ";
-        
         $result = $this->DB->fetchColumn($query);
-
         return $result;
-        
     }
 
+    public function getContactsByUserId($userId){
+        $query = "select * from user where _id in (select user_id from user_contact where user_id = ?)";
+        $users = $this->DB->fetchAll($query,array($userId));
+        return $users;
+    }
+    
+    public function getContactedByUserId($userId){
+        $query = "select * from user where _id in (select user_id from user_contact where contact_user_id = ?)";
+        $users = $this->DB->fetchAll($query,array($userId));
+        return $users;
+    }
+    
+    public function getGroupsByUserId($userId){
+        $query = "select * from `group` where _id in (select group_id from user_group where user_id = ?)";
+        $groups = $this->DB->fetchAll($query,array($userId));
+        return $groups;
+    }
+    
 }

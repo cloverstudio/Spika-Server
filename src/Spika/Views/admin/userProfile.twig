@@ -1,0 +1,277 @@
+{% extends "admin/adminBase.twig" %}
+
+{% block content %}
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        {{lang.labelViewUser}}
+                    </h1>
+                </div>
+            </div>
+             
+            <div class="row">
+                <div class="col-lg-8">
+                    
+                    {% include "admin/alerts.twig" %}
+                             
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
+                      <li><a href="#contacts" data-toggle="tab">Contacts</a></li>
+                      <li><a href="#contacted" data-toggle="tab">Contacted</a></li>
+                      <li><a href="#groups" data-toggle="tab">Groups</a></li>
+                    </ul>
+                    
+                    <div class="tab-content">
+                    
+                      <div class="tab-pane active" id="profile">
+                      
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    {{lang.labelpicture}}
+                                </div>
+                                <div class="panel-body">
+                                    {% if formValues.avatar_thumb_file_id != '' %}
+                                        <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_thumb_file_id}}" width="120" />
+                                    {% else %}
+                                        <img class="img-thumbnail" src="http://dummyimage.com/120x120/e2e2e2/7a7a7a&text=nopicture" width="120"/>
+                                    {% endif %}
+                                    
+                                    {% if formValues.avatar_file_id != '' %}
+                                        <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_file_id}}" width="640"/>
+                                    {% else %}
+                                        <img class="img-thumbnail" src="http://dummyimage.com/640x640/e2e2e2/7a7a7a&text=nopicture" width="640"/>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>{{lang.formUserName}}</label>
+                                <div class="well">{{formValues.name}}</div>
+                            </div>
+    
+                            <div class="form-group">
+                                <label>{{lang.formUserEmail}}</label>
+                                <div class="well">{{formValues.email}}</div>
+                                
+                            </div>
+    
+                            <div class="form-group">
+                                <label>{{lang.formUserPassword}}</label>
+                                <div class="well">{% if formValues.password != "" %}Yes{% else %}No{% endif %}</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>{{lang.formUserAbout}}</label>
+                                <div class="well">{{formValues.about}}</div>
+                            </div>
+    
+                            <div class="form-group">
+                                <label>{{lang.formUserStatus}}</label>
+                                <div class="well">{{formValues.online_status}}</div>
+                            </div>               
+     
+                            <div class="form-group">
+                                <label>{{lang.formMaxContacts}}</label>
+                                <div class="well">{{formValues.max_contact_count}}</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>{{lang.formMaxFavorites}}</label>
+                                <div class="well">{{formValues.max_favorite_count}}</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>{{lang.formBirthday}}</label>
+                                 <div class="well">{{formValues.birthday|date('Y.m.d')}}</div>
+                            </div>
+    
+                            
+                            <div class="form-group">
+                                <label>{{lang.formGender}}</label>
+                                <div class="well">{{formValues.gender}}</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>{{lang.formToken}}</label>
+                                <div class="well">{{formValues.token}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>{{lang.formIosToken}}</label>
+                                <div class="well">{{formValues.ios_push_token}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>{{lang.formAndroidToken}}</label>
+                                <div class="well">{{formValues.android_push_token}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>{{lang.formLastLogin}}</label>
+                                <div class="well">{{formValues.last_login|date('Y.m.d H:i:s')}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>{{lang.labelCreated}}</label>
+                                <div class="well">{{formValues.created|date('Y.m.d H:i:s')}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>{{lang.labelModified}}</label>
+                                <div class="well">{{formValues.modified|date('Y.m.d H:i:s')}}</div>
+                            </div>
+                      </div>
+                      
+                      <div class="tab-pane" id="contacts">
+                      
+                            <table class="table table-striped">
+                                
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>{{lang.formUserAvatar}}</th>
+                                        <th>{{lang.formUserName}}</th>
+                                        <th>{{lang.formUserEmail}}</th>
+                                        <th class="text-right">{{lang.labelCreated}}</th>
+                                        <th width="100px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                    {% for user in contacts %}
+        
+                                        <tr>
+                                            <td>{{user._id}}</td>
+                                            <td>
+                                                {% if user.avatar_thumb_file_id != '' %}
+                                                    <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{user.avatar_thumb_file_id}}" width="60"/>
+                                                {% else %}
+                                                    <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{user.name}}</td>
+                                            <td>{{user.email}}</td>
+                                            <td class="text-right">{{user.created}}</td>
+                                            <td class="text-right">
+ 
+                                            </td>
+                                            
+                                        </tr>
+        
+                                    {% endfor %}
+        
+                                </tbody>
+                            </table>                      
+                      </div>
+                      
+                      <div class="tab-pane" id="contacted">
+                      
+
+                            <table class="table table-striped">
+                                
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>{{lang.formUserAvatar}}</th>
+                                        <th>{{lang.formUserName}}</th>
+                                        <th>{{lang.formUserEmail}}</th>
+                                        <th class="text-right">{{lang.labelCreated}}</th>
+                                        <th width="100px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                    {% for user in contacted %}
+        
+                                        <tr>
+                                            <td>{{user._id}}</td>
+                                            <td>
+                                                {% if user.avatar_thumb_file_id != '' %}
+                                                    <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{user.avatar_thumb_file_id}}" width="60"/>
+                                                {% else %}
+                                                    <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{user.name}}</td>
+                                            <td>{{user.email}}</td>
+                                            <td class="text-right">{{user.created}}</td>
+                                            <td class="text-right">
+                                                
+   
+        
+                                            </td>
+                                            
+                                        </tr>
+        
+                                    {% endfor %}
+        
+                                </tbody>
+                            </table> 
+                                
+                      
+                      </div>
+                      
+                      <div class="tab-pane" id="groups">
+                      
+                    
+                            <table class="table table-striped">
+                                
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>{{lang.formGroupAvatar}}</th>
+                                        <th>{{lang.formGroupCategory}}</th>
+                                        <th>{{lang.formGroupName}}</th>
+                                        <th>{{lang.labelCreated}}</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                    {% for group in groups %}
+        
+                                        <tr>
+                                            <td>{{group._id}}</td>
+                                            <td>
+                                                {% if group.avatar_thumb_file_id != '' %}
+                                                    <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{group.avatar_thumb_file_id}}" width="60"/>
+                                                {% else %}
+                                                    <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
+                                                    
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if categoryList[group.category_id] is defined %}
+                                                    {{categoryList[group.category_id].title}}
+                                                {% endif %}
+                                            </td>
+                                            <td>{{group.name}}</td>
+                                            <td>{{group.created}}</td>
+                                            <td>
+                                                
+
+        
+                                            </td>
+                                        </tr>
+        
+                                    {% endfor %}
+        
+                                </tbody>
+                            </table>
+                      
+                      </div>
+                      
+                    </div>
+
+               
+
+                     
+
+                    
+                </div>
+                
+                <div id="chatWindow" class="col-lg-4">
+                    
+                </div>
+            </div>
+             
+</script>
+       
+{% endblock %}

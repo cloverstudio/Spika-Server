@@ -246,10 +246,10 @@ class GroupController extends SpikaBaseController
 
         $controllers->get('/searchGroups/{type}/',
             function ($type) use ($app,$self) {
-                $result = $app['spikadb']->findAllGroups();
+                $result = $app['spikadb']->findAllGroupsWithPagingWithCriteria(0,100,"",array());
                 return json_encode($result);
             }
-        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
+        )->before($app['beforeApiGeneral']);
         
         $controllers->get('/searchGroups/{type}/{value}',
             function ($type,$value) use ($app,$self) {

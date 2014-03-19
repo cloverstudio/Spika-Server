@@ -1500,8 +1500,7 @@ class MySQL implements DbInterface
         if(isset($gourp['modified']))
             $gourp['modified'] = intval($gourp['modified']);
         
-        if(isset($gourp['type']))
-            $gourp['type'] = 'group';
+        $gourp['type'] = 'group';
 
         return $gourp;
     }

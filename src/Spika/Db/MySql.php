@@ -1999,7 +1999,7 @@ class MySQL implements DbInterface
         
     }
     
-   public function findAllUsersWithPagingWithCriteria($offset = 0,$count=0,$criteria='')
+   public function findAllUsersWithPagingWithCriteria($offset = 0,$count=0,$criteria='',$criteriaValues=array())
    {
         $query = "select * from user where 1 = 1 {$criteria} order by _id ";
         
@@ -2007,7 +2007,7 @@ class MySQL implements DbInterface
             $query .= " limit {$count} offset {$offset} ";
         }
         
-        $result = $this->DB->fetchAll($query);
+        $result = $this->DB->fetchAll($query,$criteriaValues);
         
         $formatedUsers = array();
         foreach($result as $user){
@@ -2018,18 +2018,18 @@ class MySQL implements DbInterface
         return $this->formatResult($formatedUsers);
     }
 
-   public function findUserCountWithCriteria($criteria = '')
+   public function findUserCountWithCriteria($criteria = '',$criteriaValues=array())
     {
         $query = "select count(*) as count from user where 1 = 1 {$criteria}";
         
-        $result = $this->DB->fetchColumn($query);
+        $result = $this->DB->fetchColumn($query,$criteriaValues);
 
         return $result;
     }
 
-    public function findAllGroupsWithPagingWithCriteria($offset,$count,$criteria){
+    public function findAllGroupsWithPagingWithCriteria($offset,$count,$criteria,$criteriaValues){
         
-        $result = $this->DB->fetchAll("select * from `group` where 1 = 1 {$criteria} order by _id limit {$count} offset {$offset}");
+        $result = $this->DB->fetchAll("select * from `group` where 1 = 1 {$criteria} order by _id limit {$count} offset {$offset}",$criteriaValues);
         
         $formatedGroups = array();
         foreach($result as $group){
@@ -2039,17 +2039,16 @@ class MySQL implements DbInterface
         
         return $formatedGroups;
 
-        
     }
     
-    public function findGroupCountWithCriteria($criteria){
+    public function findGroupCountWithCriteria($criteria,$criteriaValues){
         $query = "select count(*) as count from `group` where 1 = 1 {$criteria} ";
-        $result = $this->DB->fetchColumn($query);
+        $result = $this->DB->fetchColumn($query,$criteriaValues);
         return $result;
     }
 
     public function getContactsByUserId($userId){
-        $query = "select * from user where _id in (select user_id from user_contact where user_id = ?)";
+        $query = "select * from user where _id in (select contact_user_id from user_contact where user_id = ?)";
         $users = $this->DB->fetchAll($query,array($userId));
         return $users;
     }
@@ -2065,5 +2064,29 @@ class MySQL implements DbInterface
         $groups = $this->DB->fetchAll($query,array($userId));
         return $groups;
     }
+
+    public function getAllUsersByGroupIdWithCriteria($groupId,$offset = 0,$count = 30,$criteria = "",$criteriaValues = array()){
+        $query = "
+            select * from user where _id in 
+                (select user_id from user_group where group_id = ?) {$criteria}
+                limit {$count} offset {$offset}";
+
+        $users = $this->DB->fetchAll($query,array_merge(array($groupId),$criteriaValues));
+
+        return $users;
+    }
     
+    public function getAllUsersCountByGroupIdWithCriteria($groupId,$criteria = "",$criteriaValues = array()){
+    
+        $query = "
+            select count(*) from user where _id in 
+                (select user_id from user_group where group_id = ?) {$criteria}";
+
+        $users = $this->DB->fetchColumn($query,array_merge(array($groupId),$criteriaValues));
+
+        return $users;
+        
+    }
+
+
 }

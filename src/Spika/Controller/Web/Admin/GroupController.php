@@ -43,15 +43,15 @@ class GroupController extends SpikaWebBaseController
 
             // search criteria
             $searchCriteriaGroupName = $app['session']->get('groupnameCriteria');
-            $searchCriteriaGroupName = trim($searchCriteriaGroupName);
             
             $criteria = "";
+            $searchGroupNameCriteriaValues = array();
             if(!empty($searchCriteriaGroupName)){
-                $criteria .= " and LOWER(name) like LOWER('%{$searchCriteriaGroupName}%')";
+                $criteria .= " and LOWER(name) like LOWER(?)";
+                $searchGroupNameCriteriaValues[] = "%{$searchCriteriaGroupName}%";
             }
-
-
-            $count = $self->app['spikadb']->findGroupCountWithCriteria($criteria);
+            
+            $count = $self->app['spikadb']->findGroupCountWithCriteria($criteria,$searchGroupNameCriteriaValues);
             
             $page = $request->get('page');
             if(empty($page))
@@ -61,7 +61,7 @@ class GroupController extends SpikaWebBaseController
             if(!empty($msg))
                 $self->setInfoAlert($self->language[$msg]);
             
-            $groups = $self->app['spikadb']->findAllGroupsWithPagingWithCriteria(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT,$criteria);
+            $groups = $self->app['spikadb']->findAllGroupsWithPagingWithCriteria(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT,$criteria,$searchGroupNameCriteriaValues);
             
             // convert timestamp to date
             for($i = 0 ; $i < count($groups) ; $i++){
@@ -87,7 +87,7 @@ class GroupController extends SpikaWebBaseController
 
         $controllers->post('group/list', function (Request $request) use ($app,$self) {
             
-            $groupnameCriteria = $request->get('search-groupname');
+            $groupnameCriteria = trim($request->get('search-groupname'));
             $clearButton = $request->get('clear');
             
             if(!empty($clearButton)){
@@ -202,20 +202,90 @@ class GroupController extends SpikaWebBaseController
         $controllers->get('group/view/{id}', function (Request $request,$id) use ($app,$self) {
             
             $self->setVariables();
-
             $group = $self->app['spikadb']->findGroupById($id);
+            $tab = 'profile';
+
+            $action = $request->get('action');
+            if($action == 'subscribe'){
+                $self->app['spikadb']->subscribeGroup($group['_id'],$self->loginedUser['_id']);
+                $self->setInfoAlert($self->language['messageSubscribed']);
+                $self->updateLoginUserData();
+            }
+            
+            if($action == 'unsubscribeUser'){
+                $userId = $request->get('value');
+                $self->app['spikadb']->unSubscribeGroup($group['_id'],$userId);
+                $self->setInfoAlert($self->language['messageKicked']);
+                $self->updateLoginUserData();
+            }
+
+            if($action == 'unsubscribe'){
+                $self->app['spikadb']->unSubscribeGroup($group['_id'],$self->loginedUser['_id']);
+                $self->setInfoAlert($self->language['messageUnsubscribed']);
+                $self->updateLoginUserData();
+            }
+            
             $categoryList = $self->getGroupCategoryList();
             
             $categoryName = $categoryList[$group['category_id']]['title'];
             $group['categoryName'] = $categoryName;
             
-            return $self->render('admin/groupForm.twig', array(
+            
+            $pageSubscribedUsers = $request->get('page');
+            if(empty($pageSubscribedUsers))
+                $pageSubscribedUsers = 1;
+            else
+                $tab = 'users';
+            
+            $criteria = "";
+            $searchUsernameCriteria = $app['session']->get('subscribedUsersCriteria');
+            $searchUsernameCriteriaValues = array();
+            if(!empty($searchUsernameCriteria)){
+                $criteria .= " and LOWER(name) like LOWER(?)";
+                $searchUsernameCriteriaValues[] = "%{$searchUsernameCriteria}%";
+                $tab = 'users';
+            }
+
+            $userList = $self->app['spikadb']->getAllUsersByGroupIdWithCriteria($group['_id'],($pageSubscribedUsers-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT,$criteria,$searchUsernameCriteriaValues);
+            $userCount = $self->app['spikadb']->getAllUsersCountByGroupIdWithCriteria($group['_id'],$criteria,$searchUsernameCriteriaValues);
+            
+            $isSubscribed = $self->checkUserIsSubscribedGroup($group['_id']);
+            
+            return $self->render('admin/groupProfile.twig', array(
                 'mode' => 'view',
                 'categoryList' => $self->getGroupCategoryList(),
-                'formValues' => $group
+                'formValues' => $group,
+                'groupId' => $id,
+                'isSubscribed' => $isSubscribed,
+                'subscribedUsers' => $userList,
+                'tab' => $tab,
+                'pager' => array(
+                    'baseURL' => ROOT_URL . "/admin/group/view/{$group['_id']}?page=",
+                    'pageCount' => ceil($userCount / ADMIN_LISTCOUNT) - 1,
+                    'page' => $pageSubscribedUsers,
+                ),
+                'searchCriteria' => array(
+                    'userName' => $searchUsernameCriteria
+                )
             ));
             
         })->before($app['adminBeforeTokenChecker']);
+
+        $controllers->post('group/view/{id}', function (Request $request,$id) use ($app,$self) {
+            
+            $usernameCriteria = trim($request->get('search-subscribedusers'));
+            $clearButton = $request->get('clear');
+            
+            if(!empty($clearButton)){
+                $app['session']->set('subscribedUsersCriteria', '');
+            } else {
+                $app['session']->set('subscribedUsersCriteria', $usernameCriteria);
+            }
+            
+            return $app->redirect(ROOT_URL . "/admin/group/view/{$id}"); 
+                        
+        })->before($app['adminBeforeTokenChecker']);
+
 
         //
         // Edit logics

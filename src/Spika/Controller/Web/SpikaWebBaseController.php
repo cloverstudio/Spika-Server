@@ -54,6 +54,40 @@ class SpikaWebBaseController implements ControllerProviderInterface
         $this->loginedUser = $this->app['session']->get('user');
     }
     
+    public function updateLoginUserData(){
+        $user = $this->app['spikadb']->findUserById($this->loginedUser['_id'],false);
+        $this->app['session']->set('user',$user);
+        $this->loginedUser = $this->app['session']->get('user');
+    }
+    
+    public function checkUserIsInLoginUserContact($userId){
+    
+        $contacts = $this->loginedUser['contacts'];
+        
+        $isExists = false;
+        foreach($contacts as $contactUserId){
+            if(intval($userId) == intval($contactUserId))
+                $isExists = true;
+        }
+        
+        return $isExists;
+    }
+    
+    public function checkUserIsSubscribedGroup($groupId){
+        
+        $groups = $this->loginedUser['favorite_groups'];
+        
+        $isExists = false;
+        foreach($groups as $favoriteGroupId){
+            if(intval($groupId) == intval($favoriteGroupId))
+                $isExists = true;
+        }
+        
+        return $isExists;
+
+        
+    }
+    
     public function render($tempalteFile,$params){
         
         $user = $this->app['session']->get('user');

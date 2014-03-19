@@ -76,12 +76,14 @@ interface DbInterface
     public function updateReadAt($messageId);
     public function getAllUsersByGroupId($groupId,$offset,$count);
     public function reportMessage($messageId);
-    public function findAllUsersWithPagingWithCriteria($offect,$count,$criteria);
-    public function findUserCountWithCriteria($criteria);
-    public function findAllGroupsWithPagingWithCriteria($offect,$count,$criteria);
-    public function findGroupCountWithCriteria($criteria);
+    public function findAllUsersWithPagingWithCriteria($offect,$count,$criteria,$criteriaValues);
+    public function findUserCountWithCriteria($criteria,$criteriaValues);
+    public function findAllGroupsWithPagingWithCriteria($offect,$count,$criteria,$values);
+    public function findGroupCountWithCriteria($criteria,$values);
     public function getContactsByUserId($userId);
     public function getContactedByUserId($userId);
     public function getGroupsByUserId($userId);
+    public function getAllUsersByGroupIdWithCriteria($groupId,$offset,$count,$criteria,$values);
+    public function getAllUsersCountByGroupIdWithCriteria($groupId,$criteria,$values);
 
 }

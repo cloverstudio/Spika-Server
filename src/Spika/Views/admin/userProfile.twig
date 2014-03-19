@@ -7,6 +7,13 @@
                 <div class="col-lg-12">
                     <h1 class="page-header">
                         {{lang.labelViewUser}}
+
+                        {% if isInMyContact == 0 %}
+                            <a href="{{ROOT_URL}}/admin/user/view/{{userId}}?action=addToContact" class="btn btn-primary btn-sm">{{lang.btnAddToContact}}</a>
+                        {% else %}
+                            <a href="{{ROOT_URL}}/admin/user/view/{{userId}}?action=removeFromContact" class="btn btn-danger btn-sm">{{lang.btnRemoveFromContact}}</a>
+                        {% endif %}
+                    </h1>
                     </h1>
                 </div>
             </div>
@@ -17,10 +24,10 @@
                     {% include "admin/alerts.twig" %}
                              
                     <ul class="nav nav-tabs">
-                      <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
-                      <li><a href="#contacts" data-toggle="tab">Contacts</a></li>
-                      <li><a href="#contacted" data-toggle="tab">Contacted</a></li>
-                      <li><a href="#groups" data-toggle="tab">Groups</a></li>
+                      <li class="active"><a href="#profile" data-toggle="tab">{{lang.labelProfile}}</a></li>
+                      <li><a href="#contacts" data-toggle="tab">{{lang.labelContacts}}</a></li>
+                      <li><a href="#contacted" data-toggle="tab">{{lang.labelContacted}}</a></li>
+                      <li><a href="#groups" data-toggle="tab">{{lang.labelGroups}}</a></li>
                     </ul>
                     
                     <div class="tab-content">
@@ -146,11 +153,24 @@
                                                     <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
                                                 {% endif %}
                                             </td>
-                                            <td>{{user.name}}</td>
+                                            <td><a href="{{ROOT_URL}}/admin/user/view/{{user._id}}">{{user.name}}</a></td>
                                             <td>{{user.email}}</td>
-                                            <td class="text-right">{{user.created}}</td>
+                                            <td class="text-right">{{user.created|date("Y.m.d")}}</td>
                                             <td class="text-right">
- 
+                                                
+                                                <div class="btn-group text-left" >
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        {{lang.labelAction}} <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>
+                                                            <a href="{{ROOT_URL}}/admin/user/view/{{userId}}?action=removeContact&value={{user._id}}">
+                                                                <i class="fa fa-unlink"></i> {{lang.labelRemoveContact}}
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+        
                                             </td>
                                             
                                         </tr>
@@ -189,12 +209,23 @@
                                                     <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
                                                 {% endif %}
                                             </td>
-                                            <td>{{user.name}}</td>
+                                            <td><a href="{{ROOT_URL}}/admin/user/view/{{user._id}}">{{user.name}}</a></td>
                                             <td>{{user.email}}</td>
-                                            <td class="text-right">{{user.created}}</td>
+                                            <td class="text-right">{{user.created|date("Y.m.d")}}</td>
                                             <td class="text-right">
                                                 
-   
+                                                <div class="btn-group text-left" >
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        {{lang.labelAction}} <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>
+                                                            <a href="{{ROOT_URL}}/admin/user/view/{{userId}}?action=removeFromContact&value={{user._id}}">
+                                                                <i class="fa fa-unlink"></i> {{lang.labelRemoveFromContact}}
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
         
                                             </td>
                                             
@@ -242,11 +273,23 @@
                                                     {{categoryList[group.category_id].title}}
                                                 {% endif %}
                                             </td>
-                                            <td>{{group.name}}</td>
-                                            <td>{{group.created}}</td>
+                                            <td><a href="{{ROOT_URL}}/admin/group/view/{{group._id}}">{{group.name}}</a></td>
+                                            <td>{{group.created|date("Y.m.d")}}</td>
                                             <td>
                                                 
-
+                                                <div class="btn-group text-left" >
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        {{lang.labelAction}} <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>
+                                                            <a href="{{ROOT_URL}}/admin/user/view/{{userId}}?action=removeGroup&value={{group._id}}">
+                                                                <i class="fa fa-unlink"></i> {{lang.labelRemoveGroup}}
+                                                            </a>
+                                                        </li>
+                                                        
+                                                    </ul>
+                                                </div>
         
                                             </td>
                                         </tr>

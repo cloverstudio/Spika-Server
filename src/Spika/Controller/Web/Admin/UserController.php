@@ -56,14 +56,15 @@ class UserController extends SpikaWebBaseController
             
             // search criteria
             $searchCriteriaUserName = $app['session']->get('usernameCriteria');
-            $searchCriteriaUserName = trim($searchCriteriaUserName);
             
             $criteria = "";
+            $criteriaValues = array();
             if(!empty($searchCriteriaUserName)){
-                $criteria .= " and LOWER(name) like LOWER('%{$searchCriteriaUserName}%')";
+                $criteria .= " and LOWER(name) like LOWER(?)";
+                $criteriaValues[] = "%{$searchCriteriaUserName}%";
             }
             
-            $count = $self->app['spikadb']->findUserCountWithCriteria($criteria);
+            $count = $self->app['spikadb']->findUserCountWithCriteria($criteria,$criteriaValues);
             
             $page = $request->get('page');
             if(empty($page))
@@ -73,7 +74,7 @@ class UserController extends SpikaWebBaseController
             if(!empty($msg))
                 $self->setInfoAlert($self->language[$msg]);
             
-            $users = $self->app['spikadb']->findAllUsersWithPagingWithCriteria(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT,$criteria);
+            $users = $self->app['spikadb']->findAllUsersWithPagingWithCriteria(($page-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT,$criteria,$criteriaValues);
             
             // convert timestamp to date
             for($i = 0 ; $i < count($users['rows']) ; $i++){
@@ -99,7 +100,7 @@ class UserController extends SpikaWebBaseController
 
         $controllers->post('user/list', function (Request $request) use ($app,$self) {
             
-            $usernameCriteria = $request->get('search-username');
+            $usernameCriteria = trim($request->get('search-username'));
             $clearButton = $request->get('clear');
             
             if(!empty($clearButton)){
@@ -198,8 +199,47 @@ class UserController extends SpikaWebBaseController
         $controllers->get('user/view/{id}', function (Request $request,$id) use ($app,$self) {
             
             $self->setVariables();
-
+            
             $user = $self->app['spikadb']->findUserById($id,false);
+            
+            $action = $request->get('action');
+            if($action == 'removeContact'){
+                $removeUserId = $request->get('value');
+                if(!empty($removeUserId)){
+                    $self->app['spikadb']->removeContact($id,$removeUserId);
+                    $self->setInfoAlert($self->language['messageRemoveContact']);
+                }
+            }
+            
+            if($action == 'removeFromContact'){
+                $removeFromUserId = $request->get('value');
+                if(!empty($removeFromUserId)){
+                    $self->app['spikadb']->removeContact($removeFromUserId,$id);
+                    $self->setInfoAlert($self->language['messageRemoveContact']);
+                }
+            }
+                        
+            if($action == 'removeGroup'){
+                $groupId = $request->get('value');
+                if(!empty($groupId)){
+                    $self->app['spikadb']->unSubscribeGroup($groupId,$id);
+                    $self->setInfoAlert($self->language['messagUnsubscribed']);
+                }
+            }
+                        
+            if($action == 'addToContact'){
+                $self->app['spikadb']->addContact($self->loginedUser['_id'],$user['_id']);
+                $self->setInfoAlert($self->language['labelAddToContact']);
+                $self->updateLoginUserData();
+            }
+            
+            if($action == 'removeFromContact'){
+                $self->app['spikadb']->removeContact($self->loginedUser['_id'],$user['_id']);
+                $self->setInfoAlert($self->language['messageRemoveContact']);
+                $self->updateLoginUserData();
+            }
+            
+            $isInMyContact = $self->checkUserIsInLoginUserContact($user['_id']);
             
             $contact = $self->app['spikadb']->getContactsByUserId($id);
             $contacted = $self->app['spikadb']->getContactedByUserId($id);
@@ -209,10 +249,13 @@ class UserController extends SpikaWebBaseController
                 'mode' => 'view',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
+                'userId' => $id,
                 'formValues' => $user,
                 'contacts' => $contact,
                 'contacted' => $contacted,
                 'groups' => $group,
+                'categoryList' => $self->getGroupCategoryList(),
+                'isInMyContact' => $isInMyContact
             ));
             
         })->before($app['adminBeforeTokenChecker']);

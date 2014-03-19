@@ -66,7 +66,6 @@ class UserController extends SpikaBaseController
 
         $controllers->post('/createUser', function (Request $request) use ($app,$self) {
     
-    
             $requestBody = $request->getContent();
             
             if(!$self->validateRequestParams($requestBody,array(
@@ -118,7 +117,6 @@ class UserController extends SpikaBaseController
 
 
     }
-
 
     private function setupUpdateUserMethod($self,$app,$controllers){
     

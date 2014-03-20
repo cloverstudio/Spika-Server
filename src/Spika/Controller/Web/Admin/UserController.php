@@ -124,7 +124,7 @@ class UserController extends SpikaWebBaseController
                 return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }
             
-            return $self->render('admin/userForm.twig', array(
+            return $self->render('admin/userAdd.twig', array(
                 'mode' => 'new',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
@@ -184,7 +184,7 @@ class UserController extends SpikaWebBaseController
                 return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageUserAdded');
             }
             
-            return $self->render('admin/userForm.twig', array(
+            return $self->render('admin/userAdd.twig', array(
                 'mode' => 'new',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
@@ -203,29 +203,6 @@ class UserController extends SpikaWebBaseController
             $user = $self->app['spikadb']->findUserById($id,false);
             
             $action = $request->get('action');
-            if($action == 'removeContact'){
-                $removeUserId = $request->get('value');
-                if(!empty($removeUserId)){
-                    $self->app['spikadb']->removeContact($id,$removeUserId);
-                    $self->setInfoAlert($self->language['messageRemoveContact']);
-                }
-            }
-            
-            if($action == 'removeFromContact'){
-                $removeFromUserId = $request->get('value');
-                if(!empty($removeFromUserId)){
-                    $self->app['spikadb']->removeContact($removeFromUserId,$id);
-                    $self->setInfoAlert($self->language['messageRemoveContact']);
-                }
-            }
-                        
-            if($action == 'removeGroup'){
-                $groupId = $request->get('value');
-                if(!empty($groupId)){
-                    $self->app['spikadb']->unSubscribeGroup($groupId,$id);
-                    $self->setInfoAlert($self->language['messagUnsubscribed']);
-                }
-            }
                         
             if($action == 'addToContact'){
                 $self->app['spikadb']->addContact($self->loginedUser['_id'],$user['_id']);
@@ -266,21 +243,58 @@ class UserController extends SpikaWebBaseController
 
         $controllers->get('user/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $tab = 'profile';
+            
             $self->setVariables();
-
+            
             if(!$self->checkPermission() && $self->loginedUser['_id'] != $id){
                 return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }            
             
+            $action = $request->get('action');
+            
+            if($action == 'removeContact'){
+                $removeUserId = $request->get('value');
+                if(!empty($removeUserId)){
+                    $self->app['spikadb']->removeContact($id,$removeUserId);
+                    $self->setInfoAlert($self->language['messageRemoveContact']);
+                }
+                $self->updateLoginUserData();
+                
+                $tab = 'contacts';
+            }
+              
+            if($action == 'removeGroup'){
+                $groupId = $request->get('value');
+                if(!empty($groupId)){
+                    $self->app['spikadb']->unSubscribeGroup($groupId,$id);
+                    $self->setInfoAlert($self->language['messagUnsubscribed']);
+                }
+                $self->updateLoginUserData();
+                
+                $tab = 'groups';
+            }
+
+
             $user = $self->app['spikadb']->findUserById($id,false);
             $user['birthday'] = date('Y-m-d',$user['birthday']);
             
-            return $self->render('admin/userForm.twig', array(
+            $contact = $self->app['spikadb']->getContactsByUserId($id);
+            $group = $self->app['spikadb']->getGroupsByUserId($id);
+
+
+            return $self->render('admin/userEdit.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
-                'formValues' => $user
+                'contacts' => $contact,
+                'groups' => $group,
+                'formValues' => $user,
+                'userId' => $id,
+                'contacts' => $contact,
+                'groups' => $group,
+                'tab' => $tab,
             ));
             
         })->before($app['adminBeforeTokenChecker']);
@@ -351,19 +365,27 @@ class UserController extends SpikaWebBaseController
                     false // allow to change password and email
                 );
                 
-                return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageUserChanged');
+                $user = $self->app['spikadb']->findUserById($id,false);
+                
+                $self->setInfoAlert($self->language['messageUserChanged']);
 
             }
     
-            
+            $contact = $self->app['spikadb']->getContactsByUserId($id);
+            $group = $self->app['spikadb']->getGroupsByUserId($id);
+
             $user['birthday'] = date('Y-m-d',$user['birthday']);
 
-            return $self->render('admin/userForm.twig', array(
+            return $self->render('admin/userEdit.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
-                'formValues' => $user
+                'userId' => $id,
+                'contacts' => $contact,
+                'groups' => $group,
+                'formValues' => $user,
+                'tab' => 'profile',
             ));
                         
         })->before($app['adminBeforeTokenChecker']);    
@@ -405,7 +427,6 @@ class UserController extends SpikaWebBaseController
             }
             
         })->before($app['adminBeforeTokenChecker']);
-
     
         $controllers->get('user/conversation/{userId}', function (Request $request,$userId) use ($app,$self) {
             
@@ -446,8 +467,8 @@ class UserController extends SpikaWebBaseController
             ));
             
         })->before($app['adminBeforeTokenChecker']);
-
-    
+        
+        
         
         return $controllers;
     }

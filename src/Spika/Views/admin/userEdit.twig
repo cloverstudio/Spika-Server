@@ -1,0 +1,294 @@
+{% extends "admin/adminBase.twig" %}
+
+{% block content %}
+
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+        
+        $('#birthday').datepicker();
+        $('#btn-calendar').click(function(){
+            $('#birthday').datepicker('show');
+        });
+        
+        $('#chkbox_change_password').click(function() {
+        
+            var $this = $(this);
+
+            if ($this.is(':checked')) {
+                
+                $('#password').removeAttr("disabled");
+                $('#password').val('');
+                
+            } else {
+                
+                $('#password').attr("disabled","disabled");
+                $('#password').val('');
+                
+            }
+            
+        });        
+    });
+    
+</script>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        {{lang.labelEditUser}}
+                    </h1>
+                </div>
+            </div>
+             
+            <div class="row">
+                <div class="col-lg-8">
+                    
+                    {% include "admin/alerts.twig" %}
+                    
+                    <ul class="nav nav-tabs">
+                        <li {% if tab == 'profile' %}class="active"{% endif %}><a href="#profile" data-toggle="tab">{{lang.labelProfile}}</a></li>
+                        <li {% if tab == 'contacts' %}class="active"{% endif %}><a href="#contacts" data-toggle="tab">{{lang.labelContacts}}</a></li>
+                        <li {% if tab == 'groups' %}class="active"{% endif %}><a href="#groups" data-toggle="tab">{{lang.labelGroups}}</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane {% if tab == 'profile' %}active{% endif %}" id="profile">
+                        
+                            <form role="form" method="post" action="{{ROOT_URL}}/admin/user/edit/{{id}}" enctype="multipart/form-data">
+    
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        {{lang.labelpicture}}
+                                    </div>
+                                    <div class="panel-body">
+                                        {% if formValues.avatar_thumb_file_id != '' %}
+                                            <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_thumb_file_id}}" width="120" />
+                                        {% else %}
+                                            <img class="img-thumbnail" src="http://dummyimage.com/120x120/e2e2e2/7a7a7a&text=nopicture" width="120"/>
+                                        {% endif %}
+                                        
+                                        {% if formValues.avatar_file_id != '' %}
+                                            <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_file_id}}" width="640"/>
+                                        {% else %}
+                                            <img class="img-thumbnail" src="http://dummyimage.com/640x640/e2e2e2/7a7a7a&text=nopicture" width="640"/>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group">
+                                    <label>{{lang.formUserAvatar}}</label>
+                                    <input type="file" name="file">
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" name="chkbox_delete_picture" value="1">
+                                        {{lang.labelDeletePicture}}
+                                    </label>
+                                </div>
+                            
+                            <div class="form-group">
+                                <label>{{lang.formUserName}}</label>
+                                    <span class="text-danger">{{lang.noteRequired}}</span>
+                                    <input class="form-control" name="name" value="{{formValues.name}}">
+                            </div>
+    
+                            <div class="form-group">
+                                <label>{{lang.formUserEmail}}</label>
+                                <span class="text-danger">{{lang.noteRequired}}</span>
+                                <input class="form-control" name="email" value="{{formValues.email}}">
+                            </div>
+    
+                            <div class="form-group">
+                                <label>{{lang.formUserPassword}}</label>
+                                <span class="text-danger">{{lang.noteRequired}}</span>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="checkbox" id="chkbox_change_password" name="chkbox_change_password" value="1">
+                                    </span>
+                                    <input type="text" class="form-control" id="password" name="password" disabled="disabled" placeholder="{{lang.messageChangePassword}}">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>{{lang.formUserAbout}}</label>
+                                <textarea class="form-control" rows="3" name="about">{{formValues.about}}</textarea>
+                            </div>
+    
+                            <div class="form-group">
+                                <label>{{lang.formUserStatus}}</label>
+                                <select class="form-control" name="online_status">
+                                    {% for status in statusList %}
+                                        <option value="{{status}}" {% if formValues.online_status == status %}selected{% endif %}>{{status}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+     
+                            <div class="form-group">
+                                <label>{{lang.formMaxContacts}}</label>
+                                <span class="text-danger">{{lang.noteRequired}}</span>
+                                <input class="form-control" name="max_contact_count" value="{{formValues.max_contact_count}}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>{{lang.formMaxFavorites}}</label><span class="text-danger">{{lang.noteRequired}}</span>
+                                <input class="form-control" name="max_favorite_count" value="{{formValues.max_favorite_count}}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>{{lang.formBirthday}}</label>
+                                
+                                <div class="input-group">
+                                    <input class="form-control" id="birthday" name="birthday" value="{{formValues.birthday}}" data-date-format="yyyy-mm-dd" data-date-viewmode="years">
+                                    <span class="input-group-btn">
+                                        <button id="btn-calendar" class="btn btn-default" type="button"><i class="fa fa-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                                
+                            </div>
+    
+                            <div class="form-group">
+                                <label>{{lang.formGender}}</label>
+                                <select class="form-control" name="gender">                            
+                                    {% for gender in genderList %}
+                                        <option value="{{gender}}" {% if formValues.gender == gender %}selected{% endif %}>{{gender}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+    
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">{{lang.btnSave}}</button>
+    
+                        </form>
+                    </div>
+                    
+                    <div class="tab-pane {% if tab == 'contacts' %}active{% endif %}" id="contacts">
+                        
+                        <table class="table table-striped">
+                        
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>{{lang.formUserAvatar}}</th>
+                                    <th>{{lang.formUserName}}</th>
+                                    <th>{{lang.formUserEmail}}</th>
+                                    <th class="text-right">{{lang.labelCreated}}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                                {% for user in contacts %}
+    
+                                    <tr>
+                                        <td>{{user._id}}</td>
+                                        <td>
+                                            {% if user.avatar_thumb_file_id != '' %}
+                                                <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{user.avatar_thumb_file_id}}" width="60"/>
+                                            {% else %}
+                                                <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
+                                            {% endif %}
+                                        </td>
+                                        <td><a href="{{ROOT_URL}}/admin/user/view/{{user._id}}">{{user.name}}</a></td>
+                                        <td>{{user.email}}</td>
+                                        <td class="text-right">{{user.created|date("Y.m.d")}}</td>
+                                        <td class="text-right">
+                                            
+                                            <div class="btn-group text-left" >
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    {{lang.labelAction}} <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li>
+                                                        <a href="{{ROOT_URL}}/admin/user/edit/{{userId}}?action=removeContact&value={{user._id}}">
+                                                            <i class="fa fa-unlink"></i> {{lang.labelRemoveContact}}
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+    
+                                        </td>
+                                        
+                                    </tr>
+    
+                                {% endfor %}
+    
+                            </tbody>
+                        </table>    
+                        
+                    </div>
+                    
+                    <div class="tab-pane {% if tab == 'groups' %}active{% endif %}" id="groups">
+                    
+                        <table class="table table-striped">
+                            
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>{{lang.formGroupAvatar}}</th>
+                                    <th>{{lang.formGroupCategory}}</th>
+                                    <th>{{lang.formGroupName}}</th>
+                                    <th class="text-right">{{lang.labelCreated}}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                                {% for group in groups %}
+    
+                                    <tr>
+                                        <td>{{group._id}}</td>
+                                        <td>
+                                            {% if group.avatar_thumb_file_id != '' %}
+                                                <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{group.avatar_thumb_file_id}}" width="60"/>
+                                            {% else %}
+                                                <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
+                                                
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if categoryList[group.category_id] is defined %}
+                                                {{categoryList[group.category_id].title}}
+                                            {% endif %}
+                                        </td>
+                                        <td><a href="{{ROOT_URL}}/admin/group/view/{{group._id}}">{{group.name}}</a></td>
+                                        <td class="text-right">{{group.created|date("Y.m.d")}}</td>
+                                        <td class="text-right">
+                                            
+                                            <div class="btn-group text-left" >
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    {{lang.labelAction}} <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li>
+                                                        <a href="{{ROOT_URL}}/admin/user/edit/{{userId}}?action=removeGroup&value={{group._id}}">
+                                                            <i class="fa fa-unlink"></i> {{lang.labelRemoveGroup}}
+                                                        </a>
+                                                    </li>
+                                                    
+                                                </ul>
+                                            </div>
+    
+                                        </td>
+                                    </tr>
+    
+                                {% endfor %}
+    
+                            </tbody>
+                        </table>
+                            
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
+            <div id="chatWindow" class="col-lg-4">
+                
+            </div>
+        </div>
+             
+</script>
+       
+{% endblock %}

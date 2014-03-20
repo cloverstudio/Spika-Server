@@ -1,0 +1,213 @@
+{% extends "admin/adminBase.twig" %}
+
+{% block content %}
+
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+
+        $('#chkbox_change_password').click(function() {
+        
+            var $this = $(this);
+
+            if ($this.is(':checked')) {
+                
+                $('#group_password').removeAttr("disabled");
+                $('#group_password').val('');
+                
+            } else {
+                
+                $('#group_password').attr("disabled","disabled");
+                $('#group_password').val('');
+                
+            }
+            
+        });        
+    });
+    
+</script>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        {{lang.labelEditGroup}}
+                    </h1>
+                </div>
+            </div>
+             
+            <div class="row">
+                <div class="col-lg-8">
+                    
+                    {% include "admin/alerts.twig" %}
+                    
+                    <ul class="nav nav-tabs">
+                      <li {% if tab == 'profile' %}class="active"{% endif %}><a href="#profile" data-toggle="tab">{{lang.labelGroupProfile}}</a></li>
+                      <li {% if tab == 'users' %}class="active"{% endif %}><a href="#subscribedUsers" data-toggle="tab">{{lang.labelSubscribedUsers}}</a></li>
+                    </ul>
+                    
+                    <div class="tab-content">
+                    
+                      <div class="tab-pane {% if tab == 'profile' %}active{% endif %}" id="profile">
+
+                        <form role="form" method="post" action="{{ROOT_URL}}/admin/group/edit/{{id}}" enctype="multipart/form-data">
+
+                        
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    {{lang.labelpicture}}
+                                </div>
+                                <div class="panel-body">
+                                    {% if formValues.avatar_thumb_file_id != '' %}
+                                        <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_thumb_file_id}}" width="120" />
+                                    {% else %}
+                                        <img class="img-thumbnail" src="http://dummyimage.com/120x120/e2e2e2/7a7a7a&text=nopicture" width="120"/>
+                                    {% endif %}
+                                    
+                                    {% if formValues.avatar_file_id != '' %}
+                                        <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{formValues.avatar_file_id}}" width="640"/>
+                                    {% else %}
+                                        <img class="img-thumbnail" src="http://dummyimage.com/640x640/e2e2e2/7a7a7a&text=nopicture" width="640"/>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        
+
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="chkbox_delete_picture" value="1">
+                                    {{lang.labelDeletePicture}}
+                                </label>
+                            </div>
+                        
+                        <div class="form-group">
+                            <label>{{lang.formGroupCategory}}</label>
+                            
+                                <select class="form-control" name="category_id">
+                                
+                                    {% for category in categoryList %}
+                                        <option value="{{category._id}}" {% if formValues.category_id == category._id %}selected{% endif %}>{{category.title}}</option>
+                                    {% endfor %}
+                                    
+                                </select>
+                            
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{lang.formGroupName}}</label><span class="text-danger">{{lang.noteRequired}}</span>
+                            <input class="form-control" name="name" value="{{formValues.name}}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{lang.formGroupPassword}}</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input type="checkbox" id="chkbox_change_password" name="chkbox_change_password" value="1">
+                                </span>
+                                <input type="text" class="form-control" id="group_password" name="group_password" disabled="disabled" placeholder="{{lang.messageChangePassword}}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>{{lang.formGroupAvatar}}</label>
+                            <input type="file" name="file">
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{lang.formGroupDescription}}</label><span class="text-danger">{{lang.noteRequired}}</span>
+                            <textarea class="form-control" rows="3" name="description">{{formValues.description}}</textarea>
+                        </div>
+
+                        <input type="submit" class="btn btn-primary btn-lg btn-block" name="save" value="{{lang.btnSave}}" />
+                        
+                    </form>
+                    
+                  </div>
+                  
+                  <div class="tab-pane {% if tab == 'users' %}active{% endif %}" id="subscribedUsers">
+
+                        <div style="text-align:right;padding-top: 10px">
+    
+                            <form class="form-inline" role="form" method="post" action="{{ROOT_URL}}/admin/group/edit/{{id}}" >
+                              <div class="form-group">
+                                <input type="text" name="search-subscribedusers" value="{{searchCriteria.userName}}" class="form-control" id="exampleInputEmail2" placeholder="{{lang.formUserName}}">
+                              </div>
+                              <input type="submit" class="btn btn-primary" name="search" value="{{lang.search}}" />
+                                                            
+                              {% if searchCriteria.userName != '' %}
+                                    <input type="submit" class="btn btn-danger" name="clear" value="{{lang.clearCriteria}}" />
+                              {% endif %}
+                              
+                            </form>
+                        
+                        </div>
+
+                        <table class="table table-striped">
+                            
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>{{lang.formUserAvatar}}</th>
+                                    <th>{{lang.formUserName}}</th>
+                                    <th>{{lang.formUserEmail}}</th>
+                                    <th class="text-right">{{lang.labelCreated}}</th>
+                                    <th width="100px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                                {% for user in subscribedUsers %}
+    
+                                    <tr>
+                                        <td>{{user._id}}</td>
+                                        <td>
+                                            {% if user.avatar_thumb_file_id != '' %}
+                                                <img class="img-thumbnail" src="{{ROOT_URL}}/api/filedownloader?file={{user.avatar_thumb_file_id}}" width="60"/>
+                                            {% else %}
+                                                <img class="img-thumbnail" src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" width="60"/>
+                                            {% endif %}
+                                        </td>
+                                        <td><a href="{{ROOT_URL}}/admin/user/view/{{user._id}}">{{user.name}}</a></td>
+                                        <td>{{user.email}}</td>
+                                        <td class="text-right">{{user.created|date("Y.m.d")}}</td>
+                                        <td class="text-right">
+                                            
+                                            <div class="btn-group text-left" >
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    {{lang.labelAction}} <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li>
+                                                        <a href="{{ROOT_URL}}/admin/group/edit/{{id}}?action=unsubscribeUser&value={{user._id}}">
+                                                            <i class="fa fa-unlink"></i> {{lang.labelKickUser}}
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+    
+                                        </td>
+                                        
+                                    </tr>
+    
+                                {% endfor %}
+    
+                            </tbody>
+                        </table>  
+                        
+                        <div style="text-align:right">
+                            {% include "admin/pager.twig" %}
+                        </div>
+                        
+                  </div>
+
+                    
+                </div>
+                
+                <div id="chatWindow" class="col-lg-4">
+                    
+                </div>
+                
+            </div>
+             
+</script>
+       
+{% endblock %}

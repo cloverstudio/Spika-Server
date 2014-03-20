@@ -125,7 +125,6 @@
                                         <th>{{lang.formUserName}}</th>
                                         <th>{{lang.formUserEmail}}</th>
                                         <th class="text-right">{{lang.labelCreated}}</th>
-                                        <th width="100px"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -144,22 +143,7 @@
                                             <td><a href="{{ROOT_URL}}/admin/user/view/{{user._id}}">{{user.name}}</a></td>
                                             <td>{{user.email}}</td>
                                             <td class="text-right">{{user.created|date("Y.m.d")}}</td>
-                                            <td class="text-right">
-                                                
-                                                <div class="btn-group text-left" >
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                        {{lang.labelAction}} <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li>
-                                                            <a href="{{ROOT_URL}}/admin/group/view/{{groupId}}?action=unsubscribeUser&value={{user._id}}">
-                                                                <i class="fa fa-unlink"></i> {{lang.labelKickUser}}
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-        
-                                            </td>
+
                                             
                                         </tr>
         

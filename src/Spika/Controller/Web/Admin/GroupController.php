@@ -105,7 +105,7 @@ class GroupController extends SpikaWebBaseController
             
             $self->setVariables();
 
-            return $self->render('admin/groupForm.twig', array(
+            return $self->render('admin/groupAdd.twig', array(
                 'mode' => 'new',
                 'categoryList' => $self->getGroupCategoryList(),
                 'formValues' => $self->getEmptyFormData(),
@@ -136,12 +136,9 @@ class GroupController extends SpikaWebBaseController
                     if(!preg_match("/jpeg/", $mimeType)){
                         $self->setErrorAlert($self->language['messageValidationErrorFormat']);
                         $validationError = true;
-                        
                     }else{
-                                            
                         $fileName = $self->savePicture($file);
-                        $thumbFileName = $self->saveThumb($file);
-                                
+                        $thumbFileName = $self->saveThumb($file);      
                     }
                 
                 }
@@ -184,11 +181,11 @@ class GroupController extends SpikaWebBaseController
                     $self->loginedUser['_id']
                 );
 
-                
                 return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageGroupAdded');
+
             }
             
-            return $self->render('admin/groupForm.twig', array(
+            return $self->render('admin/groupAdd.twig', array(
                 'mode' => 'new',
                 'categoryList' => $self->getGroupCategoryList(),
                 'formValues' => $formValues
@@ -206,19 +203,13 @@ class GroupController extends SpikaWebBaseController
             $tab = 'profile';
 
             $action = $request->get('action');
+            
             if($action == 'subscribe'){
                 $self->app['spikadb']->subscribeGroup($group['_id'],$self->loginedUser['_id']);
                 $self->setInfoAlert($self->language['messageSubscribed']);
                 $self->updateLoginUserData();
             }
             
-            if($action == 'unsubscribeUser'){
-                $userId = $request->get('value');
-                $self->app['spikadb']->unSubscribeGroup($group['_id'],$userId);
-                $self->setInfoAlert($self->language['messageKicked']);
-                $self->updateLoginUserData();
-            }
-
             if($action == 'unsubscribe'){
                 $self->app['spikadb']->unSubscribeGroup($group['_id'],$self->loginedUser['_id']);
                 $self->setInfoAlert($self->language['messageUnsubscribed']);
@@ -294,16 +285,42 @@ class GroupController extends SpikaWebBaseController
         $controllers->get('group/edit/{id}', function (Request $request,$id) use ($app,$self) {
 
             $self->setVariables();
-
+            $tab = 'profile';
+            
             $group = $self->app['spikadb']->findGroupById($id);
 
             if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
                 return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageNoPermission');
             }
 
-
-            $categoryList = $self->getGroupCategoryList();
+            $action = $request->get('action');
+            if($action == 'unsubscribeUser'){
+                $userId = $request->get('value');
+                $self->app['spikadb']->unSubscribeGroup($group['_id'],$userId);
+                $self->setInfoAlert($self->language['messageKicked']);
+                $self->updateLoginUserData();
+                $tab = 'users';
+            }
             
+            $pageSubscribedUsers = $request->get('page');
+            if(empty($pageSubscribedUsers))
+                $pageSubscribedUsers = 1;
+            else
+                $tab = 'users';
+            
+            $criteria = "";
+            $searchUsernameCriteria = $app['session']->get('subscribedUsersCriteria');
+            $searchUsernameCriteriaValues = array();
+            if(!empty($searchUsernameCriteria)){
+                $criteria .= " and LOWER(name) like LOWER(?)";
+                $searchUsernameCriteriaValues[] = "%{$searchUsernameCriteria}%";
+                $tab = 'users';
+            }
+
+            $userList = $self->app['spikadb']->getAllUsersByGroupIdWithCriteria($group['_id'],($pageSubscribedUsers-1)*ADMIN_LISTCOUNT,ADMIN_LISTCOUNT,$criteria,$searchUsernameCriteriaValues);
+            $userCount = $self->app['spikadb']->getAllUsersCountByGroupIdWithCriteria($group['_id'],$criteria,$searchUsernameCriteriaValues);
+
+            $categoryList = $self->getGroupCategoryList();            
             if(isset($categoryList[$group['category_id']]['title']))
                 $categoryName = $categoryList[$group['category_id']]['title'];
             else
@@ -311,19 +328,45 @@ class GroupController extends SpikaWebBaseController
                 
             $group['categoryName'] = $categoryName;
             
-            return $self->render('admin/groupForm.twig', array(
+            return $self->render('admin/groupEdit.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'categoryList' => $self->getGroupCategoryList(),
-                'formValues' => $group
+                'formValues' => $group,
+                'tab' => $tab,
+                'subscribedUsers' => $userList,
+                'pager' => array(
+                    'baseURL' => ROOT_URL . "/admin/group/edit/{$group['_id']}?page=",
+                    'pageCount' => ceil($userCount / ADMIN_LISTCOUNT) - 1,
+                    'page' => $pageSubscribedUsers,
+                ),
+                'searchCriteria' => array(
+                    'userName' => $searchUsernameCriteria
+                )
+
             ));
             
         })->before($app['adminBeforeTokenChecker']);
 
         $controllers->post('group/edit/{id}', function (Request $request,$id) use ($app,$self) {
             
+            // search
+            $usernameCriteria = trim($request->get('search-subscribedusers'));
+            $clearButton = $request->get('clear');
+            $searchButton = $request->get('search');
+            if(!empty($clearButton)){
+                $app['session']->set('subscribedUsersCriteria', '');
+                return $app->redirect(ROOT_URL . "/admin/group/edit/{$id}"); 
+            } 
+            if(!empty($searchButton)){
+                $app['session']->set('subscribedUsersCriteria', $usernameCriteria);
+                return $app->redirect(ROOT_URL . "/admin/group/edit/{$id}"); 
+            }
+            
+            // update
             $self->setVariables();
-
+            $tab = 'profile';
+            
             $group = $self->app['spikadb']->findGroupById($id);
             if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
                 return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageNoPermission');
@@ -404,15 +447,38 @@ class GroupController extends SpikaWebBaseController
                     $thumbFileName
                 );
                 
-                return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageGroupChanged');
-
+                $group = $self->app['spikadb']->findGroupById($id);
+                
             }
             
-            return $self->render('admin/groupForm.twig', array(
+            $criteria = "";
+            $searchUsernameCriteria = $app['session']->get('subscribedUsersCriteria');
+            $searchUsernameCriteriaValues = array();
+            if(!empty($searchUsernameCriteria)){
+                $criteria .= " and LOWER(name) like LOWER(?)";
+                $searchUsernameCriteriaValues[] = "%{$searchUsernameCriteria}%";
+                $tab = 'users';
+            }
+
+            $userList = $self->app['spikadb']->getAllUsersByGroupIdWithCriteria($group['_id'],0,ADMIN_LISTCOUNT,$criteria,$searchUsernameCriteriaValues);
+            $userCount = $self->app['spikadb']->getAllUsersCountByGroupIdWithCriteria($group['_id'],$criteria,$searchUsernameCriteriaValues);
+
+            return $self->render('admin/groupEdit.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
                 'categoryList' => $self->getGroupCategoryList(),
-                'formValues' => $group
+                'formValues' => $group,
+                'tab' => $tab,
+                'subscribedUsers' => $userList,
+                'pager' => array(
+                    'baseURL' => ROOT_URL . "/admin/group/edit/{$group['_id']}?page=",
+                    'pageCount' => ceil($userCount / ADMIN_LISTCOUNT) - 1,
+                    'page' => 1,
+                ),
+                'searchCriteria' => array(
+                    'userName' => $searchUsernameCriteria
+                )
+
             ));
                         
         })->before($app['adminBeforeTokenChecker']);    

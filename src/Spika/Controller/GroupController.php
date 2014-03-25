@@ -344,7 +344,7 @@ class GroupController extends SpikaBaseController
                     return $self->returnErrorResponse("invalid group id");
                 }
                 
-                $users = $app['spikadb']->getAllUsersByGroupId($groupId,$count,$offset);
+                $users = $app['spikadb']->getAllUsersByGroupId($groupId,$offset,$count);
                 
                 return json_encode($users);
                 

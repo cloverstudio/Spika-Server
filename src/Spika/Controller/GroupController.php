@@ -346,7 +346,12 @@ class GroupController extends SpikaBaseController
                 
                 $users = $app['spikadb']->getAllUsersByGroupId($groupId,$offset,$count);
                 
-                return json_encode($users);
+                $usersCount = $app['spikadb']->getAllUsersCountByGroupId($groupId);
+                
+                return json_encode(array(
+                    'count' => $usersCount,
+                    'users' => $users
+                ));
                 
             }
             

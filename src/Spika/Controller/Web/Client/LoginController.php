@@ -265,10 +265,10 @@ class LoginController extends SpikaWebBaseController
                 
                 // call api
                 $client = new Client();
-                $requestURL = ROOT_URL . "/api/resetPassword?email" . $email;
-                $response = $client->get($requestURL);
-                
-                $self->setInfoAlert("Please check your email.");
+                $request = $client->get(LOCAL_ROOT_URL . "/api/resetPassword?email=" . $email);
+                $response = $request->send();
+                        
+                $self->setInfoAlert($self->language['messageResetPasswordEmailSent']);
                 
             }
             

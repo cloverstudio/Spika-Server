@@ -491,6 +491,7 @@ class GroupController extends SpikaWebBaseController
             $self->setVariables();
 
             $group = $self->app['spikadb']->findGroupById($id);
+            
             if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
                 return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageNoPermission');
             }
@@ -514,6 +515,7 @@ class GroupController extends SpikaWebBaseController
             $self->setVariables();
 
             $group = $self->app['spikadb']->findGroupById($id);
+            
             if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
                 return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageNoPermission');
             }
@@ -558,6 +560,7 @@ class GroupController extends SpikaWebBaseController
         $controllers->get('group/unsubscribeUser/{groupId}/{userId}', function (Request $request,$groupId,$userId) use ($app,$self) {
             
             $group = $self->app['spikadb']->findGroupById($id);
+            
             if($group['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
                 return $app->redirect(ROOT_URL . '/admin/group/list?msg=messageNoPermission');
             }

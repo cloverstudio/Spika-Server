@@ -15,6 +15,20 @@ class Utils{
 	    return $string;
 	}
 	
+	static public function checkEmailIsValid($email)
+	{
+	    $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/'; 
+	    return preg_match($regex, $email);
+	}
+
+	static public function checkPasswordIsValid($password)
+	{
+	    $regex = '/^[a-zA-Z0-9]{6,}$/'; 
+	    return preg_match($regex, $password);
+	}
+
+
+	
 }
 
 ?>

@@ -162,7 +162,7 @@ class AsyncTaskController extends SpikaBaseController
 
     function generatePushNotificationMessage($fromUser,$toUser){
 
-        $message = "You got message from {$fromUser['name']}";
+        $message = sprintf(DIRECTMESSAGE_NOTIFICATION_MESSAGE, $fromUser['name']);
 
         return $message;
 

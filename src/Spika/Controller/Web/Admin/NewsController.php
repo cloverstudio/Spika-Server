@@ -78,6 +78,10 @@ class NewsController extends SpikaWebBaseController
             
             $self->setVariables();
 
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
+            }
+
             return $self->render('admin/newsForm.twig', array(
                 'mode' => 'new',
                 'formValues' => $self->getEmptyFormData(),
@@ -92,6 +96,10 @@ class NewsController extends SpikaWebBaseController
         $controllers->post('news/add', function (Request $request) use ($app,$self) {
             
             $self->setVariables();
+
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
+            }
 
             $validationError = false;
             
@@ -145,6 +153,10 @@ class NewsController extends SpikaWebBaseController
         $controllers->get('news/edit/{id}', function (Request $request,$id) use ($app,$self) {
 
             $self->setVariables();
+
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
+            }
 
             $story = $self->app['spikadb']->findStoryById($id);
             if($story['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
@@ -206,6 +218,10 @@ class NewsController extends SpikaWebBaseController
             
             $self->setVariables();
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
+            }
+
             $story = $self->app['spikadb']->findStoryById($id);
             if($story['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
             	return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
@@ -225,6 +241,10 @@ class NewsController extends SpikaWebBaseController
             
             $self->setVariables();
             
+            if(!$self->checkPermission()){
+                return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');
+            }
+
             $story = $self->app['spikadb']->findStoryById($id);
             if($story['user_id'] != $self->loginedUser['_id'] && $self->loginedUser['_id'] != SUPPORT_USER_ID){
             	return $app->redirect(ROOT_URL . '/admin/news/list?msg=messageNoPermission');

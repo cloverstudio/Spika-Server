@@ -90,6 +90,7 @@ $app['adminBeforeTokenChecker'] = $app->share(function () use ($app) {
 });
 
 
+$app->mount('/api/', new Spika\Controller\ServerListController());
 $app->mount('/api/', new Spika\Controller\SendPasswordController());
 $app->mount('/api/', new Spika\Controller\ReportController());
 $app->mount('/api/', new Spika\Controller\FileController());

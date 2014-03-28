@@ -189,6 +189,13 @@ class ServerController extends SpikaWebBaseController
                 $validationError = true;
             }
             
+            //checking url
+            $pattern="/^https?:\/\/(.*)[^\/]$/";
+            if(preg_match($pattern, $formValues['url'], $match) == 0){
+            	$self->setErrorAlert($self->language['messageUrlIsNotValid']);
+            	$validationError = true;
+            }
+            
             if(!$validationError){
 
                 $self->app['spikadb']->updateServer(

@@ -1,0 +1,46 @@
+{% extends "admin/adminBase.twig" %}
+
+{% block content %}
+
+
+            <div class="row">
+                <div class="col-lg-12" style="margin-top:30px">
+                    <div class="alert alert-danger">
+                        <strong>{{lang.messageConfirmDeleteServer}}</strong>
+                    </div>
+                </div>
+            </div>
+             
+            <div class="row">
+                <div class="col-lg-8">
+                    
+                    {% include "admin/alerts.twig" %}
+                    
+                        <form role="form" method="post" action="{{ROOT_URL}}/admin/servers/delete/{{id}}" enctype="multipart/form-data">
+                        
+                        <div class="form-group">
+                            <label>{{lang.formServerName}}</label>                           
+                                <div class="well">{{formValues.name}}</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>{{lang.formServerUrl}}</label>                           
+                                <div class="well">{{formValues.url}}</div>
+                        </div>
+   
+                        <input type="submit" name="submit_cancel" class="btn btn-success btn-lg btn-block" value="{{lang.btnCancel}}" />
+                        <input type="submit" name="submit_delete" class="btn btn-danger btn-lg btn-block" value="{{lang.btnDelete}}" />
+
+                    </form>
+                    
+                </div>
+                
+                <div id="chatWindow" class="col-lg-4">
+                    
+                </div>
+                
+            </div>
+             
+</script>
+       
+{% endblock %}

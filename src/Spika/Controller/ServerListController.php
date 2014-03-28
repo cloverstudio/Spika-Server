@@ -25,16 +25,7 @@ class ServerListController extends SpikaBaseController
 
         $controllers->get('/servers', function (Request $request) use ($app,$self) {
             
-            $serverList = array(
-                array(
-                    'name' => 'Spika Official',
-                    'url' => 'http://officialapi.spikaapp.com/api'
-                ),
-                array(
-                    'name' => 'Spika Debug',
-                    'url' => 'http://officialapi.spikaapp.com/api'
-                ),
-            );
+        	$serverList = $app['spikadb']->findAllServersWitoutId();
             
             return json_encode($serverList);
             

@@ -2086,6 +2086,125 @@ class MySQL implements DbInterface
         return $users;
         
     }
+    
+    //******method for add servers
+    public function findServersCount()
+    {
+    	$query = "select count(*) as count from `servers`";
+    
+    	$result = $this->DB->fetchColumn($query);
+    
+    	return $result;
+    }
+    
+    public function reformatServerData($server){
+    
+    	$server['created'] = intval($server['created']);
+    	$server['modified'] = intval($server['modified']);
+    
+    	return $server;
+    }
 
-
+    public function findAllServers($offset = 0,$count=0)
+    {
+    	 
+    	$query = "select * from servers order by created desc  ";
+    	 
+    	if($count != 0){
+    		$query .= " limit {$count} offset {$offset} ";
+    	}
+    	 
+    	$result = $this->DB->fetchAll($query);
+    	 
+    	$formatedServers = array();
+    	foreach($result as $server){
+    		$server = $this->reformatServerData($server);
+    		$formatedServers[] = $server;
+    	}
+    
+    	return $formatedServers;
+    
+    }
+    
+    public function createServer($name,$url){
+    
+    
+    	$serversData = array(
+    			'name' => $name,
+    			'url' => $url,
+    			'modified' => time(),
+    			'created' => time()
+    	);
+    
+    	if($this->DB->insert('`servers`',$serversData)){
+    		return array(
+    				'ok' => 1,
+    				'id' => $this->DB->lastInsertId("_id")
+    		);
+    	}else{
+    		return null;
+    	}
+    
+    }
+    
+    public function findServerById($id)
+    {
+    	$server = $this->DB->fetchAssoc('select * from `servers` where _id = ?',array($id));
+    	$server = $this->reformatServerData($server);
+    
+    	return $this->formatRow($server);
+    }
+    
+    public function updateServer($server_id,$name,$url){
+    
+    	$now = time();
+    
+    	$result = $this->DB->executeupdate(
+    			'update `servers` set
+                    name = ?,
+                    url = ?,
+    				modified = ?
+                    WHERE _id = ?',
+    			array(
+    					$name,
+    					$url,
+    					time(),
+    					$server_id));
+    
+    	if($result){
+    		return array(
+    				'ok' => 1,
+    				'id' => $server_id,
+    				'rev' => 'tmprev'
+    		);
+    	}else{
+    		$arr = array('message' => 'update server error!', 'error' => 'logout');
+    		return json_encode($arr);;
+    	}
+    
+    	return null;
+    
+    }
+    
+    public function deleteServer($id){
+    
+    	$this->DB->delete('`servers`', array('_id' => $id));
+    
+    	return array(
+    			'ok' => 1,
+    			'id' => $id,
+    			'rev' => 'tmprev'
+    	);
+    }
+    
+    public function findAllServersWitoutId()
+    {
+    
+    	$query = "select name, url from servers order by created asc  ";
+    
+    	$result = $this->DB->fetchAll($query);
+    
+    	return $result;
+    
+    }
 }

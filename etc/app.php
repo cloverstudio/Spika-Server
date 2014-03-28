@@ -115,6 +115,7 @@ $app->mount('/admin/', new Spika\Controller\Web\Admin\GroupCategoryController())
 $app->mount('/admin/', new Spika\Controller\Web\Admin\EmoticonController());
 
 $app->mount('/client/', new Spika\Controller\Web\Client\LoginController());
+$app->mount('/client/', new Spika\Controller\Web\Client\MainController());
 
 
 

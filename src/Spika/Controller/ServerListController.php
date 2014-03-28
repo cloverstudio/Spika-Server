@@ -28,11 +28,11 @@ class ServerListController extends SpikaBaseController
             $serverList = array(
                 array(
                     'name' => 'Spika Official',
-                    'url' => 'http://officialapi.spikaapp.com/api'
+                    'url' => 'http://officialapi.spikaapp.com'
                 ),
                 array(
                     'name' => 'Spika Debug',
-                    'url' => 'http://officialapi.spikaapp.com/api'
+                    'url' => 'http://officialapi.spikaapp.com'
                 ),
             );
             

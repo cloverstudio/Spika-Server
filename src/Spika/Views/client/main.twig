@@ -1,0 +1,462 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{lang.clientSiteTitle}}</title>
+
+    <link href="{{ROOT_URL}}/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="{{ROOT_URL}}/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="{{ROOT_URL}}/assets/css/sb-admin.css" rel="stylesheet">
+	<link rel="stylesheet" href="{{ROOT_URL}}/assets/css/plugins/social-buttons/social-buttons.css">
+	<link href="{{ROOT_URL}}/assets/css/spika-client.css" rel="stylesheet">
+	
+    <script src="{{ROOT_URL}}/assets/js/jquery-1.10.2.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/bootstrap.min.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/sb-admin.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/underscore.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/backbone.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/spika-client-app.js"></script>
+
+    <script type="text/templage" id="chat-panel">
+
+    	<div class="panel panel-default" id="chat-panel">
+    	
+    		<div class="panel-heading">安江　健
+    			<button class="btn btn-danger btn-circle" type="button">
+    			<i class="fa fa-heart"></i>
+    			</button>
+    		</div>
+    		<div class="panel-body">
+    			<div class="timestamp_date">
+    				<p>
+    					2014年3月19日
+    				</p>
+    			</div>
+    			<div class="post_block">
+    				<div class="person_info">
+    					<h5>
+    						<img class="person_img" src="img/ken.jpg" alt="" width="" height="" />
+    						安江 健
+    					</h5>
+    					<div class="clear"></div>
+    				</div>
+    				<div class="alert alert-success">
+    					New contact added.
+    				</div>
+    				<div class="post">
+    					<div class="timestamp">
+    						15:28
+    					</div>
+    					<div class="post_content">
+    						こんにちわ
+    					</div>
+    				</div>
+    				<div class="post">
+    					<div class="timestamp">
+    						15:29
+    					</div>
+    					<div class="post_content">
+    						ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+    					</div>
+    				</div>
+    			</div>
+    			<div class="post_block">
+    				<div class="person_info">
+    					<h5>
+    						<img class="person_img" src="img/ken2.jpg" alt="" width="" height="" />
+    						Max Clover
+    					</h5>
+    					<div class="clear"></div>
+    				</div>
+    				<div class="post">
+    					<div class="timestamp">
+    						15:28
+    					</div>
+    					<div class="post_content">
+    						こんにちわ
+    					</div>
+    				</div>
+    				<div class="post">
+    					<div class="timestamp">
+    						15:29
+    					</div>
+    					<div class="post_content">
+    						ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+    						ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+    					</div>
+    				</div>
+    			</div>
+    			<div class="timestamp_date">
+    				<p>
+    					2014年3月20日
+    				</p>
+    			</div>
+    			<div class="post_block">
+    				<div class="person_info">
+    					<h5>
+    						<img class="person_img" src="img/ken.jpg" alt="" width="" height="" />
+    						安江 健
+    					</h5>
+    					<div class="clear"></div>
+    				</div>
+    				<div class="post">
+    					<div class="timestamp">
+    						15:28
+    					</div>
+    					<div class="post_content">
+    						こんにちわ
+    					</div>
+    				</div>
+    				<div class="post">
+    					<div class="timestamp">
+    						15:29
+    					</div>
+    					<div class="post_content">
+    						ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+    		<div id="edit_feald" class="panel-body">
+    			<div class="panel panel-default">
+    				<div class="panel-heading"><button class="btn btn-primary btn-sm" type="button">Send</button>
+    				<ul>
+    					<li>
+    						<a class="btn btn-social-icon btn-github">
+    						<i class="fa fa-smile-o"></i>
+    						</a>
+    					</li>
+    					<li>
+    						<a class="btn btn-social-icon btn-github">
+    						<i class="fa fa-paperclip"></i>
+    						</a>
+    					</li>
+    				</ul>
+    				</div>
+    				<div class="panel-body">
+    					<textarea></textarea>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+						
+    </script>
+    
+</head>
+
+<body id="spika-client">
+
+    <div id="wrapper">
+
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Spika Web ver.</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>Read All Messages</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-messages -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 1</strong>
+                                        <span class="pull-right text-muted">40% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 2</strong>
+                                        <span class="pull-right text-muted">20% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                            <span class="sr-only">20% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 3</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 4</strong>
+                                        <span class="pull-right text-muted">80% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Tasks</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-comment fa-fw"></i> New Comment
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+                                    <span class="pull-right text-muted small">12 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-tasks fa-fw"></i> New Task
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Alerts</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+        </nav>
+        <!-- /.navbar-static-top -->
+
+        <nav class="navbar-static-side" role="navigation" id="right-nav">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="sidebar-search">
+                        <div class="input-group custom-search-form">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <!-- /input-group -->
+                    </li>
+                    <li>
+                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                    </li>
+                    <li>
+                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                    </li>
+                     <li>
+                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                    </li>
+                     <li>
+                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                    </li>
+                     <li>
+                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                    </li>
+                     <li>
+                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                    </li>
+                     <li>
+                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                    </li>
+                </ul>
+                <!-- /#side-menu -->
+            </div>
+            <!-- /.sidebar-collapse -->
+        </nav>
+        <!-- /.navbar-static-side -->
+
+        <div id="page-wrapper">
+            <div class="row" style="padding-top:10px">
+
+					<div class="col-md-9">
+					    
+					    
+						
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-primary">
+							<div class="panel-heading"> Primary Panel </div>
+							<div class="panel-body">
+								<div class="person_detail">
+									<img src="img/ken.jpg" alt="" width="" height="" />
+									安江　ケン
+								</div>
+								<div>
+									<a href="">Profile</a>
+								</div>
+								<div class="description">
+									no description
+								</div>
+							</div>
+							
+							<div class="panel-footer"> Panel Footer </div>
+						</div>
+					</div>
+
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+</body>
+
+</html>

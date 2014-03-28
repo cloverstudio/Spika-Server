@@ -50,6 +50,13 @@ class SpikaWebBaseController implements ControllerProviderInterface
         return $controllers;        
     }
     
+    public function checkLogin(){
+        if($this->app['session']->get('user') == null)
+            return false;
+        else
+            return true;
+    }
+    
     public function setVariables(){
         $this->loginedUser = $this->app['session']->get('user');
     }

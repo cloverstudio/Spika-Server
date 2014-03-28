@@ -95,15 +95,8 @@ class LoginController extends SpikaWebBaseController
                     )
                 ));
 
-                $response = new RedirectResponse("dashboard");
-                
-                if(!empty($remember)){
-                    $response->headers->setCookie(new Cookie("username", $username));
-                    $response->headers->setCookie(new Cookie("password", $password));
-                }
-                
+                $response = new RedirectResponse("main");
                 $app['session']->set('user', $authData);
-                
                 return $response;
                 
             }else{
@@ -207,10 +200,18 @@ class LoginController extends SpikaWebBaseController
                 $newUserId = $app['spikadb']->createUser(
                     $username,
                     $email,
-                    $password
+                    md5($password)
                 );
                 
+                $authData = $self->app['spikadb']->doSpikaAuth($email,md5($password));
+                $authData = json_decode($authData,true);
+                
+                $response = new RedirectResponse("main");
+                $app['session']->set('user', $authData);
+                return $response;
+                
             }
+            
             
             return $self->render('client/regist.twig', array(
                 'ROOT_URL' => ROOT_URL,

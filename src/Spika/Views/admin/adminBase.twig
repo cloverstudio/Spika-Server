@@ -249,17 +249,19 @@
                         <a href="{{ROOT_URL}}/admin/dashboard"><i class="fa fa-dashboard fa-fw"></i> {{lang.menuDashboard}}</a>
                     </li>
                     <li>
-                        <a href="{{ROOT_URL}}/admin/user/list"><i class="fa fa-user"></i> {{lang.menuUser}}</a>
+                        <a href="{{ROOT_URL}}/admin/user/list"><i class="fa fa-user fa-fw"></i> {{lang.menuUser}}</a>
                     </li>
                     <li>
-                        <a href="{{ROOT_URL}}/admin/group/list"><i class="fa fa-users"></i> {{lang.menuGroups}}</a>
+                        <a href="{{ROOT_URL}}/admin/group/list"><i class="fa fa-users fa-fw"></i> {{lang.menuGroups}}</a>
                     </li>
                     <li>
-                        <a href="{{ROOT_URL}}/admin/news/list"><i class="fa fa-info"></i> {{lang.menuNews}}</a>
+                        <a href="{{ROOT_URL}}/admin/news/list"><i class="fa fa-info fa-fw"></i> {{lang.menuNews}}</a>
                     </li>
                     
                     {% if isAdmin %}
-                    
+                        <li>
+                            <a href="{{ROOT_URL}}/admin/servers/list"><i class="fa fa-link fa-fw"></i> {{lang.menuServers}}</a>
+                        </li>
                         <li>
                             <a href="#"><i class="fa fa-wrench fa-fw"></i> {{lang.menuSettings}}<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">

@@ -57,8 +57,11 @@
     
     var navigationBarManager = {
         
-        templateUserRow : _.template('<li><a href="javascript:"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
-        templateGroupsRow : _.template('<li><a href="javascript:"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
+        templateUserRowWithImage : _.template('<li><a href="javascript:"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
+        templateGroupsRowWithImage : _.template('<li><a href="javascript:"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
+        templateUserRowWithoutImage : _.template('<li><a href="javascript:"><img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
+        templateGroupsRowWithoutImage : _.template('<li><a href="javascript:"><img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
+        
         renderContacts : function(userList){
             
             var self = this;
@@ -66,8 +69,13 @@
                 
                 var html = '';
                 _.each(users, function(user){
-                    html += self.templateUserRow(user);
-                    console.log(user);
+                    
+                    if(_.isEmpty(user.avatar_thumb_file_id)){
+                        html += self.templateUserRowWithoutImage(user);
+                    }else{
+                        html += self.templateUserRowWithImage(user);
+                    }
+                    
                 });
                 
                 $('#tab-users ul').html(html);
@@ -87,7 +95,13 @@
                 
                 var html = '';
                 _.each(groups, function(group){
-                    html += self.templateGroupsRow(group);
+
+                    if(_.isEmpty(group.avatar_thumb_file_id)){
+                        html += self.templateGroupsRowWithoutImage(group);
+                    }else{
+                        html += self.templateGroupsRowWithImage(group);
+                    }
+                    
                 });
                 
                 $('#tab-groups ul').html(html);

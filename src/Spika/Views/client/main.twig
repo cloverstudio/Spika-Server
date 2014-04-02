@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -20,138 +19,53 @@
     <script src="{{ROOT_URL}}/assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="{{ROOT_URL}}/assets/js/sb-admin.js"></script>
     <script src="{{ROOT_URL}}/assets/js/underscore.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/backbone.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/spika-client-app.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/spika-client.js"></script>
 
-    <script type="text/templage" id="chat-panel">
+    <script type="text/javascript">
 
-    	<div class="panel panel-default" id="chat-panel">
-    	
-    		<div class="panel-heading">安江　健
-    			<button class="btn btn-danger btn-circle" type="button">
-    			<i class="fa fa-heart"></i>
-    			</button>
-    		</div>
-    		<div class="panel-body">
-    			<div class="timestamp_date">
-    				<p>
-    					2014年3月19日
-    				</p>
-    			</div>
-    			<div class="post_block">
-    				<div class="person_info">
-    					<h5>
-    						<img class="person_img" src="img/ken.jpg" alt="" width="" height="" />
-    						安江 健
-    					</h5>
-    					<div class="clear"></div>
-    				</div>
-    				<div class="alert alert-success">
-    					New contact added.
-    				</div>
-    				<div class="post">
-    					<div class="timestamp">
-    						15:28
-    					</div>
-    					<div class="post_content">
-    						こんにちわ
-    					</div>
-    				</div>
-    				<div class="post">
-    					<div class="timestamp">
-    						15:29
-    					</div>
-    					<div class="post_content">
-    						ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-    					</div>
-    				</div>
-    			</div>
-    			<div class="post_block">
-    				<div class="person_info">
-    					<h5>
-    						<img class="person_img" src="img/ken2.jpg" alt="" width="" height="" />
-    						Max Clover
-    					</h5>
-    					<div class="clear"></div>
-    				</div>
-    				<div class="post">
-    					<div class="timestamp">
-    						15:28
-    					</div>
-    					<div class="post_content">
-    						こんにちわ
-    					</div>
-    				</div>
-    				<div class="post">
-    					<div class="timestamp">
-    						15:29
-    					</div>
-    					<div class="post_content">
-    						ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-    						ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-    					</div>
-    				</div>
-    			</div>
-    			<div class="timestamp_date">
-    				<p>
-    					2014年3月20日
-    				</p>
-    			</div>
-    			<div class="post_block">
-    				<div class="person_info">
-    					<h5>
-    						<img class="person_img" src="img/ken.jpg" alt="" width="" height="" />
-    						安江 健
-    					</h5>
-    					<div class="clear"></div>
-    				</div>
-    				<div class="post">
-    					<div class="timestamp">
-    						15:28
-    					</div>
-    					<div class="post_content">
-    						こんにちわ
-    					</div>
-    				</div>
-    				<div class="post">
-    					<div class="timestamp">
-    						15:29
-    					</div>
-    					<div class="post_content">
-    						ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    		<div id="edit_feald" class="panel-body">
-    			<div class="panel panel-default">
-    				<div class="panel-heading"><button class="btn btn-primary btn-sm" type="button">Send</button>
-    				<ul>
-    					<li>
-    						<a class="btn btn-social-icon btn-github">
-    						<i class="fa fa-smile-o"></i>
-    						</a>
-    					</li>
-    					<li>
-    						<a class="btn btn-social-icon btn-github">
-    						<i class="fa fa-paperclip"></i>
-    						</a>
-    					</li>
-    				</ul>
-    				</div>
-    				<div class="panel-body">
-    					<textarea></textarea>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-						
+        var _spikaClient = new SpikaClient('{{ROOT_URL}}/api');
+        var _loginedUser = {{ loginedUser|json_encode()|raw }};
+        var _lang = {{ lang|json_encode()|raw }};
+        var _consts = {
+            RootURL: '{{ROOT_URL}}'
+        };
+        
     </script>
     
+    <script src="{{ROOT_URL}}/assets/js/spika-client-app.js"></script>
+
 </head>
 
-<body id="spika-client">
+<body>
 
+    <!-- modal dialog templates -->
+    <div class="modal fade" id="modalAlertDialog" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="modalTitle"></h4>
+          </div>
+          <div class="modal-body" id="modalText">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="modalDismissButton"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" id="modalLoading" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center" id="modalText">
+                    <i class="fa fa-refresh fa-spin fa-5x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div id="wrapper">
 
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -379,42 +293,62 @@
         </nav>
         <!-- /.navbar-static-top -->
 
-        <nav class="navbar-static-side" role="navigation" id="right-nav">
+        <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li>
-                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
-                    </li>
-                    <li>
-                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
-                    </li>
-                     <li>
-                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
-                    </li>
-                     <li>
-                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
-                    </li>
-                     <li>
-                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
-                    </li>
-                     <li>
-                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
-                    </li>
-                     <li>
-                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
-                    </li>
+
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#tab-recent" data-toggle="tab">Recent</a></li>
+                  <li><a href="#tab-users" data-toggle="tab">User</a></li>
+                  <li><a href="#tab-groups" data-toggle="tab">Group</a></li>
                 </ul>
+                
+                <!-- Tab panes -->
+                <div class="tab-content">
+                
+                  <div class="tab-pane active" id="tab-recent">
+                  
+                                <ul class="nav" id="side-menu">
+                
+                                    <li>
+                                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                                    </li>
+                                    <li>
+                                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                                    </li>
+                                     <li>
+                                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                                    </li>
+                                     <li>
+                                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                                    </li>
+                                     <li>
+                                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                                    </li>
+                                     <li>
+                                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                                    </li>
+                                     <li>
+                                        <a href="index.html"><img src="img/ken.jpg" alt="" width="40" height="40" class="person_img" />安江健</a>
+                                    </li>
+                                </ul>
+                  
+                  </div>
+                  <div class="tab-pane" id="tab-users">
+                
+                        <ul class="nav" id="side-menu">
+
+                        </ul>
+                                  
+                  </div>
+                
+                  <div class="tab-pane" id="tab-groups">
+                
+                        <ul class="nav" id="side-menu">
+
+                        </ul>
+                                  
+                  </div>
+                </div>
                 <!-- /#side-menu -->
             </div>
             <!-- /.sidebar-collapse -->
@@ -422,14 +356,131 @@
         <!-- /.navbar-static-side -->
 
         <div id="page-wrapper">
-            <div class="row" style="padding-top:10px">
-
-					<div class="col-md-9">
-					    
-					    
+            <div class="row">
+                <div class="col-lg-12">
+					<div class="col-lg-9">
+						<div class="panel-default">
 						
+							<div id="conversation_block">
+							
+								<div class="timestamp_date">
+									<p>
+										2014年3月19日
+									</p>
+								</div>
+								<div class="post_block">
+									<div class="person_info">
+										<h5>
+											<img class="person_img" src="img/ken.jpg" alt="" width="" height="" />
+											安江 健
+										</h5>
+										<div class="clear"></div>
+									</div>
+									<div class="alert alert-success">
+										New contact added.
+									</div>
+									<div class="post">
+										<div class="timestamp">
+											15:28
+										</div>
+										<div class="post_content">
+											こんにちわ
+										</div>
+									</div>
+									<div class="post">
+										<div class="timestamp">
+											15:29
+										</div>
+										<div class="post_content">
+											ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+										</div>
+									</div>
+								</div>
+								<div class="post_block">
+									<div class="person_info">
+										<h5>
+											<img class="person_img" src="img/ken2.jpg" alt="" width="" height="" />
+											Max Clover
+										</h5>
+										<div class="clear"></div>
+									</div>
+									<div class="post">
+										<div class="timestamp">
+											15:28
+										</div>
+										<div class="post_content">
+											こんにちわ
+										</div>
+									</div>
+									<div class="post">
+										<div class="timestamp">
+											15:29
+										</div>
+										<div class="post_content">
+											ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+											ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+										</div>
+									</div>
+								</div>
+								<div class="timestamp_date">
+									<p>
+										2014年3月20日
+									</p>
+								</div>
+								<div class="post_block">
+									<div class="person_info">
+										<h5>
+											<img class="person_img" src="img/ken.jpg" alt="" width="" height="" />
+											安江 健
+										</h5>
+										<div class="clear"></div>
+									</div>
+									<div class="post">
+										<div class="timestamp">
+											15:28
+										</div>
+										<div class="post_content">
+											こんにちわ
+										</div>
+									</div>
+									<div class="post">
+										<div class="timestamp">
+											15:29
+										</div>
+										<div class="post_content">
+											ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div id="chat_block" >
+							
+								<div class="panel panel-default">
+									<div class="panel-heading"><button class="btn btn-primary btn-sm" type="button">Send</button>
+									<ul>
+										<li>
+											<a class="btn btn-social-icon btn-github">
+											<i class="fa fa-smile-o"></i>
+											</a>
+										</li>
+										<li>
+											<a class="btn btn-social-icon btn-github">
+											<i class="fa fa-paperclip"></i>
+											</a>
+										</li>
+									</ul>
+									</div>
+									<div class="panel-body">
+									    <div class="chatpanel" id="sticker" style="display:none;"></div>
+									    <div class="chatpanel" id="fileupload" style="display:none;"></div>
+										<textarea id="textarea"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-lg-3">
 						<div class="panel panel-primary">
 							<div class="panel-heading"> Primary Panel </div>
 							<div class="panel-body">
@@ -448,7 +499,8 @@
 							<div class="panel-footer"> Panel Footer </div>
 						</div>
 					</div>
-
+                </div>
+                <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
         </div>
@@ -456,6 +508,7 @@
 
     </div>
     <!-- /#wrapper -->
+
 
 </body>
 

@@ -201,4 +201,42 @@ SpikaClient.prototype.getGroup = function(groupId,succeessListener,failedListene
 
 }
 
+SpikaClient.prototype.getContacts = function(succeessListener,failedListener)
+{
 
+    var requestLogin = $.ajax({
+        url: this.apiEndPointUrl + '/getContacts',
+        type: 'GET',
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    requestLogin.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    requestLogin.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+
+SpikaClient.prototype.getFavoriteGroups = function(succeessListener,failedListener)
+{
+
+    var requestLogin = $.ajax({
+        url: this.apiEndPointUrl + '/getFavoriteGroups',
+        type: 'GET',
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    requestLogin.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    requestLogin.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}

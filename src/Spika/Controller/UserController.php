@@ -280,6 +280,20 @@ class UserController extends SpikaBaseController
             
         )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
+        $controllers->get('/getContacts',
+            function (Request $request) use ($app,$self) {
+                
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
+
+                $users = $app['spikadb']->getContactsByUserId($currentUser['_id']);
+                
+                return json_encode($users);
+                
+            }
+            
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
+
     }
 
     

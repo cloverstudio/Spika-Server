@@ -1,43 +1,22 @@
 .clear {
 	clear: both;
-	
 }
 body {
 	background-color: #222222;
-	overflow:hidden
+	overflow: hidden;
 }
 
-#right-nav{
-    height: 100%
-}
-.navbar-default {
-	background-color: #00CC7B;
-}
 
 .navbar-default .sidebar-collapse {
-	background-color: #222222
+	padding-top: 10px;
 }
 
 .navbar-default .navbar-brand {
-	color: #FFFFFF;
 	font-weight: 600;
 }
 
-.sidebar-collapse a,
-.nav > li > a {
-	color: #FFFFFF;
-}
-
-.sidebar-collapse .nav > li > a:hover,
-.sidebar-collapse .nav > li > a:focus {
-  text-decoration: none;
-  background-color: #888888;
-}
-
-.navbar .nav > li > a:hover,
-.navbar .nav > li > a:focus {
-  text-decoration: none;
-  background-color: #9FFFD9;
+.sidebar-collapse .tab-content{
+    overflow-y: auto;
 }
 
 .navbar-static-side ul li {
@@ -87,31 +66,48 @@ body {
 	padding-right: 50px;
 }
 
-#edit_feald {
-	padding: 20px;
+#chat_block {
+	padding: 5px;
 	background-color: #EEEEEE;
 }
 
-#edit_feald .panel-heading {
+#chat_block .panel{
+	margin-bottom: 0px;
+}
+
+
+#chat_block .panel-heading {
 	line-height: 27px;
 }
 
-#edit_feald .panel-heading .btn {
+#chat_block .panel-heading .btn {
 	float: right;
 }
 
-#edit_feald  textarea {
+#chat_block  textarea {
 	width: 100%;
 	border: none;
+	min-height: 100px;
 }
 
-#edit_feald .panel-heading ul {
+#chat_block  div.chatpanel {
+	width: 100%;
+	border: none;
+	min-height: 100px;
+}
+
+
+#chat_block .panel-body {
+	padding: 3px;
+}
+
+#chat_block .panel-heading ul {
 	padding-left: 0px;
 	margin-bottom: 0;
 	height: 35px;
 }
 
-#edit_feald .panel-heading ul li {
+#chat_block .panel-heading ul li {
 	display: inline-block;
 	font-size: 20px;
 	padding-right: 10px;
@@ -121,64 +117,14 @@ body {
 	margin-right: 10px;
 }
 
-#spika-client .col-xs-1,
-#spika-client .col-sm-1,
-#spika-client .col-md-1,
-#spika-client .col-lg-1,
-#spika-client .col-xs-2,
-#spika-client .col-sm-2,
-#spika-client .col-md-2,
-#spika-client .col-lg-2,
-#spika-client .col-xs-3,
-#spika-client .col-sm-3,
-#spika-client .col-md-3,
-#spika-client .col-lg-3,
-#spika-client .col-xs-4,
-#spika-client .col-sm-4,
-#spika-client .col-md-4,
-#spika-client .col-lg-4,
-#spika-client .col-xs-5,
-#spika-client .col-sm-5,
-#spika-client .col-md-5,
-#spika-client .col-lg-5,
-#spika-client .col-xs-6,
-#spika-client .col-sm-6,
-#spika-client .col-md-6,
-#spika-client .col-lg-6,
-#spika-client .col-xs-7,
-#spika-client .col-sm-7,
-#spika-client .col-md-7,
-#spika-client .col-lg-7,
-#spika-client .col-xs-8,
-#spika-client .col-sm-8,
-#spika-client .col-md-8,
-#spika-client .col-lg-8,
-#spika-client .col-xs-9,
-#spika-client .col-sm-9,
-#spika-client .col-md-9,
-#spika-client .col-lg-9,
-#spika-client .col-xs-10,
-#spika-client .col-sm-10,
-#spika-client .col-md-10,
-#spika-client .col-lg-10,
-#spika-client .col-xs-11,
-#spika-client .col-sm-11,
-#spika-client .col-md-11,
-#spika-client .col-lg-11,
-#spika-client .col-xs-12,
-#spika-client .col-sm-12,
-#spika-client .col-md-12,
-#spika-client .col-lg-12 {
-  position: relative;
-  min-height: 1px;
-  padding-right: 5px;
-  padding-left: 5px;
+#page-wrapper {
+	padding: 0;
 }
 
-#spika-client #page-wrapper{
-  padding: 0 15px;
+.col-lg-3 .panel {
+	margin-top: 20px;
 }
 
-#side-menu{
-    overflow-y: auto;
+#conversation_block{
+    overflow-y: scroll;
 }

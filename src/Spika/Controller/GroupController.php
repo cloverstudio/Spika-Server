@@ -405,6 +405,20 @@ class GroupController extends SpikaBaseController
             
         )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
             
+        $controllers->get('/getFavoriteGroups',
+            function (Request $request) use ($app,$self) {
+                
+                $currentUser = $app['currentUser'];
+                $requestBody = $request->getContent();
+
+                $groups = $app['spikadb']->getGroupsByUserId($currentUser['_id']);
+                
+                return json_encode($groups);
+                
+            }
+            
+        )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
+
     }
             
 }

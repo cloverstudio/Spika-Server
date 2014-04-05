@@ -160,7 +160,12 @@ class UserController extends SpikaBaseController
                 
                 switch ($type){
                     case "id":
-                        $result = $app['spikadb']->findUserById($value);
+                        $userIds = explode(",",$value);
+                        if(count($userIds) == 1){
+                            $result = $app['spikadb']->findUserById($value);
+                        }else{
+                            $result = $app['spikadb']->findUsersById($userIds);
+                        }
                         break;
                     case "email":
                         $result = $app['spikadb']->findUserByEmail($value);

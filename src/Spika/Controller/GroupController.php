@@ -222,7 +222,12 @@ class GroupController extends SpikaBaseController
 
                 switch ($type){
                     case "id":
-                        $result = $app['spikadb']->findGroupById($value);
+                        $groupIds = explode(",",$value);
+                        if(count($groupIds) == 1){
+                            $result = $app['spikadb']->findGroupById($value);
+                        }else{
+                            $result = $app['spikadb']->findGroupsById($groupIds);
+                        }
                         break;
                     case "name":
                         $result = $app['spikadb']->findGroupByName($value);
@@ -238,7 +243,6 @@ class GroupController extends SpikaBaseController
                 if($result == null)
                     return "{}";
                     
-                
                 return json_encode($result);
                 
             }

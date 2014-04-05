@@ -57,10 +57,16 @@
     
     var navigationBarManager = {
         
-        templateUserRowWithImage : _.template('<li><a href="javascript:"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
-        templateGroupsRowWithImage : _.template('<li><a href="javascript:"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
-        templateUserRowWithoutImage : _.template('<li><a href="javascript:"><img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
-        templateGroupsRowWithoutImage : _.template('<li><a href="javascript:"><img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-circle" /><%= name %></a></li>'),
+        userList : {},
+        groupList : {},
+        unreadMessageNumPerUser : {},
+        unreadMessageNumPerGroup : {},        
+        templateUserRow : _.template('<li><a href="javascript:"><%= img %><%= name %></a></li>'),
+        templateGroupsRow : _.template('<li><a href="javascript:"><%= img %><%= name %></a></li>'),
+        avatarImage : _.template('<img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
+        avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
+        templateRecentActivityRowUser : _.template('<li><a href="javascript:"><%= img %><%= name %> <%= count %></a></li>'),
+        templateRecentActivityRowGroup : _.template('<li><a href="javascript:"><%= img %><%= name %> <%= count %></a></li>'),
         
         renderContacts : function(userList){
             
@@ -68,13 +74,15 @@
             _spikaClient.getContacts(function(users){
                 
                 var html = '';
-                _.each(users, function(user){
+                _.each(users, function(data){
                     
-                    if(_.isEmpty(user.avatar_thumb_file_id)){
-                        html += self.templateUserRowWithoutImage(user);
+                    if(_.isEmpty(data.avatar_thumb_file_id)){
+                        data.img = self.avatarNoImage(data);
                     }else{
-                        html += self.templateUserRowWithImage(user);
+                        data.img = self.avatarImage(data);
                     }
+                    
+                    html += self.templateUserRow(data);
                     
                 });
                 
@@ -94,13 +102,15 @@
             _spikaClient.getFavoriteGroups(function(groups){
                 
                 var html = '';
-                _.each(groups, function(group){
+                _.each(groups, function(data){
 
-                    if(_.isEmpty(group.avatar_thumb_file_id)){
-                        html += self.templateGroupsRowWithoutImage(group);
+                    if(_.isEmpty(data.avatar_thumb_file_id)){
+                        data.img = self.avatarNoImage(data);
                     }else{
-                        html += self.templateGroupsRowWithImage(group);
+                        data.img = self.avatarImage(data);
                     }
+                    
+                    html += self.templateGroupsRow(data);
                     
                 });
                 
@@ -112,7 +122,174 @@
                 
             });
             
+        },
+        renderRecentActivity : function(userList){
+        
+            var self = this;
+            _spikaClient.getActivitySummary(function(data){
+                
+                var html = '';
+                var totalUnreadMessage = 0;
+                
+                $('#tab-recent ul').html(html);
+                
+                var usersId = new Array();
+                var groupsId = new Array();
+                
+                if(data.rows[0].value.recent_activity != undefined){
+                
+                    if(data.rows[0].value.recent_activity.direct_messages != undefined){
+                    
+                        var directMessages = data.rows[0].value.recent_activity.direct_messages.notifications;
+                        
+                        for(index in directMessages){
+                            directMessageRow = directMessages[index];
+                            fromUserId = directMessageRow.messages[0]['from_user_id'];
+                            
+                            usersId.push(fromUserId);
+                            
+                            if(_.isUndefined(self.unreadMessageNumPerUser[fromUserId])){
+                                self.unreadMessageNumPerUser[fromUserId] = 0;
+                            }
+                            
+                            self.unreadMessageNumPerUser[fromUserId] += parseInt(directMessageRow.count);
+                            
+                        }
+                        
+                    }
+                    
+                    if(data.rows[0].value.recent_activity.group_posts != undefined){
+                    
+                        var groupMessages = data.rows[0].value.recent_activity.group_posts.notifications;
+                        
+                        for(index in groupMessages){
+                            groupMessageRow = groupMessages[index];
+                            groupId = groupMessageRow['target_id'];
+
+                            groupsId.push(groupId);
+                            
+                            if(_.isUndefined(self.unreadMessageNumPerGroup[groupId])){
+                                self.unreadMessageNumPerGroup[groupId] = 0;
+                            }
+                            
+                            self.unreadMessageNumPerGroup[groupId] += parseInt(groupMessageRow.count);
+                            
+                        }    
+                           
+                    }
+                }                
+                
+
+                _spikaClient.getUser(usersId.join(','),function(data){
+
+                        for(userid in data){
+                            
+                            self.userList[data[userid]['_id']] = data[userid];
+                            
+                        }
+                    
+                        console.log(self.userList);
+                        
+                    _spikaClient.getGroup(groupsId.join(','),function(data){
+                        
+                        for(groupid in data){
+                            
+                            self.groupList[data[groupid]['_id']] = data[groupid];
+                            
+                        }
+                        
+                        // every information are fetched
+                        self.renderRecentActivityNext();
+                        
+                    },function(errorString){
+                        
+                        alertManager.hideLoading();
+                        
+                    });
+                
+                },function(errorString){
+                    
+                    alertManager.hideLoading();
+                    
+                });
+                
+    
+                
+            },function(errorMessage){
+            
+                alertManager.showError(_lang.messageGeneralError);
+                alertManager.hideLoading();
+                
+            });
+            
+        },
+        renderRecentActivityNext : function(){
+            
+            if(_.isEmpty(this.userList)){
+                return;
+            }
+            
+            if(_.isEmpty(this.groupList)){
+                return;
+            }
+            
+            if(_.isEmpty(this.unreadMessageNumPerUser)){
+                return;
+            }
+            
+            if(_.isEmpty(this.unreadMessageNumPerGroup)){
+                return;
+            }
+            
+            var html = '';
+            
+            for(userId in this.userList){
+                
+                var count = this.unreadMessageNumPerUser[userId];
+                var data = this.userList[userId];
+                if(count > 0){
+                    data.count = '(' + count + ')';
+                }else{
+                    data.count = '';
+                }
+                 
+                if(_.isEmpty(data.avatar_thumb_file_id)){
+                    data.img = this.avatarNoImage(data);
+                }else{
+                    data.img = this.avatarImage(data);
+                }
+                
+                html += this.templateRecentActivityRowUser(data);
+                
+
+            }
+            
+            for(groupId in this.groupList){
+
+                var count = this.unreadMessageNumPerGroup[groupId];
+                var data = this.groupList[groupId];
+                if(count > 0){
+                    data.count = '(' + count + ')';
+                }else{
+                    data.count = '';
+                }
+                 
+                if(_.isEmpty(data.avatar_thumb_file_id)){
+                    data.img = this.avatarNoImage(data);
+                }else{
+                    data.img = this.avatarImage(data);
+                }
+                
+                html += this.templateRecentActivityRowGroup(data);
+                
+                alertManager.hideLoading();
+                
+            }
+            
+            $('#tab-recent ul').html(html);
+            
         }
+        
     }
     
     $(document).ready(function() {
@@ -129,9 +306,10 @@
             
             navigationBarManager.renderContacts();
             navigationBarManager.renderGroups();
+            navigationBarManager.renderRecentActivity();
             
-            alertManager.hideLoading();
             
+
         },function(errorString){
         
             alertManager.showAlert(_lang.labelErrorDialogTitle,_lang.messageTokenError,_lang.labelCloseButton,function(){

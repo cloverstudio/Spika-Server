@@ -189,6 +189,35 @@ class MySQL implements DbInterface
     }
 
     /**
+     * Finds a users by User ID array
+     *
+     * @param  string $id
+     * @return array
+     */
+    public function findUsersById($ids)
+    {
+        
+        $usersAry = array();
+        
+        foreach($ids as $row => $id){
+            $ids[$row] = intval($id);
+        }
+        
+        $idsStr = implode(',',$ids);
+
+        $result = $this->DB->fetchAll('select * from user where _id in (' . $idsStr . ')');
+
+        foreach($result as $user){
+            $user = $this->reformatUserData($user,true);   
+            $usersAry[] = $user;
+        } 
+           
+        return $usersAry;
+        
+    }
+
+
+    /**
      * Finds a user by email
      *
      * @param  string $email
@@ -1083,6 +1112,28 @@ class MySQL implements DbInterface
         $group['category_name'] = $groupCategory['title'];
         
         return $this->formatRow($group);
+    }
+
+    public function findGroupsById($ids)
+    {
+
+        $groupsAry = array();
+        
+        foreach($ids as $row => $id){
+            $ids[$row] = intval($id);
+        }
+        
+        $idsStr = implode(',',$ids);
+
+        $result = $this->DB->fetchAll('select * from `group` where _id in (' . $idsStr . ')');
+
+        foreach($result as $group){
+            $group = $this->formatRow($group,true);   
+            $groupsAry[] = $group;
+        } 
+           
+        return $groupsAry;
+
     }
 
     public function findGroupByName($name)

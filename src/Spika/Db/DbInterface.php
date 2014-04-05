@@ -13,6 +13,7 @@ interface DbInterface
     public function saveUserToken($userJson, $id);
     public function findUserByToken($token);
     public function findUserById($id);
+    public function findUsersById($ids);
     public function findUserByEmail($email);
     public function findUserByName($name);
     public function getActivitySummary($user_id);
@@ -35,6 +36,7 @@ interface DbInterface
     public function getComments($messageId,$count,$offset);
     public function getGroupMessages($targetGroupId,$count,$offset);
     public function findGroupById($id);
+    public function findGroupsById($id);
     public function findGroupByName($name);
     public function findGroupByCategoryId($categoryId);
     public function findGroupsByName($name);

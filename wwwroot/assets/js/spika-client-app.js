@@ -403,7 +403,7 @@
                             
                         currentMessages.push(value);
                         
-                        this.chatContentPool[dateStr][timeStr] = currentMessages;
+                        this.chatContentPool[dateStr][lastKey] = currentMessages;
                         
                     }else{
                         
@@ -412,19 +412,19 @@
                       
                         this.chatContentPool[dateStr][timeStr] = messages;
                         
+                        
                     }
                  
                 }
-                
-
 
             }
-            
             
         },
         render : function(){
             
             var html = '';
+            
+            console.log(this.chatContentPool);
             
             for(var date in this.chatContentPool){
                 
@@ -443,8 +443,6 @@
                         firstRow.img = this.avatarImage(firstRow);
                     }
                     
-                    console.log(firstRow);
-                    
                     postsHtml += this.templateUserInfo(firstRow);
                     
                    
@@ -453,7 +451,16 @@
                         var post = this.chatContentPool[date][tmp][tmp2];
                         
                         var dateObj = new Date(post.created*1000);
-                        var timeStr = dateObj.getHours() + ":" + dateObj.getMinutes();
+                        var hour = dateObj.getHours();
+                        var min = dateObj.getMinutes();
+                        
+                        if(hour < 10)
+                            hour = '0' + hour;
+                            
+                        if(min < 10)
+                            min = '0' + min;
+                            
+                        var timeStr = hour + ":" + min;
                         
                         post.time = timeStr;
                         postsHtml += this.templateOnePost(post);
@@ -466,7 +473,7 @@
 
 
                 
-                html += this.templateChatBlockPerson({conversation : ''});
+                //html += this.templateChatBlockPerson({conversation : ''});
                 
             }
             

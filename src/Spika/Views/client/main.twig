@@ -31,6 +31,8 @@
         };
         var _chatManager = {};
         
+        
+        
     </script>
     
     <script src="{{ROOT_URL}}/assets/js/spika-client-app.js"></script>
@@ -342,102 +344,13 @@
 						<div class="panel-default">
 						
 							<div id="conversation_block">
-							
-								<div class="timestamp_date">
-									<p>
-										2014年3月19日
-									</p>
-								</div>
-								<div class="post_block">
-									<div class="person_info">
-										<h5>
-											<img class="person_img" src="img/ken.jpg" alt="" width="" height="" />
-											安江 健
-										</h5>
-										<div class="clear"></div>
-									</div>
-									<div class="alert alert-success">
-										New contact added.
-									</div>
-									<div class="post">
-										<div class="timestamp">
-											15:28
-										</div>
-										<div class="post_content">
-											こんにちわ
-										</div>
-									</div>
-									<div class="post">
-										<div class="timestamp">
-											15:29
-										</div>
-										<div class="post_content">
-											ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-										</div>
-									</div>
-								</div>
-								<div class="post_block">
-									<div class="person_info">
-										<h5>
-											<img class="person_img" src="img/ken2.jpg" alt="" width="" height="" />
-											Max Clover
-										</h5>
-										<div class="clear"></div>
-									</div>
-									<div class="post">
-										<div class="timestamp">
-											15:28
-										</div>
-										<div class="post_content">
-											こんにちわ
-										</div>
-									</div>
-									<div class="post">
-										<div class="timestamp">
-											15:29
-										</div>
-										<div class="post_content">
-											ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-											ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-										</div>
-									</div>
-								</div>
-								<div class="timestamp_date">
-									<p>
-										2014年3月20日
-									</p>
-								</div>
-								<div class="post_block">
-									<div class="person_info">
-										<h5>
-											<img class="person_img" src="img/ken.jpg" alt="" width="" height="" />
-											安江 健
-										</h5>
-										<div class="clear"></div>
-									</div>
-									<div class="post">
-										<div class="timestamp">
-											15:28
-										</div>
-										<div class="post_content">
-											こんにちわ
-										</div>
-									</div>
-									<div class="post">
-										<div class="timestamp">
-											15:29
-										</div>
-										<div class="post_content">
-											ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-										</div>
-									</div>
-								</div>
+
 							</div>
 							
 							<div id="chat_block" >
 							
 								<div class="panel panel-default">
-									<div class="panel-heading"><button class="btn btn-primary btn-sm" type="button">Send</button>
+									<div class="panel-heading"><button class="btn btn-primary btn-sm" type="button" id="btn-chat-send">Send</button>
 									<ul>
 										<li>
 											<a class="btn btn-social-icon btn-github">
@@ -460,23 +373,22 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-3" id="sidebar_block">
 						<div class="panel panel-primary">
-							<div class="panel-heading"> Primary Panel </div>
+							<div class="panel-heading"> Profile </div>
 							<div class="panel-body">
 								<div class="person_detail">
-									<img src="img/ken.jpg" alt="" width="" height="" />
-									安江　ケン
+									<span id="profile-picture"></span><br />
+									<span id="profile-name"></span><br />
+									<a href="">See Profile</a>
 								</div>
-								<div>
-									<a href="">Profile</a>
-								</div>
-								<div class="description">
-									no description
+
+								<div id="profile-description">
+									
 								</div>
 							</div>
 							
-							<div class="panel-footer"> Panel Footer </div>
+							<div class="panel-footer">  </div>
 						</div>
 					</div>
                 </div>

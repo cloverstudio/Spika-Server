@@ -691,7 +691,7 @@ class MySQL implements DbInterface
         }else{
             return null;
         }
-
+        
         if($this->DB->insert('message',$messageData)){
         
             $couchDBCompatibleResponse = array(
@@ -1348,13 +1348,15 @@ class MySQL implements DbInterface
             
             $this->DB->executeUpdate(
                     'update notification 
-                        set count = 0
+                        set count = 0,
+                            modified = ?
                         where 
                         user_id = ?
                         and from_user_id = ?
                         and target_type = ?
                     ',
                     array(
+                        time(),
                         $toUser,
                         $fromUserId,
                         $type));
@@ -1368,13 +1370,15 @@ class MySQL implements DbInterface
             
             $this->DB->executeUpdate(
                     'update notification 
-                        set count = 0
+                        set count = 0,
+                            modified = ?
                         where 
                         user_id = ?
                         and to_group_id = ?
                         and target_type = ?
                     ',
                     array(
+                        time(),
                         $toUser,
                         $toGroupId,
                         $type));
@@ -1382,7 +1386,6 @@ class MySQL implements DbInterface
         }   
         
         $this->logger->adddebug("touser : {$toUser} , type : {$type} , fieldkey : {$fieldKey}");
-            
     
     }
 

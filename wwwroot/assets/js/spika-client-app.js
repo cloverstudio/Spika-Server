@@ -55,6 +55,7 @@
             
     };
     
+    // navigation bar renderer
     var navigationBarManager = {
         
         userList : {},
@@ -126,12 +127,16 @@
         renderRecentActivity : function(userList){
         
             var self = this;
-            _spikaClient.getActivitySummary(function(data){
+            
+            this.userList = {};
+            this.groupList = {};
+            this.unreadMessageNumPerUser = {};
+            this.unreadMessageNumPerGroup = {};   
                 
+            _spikaClient.getActivitySummary(function(data){
+
                 var html = '';
                 var totalUnreadMessage = 0;
-                
-                $('#tab-recent ul').html(html);
                 
                 var usersId = new Array();
                 var groupsId = new Array();
@@ -143,16 +148,18 @@
                         var directMessages = data.rows[0].value.recent_activity.direct_messages.notifications;
                         
                         for(index in directMessages){
-                            directMessageRow = directMessages[index];
-                            fromUserId = directMessageRow.messages[0]['from_user_id'];
+                            var directMessageRow = directMessages[index];
+                            var fromUserId = directMessageRow.messages[0]['from_user_id'];
+                            var timestamp = directMessageRow.messages[0]['modified'];
+                            var key = timestamp + + fromUserId;
                             
                             usersId.push(fromUserId);
                             
-                            if(_.isUndefined(self.unreadMessageNumPerUser[fromUserId])){
-                                self.unreadMessageNumPerUser[fromUserId] = 0;
+                            if(_.isUndefined(self.unreadMessageNumPerUser[key])){
+                                self.unreadMessageNumPerUser[key] = {count:0,userId:fromUserId};
                             }
                             
-                            self.unreadMessageNumPerUser[fromUserId] += parseInt(directMessageRow.count);
+                            self.unreadMessageNumPerUser[key].count += parseInt(directMessageRow.count);
                             
                         }
                         
@@ -163,16 +170,18 @@
                         var groupMessages = data.rows[0].value.recent_activity.group_posts.notifications;
                         
                         for(index in groupMessages){
-                            groupMessageRow = groupMessages[index];
-                            groupId = groupMessageRow['target_id'];
-
+                            var groupMessageRow = groupMessages[index];
+                            var groupId = groupMessageRow['target_id'];
+                            var timestamp = groupMessageRow.messages[0]['modified'];
+                            var key = groupId;
+                            
                             groupsId.push(groupId);
                             
-                            if(_.isUndefined(self.unreadMessageNumPerGroup[groupId])){
-                                self.unreadMessageNumPerGroup[groupId] = 0;
+                            if(_.isUndefined(self.unreadMessageNumPerGroup[key])){
+                                self.unreadMessageNumPerGroup[key] = {count:0,groupId:groupId};
                             }
                             
-                            self.unreadMessageNumPerGroup[groupId] += parseInt(groupMessageRow.count);
+                            self.unreadMessageNumPerGroup[key].count += parseInt(groupMessageRow.count);
                             
                         }    
                            
@@ -245,10 +254,15 @@
             
             var html = '';
             
-            for(userId in this.userList){
+            var keys = _.keys(this.unreadMessageNumPerUser);
+            keys = keys.reverse();
+            for(var i = 0 ; i < keys.length ; i++){
                 
-                var count = this.unreadMessageNumPerUser[userId];
+                var key = keys[i];
+                var userId = this.unreadMessageNumPerUser[key].userId;
+                var count = this.unreadMessageNumPerUser[key].count;
                 var data = this.userList[userId];
+                
                 if(count > 0){
                     data.count = '(' + count + ')';
                 }else{
@@ -268,9 +282,13 @@
 
             }
             
-            for(groupId in this.groupList){
-
-                var count = this.unreadMessageNumPerGroup[groupId];
+            var keys = _.keys(this.unreadMessageNumPerGroup);
+            keys = keys.reverse();
+            for(var i = 0 ; i < keys.length ; i++){
+                
+                var key = keys[i];
+                var groupId = this.unreadMessageNumPerGroup[key].groupId;
+                var count = this.unreadMessageNumPerGroup[key].count;
                 var data = this.groupList[groupId];
                 if(count > 0){
                     data.count = '(' + count + ')';
@@ -298,6 +316,7 @@
         
     }
     
+    // everything for caht
     _chatManager = {
         
         templateDate : _.template('<div class="timestamp_date"><p><%= date %></p></div>'),
@@ -318,10 +337,13 @@
             
             alertManager.showLoading();
             
-            this.currentUserId = userId;
+            this.chatCurrentUserId = userId;
+            this.chatCurrentGroupId = 0;
             
             _spikaClient.loadUserChat(userId,this.chatPageRowCount,this.chatCurrentPage,function(data){
-            
+                
+                sideBarManager.renderUserProfile(userId);
+                
                 alertManager.hideLoading();
                 
                 self.chatContentPool = {};
@@ -330,23 +352,45 @@
             
                 self.render();
                 
+                self.scrollToBottom();
+                
             },function(errorString){
             
                 alertManager.hideLoading();
                 
-                alertManager.showAlert(_lang.labelErrorDialogTitle,_lang.messageTokenError,_lang.labelCloseButton,function(){
-                    location.href = "login";
-                });
+                alertManager.showError(_lang.messageGeneralError);
             
             });
             
-            //alertManager.hideLoading();
             
         },
+        
         startGroupChat : function(groupId){
             
+            var self = this;
+            
             alertManager.showLoading();
-            //alertManager.hideLoading();
+            
+            this.chatCurrentGroupId = groupId;
+            this.chatCurrentUserId = 0;
+            
+            _spikaClient.loadGroupChat(groupId,this.chatPageRowCount,this.chatCurrentPage,function(data){
+            
+                self.chatContentPool = {};
+                
+                self.mergeConverSation(data);
+            
+                self.render();
+                
+                self.scrollToBottom();
+                
+            },function(errorString){
+            
+                alertManager.hideLoading();
+                
+                alertManager.showError(_lang.messageGeneralError);
+            
+            });
                
         },
         mergeConverSation : function(data){
@@ -369,7 +413,7 @@
                 
                 var date = new Date(value.created*1000);
                 var dateStr = (date.getYear() + 1900)  + "." + (date.getMonth() + 1) + "." + date.getDate();
-                var timeStr = date.getHours() + ":" + date.getMinutes();
+                var timeStr = date.getHours() + ":" + date.getMinutes() + _.random(0, 100);
                 var fromuserId = value.from_user_id;
                 
                 if(_.isUndefined(this.chatContentPool[dateStr]))
@@ -393,6 +437,7 @@
                   
                     this.chatContentPool[dateStr][timeStr] = messages;
                     
+                    
                 }else{
 
                     if(lastValue.from_user_id == fromuserId){
@@ -404,28 +449,29 @@
                         currentMessages.push(value);
                         
                         this.chatContentPool[dateStr][lastKey] = currentMessages;
-                        
+                        console.log("2" + value._id);
+
                     }else{
                         
                         var messages = new Array();
                         messages.push(value);
                       
                         this.chatContentPool[dateStr][timeStr] = messages;
-                        
-                        
+
+
                     }
                  
                 }
 
             }
             
+            
         },
+        
         render : function(){
             
             var html = '';
-            
-            console.log(this.chatContentPool);
-            
+
             for(var date in this.chatContentPool){
                 
                 html += this.templateDate({date:date});
@@ -444,7 +490,6 @@
                     }
                     
                     postsHtml += this.templateUserInfo(firstRow);
-                    
                    
                     for(var tmp2 in this.chatContentPool[date][tmp]){
                         
@@ -473,16 +518,222 @@
 
 
                 
-                //html += this.templateChatBlockPerson({conversation : ''});
-                
             }
-            
             
             
             $('#conversation_block').html(html);
             
+        },
+        sendTextMessage : function(message){
+            
+            var self = this;
+            
+            if(self.chatCurrentUserId != 0) {
+            
+                _spikaClient.postTextMessageToUser(self.chatCurrentUserId,message,function(data){
+                    
+                    $('#btn-chat-send').html('Sent');
+                    
+    
+                    _spikaClient.loadUserChat(self.chatCurrentUserId,self.chatPageRowCount,self.chatCurrentPage,function(data){
+                        
+                        setTimeout(function(){
+                            $('#btn-chat-send').html('Send');
+                            $('#btn-chat-send').removeAttr('disabled');
+                        }, 1000);
+                    
+                        self.chatContentPool = {};
+                        
+                        self.mergeConverSation(data);
+                    
+                        self.render();
+                        
+                        self.scrollToBottom();
+                        
+                    },function(errorString){
+                    
+                        alertManager.showError(_lang.messageGeneralError);
+                    
+                        setTimeout(function(){
+                            $('#btn-chat-send').html('Send');
+                            $('#btn-chat-send').removeAttr('disabled');
+                        }, 1000);
+                        
+                    });
+                    
+                },function(errorString){
+                
+                    alertManager.showError(_lang.messageGeneralError);
+                    
+                });
+            
+            } else if(self.chatCurrentGroupId != 0) {
+                
+                _spikaClient.postTextMessageToGroup(self.chatCurrentGroupId,message,function(data){
+                    
+                    $('#btn-chat-send').html('Sent');
+                    
+    
+                    _spikaClient.loadGroupChat(self.chatCurrentGroupId,self.chatPageRowCount,self.chatCurrentPage,function(data){
+                    
+                        setTimeout(function(){
+                            $('#btn-chat-send').html('Send');
+                            $('#btn-chat-send').removeAttr('disabled');
+                        }, 1000);
+                    
+                        self.chatContentPool = {};
+                        
+                        self.mergeConverSation(data);
+                    
+                        self.render();
+                        
+                        self.scrollToBottom();
+                        
+                    },function(errorString){
+                    
+                        alertManager.showError(_lang.messageGeneralError);
+                    
+                        setTimeout(function(){
+                            $('#btn-chat-send').html('Send');
+                            $('#btn-chat-send').removeAttr('disabled');
+                        }, 1000);
+                        
+                    });
+                    
+                },function(errorString){
+                
+                    alertManager.showError(_lang.messageGeneralError);
+                    
+                });
+
+                
+            }
+            
+        },
+        scrollToBottom : function(){
+            var objConversationBlock = $('#conversation_block');
+            var height = objConversationBlock[0].scrollHeight;
+            objConversationBlock.scrollTop(height);
         }
             
+    };
+    
+    // see new messages
+    var newMessageChecker = {
+        
+        lastModified : 0,
+        checkInterval : 1000, // ms
+        startUpdating : function(){
+            
+            var self = this;
+            
+            this.checkUpdate();
+            
+            setTimeout(function(){
+                self.checkUpdate();
+            }, this.checkInterval);
+            
+        },
+        checkUpdate : function(){
+            
+            var self = this;
+            var isUpdateNeed = false;
+            
+            _spikaClient.getActivitySummary(function(data){
+                
+                if(self.lastModified == 0)
+                    alertManager.hideLoading();
+                    
+                if(data.rows[0].value.recent_activity != undefined){
+                
+                    if(data.rows[0].value.recent_activity.direct_messages != undefined){
+                    
+                        var directMessages = data.rows[0].value.recent_activity.direct_messages.notifications;                        
+                        for(index in directMessages){
+                            directMessageRow = directMessages[index];
+                            timestamp = directMessageRow.messages[0]['modified'];
+                            
+                            if(timestamp > self.lastModified){
+                                isUpdateNeed = true;
+                                self.lastModified = timestamp;
+                            }
+                        }
+                        
+                    }
+                    
+                    if(data.rows[0].value.recent_activity.group_posts != undefined){
+                    
+                        var groupMessages = data.rows[0].value.recent_activity.group_posts.notifications;
+                        
+                        for(index in groupMessages){
+                            groupMessagesRow = groupMessages[index];
+                            timestamp = groupMessagesRow.messages[0]['modified'];
+                            
+                            if(timestamp > self.lastModified){
+                                isUpdateNeed = true;
+                                self.lastModified = timestamp;
+                            }
+                            
+                        }    
+                           
+                    }
+                }
+                
+                if(isUpdateNeed){
+                    navigationBarManager.renderRecentActivity();
+                }
+                
+                setTimeout(function(){
+                    self.checkUpdate();
+                }, self.checkInterval);
+            
+            },function(errorMessage){
+            
+                alertManager.showError(_lang.messageGeneralError);
+                alertManager.hideLoading();
+                
+            });
+            
+        }
+          
+    };
+    
+    // render side bar
+    var sideBarManager = {
+
+        templateProflie : _.template('<div class="panel panel-primary"><div class="panel-heading"> Profile </div><div class="panel-body"><div class="person_detail"><span id="profile-picture"><%= img %></span><br /><span id="profile-name"><%= name %></span><br /><a href="' + _consts.RootURL + '/admin/user/view/<%= _id %>">See Profile</a></div><div id="profile-description"><%= about %></div></div><div class="panel-footer"></div></div>'),
+        avatarImage : _.template('<img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="240" height="240" class="person_img img-thumbnail" />'),
+        avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="240" height="240" class="person_img img-thumbnail" />'),
+
+        renderUserProfile : function(userId){
+            
+            var self = this;
+            
+            _spikaClient.getUser(userId,function(data){
+
+                console.log(data);
+                
+                var html = '';
+                 
+                if(_.isEmpty(data.avatar_file_id)){
+                    data.img = self.avatarNoImage(data);
+                }else{
+                    data.img = self.avatarImage(data);
+                }
+
+                html += self.templateProflie(data);
+                
+                $('#sidebar_block').html(html);
+                
+            },function(errorString){
+                
+                alertManager.hideLoading();
+                
+            });
+
+            
+        }
+        
     };
     
     $(document).ready(function() {
@@ -499,10 +750,9 @@
             
             navigationBarManager.renderContacts();
             navigationBarManager.renderGroups();
-            navigationBarManager.renderRecentActivity();
             
+            newMessageChecker.startUpdating();
             
-
         },function(errorString){
         
             alertManager.showAlert(_lang.labelErrorDialogTitle,_lang.messageTokenError,_lang.labelCloseButton,function(){
@@ -510,7 +760,15 @@
             });
             
         });
+        
+        $('#btn-chat-send').click(function(){
             
+            _chatManager.sendTextMessage($('#textarea').val());
+            $('#textarea').val('');
+            $('#btn-chat-send').html('<i class="fa fa-refresh fa-spin"></i> Sending');
+            $('#btn-chat-send').attr('disabled','disabled');
+            
+        });
         
     });
 

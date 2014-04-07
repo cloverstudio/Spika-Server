@@ -188,7 +188,6 @@
                     }
                 }                
                 
-                
                 usersId = _.uniq(usersId);
                 groupsId = _.uniq(groupsId);
                 
@@ -378,6 +377,8 @@
             
             _spikaClient.loadGroupChat(groupId,this.chatPageRowCount,this.chatCurrentPage,function(data){
             
+                sideBarManager.renderGroupProfile(groupId);
+                
                 self.chatContentPool = {};
                 
                 alertManager.hideLoading();
@@ -423,7 +424,6 @@
                 if(_.isUndefined(this.chatContentPool[dateStr]))
                     this.chatContentPool[dateStr] = {};
                 
-                
                 var lastValue = "";
                 var lastKey = "";
                 
@@ -432,7 +432,6 @@
                         lastValue = this.chatContentPool[dateStr][lastKey][0];
                     }
                 }
-                
              
                 if(_.isEmpty(lastValue)){
                     
@@ -440,7 +439,6 @@
                     messages.push(value);
                   
                     this.chatContentPool[dateStr][timeStr] = messages;
-                    
                     
                 }else{
 
@@ -453,7 +451,7 @@
                         currentMessages.push(value);
                         
                         this.chatContentPool[dateStr][lastKey] = currentMessages;
-                        console.log("2" + value._id);
+
 
                     }else{
                         
@@ -752,7 +750,8 @@
     // render side bar
     var sideBarManager = {
 
-        templateProflie : _.template('<div class="panel panel-primary"><div class="panel-heading"> Profile </div><div class="panel-body"><div class="person_detail"><span id="profile-picture"><%= img %></span><br /><span id="profile-name"><%= name %></span><br /><a href="' + _consts.RootURL + '/admin/user/view/<%= _id %>">See Profile</a></div><div id="profile-description"><%= about %></div></div><div class="panel-footer"></div></div>'),
+        templateUserProflie : _.template('<div class="panel panel-primary"><div class="panel-heading"> Profile </div><div class="panel-body"><div class="person_detail"><span id="profile-picture"><%= img %></span><br /><span id="profile-name"><%= name %></span><br /><a href="' + _consts.RootURL + '/admin/user/view/<%= _id %>">See Profile</a></div><div id="profile-description"><%= about %></div></div><div class="panel-footer"></div></div>'),
+        templateGroupProflie : _.template('<div class="panel panel-primary"><div class="panel-heading"> Profile </div><div class="panel-body"><div class="person_detail"><span id="profile-picture"><%= img %></span><br /><span id="profile-name"><%= name %></span><br /><a href="' + _consts.RootURL + '/admin/group/view/<%= _id %>">See Profile</a></div><div id="profile-description"><%= description %></div></div><div class="panel-footer"></div></div>'),
         avatarImage : _.template('<img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="240" height="240" class="person_img img-thumbnail" />'),
         avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="240" height="240" class="person_img img-thumbnail" />'),
 
@@ -770,7 +769,34 @@
                     data.img = self.avatarImage(data);
                 }
 
-                html += self.templateProflie(data);
+                html += self.templateUserProflie(data);
+                
+                $('#sidebar_block').html(html);
+                
+            },function(errorString){
+                
+                alertManager.hideLoading();
+                
+            });
+
+            
+        },
+        renderGroupProfile : function(groupId){
+            
+            var self = this;
+            
+            _spikaClient.getGroup(groupId,function(data){
+
+                var html = '';
+                 
+                if(_.isEmpty(data.avatar_file_id)){
+                    data.img = self.avatarNoImage(data);
+                }else{
+                    data.img = self.avatarImage(data);
+                }
+                
+
+                html += self.templateGroupProflie(data);
                 
                 $('#sidebar_block').html(html);
                 
@@ -782,6 +808,7 @@
 
             
         }
+        
         
     };
     

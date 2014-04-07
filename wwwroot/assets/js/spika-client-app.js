@@ -62,8 +62,8 @@
         groupList : {},
         unreadMessageNumPerUser : {},
         unreadMessageNumPerGroup : {},        
-        templateUserRow : _.template('<li><a href="javascript:"><%= img %><%= name %></a></li>'),
-        templateGroupsRow : _.template('<li><a href="javascript:"><%= img %><%= name %></a></li>'),
+        templateUserRow : _.template('<li><a href="javascript:_chatManager.startPrivateChat(<%= _id %>)"><%= img %><%= name %></a></li>'),
+        templateGroupsRow : _.template('<li><a href="javascript:_chatManager.startGroupChat(<%= _id %>)"><%= img %><%= name %></a></li>'),
         avatarImage : _.template('<img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
         avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
         templateRecentActivityRowUser : _.template('<li><a href="javascript:_chatManager.startPrivateChat(<%= userId %>)"><%= img %><i class="fa fa-user"></i> <%= name %> <%= count %></a></li>'),
@@ -689,7 +689,6 @@
             
             },function(errorMessage){
             
-                alertManager.showError(_lang.messageGeneralError);
                 alertManager.hideLoading();
                 
             });
@@ -711,8 +710,6 @@
             
             _spikaClient.getUser(userId,function(data){
 
-                console.log(data);
-                
                 var html = '';
                  
                 if(_.isEmpty(data.avatar_file_id)){

@@ -35,8 +35,6 @@
     <script src="{{ROOT_URL}}/assets/js/plugins/morris/morris.js"></script>
 
     <script src="{{ROOT_URL}}/assets/js/bootstrap-datepicker.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/spika-client.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/spika-chat-window.js"></script>
 
 <script type="text/javascript">
 
@@ -214,6 +212,9 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li>
+                            <a href="{{ROOT_URL}}/chat/main">{{lang.menuChatClient}}</a>
+                        </li>
+                        <li>
                             <a href="{{ROOT_URL}}/admin/user/edit/{{loginedUser._id}}">{{lang.menuEditProfile}}</a>
                         </li>
                         <li>
@@ -224,17 +225,6 @@
                 </li>
                 <!-- /.dropdown -->
                 
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <button id="notificationButton" type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button>
-                    </a>
-                    <ul id="notificationList" class="dropdown-menu dropdown-messages">
-
-                    </ul>
-                    <!-- /.dropdown-messages -->
-                    
-                </li>
-
 
             </ul>
             <!-- /.navbar-top-links -->

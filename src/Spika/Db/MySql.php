@@ -1348,15 +1348,13 @@ class MySQL implements DbInterface
             
             $this->DB->executeUpdate(
                     'update notification 
-                        set count = 0,
-                            modified = ?
+                        set count = 0
                         where 
                         user_id = ?
                         and from_user_id = ?
                         and target_type = ?
                     ',
                     array(
-                        time(),
                         $toUser,
                         $fromUserId,
                         $type));
@@ -1370,15 +1368,13 @@ class MySQL implements DbInterface
             
             $this->DB->executeUpdate(
                     'update notification 
-                        set count = 0,
-                            modified = ?
+                        set count = 0
                         where 
                         user_id = ?
                         and to_group_id = ?
                         and target_type = ?
                     ',
                     array(
-                        time(),
                         $toUser,
                         $toGroupId,
                         $type));

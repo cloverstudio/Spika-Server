@@ -42,112 +42,6 @@
     var loginedUser = {{ loginedUser|json_encode()|raw }};
     var templateNotificationRow = '<li><a href="javascript:%%javascript%%"><div><strong>%%messageType%%</strong></div><div>%%message%% <span class="text-danger">%%unreadnum%%</span></div></a></li>';
     
-    function loadActivitySummary(){
-        
-        spikaClient.getActivitySummary(function(data){
-            
-            parseActivityData(data);
-            
-            setTimeout(function(){loadActivitySummary()},3000);
-
-        },function(errorString){
-
-            if(errorString.match(/expired|invalid/i)){
-                
-                self.spikaClient.login(loginedUser.email,loginedUser.password,function(data){
-                    
-                    loginedUser = data;
-                    spikaClient.setCurrentUser(loginedUser);
-                    loadActivitySummary();
-                
-                },function(errorString){
-                
-                    console.log(errorString);
-
-                });
-                
-            }
-        
-        });
-        
-    }
-    
-    function parseActivityData(data){
-        
-        var totalUnreadMessage = 0;
-        
-        var notificationData = [];
-        
-        if(data.rows[0].value.recent_activity != undefined){
-            if(data.rows[0].value.recent_activity.direct_messages != undefined){
-                var directMessages = data.rows[0].value.recent_activity.direct_messages.notifications;
-                
-                for(index in directMessages){
-                    directMessageRow = directMessages[index];
-                    totalUnreadMessage += (directMessageRow.count - 0);
-                    
-                    directMessageRow.type = 'directMessage';
-                    notificationData.push(directMessageRow);
-                }
-            }
-            
-            if(data.rows[0].value.recent_activity.group_posts != undefined){
-                var groupMessages = data.rows[0].value.recent_activity.group_posts.notifications;
-                for(index in groupMessages){
-                    groupMessageRow = groupMessages[index];
-                    totalUnreadMessage += ( groupMessageRow.count - 0);
-
-                    groupMessageRow.type = 'groupChat';
-                    notificationData.push(groupMessageRow);
-                }       
-            }
-        }
-
-        $('#notificationButton').removeClass('btn-danger');
-        $('#notificationButton').removeClass('btn-info');
-
-        if(totalUnreadMessage > 0){
-            
-            $('#notificationButton').html(totalUnreadMessage);
-            $('#notificationButton').addClass('btn-danger');
-            
-        }else{
-
-            $('#notificationButton').html('<i class="fa fa-check"></i>');
-            $('#notificationButton').addClass('btn-info');
-           
-        } 
-        
-        var html = "";
-        
-        for(index in notificationData){
-            
-            var notification = notificationData[index];
-            var rowHtml = templateNotificationRow;
-            
-            if(notification.type == 'directMessage'){
-                rowHtml = rowHtml.replace(/%%messageType%%/,'{{lang.notificationTypeMessage}}');
-                rowHtml = rowHtml.replace(/%%javascript%%/,'openUserChat(' + notification.target_id + ')');
-            }
-            
-            if(notification.type == 'groupChat'){
-                rowHtml = rowHtml.replace(/%%messageType%%/,'{{lang.notificationTypeGroup}}');
-                rowHtml = rowHtml.replace(/%%javascript%%/,'openGroupChat(' + notification.target_id + ')');
-            }
-
-            rowHtml = rowHtml.replace(/%%message%%/,notification.messages[0].message);
-            
-            if(notification.count > 0)
-                rowHtml = rowHtml.replace(/%%unreadnum%%/,"(" + notification.count + ")");
-            else
-                rowHtml = rowHtml.replace(/%%unreadnum%%/,'');
-            
-            html += rowHtml;
-        }
-        
-        $('#notificationList').html(html);
-        
-    }
     
     function openUserChat(userId){
     
@@ -181,15 +75,6 @@
         chatWindow.loadGroupConversation(groupId);
     }
     
-    
-    $(document).ready(function() {
-        
-        spikaClient.setCurrentUser(loginedUser);
-        
-        setTimeout(function(){loadActivitySummary()},3000);
-
-    });
-    
 </script>
 
 </head>
@@ -212,7 +97,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li>
-                            <a href="{{ROOT_URL}}/chat/main">{{lang.menuChatClient}}</a>
+                            <a href="{{ROOT_URL}}/client/main">{{lang.menuChatClient}}</a>
                         </li>
                         <li>
                             <a href="{{ROOT_URL}}/admin/user/edit/{{loginedUser._id}}">{{lang.menuEditProfile}}</a>

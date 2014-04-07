@@ -326,7 +326,7 @@
         avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
         templateOnePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %></div></div>'),
         chatPageRowCount : 30,
-        chatCurrentPage : 0,
+        chatCurrentPage : 1,
         chatCurrentUserId : 0,
         chatCurrentGroupId : 0,
         chatContentPool : {},
@@ -339,6 +339,7 @@
             
             this.chatCurrentUserId = userId;
             this.chatCurrentGroupId = 0;
+            this.chatCurrentPage = 1;
             
             _spikaClient.loadUserChat(userId,this.chatPageRowCount,this.chatCurrentPage,function(data){
                 
@@ -348,7 +349,7 @@
                 
                 self.chatContentPool = {};
                 
-                self.mergeConverSation(data);
+                self.mergeConversation(data);
             
                 self.render();
                 
@@ -373,13 +374,16 @@
             
             this.chatCurrentGroupId = groupId;
             this.chatCurrentUserId = 0;
+            this.chatCurrentPage = 1;
             
             _spikaClient.loadGroupChat(groupId,this.chatPageRowCount,this.chatCurrentPage,function(data){
             
                 self.chatContentPool = {};
                 
-                self.mergeConverSation(data);
-            
+                alertManager.hideLoading();
+                
+                self.mergeConversation(data);
+                
                 self.render();
                 
                 self.scrollToBottom();
@@ -393,7 +397,7 @@
             });
                
         },
-        mergeConverSation : function(data){
+        mergeConversation : function(data){
             
             data.rows.reverse();
             
@@ -457,7 +461,6 @@
                         messages.push(value);
                       
                         this.chatContentPool[dateStr][timeStr] = messages;
-
 
                     }
                  
@@ -544,7 +547,7 @@
                     
                         self.chatContentPool = {};
                         
-                        self.mergeConverSation(data);
+                        self.mergeConversation(data);
                     
                         self.render();
                         
@@ -583,7 +586,7 @@
                     
                         self.chatContentPool = {};
                         
-                        self.mergeConverSation(data);
+                        self.mergeConversation(data);
                     
                         self.render();
                         
@@ -614,6 +617,33 @@
             var objConversationBlock = $('#conversation_block');
             var height = objConversationBlock[0].scrollHeight;
             objConversationBlock.scrollTop(height);
+        },
+        loadNewMessage : function(){
+
+            var self = this;
+            
+            console.log('loadnewmessage');
+            
+            if(self.chatCurrentUserId != 0){
+                _spikaClient.loadUserChat(self.chatCurrentUserId,self.chatPageRowCount,1,function(data){
+                    self.mergeConversation(data);
+                    self.render();
+                    self.scrollToBottom();
+                },function(errorString){
+    
+                });
+            }
+
+            else if(self.chatCurrentGroupId != 0){
+                _spikaClient.loadGroupChat(self.chatCurrentGroupId,self.chatPageRowCount,1,function(data){
+                    self.mergeConversation(data);
+                    self.render();
+                    self.scrollToBottom();
+                },function(errorString){
+    
+                });
+            }
+            
         }
             
     };
@@ -622,6 +652,7 @@
     var newMessageChecker = {
         
         lastModified : 0,
+        lastUnreadMessageCount : 0,
         checkInterval : 1000, // ms
         startUpdating : function(){
             
@@ -638,6 +669,7 @@
             
             var self = this;
             var isUpdateNeed = false;
+            var unreadMessageCount = 0;
             
             _spikaClient.getActivitySummary(function(data){
                 
@@ -648,15 +680,24 @@
                 
                     if(data.rows[0].value.recent_activity.direct_messages != undefined){
                     
-                        var directMessages = data.rows[0].value.recent_activity.direct_messages.notifications;                        
+                        var directMessages = data.rows[0].value.recent_activity.direct_messages.notifications;      
+                                          
                         for(index in directMessages){
+                        
                             directMessageRow = directMessages[index];
                             timestamp = directMessageRow.messages[0]['modified'];
                             
                             if(timestamp > self.lastModified){
                                 isUpdateNeed = true;
                                 self.lastModified = timestamp;
+                                
+                                if(_chatManager.chatCurrentUserId == directMessageRow.messages[0]['from_user_id']){
+                                     _chatManager.loadNewMessage();
+                                }
+                                   
                             }
+                            
+                            unreadMessageCount+=parseInt(directMessageRow.count);
                         }
                         
                     }
@@ -666,18 +707,29 @@
                         var groupMessages = data.rows[0].value.recent_activity.group_posts.notifications;
                         
                         for(index in groupMessages){
+                        
                             groupMessagesRow = groupMessages[index];
                             timestamp = groupMessagesRow.messages[0]['modified'];
                             
                             if(timestamp > self.lastModified){
                                 isUpdateNeed = true;
                                 self.lastModified = timestamp;
+                                
+                                if(_chatManager.chatCurrentGroupId == groupMessagesRow['target_id'])
+                                    _chatManager.loadNewMessage();
                             }
+                            
+                            unreadMessageCount+=parseInt(groupMessagesRow.count);
                             
                         }    
                            
                     }
                 }
+                
+                if(self.unreadMessageCount != unreadMessageCount)
+                    isUpdateNeed = true;
+                    
+                self.unreadMessageCount = unreadMessageCount;
                 
                 if(isUpdateNeed){
                     navigationBarManager.renderRecentActivity();

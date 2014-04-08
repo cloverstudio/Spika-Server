@@ -31,6 +31,18 @@
         };
         var _chatManager = {};
         
+        {% if targetUserId is defined %}
+            var _targetUserId = {{ targetUserId }};
+        {% else %}
+            var _targetUserId = 0;
+        {% endif %}
+            
+        {% if targetGroupId is defined %}
+            var _targetGroupId = {{ targetGroupId }};
+        {% else %}
+            var _targetGroupId = 0;
+        {% endif %}
+        
     </script>
     
     <script src="{{ROOT_URL}}/assets/js/spika-client-app.js"></script>

@@ -41,39 +41,7 @@
     var spikaClient = new SpikaClient('{{ROOT_URL}}/api');
     var loginedUser = {{ loginedUser|json_encode()|raw }};
     var templateNotificationRow = '<li><a href="javascript:%%javascript%%"><div><strong>%%messageType%%</strong></div><div>%%message%% <span class="text-danger">%%unreadnum%%</span></div></a></li>';
-    
-    
-    function openUserChat(userId){
-    
-        chatWindow = new SpikaChatWindow('{{ROOT_URL}}/api',loginedUser,{
-            title:'{{lang.labelChatWindowTitle}}',
-            conversationNotSelected:'{{lang.conversationNotSelected}}',
-            btnReload:'{{lang.btnReload}}',
-            openLocation:'{{lang.openLocation}}',
-            chatTextBoxPlaceHolder:'{{lang.chatTextBoxPlaceHolder}}',
-            chatTextBoxSend:'{{lang.chatTextBoxSend}}'
-        },true,1);
 
-        chatWindow.attach($('#chatWindow'));
-        chatWindow.setUser(loginedUser);
-        chatWindow.loadUserConversation(userId);
-    }
-    
-    function openGroupChat(groupId){
-    
-        chatWindow = new SpikaChatWindow('{{ROOT_URL}}/api',loginedUser,{
-            title:'{{lang.labelChatWindowTitle}}',
-            conversationNotSelected:'{{lang.conversationNotSelected}}',
-            btnReload:'{{lang.btnReload}}',
-            openLocation:'{{lang.openLocation}}',
-            chatTextBoxPlaceHolder:'{{lang.chatTextBoxPlaceHolder}}',
-            chatTextBoxSend:'{{lang.chatTextBoxSend}}'
-        },true,2);
-
-        chatWindow.attach($('#chatWindow'));
-        chatWindow.setUser(loginedUser);
-        chatWindow.loadGroupConversation(groupId);
-    }
     
 </script>
 

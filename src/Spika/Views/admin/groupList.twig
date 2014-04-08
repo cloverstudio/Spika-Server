@@ -8,32 +8,9 @@
     var lastUserId = 0;
     
     function openChat(groupId){
-        console.log(groupId);
-        chatWindow.initialize();
-        chatWindow.loadGroupConversation(groupId);
+        location.href = '{{ROOT_URL}}/client/group/' + groupId;
     }
-    
-    var chatWindow = null;
-    
-    $(document).ready(function() {
-        
-        $('#chatbox').height($('#list').height());
-        
-        chatWindow = new SpikaChatWindow('{{ROOT_URL}}/api',loginedUser,{
-            title:'{{lang.labelChatWindowTitle}}',
-            conversationNotSelected:'{{lang.conversationNotSelected}}',
-            btnReload:'{{lang.btnReload}}',
-            openLocation:'{{lang.openLocation}}',
-            chatTextBoxPlaceHolder:'{{lang.chatTextBoxPlaceHolder}}',
-            chatTextBoxSend:'{{lang.chatTextBoxSend}}'
-        },true,2);
 
-        chatWindow.attach($('#chatWindow'));
-        chatWindow.showAlert('{{lang.conversationNotSelected}}');
-        chatWindow.setUser(loginedUser);
-        
-    });
-    
 </script>
 
             <div class="row">

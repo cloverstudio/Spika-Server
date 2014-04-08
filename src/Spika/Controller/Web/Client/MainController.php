@@ -46,6 +46,36 @@ class MainController extends SpikaWebBaseController
             ));
         }); 
       
+    
+        $controllers->get('/user/{userId}', function (Request $request,$userId) use ($app,$self) {
+            
+            if(!$self->checkLogin()){
+                return $app->redirect(ROOT_URL . '/client/login');
+            }
+            
+            $self->setVariables();
+            
+            return $self->render('client/main.twig', array(
+                'ROOT_URL' => ROOT_URL,      
+                'targetUserId' => $userId        
+            ));
+        }); 
+      
+    
+        $controllers->get('/group/{groupId}', function (Request $request,$groupId) use ($app,$self) {
+            
+            if(!$self->checkLogin()){
+                return $app->redirect(ROOT_URL . '/client/login');
+            }
+            
+            $self->setVariables();
+            
+            return $self->render('client/main.twig', array(
+                'ROOT_URL' => ROOT_URL,              
+                'targetGroupId' => $groupId        
+            ));
+        }); 
+      
         return $controllers;
         
     }

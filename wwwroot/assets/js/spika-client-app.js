@@ -323,13 +323,83 @@
         templateUserInfo : _.template('<div class="person_info"><h5><%= img %><%= from_user_name %></h5><div class="clear"></div></div>'),
         avatarImage : _.template('<img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
         avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
-        templateOnePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %></div></div>'),
+        templateTextPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %></div></div>'),
+        templatePicturePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg<%= _id  %>"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_thumb_file_id %>" height="120" width="120" /></div></div><div class="modal fade bs-example-modal-lg<%= _id %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" /></div></div></div>'),
+        templateEmoticonPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><img src="<%= emoticon_image_url %>" height="120" width="120" /></div></div>'),
         chatPageRowCount : 30,
         chatCurrentPage : 1,
         chatCurrentUserId : 0,
         chatCurrentGroupId : 0,
-        chatContentPool : {},
+        chatContentPool : [],
+        isLoading : false,
+        init : function(){
+            
+            var self = this;
+            this.chatContentPool = [];
+            
+            $("#conversation_block").scroll(function() {
+                
+                var scrollPosition = $(this).scrollTop();
+                
+                if(scrollPosition == 0){
+                    
+                    if(self.isLoading == false){
+                        self.isLoading = true;
+                        self.loadNextPage();
+                    }else{
+                        
+                    }
+                                        
+                }
+                                
+            });
 
+        },
+        loadNextPage : function(){
+            
+            var self = this;
+            this.chatCurrentPage++;
+            
+            var lastHeight = $("#conversation_block")[0].scrollHeight;
+            
+            if(this.chatCurrentUserId != 0){
+            
+                _spikaClient.loadUserChat(this.chatCurrentUserId,this.chatPageRowCount,this.chatCurrentPage,function(data){
+                    self.mergeConversation(data);
+                    self.render();
+                    self.isLoading = false;
+                    
+                    var currentHeight = $("#conversation_block")[0].scrollHeight;
+                                     
+                    console.log("last : " + lastHeight + " current : " + currentHeight);
+                    $("#conversation_block").scrollTop(currentHeight - lastHeight);
+                    
+                },function(errorString){
+    
+                });
+                
+            }
+            
+            else if(this.chatCurrentGroupId != 0){
+                
+                _spikaClient.loadGroupChat(this.chatCurrentGroupId,this.chatPageRowCount,this.chatCurrentPage,function(data){
+                    self.mergeConversation(data);
+                    self.render();
+                    self.isLoading = false;
+
+                    var currentHeight = $("#conversation_block")[0].scrollHeight;
+                    
+                    console.log("last : " + lastHeight + " current : " + currentHeight);
+                    $("#conversation_block").scrollTop(currentHeight - lastHeight);
+
+
+                },function(errorString){
+    
+                });
+                
+            }
+            
+        },
         startPrivateChat : function(userId){
             
             var self = this;
@@ -339,20 +409,23 @@
             this.chatCurrentUserId = userId;
             this.chatCurrentGroupId = 0;
             this.chatCurrentPage = 1;
+            this.chatContentPool = [];
+            
+            self.isLoading = true;
             
             _spikaClient.loadUserChat(userId,this.chatPageRowCount,this.chatCurrentPage,function(data){
                 
                 sideBarManager.renderUserProfile(userId);
                 
                 alertManager.hideLoading();
-                
-                self.chatContentPool = {};
-                
+
                 self.mergeConversation(data);
             
                 self.render();
                 
                 self.scrollToBottom();
+                
+                self.isLoading = false;
                 
             },function(errorString){
             
@@ -374,13 +447,14 @@
             this.chatCurrentGroupId = groupId;
             this.chatCurrentUserId = 0;
             this.chatCurrentPage = 1;
+            this.chatContentPool = [];
             
+            self.isLoading = true;
+                
             _spikaClient.loadGroupChat(groupId,this.chatPageRowCount,this.chatCurrentPage,function(data){
-            
+                
                 sideBarManager.renderGroupProfile(groupId);
-                
-                self.chatContentPool = {};
-                
+
                 alertManager.hideLoading();
                 
                 self.mergeConversation(data);
@@ -388,6 +462,8 @@
                 self.render();
                 
                 self.scrollToBottom();
+                
+                self.isLoading = false;
                 
             },function(errorString){
             
@@ -400,130 +476,99 @@
         },
         mergeConversation : function(data){
             
-            data.rows.reverse();
+            var oldPool = [];
+            
+            for(index in this.chatContentPool){
+                var row = this.chatContentPool[index];
+                oldPool[row._id] = row;
+            }
             
             for(index in data.rows){
                 
                 var row = data.rows[index];
-                
+
                 if(_.isUndefined(row.value)){
-                    return;
+                    continue;
                 }
                 
-                var value = row.value;
+                oldPool[row.value._id] = row.value;
                 
-                if(_.isUndefined(value.created) || _.isUndefined(value.from_user_id) || _.isUndefined(value.body)){
-                    return;
-                }
-                
-                var date = new Date(value.created*1000);
-                var dateStr = (date.getYear() + 1900)  + "." + (date.getMonth() + 1) + "." + date.getDate();
-                var timeStr = date.getHours() + ":" + date.getMinutes() + _.random(0, 100);
-                var fromuserId = value.from_user_id;
-                
-                if(_.isUndefined(this.chatContentPool[dateStr]))
-                    this.chatContentPool[dateStr] = {};
-                
-                var lastValue = "";
-                var lastKey = "";
-                
-                for(var lastKey in this.chatContentPool[dateStr]){
-                    if(this.chatContentPool[dateStr][lastKey].length > 0){
-                        lastValue = this.chatContentPool[dateStr][lastKey][0];
-                    }
-                }
-             
-                if(_.isEmpty(lastValue)){
-                    
-                    var messages = new Array();
-                    messages.push(value);
-                  
-                    this.chatContentPool[dateStr][timeStr] = messages;
-                    
-                }else{
-
-                    if(lastValue.from_user_id == fromuserId){
-                        
-                        var currentMessages = this.chatContentPool[dateStr][lastKey];
-                        if(_.isUndefined(currentMessages))
-                            currentMessages = new Array();
-                            
-                        currentMessages.push(value);
-                        
-                        this.chatContentPool[dateStr][lastKey] = currentMessages;
-
-
-                    }else{
-                        
-                        var messages = new Array();
-                        messages.push(value);
-                      
-                        this.chatContentPool[dateStr][timeStr] = messages;
-
-                    }
-                 
-                }
-
             }
             
+            this.chatContentPool = _.sortBy(oldPool, function(message){ 
+                return message.created 
+            });
             
         },
         
         render : function(){
             
             var html = '';
-
-            for(var date in this.chatContentPool){
+            
+            var lastFromUserId = 0;
+            var lastDateStr = '';
+            var userPostsHtml = '';
+            
+            for(var index in this.chatContentPool){
                 
-                html += this.templateDate({date:date});
+                var row = this.chatContentPool[index];
+                var date = new Date(row.created*1000);
+                var dateStr = (date.getYear() + 1900)  + "." + (date.getMonth() + 1) + "." + date.getDate();
+                var hour = date.getHours();
+                var min = date.getMinutes();
                 
+                if(hour < 10)
+                    hour = '0' + hour;
+                    
+                if(min < 10)
+                    min = '0' + min;
+                    
+                var timeStr = hour + ":" + min;
+                var fromuserId = row.from_user_id;
                 
-                for(var tmp in this.chatContentPool[date]){
-                    
-                    var postsHtml = "";
-                     
-                    var firstRow = this.chatContentPool[date][tmp][0];
-                    
-                    if(_.isEmpty(firstRow.avatar_thumb_file_id)){
-                        firstRow.img = this.avatarNoImage(firstRow);
-                    }else{
-                        firstRow.img = this.avatarImage(firstRow);
-                    }
-                    
-                    postsHtml += this.templateUserInfo(firstRow);
-                   
-                    for(var tmp2 in this.chatContentPool[date][tmp]){
-                        
-                        var post = this.chatContentPool[date][tmp][tmp2];
-                        
-                        var dateObj = new Date(post.created*1000);
-                        var hour = dateObj.getHours();
-                        var min = dateObj.getMinutes();
-                        
-                        if(hour < 10)
-                            hour = '0' + hour;
-                            
-                        if(min < 10)
-                            min = '0' + min;
-                            
-                        var timeStr = hour + ":" + min;
-                        
-                        post.time = timeStr;
-                        postsHtml += this.templateOnePost(post);
-                        
-                    }
-                    
-                    html += this.templateChatBlockPerson({conversation:postsHtml});
-                    
+                if(lastDateStr != dateStr){
+                    html += this.templateDate({date:dateStr});
+                    lastDateStr = dateStr;
+                    lastFromUserId = 0;
                 }
+                
+                if(lastFromUserId != fromuserId){
+                    
+                    if(userPostsHtml != '')
+                        html += this.templateChatBlockPerson({conversation:userPostsHtml});
 
-
+                    if(_.isEmpty(row.avatar_thumb_file_id)){
+                        row.img = this.avatarNoImage(row);
+                    }else{
+                        row.img = this.avatarImage(row);
+                    }
+                    
+                    userPostsHtml = this.templateUserInfo(row);
+                    lastFromUserId = fromuserId;
+                }
+                
+                row.time = timeStr;
+                
+                var messageType = row.message_type;
+                
+                    console.log(row);
+                    
+                    
+                if(messageType == 'emoticon'){
+                    userPostsHtml += this.templateEmoticonPost(row);
+                }else if(messageType == 'image'){
+                    userPostsHtml += this.templatePicturePost(row);
+                }else{
+                    userPostsHtml += this.templateTextPost(row);
+                }
+                
                 
             }
             
+            html += this.templateChatBlockPerson({conversation:userPostsHtml});
             
             $('#conversation_block').html(html);
-            
+                        
         },
         sendTextMessage : function(message){
             
@@ -535,15 +580,14 @@
                     
                     $('#btn-chat-send').html('Sent');
                     
+                    this.isLoading = true;
     
                     _spikaClient.loadUserChat(self.chatCurrentUserId,self.chatPageRowCount,self.chatCurrentPage,function(data){
                         
-                        setTimeout(function(){
+                        _.delay(function(){
                             $('#btn-chat-send').html('Send');
                             $('#btn-chat-send').removeAttr('disabled');
                         }, 1000);
-                    
-                        self.chatContentPool = {};
                         
                         self.mergeConversation(data);
                     
@@ -551,11 +595,13 @@
                         
                         self.scrollToBottom();
                         
+                        self.isLoading = false;
+                        
                     },function(errorString){
                     
                         alertManager.showError(_lang.messageGeneralError);
                     
-                        setTimeout(function(){
+                        _.delay(function(){
                             $('#btn-chat-send').html('Send');
                             $('#btn-chat-send').removeAttr('disabled');
                         }, 1000);
@@ -574,27 +620,28 @@
                     
                     $('#btn-chat-send').html('Sent');
                     
+                    this.isLoading = true;
     
                     _spikaClient.loadGroupChat(self.chatCurrentGroupId,self.chatPageRowCount,self.chatCurrentPage,function(data){
                     
-                        setTimeout(function(){
+                        _.delay(function(){
                             $('#btn-chat-send').html('Send');
                             $('#btn-chat-send').removeAttr('disabled');
                         }, 1000);
                     
-                        self.chatContentPool = {};
-                        
                         self.mergeConversation(data);
                     
                         self.render();
                         
                         self.scrollToBottom();
                         
+                        self.isLoading = false;
+                        
                     },function(errorString){
                     
                         alertManager.showError(_lang.messageGeneralError);
                     
-                        setTimeout(function(){
+                        _.delay(function(){
                             $('#btn-chat-send').html('Send');
                             $('#btn-chat-send').removeAttr('disabled');
                         }, 1000);
@@ -620,9 +667,10 @@
 
             var self = this;
             
-            console.log('loadnewmessage');
-            
             if(self.chatCurrentUserId != 0){
+                
+                this.isLoading = true;
+                
                 _spikaClient.loadUserChat(self.chatCurrentUserId,self.chatPageRowCount,1,function(data){
                     self.mergeConversation(data);
                     self.render();
@@ -633,6 +681,9 @@
             }
 
             else if(self.chatCurrentGroupId != 0){
+                
+                this.isLoading = true;
+                
                 _spikaClient.loadGroupChat(self.chatCurrentGroupId,self.chatPageRowCount,1,function(data){
                     self.mergeConversation(data);
                     self.render();
@@ -658,17 +709,17 @@
             
             this.checkUpdate();
             
-            setTimeout(function(){
+            _.delay(function(){
                 self.checkUpdate();
             }, this.checkInterval);
-            
+
         },
         checkUpdate : function(){
             
             var self = this;
             var isUpdateNeed = false;
             var unreadMessageCount = 0;
-            
+
             _spikaClient.getActivitySummary(function(data){
                 
                 if(self.lastModified == 0)
@@ -733,7 +784,7 @@
                     navigationBarManager.renderRecentActivity();
                 }
                 
-                setTimeout(function(){
+                _.delay(function(){
                     self.checkUpdate();
                 }, self.checkInterval);
             
@@ -817,6 +868,7 @@
         alertManager.showLoading();
         
         windowManager.init(window);
+        _chatManager.init();
         
         // login
         _spikaClient.login(_loginedUser.email,_loginedUser.password,function(data){
@@ -829,6 +881,12 @@
             
             newMessageChecker.startUpdating();
             
+            if(_targetUserId != 0){
+                _chatManager.startPrivateChat(_targetUserId);                
+            }else if(_targetGroupId != 0){
+                _chatManager.startGroupChat(_targetGroupId);                
+            }
+
         },function(errorString){
         
             alertManager.showAlert(_lang.labelErrorDialogTitle,_lang.messageTokenError,_lang.labelCloseButton,function(){

@@ -49,8 +49,9 @@ SpikaClient.prototype.loadUserChat = function(toUserId,count,page,succeessListen
     if(this.currentUser == null)
         return null;
     
+    var offset = count * (page - 1);
     var request = $.ajax({
-        url: this.apiEndPointUrl + '/userMessages/' + toUserId + '/' + count + '/' + page,
+        url: this.apiEndPointUrl + '/userMessages/' + toUserId + '/' + count + '/' + offset,
         type: "GET",
         dataType:'json',
         headers: { 'token': this.currentUser.token }
@@ -72,8 +73,9 @@ SpikaClient.prototype.loadGroupChat = function(groupId,count,page,succeessListen
     if(this.currentUser == null)
         return null;
     
+    var offset = count * (page - 1);
     var request = $.ajax({
-        url: this.apiEndPointUrl + '/groupMessages/' + groupId + '/' + count + '/' + page,
+        url: this.apiEndPointUrl + '/groupMessages/' + groupId + '/' + count + '/' + offset,
         type: "GET",
         dataType:'json',
         headers: { 'token': this.currentUser.token }
@@ -240,3 +242,28 @@ SpikaClient.prototype.getFavoriteGroups = function(succeessListener,failedListen
     });
 
 }
+
+SpikaClient.prototype.checkUpdate = function(succeessListener,failedListener)
+{
+    
+    if(this.currentUser == null)
+        return null;
+    
+    var offset = count * (page - 1);
+    var request = $.ajax({
+        url: this.apiEndPointUrl + '/checkUpdate',
+        type: "GET",
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    request.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    request.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+

@@ -328,6 +328,7 @@
         templateEmoticonPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><img src="<%= emoticon_image_url %>" height="120" width="120" /></div></div>'),
         templateVoicePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>">Listen voice</a></div></div>'),
         templateVideoPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= video_file_id %>">Watch video</a></div></div>'),
+        templateLocationPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a target="_blank" href="http://maps.google.com/?q=<%= latitude %>,<%= longitude %>">Open in GoogleMap</a></div></div>'),
         chatPageRowCount : 30,
         chatCurrentPage : 1,
         chatCurrentUserId : 0,
@@ -557,7 +558,9 @@
                     
                     
                                 
-                if(messageType == 'video'){
+                if(messageType == 'location'){
+                    userPostsHtml += this.templateLocationPost(row);
+                }else if(messageType == 'video'){
                     userPostsHtml += this.templateVideoPost(row);
                 }else if(messageType == 'voice'){
                     userPostsHtml += this.templateVoicePost(row);

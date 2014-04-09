@@ -258,7 +258,10 @@
                 var userId = this.unreadMessageNumPerUser[key].userId;
                 var count = this.unreadMessageNumPerUser[key].count;
                 var data = this.userList[userId];
-                
+
+                if(_.isUndefined(data))
+                    continue;
+
                 if(count > 0){
                     data.count = '(' + count + ')';
                 }else{
@@ -285,6 +288,10 @@
                 var groupId = this.unreadMessageNumPerGroup[key].groupId;
                 var count = this.unreadMessageNumPerGroup[key].count;
                 var data = this.groupList[groupId];
+                
+                if(_.isUndefined(data))
+                    continue;
+                    
                 if(count > 0){
                     data.count = '(' + count + ')';
                 }else{

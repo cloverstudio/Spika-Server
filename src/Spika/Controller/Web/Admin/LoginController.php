@@ -88,7 +88,7 @@ class LoginController extends SpikaWebBaseController
                     )
                 ));
 
-                $response = new RedirectResponse("dashboard");
+                $response = new RedirectResponse(ROOT_URL . "/admin/dashboard");
                 
                 if(!empty($remember)){
                     $response->headers->setCookie(new Cookie("username", $username));

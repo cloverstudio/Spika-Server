@@ -95,7 +95,7 @@ class LoginController extends SpikaWebBaseController
                     )
                 ));
 
-                $response = new RedirectResponse("main");
+                $response = new RedirectResponse(ROOT_URL . "/client/main");
                 $app['session']->set('user', $authData);
                 return $response;
                 

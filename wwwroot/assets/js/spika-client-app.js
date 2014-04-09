@@ -1,4 +1,38 @@
 (function() {
+  var autoLink,
+    __slice = [].slice;
+
+  autoLink = function() {
+    var k, linkAttributes, option, options, pattern, v;
+    options = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    pattern = /(^|\s)((?:https?|ftp):\/\/[\-A-Z0-9+\u0026\u2019@#\/%?=()~_|!:,.;]*[\-A-Z0-9+\u0026@#\/%=~()_|])/gi;
+    if (!(options.length > 0)) {
+      return this.replace(pattern, "$1<a target=\"_blank\" href='$2'>$2</a>");
+    }
+    option = options[0];
+    linkAttributes = ((function() {
+      var _results;
+      _results = [];
+      for (k in option) {
+        v = option[k];
+        if (k !== 'callback') {
+          _results.push(" " + k + "='" + v + "'");
+        }
+      }
+      return _results;
+    })()).join('');
+    return this.replace(pattern, function(match, space, url) {
+      var link;
+      link = (typeof option.callback === "function" ? option.callback(url) : void 0) || ("<a href='" + url + "'" + linkAttributes + ">" + url + "</a>");
+      return "" + space + link;
+    });
+  };
+
+  String.prototype['autoLink'] = autoLink;
+
+}).call(this);
+
+(function() {
     
     // handles window ( mainly size change )
     var windowManager = {
@@ -132,7 +166,7 @@
             this.groupList = {};
             this.unreadMessageNumPerUser = {};
             this.unreadMessageNumPerGroup = {};   
-                
+            
             _spikaClient.getActivitySummary(function(data){
 
                 var html = '';
@@ -326,7 +360,7 @@
         
         templateDate : _.template('<div class="timestamp_date"><p><%= date %></p></div>'),
         templateChatBlockPerson : _.template('<div class="post_block"><%= conversation %></div>'),
-        templateUserInfo : _.template('<div class="person_info"><h5><%= img %><%= from_user_name %></h5><div class="clear"></div></div>'),
+        templateUserInfo : _.template('<div class="person_info"><h5><%= img %><a target="_blank" href="' + _consts.RootURL + '/admin/user/view/<%= from_user_id %>"><%= from_user_name %></a></h5><div class="clear"></div></div>'),
         avatarImage : _.template('<img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
         avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
         templateTextPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %></div></div>'),
@@ -446,7 +480,6 @@
             
             });
             
-            
         },
         
         startGroupChat : function(groupId){
@@ -562,6 +595,7 @@
                 }else if(messageType == 'image'){
                     userPostsHtml += this.templatePicturePost(row);
                 }else{
+                    row.body = row.body.autoLink();
                     userPostsHtml += this.templateTextPost(row);
                 }
                 
@@ -702,9 +736,8 @@
                 },function(errorString){
     
                 });
-            }
-
-            else if(self.chatCurrentGroupId != 0){
+                
+            } else if(self.chatCurrentGroupId != 0){
                 
                 this.isLoading = true;
                 
@@ -811,7 +844,12 @@
                 _.delay(function(){
                     self.checkUpdate();
                 }, self.checkInterval);
-            
+                
+                if(self.unreadMessageCount > 0)
+                    document.title = _lang.clientSiteTitle + ' (' + self.unreadMessageCount + ')';
+                else
+                    document.title = _lang.clientSiteTitle;
+                
             },function(errorMessage){
             
                 alertManager.hideLoading();

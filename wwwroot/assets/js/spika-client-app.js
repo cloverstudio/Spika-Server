@@ -363,7 +363,7 @@
         templateUserInfo : _.template('<div class="person_info"><h5><%= img %><a target="_blank" href="' + _consts.RootURL + '/admin/user/view/<%= from_user_id %>"><%= from_user_name %></a></h5><div class="clear"></div></div>'),
         avatarImage : _.template('<img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
         avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
-        templateTextPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %></div></div>'),
+        templateTextPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= from_user_id  %> <%= date  %> <%= body %></div></div>'),
         templatePicturePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg<%= _id  %>"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_thumb_file_id %>" height="120" width="120" /></a></div></div><div class="modal fade bs-example-modal-lg<%= _id %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" /></div></div></div>'),
         templateEmoticonPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><img src="<%= emoticon_image_url %>" height="120" width="120" /></div></div>'),
         templateVoicePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %><br /><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>">Listen voice</a></div></div>'),
@@ -585,6 +585,7 @@
                     lastFromUserId = fromuserId;
                              
                 row.time = timeStr;
+                row.date = dateStr;
                 
                 var messageType = row.message_type;
                 
@@ -595,16 +596,20 @@
                 }
 
                 if(lastDateStr != dateStr || lastDateStr == ''){
-                    html += this.templateDate({date:dateStr});
-                    lastDateStr = dateStr;
-                }
                 
-                if(lastFromUserId != fromuserId){
- 
+                    if(userPostsHtml != ''){
+                        console.log(userPostsHtml);
+                        userPostsHtml = this.templateUserInfo(lastRow) + userPostsHtml;
+                        html += this.templateChatBlockPerson({conversation:userPostsHtml});
+                        userPostsHtml = '';
+                    }
+
+                    html += this.templateDate({date:dateStr});
+                    
+                } else if(lastFromUserId != fromuserId){
                     userPostsHtml = this.templateUserInfo(lastRow) + userPostsHtml;
                     html += this.templateChatBlockPerson({conversation:userPostsHtml});
                     userPostsHtml = '';
-                    
                 }
 
                 if(messageType == 'location'){
@@ -621,7 +626,8 @@
                     row.body = row.body.autoLink();
                     userPostsHtml += this.templateTextPost(row);
                 }
-                                
+                 
+                lastDateStr = dateStr;               
                 lastRow = _.clone(row);
                 lastFromUserId = fromuserId;
 

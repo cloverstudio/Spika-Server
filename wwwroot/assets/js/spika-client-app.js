@@ -168,8 +168,9 @@
                     if(data.rows[0].value.recent_activity.group_posts != undefined){
                     
                         var groupMessages = data.rows[0].value.recent_activity.group_posts.notifications;
-                        
+
                         for(index in groupMessages){
+                            
                             var groupMessageRow = groupMessages[index];
                             var groupId = groupMessageRow['target_id'];
                             var timestamp = groupMessageRow.messages[0]['modified'];
@@ -192,7 +193,11 @@
                 groupsId = _.uniq(groupsId);
                 
                 _spikaClient.getUser(usersId.join(','),function(data){
-
+                    
+                    if(usersId.length == 1){
+                        data = [data];
+                    }
+                    
                     for(userid in data){
                         
                         self.userList[data[userid]['_id']] = data[userid];
@@ -200,6 +205,10 @@
                     }
                     
                     _spikaClient.getGroup(groupsId.join(','),function(data){
+                        
+                        if(groupsId.length == 1){
+                            data = [data];
+                        }
                         
                         for(groupid in data){
                             
@@ -259,9 +268,6 @@
                 var count = this.unreadMessageNumPerUser[key].count;
                 var data = this.userList[userId];
 
-                if(_.isUndefined(data))
-                    continue;
-
                 if(count > 0){
                     data.count = '(' + count + ')';
                 }else{
@@ -289,9 +295,6 @@
                 var count = this.unreadMessageNumPerGroup[key].count;
                 var data = this.groupList[groupId];
                 
-                if(_.isUndefined(data))
-                    continue;
-                    
                 if(count > 0){
                     data.count = '(' + count + ')';
                 }else{

@@ -562,6 +562,7 @@
             var lastFromUserId = 0;
             var lastDateStr = '';
             var userPostsHtml = '';
+            var lastRow = null;
             
             for(var index = 0 ; index < _.size(this.chatContentPool) ; index++){
                 
@@ -579,11 +580,33 @@
                     
                 var timeStr = hour + ":" + min;
                 var fromuserId = row.from_user_id;
-                                
+                
+                if(lastFromUserId == 0)
+                    lastFromUserId = fromuserId;
+                             
                 row.time = timeStr;
                 
                 var messageType = row.message_type;
                 
+                if(_.isEmpty(row.avatar_thumb_file_id)){
+                    row.img = this.avatarNoImage(row);
+                }else{
+                    row.img = this.avatarImage(row);
+                }
+
+                if(lastDateStr != dateStr || lastDateStr == ''){
+                    html += this.templateDate({date:dateStr});
+                    lastDateStr = dateStr;
+                }
+                
+                if(lastFromUserId != fromuserId){
+ 
+                    userPostsHtml = this.templateUserInfo(lastRow) + userPostsHtml;
+                    html += this.templateChatBlockPerson({conversation:userPostsHtml});
+                    userPostsHtml = '';
+                    
+                }
+
                 if(messageType == 'location'){
                     userPostsHtml += this.templateLocationPost(row);
                 }else if(messageType == 'video'){
@@ -598,33 +621,15 @@
                     row.body = row.body.autoLink();
                     userPostsHtml += this.templateTextPost(row);
                 }
-                
-                if(lastDateStr != dateStr){
-                    html += this.templateDate({date:dateStr});
-                    lastDateStr = dateStr;
-                    lastFromUserId = 0;
-                }
-                
-                if(lastFromUserId != fromuserId || index == this.chatContentPool.length - 1){
-                    
-                    if(_.isEmpty(row.avatar_thumb_file_id)){
-                        row.img = this.avatarNoImage(row);
-                    }else{
-                        row.img = this.avatarImage(row);
-                    }
-                    
-                    userPostsHtml = this.templateUserInfo(row) + userPostsHtml;
-                    
-                    if(userPostsHtml != '')
-                        html += this.templateChatBlockPerson({conversation:userPostsHtml});
-                        
-                    userPostsHtml = '';
-                    lastFromUserId = fromuserId;
-                    
-                }
-                
+                                
+                lastRow = _.clone(row);
+                lastFromUserId = fromuserId;
+
             }
             
+            userPostsHtml = this.templateUserInfo(lastRow) + userPostsHtml;
+            html += this.templateChatBlockPerson({conversation:userPostsHtml});
+
             $('#conversation_block').html(html);
                         
         },

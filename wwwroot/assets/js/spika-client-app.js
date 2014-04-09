@@ -193,13 +193,12 @@
                 
                 _spikaClient.getUser(usersId.join(','),function(data){
 
-                        for(userid in data){
-                            
-                            self.userList[data[userid]['_id']] = data[userid];
-                            
-                        }
+                    for(userid in data){
+                        
+                        self.userList[data[userid]['_id']] = data[userid];
+                        
+                    }
                     
-
                     _spikaClient.getGroup(groupsId.join(','),function(data){
                         
                         for(groupid in data){
@@ -222,8 +221,6 @@
                     alertManager.hideLoading();
                     
                 });
-                
-    
                 
             },function(errorMessage){
             
@@ -278,7 +275,6 @@
                 
                 html += this.templateRecentActivityRowUser(data);
                 
-
             }
             
             var keys = _.keys(this.unreadMessageNumPerGroup);
@@ -326,15 +322,16 @@
         templateTextPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %></div></div>'),
         templatePicturePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg<%= _id  %>"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_thumb_file_id %>" height="120" width="120" /></a></div></div><div class="modal fade bs-example-modal-lg<%= _id %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" /></div></div></div>'),
         templateEmoticonPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><img src="<%= emoticon_image_url %>" height="120" width="120" /></div></div>'),
-        templateVoicePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>">Listen voice</a></div></div>'),
-        templateVideoPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= video_file_id %>">Watch video</a></div></div>'),
-        templateLocationPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a target="_blank" href="http://maps.google.com/?q=<%= latitude %>,<%= longitude %>">Open in GoogleMap</a></div></div>'),
+        templateVoicePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %><br /><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>">Listen voice</a></div></div>'),
+        templateVideoPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %><br /><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= video_file_id %>">Watch video</a></div></div>'),
+        templateLocationPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %><br /><a target="_blank" href="http://maps.google.com/?q=<%= latitude %>,<%= longitude %>">Open in GoogleMap</a></div></div>'),
         chatPageRowCount : 30,
         chatCurrentPage : 1,
         chatCurrentUserId : 0,
         chatCurrentGroupId : 0,
         chatContentPool : [],
         isLoading : false,
+        isReachedToEnd : false,
         init : function(){
             
             var self = this;
@@ -360,6 +357,9 @@
         },
         loadNextPage : function(){
             
+            if(this.isReachedToEnd)
+                return;
+                
             var self = this;
             this.chatCurrentPage++;
             
@@ -374,7 +374,6 @@
                     
                     var currentHeight = $("#conversation_block")[0].scrollHeight;
                                      
-                    console.log("last : " + lastHeight + " current : " + currentHeight);
                     $("#conversation_block").scrollTop(currentHeight - lastHeight);
                     
                 },function(errorString){
@@ -392,7 +391,6 @@
 
                     var currentHeight = $("#conversation_block")[0].scrollHeight;
                     
-                    console.log("last : " + lastHeight + " current : " + currentHeight);
                     $("#conversation_block").scrollTop(currentHeight - lastHeight);
 
 
@@ -479,6 +477,10 @@
         },
         mergeConversation : function(data){
             
+            if(data.rows.length < this.chatPageRowCount){
+                this.isReachedToEnd = true;
+            }
+            
             var oldPool = [];
             
             for(index in this.chatContentPool){
@@ -498,9 +500,15 @@
                 
             }
             
-            this.chatContentPool = _.sortBy(oldPool, function(message){ 
+            var tmpAry = _.sortBy(oldPool, function(message){ 
                 return message.created 
             });
+            
+            this.chatContentPool = [];
+            
+            for(var index in oldPool){
+                this.chatContentPool.push(oldPool[index]);
+            }
             
         },
         
@@ -512,7 +520,7 @@
             var lastDateStr = '';
             var userPostsHtml = '';
             
-            for(var index in this.chatContentPool){
+            for(var index = 0 ; index < _.size(this.chatContentPool) ; index++){
                 
                 var row = this.chatContentPool[index];
                 var date = new Date(row.created*1000);
@@ -528,36 +536,11 @@
                     
                 var timeStr = hour + ":" + min;
                 var fromuserId = row.from_user_id;
-                
-                if(lastDateStr != dateStr){
-                    html += this.templateDate({date:dateStr});
-                    lastDateStr = dateStr;
-                    lastFromUserId = 0;
-                }
-                
-                if(lastFromUserId != fromuserId){
-                    
-                    if(userPostsHtml != '')
-                        html += this.templateChatBlockPerson({conversation:userPostsHtml});
-
-                    if(_.isEmpty(row.avatar_thumb_file_id)){
-                        row.img = this.avatarNoImage(row);
-                    }else{
-                        row.img = this.avatarImage(row);
-                    }
-                    
-                    userPostsHtml = this.templateUserInfo(row);
-                    lastFromUserId = fromuserId;
-                }
-                
+                                
                 row.time = timeStr;
                 
                 var messageType = row.message_type;
                 
-                    console.log(row);
-                    
-                    
-                                
                 if(messageType == 'location'){
                     userPostsHtml += this.templateLocationPost(row);
                 }else if(messageType == 'video'){
@@ -572,10 +555,31 @@
                     userPostsHtml += this.templateTextPost(row);
                 }
                 
+                if(lastDateStr != dateStr){
+                    html += this.templateDate({date:dateStr});
+                    lastDateStr = dateStr;
+                    lastFromUserId = 0;
+                }
+                
+                if(lastFromUserId != fromuserId || index == this.chatContentPool.length - 1){
+                    
+                    if(_.isEmpty(row.avatar_thumb_file_id)){
+                        row.img = this.avatarNoImage(row);
+                    }else{
+                        row.img = this.avatarImage(row);
+                    }
+                    
+                    userPostsHtml = this.templateUserInfo(row) + userPostsHtml;
+                    
+                    if(userPostsHtml != '')
+                        html += this.templateChatBlockPerson({conversation:userPostsHtml});
+                        
+                    userPostsHtml = '';
+                    lastFromUserId = fromuserId;
+                    
+                }
                 
             }
-            
-            html += this.templateChatBlockPerson({conversation:userPostsHtml});
             
             $('#conversation_block').html(html);
                         

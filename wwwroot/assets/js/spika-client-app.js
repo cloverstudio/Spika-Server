@@ -53,7 +53,7 @@
 
             $('body').height(window.innerHeight);
             $('.sidebar-collapse .tab-content').height(window.innerHeight - headerHeight - 50);
-            $('#conversation_block').height(window.innerHeight - chatboxHeight - headerHeight - 10);
+            $('#conversation_block').height(window.innerHeight - chatboxHeight - headerHeight - 50);
         }  
         
     };

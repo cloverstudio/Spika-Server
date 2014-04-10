@@ -66,6 +66,25 @@ body {
 	padding-right: 50px;
 }
 
+.post_media {
+	padding: 10px 0;
+	border:1px solid #DDDDDD;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	width: 50%;
+	background-color: #F5F5F5;
+}
+
+.post_fa {
+	float: left;
+	padding: 4px 10px;
+}
+
+audio {
+	width: 70%;
+}
+
 #chat_block {
 	padding: 5px;
 	background-color: #EEEEEE;

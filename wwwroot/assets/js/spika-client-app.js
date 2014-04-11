@@ -1,38 +1,4 @@
 (function() {
-  var autoLink,
-    __slice = [].slice;
-
-  autoLink = function() {
-    var k, linkAttributes, option, options, pattern, v;
-    options = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    pattern = /(^|\s)((?:https?|ftp):\/\/[\-A-Z0-9+\u0026\u2019@#\/%?=()~_|!:,.;]*[\-A-Z0-9+\u0026@#\/%=~()_|])/gi;
-    if (!(options.length > 0)) {
-      return this.replace(pattern, "$1<a target=\"_blank\" href='$2'>$2</a>");
-    }
-    option = options[0];
-    linkAttributes = ((function() {
-      var _results;
-      _results = [];
-      for (k in option) {
-        v = option[k];
-        if (k !== 'callback') {
-          _results.push(" " + k + "='" + v + "'");
-        }
-      }
-      return _results;
-    })()).join('');
-    return this.replace(pattern, function(match, space, url) {
-      var link;
-      link = (typeof option.callback === "function" ? option.callback(url) : void 0) || ("<a href='" + url + "'" + linkAttributes + ">" + url + "</a>");
-      return "" + space + link;
-    });
-  };
-
-  String.prototype['autoLink'] = autoLink;
-
-}).call(this);
-
-(function() {
     
     // handles window ( mainly size change )
     var windowManager = {
@@ -598,7 +564,6 @@
                 if(lastDateStr != dateStr || lastDateStr == ''){
                 
                     if(userPostsHtml != ''){
-                        console.log(userPostsHtml);
                         userPostsHtml = this.templateUserInfo(lastRow) + userPostsHtml;
                         html += this.templateChatBlockPerson({conversation:userPostsHtml});
                         userPostsHtml = '';
@@ -642,90 +607,97 @@
         sendTextMessage : function(message){
             
             var self = this;
+            var targetId = 0;
+            var target = '';
             
             if(self.chatCurrentUserId != 0) {
-            
-                _spikaClient.postTextMessageToUser(self.chatCurrentUserId,message,function(data){
-                    
-                    $('#btn-chat-send').html('Sent');
-                    
-                    this.isLoading = true;
-    
-                    _spikaClient.loadUserChat(self.chatCurrentUserId,self.chatPageRowCount,self.chatCurrentPage,function(data){
-                        
-                        _.delay(function(){
-                            $('#btn-chat-send').html('Send');
-                            $('#btn-chat-send').removeAttr('disabled');
-                        }, 1000);
-                        
-                        self.mergeConversation(data);
-                    
-                        self.render();
-                        
-                        self.scrollToBottom();
-                        
-                        self.isLoading = false;
-                        
-                    },function(errorString){
-                    
-                        alertManager.showError(_lang.messageGeneralError);
-                    
-                        _.delay(function(){
-                            $('#btn-chat-send').html('Send');
-                            $('#btn-chat-send').removeAttr('disabled');
-                        }, 1000);
-                        
-                    });
-                    
-                },function(errorString){
-                
-                    alertManager.showError(_lang.messageGeneralError);
-                    
-                });
-            
+                targetId = self.chatCurrentUserId;
+                target = _spikaClient.MESSAGE_TAEGET_USER;
             } else if(self.chatCurrentGroupId != 0) {
-                
-                _spikaClient.postTextMessageToGroup(self.chatCurrentGroupId,message,function(data){
-                    
-                    $('#btn-chat-send').html('Sent');
-                    
-                    this.isLoading = true;
-    
-                    _spikaClient.loadGroupChat(self.chatCurrentGroupId,self.chatPageRowCount,self.chatCurrentPage,function(data){
-                    
-                        _.delay(function(){
-                            $('#btn-chat-send').html('Send');
-                            $('#btn-chat-send').removeAttr('disabled');
-                        }, 1000);
-                    
-                        self.mergeConversation(data);
-                    
-                        self.render();
-                        
-                        self.scrollToBottom();
-                        
-                        self.isLoading = false;
-                        
-                    },function(errorString){
-                    
-                        alertManager.showError(_lang.messageGeneralError);
-                    
-                        _.delay(function(){
-                            $('#btn-chat-send').html('Send');
-                            $('#btn-chat-send').removeAttr('disabled');
-                        }, 1000);
-                        
-                    });
-                    
-                },function(errorString){
-                
-                    alertManager.showError(_lang.messageGeneralError);
-                    
-                });
-
-                
+                targetId = self.chatCurrentGroupId;
+                target = _spikaClient.MESSAGE_TAEGET_GROUP;
             }
             
+            _spikaClient.postTextMessage(target,targetId,message,function(data){
+                
+                $('#btn-chat-send').html('Sent');
+                
+                self.loadNewMessage();
+
+                _.delay(function(){
+                    $('#btn-chat-send').html('Send');
+                    $('#btn-chat-send').removeAttr('disabled');
+                }, 1000);
+                                        
+            },function(errorString){
+            
+                alertManager.showError(_lang.messageGeneralError);
+                
+            });
+                
+        },
+        sendMediaMessage : function(file,mediaType,listener){
+            
+            var self = this;
+            var targetId = 0;
+            var target = '';
+            
+            if(self.chatCurrentUserId != 0) {
+                targetId = self.chatCurrentUserId;
+                target = _spikaClient.MESSAGE_TAEGET_USER;
+            } else if(self.chatCurrentGroupId != 0) {
+                targetId = self.chatCurrentGroupId;
+                target = _spikaClient.MESSAGE_TAEGET_GROUP;
+            }
+            
+            // scale
+            resize(file,640,640,100,"image/jpeg",function(blobBigImage){
+                
+                resize(file,240,240,100,"image/jpeg",function(blobSmallImage){
+                
+                    _spikaClient.fileUpload(blobBigImage,function(data){
+                        
+                        var fileId = data;
+                        
+                        _spikaClient.fileUpload(blobSmallImage,function(data){
+                            
+                            var thumbId = data;
+                            
+                            _spikaClient.postMediaMessage(target,mediaType,targetId,fileId,thumbId,function(data){
+                                
+                                $('#btn-chat-send').html('Sent');
+                                
+                                self.loadNewMessage();
+                                listener();
+                                
+                            },function(errorString){
+                            
+                                alertManager.showError(_lang.messageGeneralError);
+                                listener();
+                                
+                            }); // post message
+                                                    
+                        },function(errorString){
+                        
+                            alertManager.showError(_lang.messageGeneralError);
+                            listener();
+                            
+                        });// upload thumb
+
+                                                
+                    },function(errorString){
+                    
+                        alertManager.showError(_lang.messageGeneralError);
+                        listener();
+                        
+                    });// upload image
+                
+                }); // generate thumb
+            
+            }); // scale image
+            
+
+                
         },
         scrollToBottom : function(){
             var objConversationBlock = $('#conversation_block');
@@ -936,6 +908,52 @@
         
     };
     
+    var fileUploadManager = {
+        handleFileSelect : function(event){
+            
+            event.preventDefault();
+            
+            var files = event.dataTransfer.files;
+            
+            if(_.isUndefined(files)){
+                return;
+            }
+            
+            var filesCount = files.length;
+            
+            if(filesCount > 1){
+                alertManager.showError(_lang.messageValidationErrorTooManyFiles);
+                return;
+            }
+            
+            var file = files[0];
+            var fileType = file.type;
+            
+            if(fileType != 'image/jpeg' && fileType != 'mp4'){
+                alertManager.showError(_lang.messageValidationErrorWrongFileType);
+                return;
+            }
+            
+            // upload
+            $('#fileupload-box').css('display','none');
+            $('#fileuploading').css('display','block');
+            
+            _chatManager.sendMediaMessage(file,_spikaClient.MEDIA_TYPE_IMAGE,function(){
+                $('#fileupload-box').css('display','block');
+                $('#fileuploading').css('display','none');
+            });
+            
+        },
+        handleDragOver : function(event){
+            event.preventDefault();
+            $('#fileupload-box').css('border-color','#f88');
+        },
+        handleDragLeave : function(event){
+            event.preventDefault();
+            $('#fileupload-box').css('border-color','#888');
+        }
+    };
+    
     $(document).ready(function() {
     
         alertManager.showLoading();
@@ -976,6 +994,40 @@
             $('#btn-chat-send').attr('disabled','disabled');
             
         });
+        
+        $('#btn_text').click(function(){
+            console.log(1);
+            $('#textarea').css('display','block');
+            $('#sticker').css('display','none');
+            $('#fileupload').css('display','none');
+             
+        });
+        $('#btn_sticker').click(function(){
+            console.log(2);
+            $('#textarea').css('display','none');
+            $('#sticker').css('display','block');
+            $('#fileupload').css('display','none');
+             
+        });
+        $('#btn_file').click(function(){
+            console.log(3);
+            $('#textarea').css('display','none');
+            $('#sticker').css('display','none');
+            $('#fileupload').css('display','block');
+            
+            $('#fileupload-box').css('display','block');
+            $('#fileuploading').css('display','none');
+            
+             
+        });
+        
+        // file dropzone setup
+        var dropZone = document.getElementById('fileupload-box');
+        dropZone.addEventListener('dragleave', fileUploadManager.handleDragLeave, false);
+        dropZone.addEventListener('dragover', fileUploadManager.handleDragOver, false);
+        dropZone.addEventListener('drop', fileUploadManager.handleFileSelect , false);
+        
+        
         
     });
 

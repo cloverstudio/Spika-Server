@@ -2,6 +2,12 @@ function SpikaClient(apiEndPointUrl)
 {
     this.apiEndPointUrl = apiEndPointUrl;
     this.currentUser = null;
+    
+    this.MESSAGE_TAEGET_USER = 'user';
+    this.MESSAGE_TAEGET_GROUP = 'group';
+
+    this.MEDIA_TYPE_IMAGE = 'image';
+    
 }
 
 SpikaClient.prototype.setRenderer = function(renderer)
@@ -91,16 +97,26 @@ SpikaClient.prototype.loadGroupChat = function(groupId,count,page,succeessListen
 
 }
 
-SpikaClient.prototype.postTextMessageToGroup = function(groupId,message,succeessListener,failedListener)
+SpikaClient.prototype.postTextMessage = function(type,targetId,message,succeessListener,failedListener)
 {
     
     if(this.currentUser == null)
         return null;
     
-    var postData = {'to_group_id':groupId,'message_type':'text','body':message};
+    var postData = {'message_type':'text','body':message};
+    var url = "";
+    
+    if(type == this.MESSAGE_TAEGET_USER){
+        postData.to_user_id = targetId;
+        url = this.apiEndPointUrl + '/sendMessageToUser';
+    }
+    if(type == this.MESSAGE_TAEGET_GROUP){
+        postData.to_group_id = targetId;
+        url = this.apiEndPointUrl + '/sendMessageToGroup';
+    }
 
     var requestLogin = $.ajax({
-        url: this.apiEndPointUrl + '/sendMessageToGroup',
+        url: url,
         type: 'POST',
         dataType:'json',
         data:JSON.stringify(postData),
@@ -117,16 +133,32 @@ SpikaClient.prototype.postTextMessageToGroup = function(groupId,message,succeess
 
 }
 
-SpikaClient.prototype.postTextMessageToUser = function(userId,message,succeessListener,failedListener)
+SpikaClient.prototype.postMediaMessage = function(type,mediaType,targetId,fileId,thumbFileId,succeessListener,failedListener)
 {
     
     if(this.currentUser == null)
         return null;
     
-    var postData = {'to_user_id':userId,'message_type':'text','body':message};
+    var postData = {'body':''};
+    var url = "";
+    
+    if(type == this.MESSAGE_TAEGET_USER){
+        postData.to_user_id = targetId;
+        url = this.apiEndPointUrl + '/sendMessageToUser';
+    }
+    if(type == this.MESSAGE_TAEGET_GROUP){
+        postData.to_group_id = targetId;
+        url = this.apiEndPointUrl + '/sendMessageToGroup';
+    }
 
+    if(mediaType == this.MEDIA_TYPE_IMAGE){
+        postData.message_type = 'image';
+        postData.picture_file_id = fileId;
+        postData.picture_thumb_file_id = thumbFileId;
+    }
+    
     var requestLogin = $.ajax({
-        url: this.apiEndPointUrl + '/sendMessageToUser',
+        url: url,
         type: 'POST',
         dataType:'json',
         data:JSON.stringify(postData),
@@ -142,6 +174,8 @@ SpikaClient.prototype.postTextMessageToUser = function(userId,message,succeessLi
     });
 
 }
+
+
 
 
 SpikaClient.prototype.getActivitySummary = function(succeessListener,failedListener)
@@ -267,3 +301,27 @@ SpikaClient.prototype.checkUpdate = function(succeessListener,failedListener)
 
 }
 
+// Login
+SpikaClient.prototype.fileUpload = function(file,succeessListener,failedListener)
+{
+    // login
+    var formData = new FormData();
+    formData.append('file', file);
+       
+    var request = $.ajax({
+        url: this.apiEndPointUrl + '/fileuploader',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false
+    });
+    
+    request.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    request.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}

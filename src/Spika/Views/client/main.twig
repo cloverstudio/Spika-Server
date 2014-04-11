@@ -20,7 +20,7 @@
     <script src="{{ROOT_URL}}/assets/js/sb-admin.js"></script>
     <script src="{{ROOT_URL}}/assets/js/underscore.js"></script>
     <script src="{{ROOT_URL}}/assets/js/spika-client.js"></script>
-
+    
     <script type="text/javascript">
 
         var _spikaClient = new SpikaClient('{{ROOT_URL}}/api');
@@ -45,6 +45,7 @@
         
     </script>
     
+    <script src="{{ROOT_URL}}/assets/js/spika-client-utils.js"></script>
     <script src="{{ROOT_URL}}/assets/js/spika-client-app.js"></script>
 
 </head>
@@ -166,7 +167,7 @@
 						<div class="panel-default">
 						
 							<div id="conversation_block">
-
+                                
 							</div>
 							
 							<div id="chat_block" >
@@ -175,21 +176,41 @@
 									<div class="panel-heading"><button class="btn btn-primary btn-sm" type="button" id="btn-chat-send">Send</button>
 									<ul>
 										<li>
-											<a class="btn btn-social-icon btn-github">
-											<i class="fa fa-smile-o"></i>
+											<a class="btn btn-social-icon btn-github" id="btn_text">
+											    <i class="fa fa-font"></i>
 											</a>
 										</li>
 										<li>
-											<a class="btn btn-social-icon btn-github">
+											<a class="btn btn-social-icon btn-github" id="btn_sticker">
+											    <i class="fa fa-smile-o"></i>
+											</a>
+										</li>
+										<li>
+											<a class="btn btn-social-icon btn-github" id="btn_file">
 											<i class="fa fa-paperclip"></i>
 											</a>
 										</li>
 									</ul>
 									</div>
 									<div class="panel-body">
-									    <div class="chatpanel" id="sticker" style="display:none;"></div>
-									    <div class="chatpanel" id="fileupload" style="display:none;"></div>
-										<textarea id="textarea"></textarea>
+									    <div class="chatpanel" id="sticker" style="display:none">
+									    </div>
+									    <div class="chatpanel" id="fileupload" style="display:none">
+									        <div id="fileupload-box">
+									            Drop files here<br />
+                                                <span id="filetype-note">jpg/mp4 only</span>
+									        </div>
+									        <div id="fileuploading">
+                                                <div class="progress progress-striped active">
+                                                    <div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                                        <span class="sr-only">Uploading</span>
+                                                    </div>
+                                                </div>
+                                                Uploading
+									        </div>
+
+									    </div>
+										<textarea class="chatpanel" id="textarea" ></textarea>
 									</div>
 								</div>
 							</div>

@@ -111,7 +111,6 @@ audio {
 
 #chat_block  div.chatpanel {
 	width: 100%;
-	border: none;
 	min-height: 100px;
 }
 
@@ -147,3 +146,25 @@ audio {
 #conversation_block{
     overflow-y: scroll;
 }
+
+#fileupload-box {
+	border: 6px dashed #888;
+	font-size: 25px;
+	text-align: center;
+	padding-top: 30px;
+	color: #777;
+}
+
+#fileuploading {
+	text-align: center;
+	padding-top: 30px;
+	padding-left: 50px;
+	padding-right: 50px;	
+}
+
+#filetype-note {
+	font-size: 12px;
+	color: #f00;
+	padding-top: 0px;
+}
+

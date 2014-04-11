@@ -7,6 +7,7 @@ function SpikaClient(apiEndPointUrl)
     this.MESSAGE_TAEGET_GROUP = 'group';
 
     this.MEDIA_TYPE_IMAGE = 'image';
+    this.MEDIA_TYPE_VIDEO = 'video';
     
 }
 
@@ -155,6 +156,11 @@ SpikaClient.prototype.postMediaMessage = function(type,mediaType,targetId,fileId
         postData.message_type = 'image';
         postData.picture_file_id = fileId;
         postData.picture_thumb_file_id = thumbFileId;
+    }
+    
+    if(mediaType == this.MEDIA_TYPE_VIDEO){
+        postData.message_type = 'video';
+        postData.video_file_id = fileId;
     }
     
     var requestLogin = $.ajax({

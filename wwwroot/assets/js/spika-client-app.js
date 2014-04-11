@@ -604,6 +604,17 @@
             $('#conversation_block').html(html);
                         
         },
+        isInConversation : function(){
+            if(this.chatCurrentUserId != 0) {
+                return true;
+            } else if(this.chatCurrentGroupId != 0) {
+                return true;
+            } else {
+                return false;
+            }
+            
+            return false;
+        },
         sendTextMessage : function(message){
             
             var self = this;
@@ -616,6 +627,11 @@
             } else if(self.chatCurrentGroupId != 0) {
                 targetId = self.chatCurrentGroupId;
                 target = _spikaClient.MESSAGE_TAEGET_GROUP;
+            } else {
+                $('#btn-chat-send').html('Send');
+                $('#btn-chat-send').removeAttr('disabled');
+                
+                return;
             }
             
             _spikaClient.postTextMessage(target,targetId,message,function(data){
@@ -648,53 +664,102 @@
             } else if(self.chatCurrentGroupId != 0) {
                 targetId = self.chatCurrentGroupId;
                 target = _spikaClient.MESSAGE_TAEGET_GROUP;
+            }else {
+                $('#btn-chat-send').html('Send');
+                $('#btn-chat-send').removeAttr('disabled');
+                
+                return;
             }
             
-            // scale
-            resize(file,640,640,100,"image/jpeg",function(blobBigImage){
-                
-                resize(file,240,240,100,"image/jpeg",function(blobSmallImage){
-                
-                    _spikaClient.fileUpload(blobBigImage,function(data){
-                        
-                        var fileId = data;
-                        
-                        _spikaClient.fileUpload(blobSmallImage,function(data){
+            if(mediaType == _spikaClient.MEDIA_TYPE_IMAGE){
+                // scale
+                resize(file,640,640,100,"image/jpeg",function(blobBigImage){
+                    
+                    resize(file,240,240,100,"image/jpeg",function(blobSmallImage){
+                    
+                        _spikaClient.fileUpload(blobBigImage,function(data){
                             
-                            var thumbId = data;
+                            var fileId = data;
                             
-                            _spikaClient.postMediaMessage(target,mediaType,targetId,fileId,thumbId,function(data){
+                            _spikaClient.fileUpload(blobSmallImage,function(data){
                                 
-                                $('#btn-chat-send').html('Sent');
+                                var thumbId = data;
                                 
-                                self.loadNewMessage();
-                                listener();
+                                _spikaClient.postMediaMessage(target,mediaType,targetId,fileId,thumbId,function(data){
+                                    
+                                    $('#btn-chat-send').html('Sent');
+                                    
+                                    self.loadNewMessage();
+                                    listener();
+                                    
+                                    _.delay(function(){
+                                        $('#btn-chat-send').html('Send');
+                                        $('#btn-chat-send').removeAttr('disabled');
+                                    }, 1000);
+                    
+                                },function(errorString){
                                 
+                                    alertManager.showError(_lang.messageGeneralError);
+                                    listener();
+                                    
+                                }); // post message
+                                                        
                             },function(errorString){
                             
                                 alertManager.showError(_lang.messageGeneralError);
                                 listener();
                                 
-                            }); // post message
+                            });// upload thumb
+    
                                                     
                         },function(errorString){
                         
                             alertManager.showError(_lang.messageGeneralError);
                             listener();
                             
-                        });// upload thumb
-
-                                                
+                        });// upload image
+                    
+                    }); // generate thumb
+                
+                }); // scale image
+            }
+            
+            if(mediaType == _spikaClient.MEDIA_TYPE_VIDEO){
+                
+                _spikaClient.fileUpload(file,function(data){
+                    
+                    var fileId = data;
+                    
+                    _spikaClient.postMediaMessage(target,mediaType,targetId,fileId,0,function(data){
+                        
+                        $('#btn-chat-send').html('Sent');
+                        
+                        self.loadNewMessage();
+                        listener();
+                        
+                        _.delay(function(){
+                            $('#btn-chat-send').html('Send');
+                            $('#btn-chat-send').removeAttr('disabled');
+                        }, 1000);
+        
                     },function(errorString){
                     
                         alertManager.showError(_lang.messageGeneralError);
                         listener();
                         
-                    });// upload image
+                    }); // post message
+                                            
+                },function(errorString){
                 
-                }); // generate thumb
+                    alertManager.showError(_lang.messageGeneralError);
+                    listener();
+                    
+                });// upload thumb
+
+                
+            }
             
-            }); // scale image
+
             
 
                 
@@ -929,8 +994,12 @@
             var file = files[0];
             var fileType = file.type;
             
-            if(fileType != 'image/jpeg' && fileType != 'mp4'){
+            if(fileType != 'image/jpeg' && fileType != 'video/mp4'){
                 alertManager.showError(_lang.messageValidationErrorWrongFileType);
+                return;
+            }
+            
+            if(!_chatManager.isInConversation()){
                 return;
             }
             
@@ -938,11 +1007,22 @@
             $('#fileupload-box').css('display','none');
             $('#fileuploading').css('display','block');
             
-            _chatManager.sendMediaMessage(file,_spikaClient.MEDIA_TYPE_IMAGE,function(){
-                $('#fileupload-box').css('display','block');
-                $('#fileuploading').css('display','none');
-            });
+            $('#btn-chat-send').attr('disabled','disabled');
             
+            if(fileType == 'image/jpeg'){
+                _chatManager.sendMediaMessage(file,_spikaClient.MEDIA_TYPE_IMAGE,function(){
+                    $('#fileupload-box').css('display','block');
+                    $('#fileuploading').css('display','none');
+                });
+            }
+
+            if(fileType == 'video/mp4'){
+                _chatManager.sendMediaMessage(file,_spikaClient.MEDIA_TYPE_VIDEO,function(){
+                    $('#fileupload-box').css('display','block');
+                    $('#fileuploading').css('display','none');
+                });
+            }
+                        
         },
         handleDragOver : function(event){
             event.preventDefault();
@@ -987,6 +1067,10 @@
         });
         
         $('#btn-chat-send').click(function(){
+            
+            if(!_chatManager.isInConversation()){
+                return;
+            }
             
             _chatManager.sendTextMessage($('#textarea').val());
             $('#textarea').val('');

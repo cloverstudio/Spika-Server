@@ -724,7 +724,7 @@
                 }); // scale image
             }
             
-            if(mediaType == _spikaClient.MEDIA_TYPE_VIDEO){
+            if(mediaType == _spikaClient.MEDIA_TYPE_VIDEO || mediaType == _spikaClient.MEDIA_TYPE_AUDIO){
                 
                 _spikaClient.fileUpload(file,function(data){
                     
@@ -758,9 +758,7 @@
 
                 
             }
-            
-
-            
+                        
 
                 
         },
@@ -994,7 +992,7 @@
             var file = files[0];
             var fileType = file.type;
             
-            if(fileType != 'image/jpeg' && fileType != 'video/mp4'){
+            if(fileType != 'image/jpeg' && fileType != 'video/mp4' && fileType != 'audio/mp3'){
                 alertManager.showError(_lang.messageValidationErrorWrongFileType);
                 return;
             }
@@ -1009,6 +1007,7 @@
             
             $('#btn-chat-send').attr('disabled','disabled');
             
+            
             if(fileType == 'image/jpeg'){
                 _chatManager.sendMediaMessage(file,_spikaClient.MEDIA_TYPE_IMAGE,function(){
                     $('#fileupload-box').css('display','block');
@@ -1018,6 +1017,13 @@
 
             if(fileType == 'video/mp4'){
                 _chatManager.sendMediaMessage(file,_spikaClient.MEDIA_TYPE_VIDEO,function(){
+                    $('#fileupload-box').css('display','block');
+                    $('#fileuploading').css('display','none');
+                });
+            }
+                        
+            if(fileType == 'audio/mp3'){
+                _chatManager.sendMediaMessage(file,_spikaClient.MEDIA_TYPE_AUDIO,function(){
                     $('#fileupload-box').css('display','block');
                     $('#fileuploading').css('display','none');
                 });
@@ -1080,29 +1086,23 @@
         });
         
         $('#btn_text').click(function(){
-            console.log(1);
             $('#textarea').css('display','block');
             $('#sticker').css('display','none');
             $('#fileupload').css('display','none');
              
         });
         $('#btn_sticker').click(function(){
-            console.log(2);
             $('#textarea').css('display','none');
             $('#sticker').css('display','block');
             $('#fileupload').css('display','none');
              
         });
         $('#btn_file').click(function(){
-            console.log(3);
             $('#textarea').css('display','none');
             $('#sticker').css('display','none');
             $('#fileupload').css('display','block');
-            
             $('#fileupload-box').css('display','block');
             $('#fileuploading').css('display','none');
-            
-             
         });
         
         // file dropzone setup
@@ -1110,8 +1110,6 @@
         dropZone.addEventListener('dragleave', fileUploadManager.handleDragLeave, false);
         dropZone.addEventListener('dragover', fileUploadManager.handleDragOver, false);
         dropZone.addEventListener('drop', fileUploadManager.handleFileSelect , false);
-        
-        
         
     });
 

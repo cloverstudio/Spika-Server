@@ -63,11 +63,17 @@ class MessageController extends SpikaBaseController
                     return $self->returnErrorResponse("load emoticon error");
                 }
                 
-                return new Response(
+                $response = new Response(
                     $result,
                     200,
                     array('Content-Type' => 'image/png')
                 );
+            
+                $response->setETag(md5($response->getContent()));
+                $response->setPublic(); // make sure the response is public/cacheable
+                $response->isNotModified($request);
+                
+                return $response;
 
             }
         )->before($app['beforeApiGeneral']);

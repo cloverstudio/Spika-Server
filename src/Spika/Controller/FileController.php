@@ -37,7 +37,12 @@ class FileController extends SpikaBaseController
             $filePath = __DIR__.'/../../../'.FileController::$fileDirName."/".basename($fileID);
             
             if(file_exists($filePath)){
-                    return $app->sendFile($filePath);
+                    $response = $app->sendFile($filePath);
+                    $response->setETag(md5($response->getContent()));
+                    $response->setPublic(); // make sure the response is public/cacheable
+                    $response->isNotModified($request);
+    
+                    return $response;
             }else{
                     return $self->returnErrorResponse("file doesn't exists.");
             }

@@ -51,7 +51,7 @@ class MessageController extends SpikaBaseController
         )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
 
         $controllers->get('/Emoticon/{id}',
-            function ($id = "") use ($app,$self) {
+            function (Request $request,$id = "") use ($app,$self) {
 
                 if(empty($id)){
                     return $self->returnErrorResponse("please specify emoticon id");

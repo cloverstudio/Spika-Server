@@ -187,6 +187,41 @@ SpikaClient.prototype.postMediaMessage = function(type,mediaType,targetId,fileId
 
 }
 
+SpikaClient.prototype.postStickerMessage = function(type,targetId,stickerIdentifier,succeessListener,failedListener)
+{
+    
+    if(this.currentUser == null)
+        return null;
+    
+    var postData = {'message_type':'emoticon','body':stickerIdentifier};
+    var url = "";
+    
+    if(type == this.MESSAGE_TAEGET_USER){
+        postData.to_user_id = targetId;
+        url = this.apiEndPointUrl + '/sendMessageToUser';
+    }
+    if(type == this.MESSAGE_TAEGET_GROUP){
+        postData.to_group_id = targetId;
+        url = this.apiEndPointUrl + '/sendMessageToGroup';
+    }
+
+    var requestLogin = $.ajax({
+        url: url,
+        type: 'POST',
+        dataType:'json',
+        data:JSON.stringify(postData),
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    requestLogin.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    requestLogin.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
 
 
 
@@ -313,7 +348,6 @@ SpikaClient.prototype.checkUpdate = function(succeessListener,failedListener)
 
 }
 
-// Login
 SpikaClient.prototype.fileUpload = function(file,succeessListener,failedListener)
 {
     // login
@@ -326,6 +360,27 @@ SpikaClient.prototype.fileUpload = function(file,succeessListener,failedListener
         data: formData,
         processData: false,
         contentType: false
+    });
+    
+    request.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    request.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+
+SpikaClient.prototype.loadStickers = function(succeessListener,failedListener)
+{
+
+    var request = $.ajax({
+        url: this.apiEndPointUrl + '/Emoticons',
+        type: 'GET',
+        type: "GET",
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
     });
     
     request.done(function( data ) {

@@ -168,3 +168,17 @@ audio {
 	padding-top: 0px;
 }
 
+#sticker{
+    overflow-x: auto;
+}
+
+#sticker-holder{
+    padding: 0px;
+}
+
+li.sticker-view{
+    display: inline-block;
+    padding: 5px;
+    cursor: pointer;
+}
+

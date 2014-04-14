@@ -762,6 +762,45 @@
 
                 
         },
+        sendSticker : function(stickerIdentifier){
+
+            var self = this;
+            var targetId = 0;
+            var target = '';
+            
+            if(self.chatCurrentUserId != 0) {
+                targetId = self.chatCurrentUserId;
+                target = _spikaClient.MESSAGE_TAEGET_USER;
+            } else if(self.chatCurrentGroupId != 0) {
+                targetId = self.chatCurrentGroupId;
+                target = _spikaClient.MESSAGE_TAEGET_GROUP;
+            } else {
+                $('#btn-chat-send').html('Send');
+                $('#btn-chat-send').removeAttr('disabled');
+                
+                return;
+            }
+            
+            _spikaClient.postStickerMessage(target,targetId,stickerIdentifier,function(data){
+                
+                $('#btn-chat-send').html('Sent');
+                
+                self.loadNewMessage();
+                
+                _.delay(function(){
+                    $('#btn-chat-send').html('Send');
+                    $('#btn-chat-send').removeAttr('disabled');
+                }, 1000);
+
+            },function(errorString){
+            
+                alertManager.showError(_lang.messageGeneralError);
+                listener();
+                
+            }); // post message
+            
+        },
+        
         scrollToBottom : function(){
             var objConversationBlock = $('#conversation_block');
             var height = objConversationBlock[0].scrollHeight;
@@ -1040,6 +1079,57 @@
         }
     };
     
+    var stickerViewManager = {
+        templateSticker : _.template('<li class="sticker-view" stickerId="<%= identifier %>"><img src="<%= stickerUrl %>" alt="" width="120" height="120" /></li>'),    
+        render : function(){
+            
+            var self = this;
+            
+            _spikaClient.loadStickers(function(data){
+
+                if(!_.isArray(data.rows))
+                    return;
+                
+                var html = '';
+                
+                _.each(data.rows,function(row,key,list){
+                    
+                    var value = row.value;
+                    
+                    if(_.isUndefined(value))
+                        return;
+                    
+                    console.log(value);
+                    
+                    value.stickerUrl =  _consts.RootURL + "/api/Emoticon/" + value._id;
+                    html += self.templateSticker(value);
+                          
+                });
+                
+                $('#sticker-holder').html(html);
+                
+                $('#sticker-holder').css('width',130 * data.rows.length);
+                
+                $('.sticker-view').click(function(){
+                    var stickerIdentifier = $(this).attr('stickerId');
+                    
+                    console.log(stickerIdentifier);
+                    
+                    if(!_.isUndefined(stickerIdentifier)){
+                        _chatManager.sendSticker(stickerIdentifier);
+                    }
+                    
+                });
+                               
+
+            },function(errorString){
+                
+                
+            });
+            
+        }
+    };
+    
     $(document).ready(function() {
     
         alertManager.showLoading();
@@ -1052,7 +1142,7 @@
             
             _loginedUser = data;
             _spikaClient.setCurrentUser(_loginedUser);
-            
+                        
             navigationBarManager.renderContacts();
             navigationBarManager.renderGroups();
             
@@ -1063,6 +1153,8 @@
             }else if(_targetGroupId != 0){
                 _chatManager.startGroupChat(_targetGroupId);                
             }
+            
+            stickerViewManager.render();
 
         },function(errorString){
         

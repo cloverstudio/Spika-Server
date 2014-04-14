@@ -19,6 +19,7 @@ interface DbInterface
     public function getActivitySummary($user_id);
     public function updateUser($userId,$user,$secure);
     public function getEmoticons();
+    public function getEmoticonByIdentifier($identifier);
     public function getEmoticonImage($emoticonId);
     public function getAvatarFileId($user_id);
     public function searchUserByName($name);

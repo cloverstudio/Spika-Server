@@ -941,6 +941,11 @@ class MySQL implements DbInterface
         return $this->formatResult($result,0);
     }
 
+    public function getEmoticonByIdentifier($identifier){
+        $result = $this->DB->fetchAssoc("select * from emoticon where identifier = ?",array($identifier));
+        return $result;
+    }
+
     public function getEmoticonImage($emoticonId){
         
         $fileDir = __DIR__.'/../../../'.FileController::$fileDirName;

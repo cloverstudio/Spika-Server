@@ -175,6 +175,16 @@ class MessageController extends SpikaBaseController
                 // emoticon message
                 if(isset($messageDataArray['emoticon_image_url'])){
                     $additionalParams['emoticon_image_url'] = $messageDataArray['emoticon_image_url'];
+                }else{
+                    
+                    // search emoticon id 
+                    $emoticon = $app['spikadb']->getEmoticonByIdentifier($message);
+                    
+                    if(isset($emoticon['_id'])){
+                        $additionalParams['emoticon_image_url'] = ROOT_URL . "/api/Emoticon/{$emoticon['_id']}";                    
+                    }
+                    
+                    
                 }
                 
                 // pitcure message

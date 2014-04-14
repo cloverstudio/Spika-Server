@@ -205,6 +205,8 @@ SpikaClient.prototype.postStickerMessage = function(type,targetId,stickerIdentif
         url = this.apiEndPointUrl + '/sendMessageToGroup';
     }
 
+    console.log(postData);
+    
     var requestLogin = $.ajax({
         url: url,
         type: 'POST',

@@ -16,10 +16,13 @@
         onResize : function(){
             var headerHeight = $('.navbar-static-top').height();
             var chatboxHeight =  $('#chat_block').height();
-
+            
+            console.log(window.innerHeight);
+            
             $('body').height(window.innerHeight);
-            $('.sidebar-collapse .tab-content').height(window.innerHeight - headerHeight - 50);
-            $('#conversation_block').height(window.innerHeight - chatboxHeight - headerHeight - 50);
+            $('#main-view').height(window.innerHeight - headerHeight);
+            $('.sidebar-collapse .tab-content').height(window.innerHeight - headerHeight);
+            $('#conversation_block').height(window.innerHeight - chatboxHeight - headerHeight);
         }  
         
     };

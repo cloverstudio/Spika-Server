@@ -5,6 +5,25 @@ body {
 	background-color: #ffffff;
 	overflow: hidden;
 }
+.row #main-row{
+    padding: 5px;
+}
+
+#main-view{
+    position: relative;
+}
+
+#main-view #chat_block{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 174px;
+}
+
+#main-view #conversation_block{
+    margin-bottom: 180px;
+}
 
 
 .navbar-default .sidebar-collapse {

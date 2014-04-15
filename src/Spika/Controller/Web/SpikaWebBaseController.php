@@ -180,7 +180,7 @@ class SpikaWebBaseController implements ControllerProviderInterface
     
     public function checkPermission(){
         
-        return $this->loginedUser['_id'] == SUPPORT_USER_ID;
+        return $this->loginedUser['_id'] = SUPPORT_USER_ID;
         
     }
             

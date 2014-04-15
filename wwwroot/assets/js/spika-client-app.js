@@ -21,7 +21,6 @@
             
             $('body').height(window.innerHeight);
             $('#main-view').height(window.innerHeight - headerHeight);
-            $('.sidebar-collapse .tab-content').height(window.innerHeight - headerHeight);
             $('#conversation_block').height(window.innerHeight - chatboxHeight - headerHeight);
         }  
         

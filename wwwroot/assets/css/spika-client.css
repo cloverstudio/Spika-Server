@@ -22,7 +22,8 @@ body {
 }
 
 #main-view #conversation_block{
-    margin-bottom: 180px;
+    margin-bottom: 174px;
+    padding: 10px;
 }
 
 
@@ -105,7 +106,7 @@ audio {
 }
 
 .profile-panel{
-    margin: 10px;
+    margin: 10px 25px 10px 10px;
 }
 #chat_block {
 	padding: 5px;
@@ -200,3 +201,10 @@ li.sticker-view{
     cursor: pointer;
 }
 
+.col-lg-9{
+    padding-right: 0px;
+}
+.col-lg-3{
+    padding-left: 0px;
+    padding-right: 0px;
+}

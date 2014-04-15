@@ -20,6 +20,7 @@
             console.log("chat box height" + chatboxHeight);
             $('body').height(window.innerHeight);
             $('#main-view').height(window.innerHeight - headerHeight);
+            $('.sidebar-collapse .tab-content').height(window.innerHeight - headerHeight);
             $('#conversation_block').height(window.innerHeight - headerHeight - chatboxHeight - 20);
         }  
         
@@ -27,7 +28,7 @@
     
     // handles modal dialogs
     var alertManager = {
-        
+
         showAlert : function(title,message,buttonText,onClose){
             
             $('#modalAlertDialog #modalTitle').text(title);
@@ -35,6 +36,7 @@
             $('#modalAlertDialog #modalDismissButton').text(buttonText);
             
             $('#modalAlertDialog').modal('show');
+            $('#modalAlertDialog').unbind('hide.bs.modal');
             $('#modalAlertDialog').on('hide.bs.modal', function (e) {
                 onClose();
             })
@@ -52,6 +54,25 @@
         },
         hideLoading : function(){
             $('#modalLoading').modal('hide');
+        },
+        showPasswordDialog : function(onEnter,defaultValue){
+            
+            $('#passwordInputDialog #modalDismissButton').text('OK');
+            $('#passwordInputDialog #modalTitle').text('Please input password');
+            
+            if(_.isUndefined(defaultValue)){
+                $('#passwordField').val('');  
+            }else{
+                $('#passwordField').val(defaultValue);            
+            }
+            
+            $('#passwordInputDialog').modal('show');
+            $('#passwordInputDialog').unbind('hide.bs.modal');
+            $('#passwordInputDialog').on('hide.bs.modal', function (e) {
+                var password = $('#passwordField').val();
+                onEnter(password);
+            })
+            
         }
             
     };
@@ -448,7 +469,6 @@
             });
             
         },
-        
         startGroupChat : function(groupId){
             
             var self = this;
@@ -461,7 +481,64 @@
             this.chatContentPool = [];
             
             self.isLoading = true;
+            
+            var cookieKey = "groupPassword" + groupId;
+            
+            // check password
+            _spikaClient.getGroup(groupId,function(data){
                 
+                if(!_.isEmpty(data.group_password)){
+        
+                    var savedPassword = Cookies(cookieKey);                
+                    
+                    console.log(savedPassword);
+                          
+                    alertManager.showPasswordDialog(function(password){
+                        
+                        var hash = CryptoJS.MD5(password);
+                        
+                        console.log(hash.toString().toLowerCase());
+                        console.log(data.group_password.toString().toLowerCase());
+                        
+                        if(hash.toString().toLowerCase() == data.group_password.toString().toLowerCase()){
+                            
+                            // save to cookie
+                            Cookies(cookieKey, password);
+                            
+                            self.enterToGroupChat(groupId);
+                            
+                        }else{
+                            
+                            alertManager.hideLoading();
+                            _.delay(function(){
+                                alertManager.showError('invalid password');
+                            }, 500) 
+
+                        }
+                        
+                    },savedPassword);
+                       
+                }else{
+                    
+                    self.enterToGroupChat(groupId);
+                    
+                }
+
+                
+            },function(errorString){
+            
+                alertManager.hideLoading();
+                alertManager.showError(_lang.messageGeneralError);
+            
+            });
+            
+
+               
+        },
+        enterToGroupChat : function(groupId){
+            
+            var self = this;
+            
             _spikaClient.loadGroupChat(groupId,this.chatPageRowCount,this.chatCurrentPage,function(data){
                 
                 sideBarManager.renderGroupProfile(groupId);
@@ -483,7 +560,7 @@
                 alertManager.showError(_lang.messageGeneralError);
             
             });
-               
+            
         },
         mergeConversation : function(data){
             

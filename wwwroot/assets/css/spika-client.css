@@ -21,6 +21,10 @@ body {
     height: 174px;
 }
 
+#chat_block .panel-heading {
+  padding: 5px 5px;
+}
+
 #main-view #conversation_block{
     padding: 10px;
 }
@@ -74,7 +78,7 @@ body {
 }
 
 .person_info h5 {
-	line-height: 55px;
+	line-height: 35px;
 }
 
 .post_block {

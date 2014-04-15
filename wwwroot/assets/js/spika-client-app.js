@@ -1111,7 +1111,7 @@
             var file = files[0];
             var fileType = file.type;
             
-            if(fileType != 'image/jpeg' && fileType != 'video/mp4' && fileType != 'audio/mp3'){
+            if(fileType != 'image/jpeg' && fileType != 'video/mp4' && fileType != 'audio/mp3' && fileType != 'audio/mpeg'){
                 alertManager.showError(_lang.messageValidationErrorWrongFileType);
                 return;
             }
@@ -1141,7 +1141,7 @@
                 });
             }
                         
-            if(fileType == 'audio/mp3'){
+            if(fileType == 'audio/mp3' || fileType == 'audio/mpeg'){
                 _chatManager.sendMediaMessage(file,_spikaClient.MEDIA_TYPE_AUDIO,function(){
                     $('#fileupload-box').css('display','block');
                     $('#fileuploading').css('display','none');

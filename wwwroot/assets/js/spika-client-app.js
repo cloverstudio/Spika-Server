@@ -1111,7 +1111,7 @@
             var file = files[0];
             var fileType = file.type;
             
-            if(fileType != 'image/jpeg' && fileType != 'video/mp4' && fileType != 'audio/mp3' && fileType != 'audio/mpeg'){
+            if(fileType != 'image/jpeg' && fileType != 'image/pjpeg' && fileType != 'video/mp4' && fileType != 'audio/mp3' && fileType != 'audio/mpeg'){
                 alertManager.showError(_lang.messageValidationErrorWrongFileType);
                 return;
             }
@@ -1127,7 +1127,7 @@
             $('#btn-chat-send').attr('disabled','disabled');
             
             
-            if(fileType == 'image/jpeg'){
+            if(fileType == 'image/jpeg' || fileType == 'image/pjpeg'){
                 _chatManager.sendMediaMessage(file,_spikaClient.MEDIA_TYPE_IMAGE,function(){
                     $('#fileupload-box').css('display','block');
                     $('#fileuploading').css('display','none');

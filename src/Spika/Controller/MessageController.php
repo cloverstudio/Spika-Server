@@ -56,24 +56,35 @@ class MessageController extends SpikaBaseController
                 if(empty($id)){
                     return $self->returnErrorResponse("please specify emoticon id");
                 }
-
-                $result = $app['spikadb']->getEmoticonImage($id);
-
-                if($result == null){
+                
+                
+                $emoticonData = $app['spikadb']->getEmoticonById($id);
+                $fileID = $emoticonData['file_id'];
+                
+                if($emoticonData == null){
                     return $self->returnErrorResponse("load emoticon error");
                 }
                 
-                $response = new Response(
-                    $result,
-                    200,
-                    array('Content-Type' => 'image/png')
-                );
-            
-                $response->setETag(md5($response->getContent()));
-                $response->setPublic(); // make sure the response is public/cacheable
-                $response->isNotModified($request);
+                $filePath = $filePath = __DIR__.'/../../../'.FileController::$fileDirName."/".basename($fileID);
+                $response = new Response();
+                $lastModified = new \DateTime();
+                $file = new \SplFileInfo($filePath);
+                
+                $lastModified = new \DateTime();
+                $lastModified->setTimestamp($file->getMTime());
+                $response->setLastModified($lastModified);
+                                    
+                if ($response->isNotModified($request)) {
+                    $response->prepare($request)->send();
+                    return $response;
+                }
+
+                $response = $app->sendFile($filePath);
+                $currentDate = new \DateTime(null, new \DateTimeZone('UTC'));
+                $response->setDate($currentDate)->prepare($request)->send();
                 
                 return $response;
+
 
             }
         )->before($app['beforeApiGeneral']);

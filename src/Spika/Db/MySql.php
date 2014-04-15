@@ -955,9 +955,18 @@ class MySQL implements DbInterface
                                         
         $filePath = $fileDir . "/" . $emoticon['file_id'];
         
-        $this->logger->addDebug(print_r($emoticon,true));
-        
         return file_get_contents($filePath);
+        
+    }
+
+    public function getEmoticonById($emoticonId){
+        
+        $fileDir = __DIR__.'/../../../'.FileController::$fileDirName;
+        
+        $emoticon = $this->DB->fetchAssoc('select file_id from emoticon where _id = ?',
+                                        array($emoticonId));
+                                        
+        return $emoticon;
         
     }
 

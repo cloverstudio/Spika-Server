@@ -14,6 +14,7 @@ namespace Spika\Controller;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 
@@ -36,15 +37,27 @@ class FileController extends SpikaBaseController
             $fileID = $request->get('file');
             $filePath = __DIR__.'/../../../'.FileController::$fileDirName."/".basename($fileID);
             
+            $app['logger']->addDebug($filePath);
+            
             if(file_exists($filePath)){
-                    $response->setPublic();
-                    $response->setLastModified(filemtime($filePath));
+                    
+                    $response = new Response();
+                    $lastModified = new \DateTime();
+                    $file = new \SplFileInfo($filePath);
+                    
+                    $lastModified = new \DateTime();
+                    $lastModified->setTimestamp($file->getMTime());
+                    $response->setLastModified($lastModified);
+                                        
                     if ($response->isNotModified($request)) {
+                        $response->prepare($request)->send();
                         return $response;
                     }
-    
+
                     $response = $app->sendFile($filePath);
-                    $response->setETag(md5($response->getContent()));
+                    $currentDate = new \DateTime(null, new \DateTimeZone('UTC'));
+                    $response->setDate($currentDate)->prepare($request)->send();
+                    
                     return $response;
                     
             }else{

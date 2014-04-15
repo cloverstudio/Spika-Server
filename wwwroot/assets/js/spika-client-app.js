@@ -14,12 +14,13 @@
             
         },
         onResize : function(){
-            var headerHeight = $('.navbar-static-top').height();
-            var chatboxHeight =  $('#chat_block').height();
+            var headerHeight = $('.navbar-static-top').outerHeight();
+            var chatboxHeight =  $('#chat_block').outerHeight();
             
+            console.log("chat box height" + chatboxHeight);
             $('body').height(window.innerHeight);
             $('#main-view').height(window.innerHeight - headerHeight);
-            $('#conversation_block').height(window.innerHeight - chatboxHeight - headerHeight);
+            $('#conversation_block').height(window.innerHeight - headerHeight - chatboxHeight - 20);
         }  
         
     };

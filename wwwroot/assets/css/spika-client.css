@@ -22,7 +22,6 @@ body {
 }
 
 #main-view #conversation_block{
-    margin-bottom: 174px;
     padding: 10px;
 }
 
@@ -59,7 +58,7 @@ body {
 .post {
 	position: relative;
 	padding-left: 65px;
-	padding-bottom: 20px;
+	padding-bottom: 5px;
 }
 
 .post .timestamp {

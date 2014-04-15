@@ -104,6 +104,9 @@ audio {
 	width: 70%;
 }
 
+.profile-panel{
+    margin: 10px;
+}
 #chat_block {
 	padding: 5px;
 	background-color: #EEEEEE;
@@ -156,10 +159,6 @@ audio {
 
 #page-wrapper {
 	padding: 0;
-}
-
-.col-lg-3 .panel {
-	margin-top: 20px;
 }
 
 #conversation_block{

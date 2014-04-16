@@ -63,6 +63,7 @@ class MySQL implements DbInterface
     {
         $user = $this->DB->fetchAssoc('select * from user where email = ? and password = ?',array($email,$password));
 
+        
         if (empty($user['_id'])) {
             $arr = array('message' => 'User not found!', 'error' => 'logout');
             return json_encode($arr);

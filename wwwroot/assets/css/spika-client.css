@@ -63,6 +63,7 @@ body {
 	position: relative;
 	padding-left: 65px;
 	padding-bottom: 5px;
+	cursor : pointer;
 }
 
 .post .timestamp {

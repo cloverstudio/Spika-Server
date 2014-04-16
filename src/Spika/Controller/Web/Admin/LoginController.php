@@ -76,7 +76,7 @@ class LoginController extends SpikaWebBaseController
             
             $authData = $self->app['spikadb']->doSpikaAuth($username,md5($password));
             $authData = json_decode($authData,true);
-            
+
             if(isset($authData['token'])){
                 
                 $html = $self->render('admin/login.twig', array(

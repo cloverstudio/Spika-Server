@@ -439,6 +439,12 @@ class MessageController extends SpikaBaseController
                 $deleteType = $requestAry['delete_type'];
                 $messageId = $requestAry['message_id'];
                 
+                $message = $app['spikadb']->findMessageById($messageId);
+                
+                if($message['from_user_id'] != $currentUser['_id']){
+                    return $self->returnErrorResponse("invalid user");
+                }
+                
                 if($deleteType == DELETE_TYPE_NOTDELETE){
                     
                     $app['spikadb']->setMessageDelete($messageId,$deleteType,0,0);

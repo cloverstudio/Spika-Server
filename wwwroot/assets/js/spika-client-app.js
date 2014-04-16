@@ -343,6 +343,9 @@
         
     }
     
+    
+
+    
     // everything for caht
     _chatManager = {
         
@@ -351,12 +354,13 @@
         templateUserInfo : _.template('<div class="person_info"><h5><%= img %><a target="_blank" href="' + _consts.RootURL + '/admin/user/view/<%= from_user_id %>"><%= from_user_name %></a></h5><div class="clear"></div></div>'),
         avatarImage : _.template('<img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
         avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
-        templateTextPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><%= body %></div></div>'),
-        templatePicturePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg<%= _id  %>"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_thumb_file_id %>" height="120" width="120" /></a></div></div><div class="modal fade bs-example-modal-lg<%= _id %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" /></div></div></div>'),
-        templateEmoticonPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="post_content"><img src="<%= emoticon_image_url %>" height="120" width="120" /></div></div>'),
-        templateVoicePost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="fa fa-play-circle-o fa-4x post_fa"></div><div class="post_content post_media"><%= body %><br /><audio controls><source src="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>" width="50" type="audio/wav"><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>">' + _lang.listenVoice + '</a></audio></div></div>'),
-        templateVideoPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="fa fa-video-camera fa-4x post_fa"></div><div class="post_content post_media"><%= body %><br /><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= video_file_id %>">' + _lang.watchVideo + '</a></div></div>'),
-        templateLocationPost : _.template('<div class="post"><div class="timestamp"><%= time %></div><div class="fa fa-location-arrow fa-4x post_fa"></div><div class="post_content post_media"><%= body %><br /><a target="_blank" href="http://maps.google.com/?q=<%= latitude %>,<%= longitude %>">' + _lang.openInGoogleMap + '</a></div></div>'),
+        templatePostHolder : _.template('<div class="post userId<%= user_id %>" id="message<%= message_id %>" messageid="<%= message_id %>"><div class="timestamp"><%= time %></div><%= content %></div>'),
+        templateTextPost : _.template('<div class="post_content" messageid="<%= _id %>"><%= body %></div>'),
+        templatePicturePost : _.template('<div class="post_content" messageid="<%= _id %>"><a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg<%= _id  %>"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_thumb_file_id %>" height="120" width="120" /></a></div></div><div class="modal fade bs-example-modal-lg<%= _id %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" /></div></div>'),
+        templateEmoticonPost : _.template('<div class="post_content" messageid="<%= _id %>"><img src="<%= emoticon_image_url %>" height="120" width="120" /></div>'),
+        templateVoicePost : _.template('<div class="fa fa-play-circle-o fa-4x post_fa"></div><div class="post_content post_media" messageid="<%= _id %>"><%= body %><br /><audio controls><source src="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>" width="50" type="audio/wav"><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>">' + _lang.listenVoice + '</a></audio></div>'),
+        templateVideoPost : _.template('<div class="fa fa-video-camera fa-4x post_fa"></div><div class="post_content post_media" messageid="<%= _id %>"><%= body %><br /><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= video_file_id %>">' + _lang.watchVideo + '</a></div>'),
+        templateLocationPost : _.template('<div class="fa fa-location-arrow fa-4x post_fa"></div><div class="post_content post_media" messageid="<%= _id %>"><%= body %><br /><a target="_blank" href="http://maps.google.com/?q=<%= latitude %>,<%= longitude %>">' + _lang.openInGoogleMap + '</a></div>'),
         chatPageRowCount : 30,
         chatCurrentPage : 1,
         chatCurrentUserId : 0,
@@ -432,6 +436,21 @@
                 
             }
             
+        },
+        resetChat : function(){
+        
+            console.log('reset chat');
+            
+            if(this.chatCurrentUserId != 0){
+                
+                this.startPrivateChat(this.chatCurrentUserId);
+                
+            } else if(this.chatCurrentGroupId != 0){
+                
+                this.startGroupChat(this.chatCurrentGroupId);
+                
+            }
+
         },
         startPrivateChat : function(userId){
             
@@ -654,22 +673,26 @@
                     html += this.templateChatBlockPerson({conversation:userPostsHtml});
                     userPostsHtml = '';
                 }
-
+                
+                var postHtml = '';
+                
                 if(messageType == 'location'){
-                    userPostsHtml += this.templateLocationPost(row);
+                    postHtml = this.templateLocationPost(row);
                 }else if(messageType == 'video'){
-                    userPostsHtml += this.templateVideoPost(row);
+                    postHtml = this.templateVideoPost(row);
                 }else if(messageType == 'voice'){
-                    userPostsHtml += this.templateVoicePost(row);
+                    postHtml = this.templateVoicePost(row);
                 }else if(messageType == 'emoticon'){
-                    userPostsHtml += this.templateEmoticonPost(row);
+                    postHtml = this.templateEmoticonPost(row);
                 }else if(messageType == 'image'){
-                    userPostsHtml += this.templatePicturePost(row);
+                    postHtml = this.templatePicturePost(row);
                 }else{
                     row.body = row.body.autoLink();
-                    userPostsHtml += this.templateTextPost(row);
+                    postHtml = this.templateTextPost(row);
                 }
-                 
+                
+                userPostsHtml += this.templatePostHolder({content:postHtml,time:timeStr,user_id:row.from_user_id,message_id:row._id});
+                
                 lastDateStr = dateStr;               
                 lastRow = _.clone(row);
                 lastFromUserId = fromuserId;
@@ -680,9 +703,51 @@
             html += this.templateChatBlockPerson({conversation:userPostsHtml});
 
             $('#conversation_block').html(html);
-                        
+            
+            var className = ".userId" + _spikaClient.currentUser._id;
+            
+            for(var index = 0 ; index < _.size(this.chatContentPool) ; index++){
+            
+                var row = this.chatContentPool[index];
+                
+                if(_spikaClient.currentUser._id == row.from_user_id){
+                    
+                    var postRowSelector = "#message" + row._id;
+                    
+                    $(postRowSelector).contextMenu({
+                    
+                        menuSelector: "#contextMenu",
+                        menuSelected: function (invokedOn, selectedMenu) {
+                                                        
+                            var deleteMessageId = invokedOn.attr('messageid');
+                            var deleteType = selectedMenu.attr('tabindex');
+                            
+                            if(!_.isUndefined(deleteMessageId) && 
+                                !_.isEmpty(deleteType) && 
+                                !_.isUndefined(deleteMessageId) && 
+                                !_.isEmpty(deleteType)){
+                                    
+                                    _chatManager.deleteMessage(deleteMessageId,deleteType);
+                                    
+                            }
+                            
+                        },
+                    });  
+                    
+                }
+                             
+            }
+
+   
+            $(".post").hover(function(){
+                $(this).css('background-color','#e5e5e5');
+            },function(){
+                $(this).css('background-color','#fff');
+            });
+   
         },
         isInConversation : function(){
+        
             if(this.chatCurrentUserId != 0) {
                 return true;
             } else if(this.chatCurrentGroupId != 0) {
@@ -915,6 +980,21 @@
                 });
             }
             
+        },
+        deleteMessage : function(messageId,deleteType){
+            
+            _spikaClient.setDelete(messageId,deleteType,function(data){
+                
+                console.log(_chatManager);
+                
+                _chatManager.resetChat();
+                
+            },function(errorString){
+                
+                console.log(errorString);
+                
+            });
+                
         }
             
     };

@@ -394,3 +394,27 @@ SpikaClient.prototype.loadStickers = function(succeessListener,failedListener)
     });
 
 }
+
+// delete
+SpikaClient.prototype.setDelete = function(messageId,deleteType,succeessListener,failedListener)
+{
+
+    var postData = {'message_id':messageId,'delete_type':deleteType};
+
+    var request = $.ajax({
+        url: this.apiEndPointUrl + '/setDelete',
+        type: 'POST',
+        data:JSON.stringify(postData),
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    request.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    request.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+

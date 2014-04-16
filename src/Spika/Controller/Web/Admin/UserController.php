@@ -413,6 +413,8 @@ class UserController extends SpikaWebBaseController
 
         $controllers->post('user/delete/{id}', function (Request $request,$id) use ($app,$self) {
             
+            $self->setVariables();
+            
             if(!$self->checkPermission()){
                 return $app->redirect(ROOT_URL . '/admin/user/list?msg=messageNoPermission');
             }

@@ -354,7 +354,9 @@
         templateUserInfo : _.template('<div class="person_info"><h5><%= img %><a target="_blank" href="' + _consts.RootURL + '/admin/user/view/<%= from_user_id %>"><%= from_user_name %></a></h5><div class="clear"></div></div>'),
         avatarImage : _.template('<img src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
         avatarNoImage : _.template('<img src="http://dummyimage.com/60x60/e2e2e2/7a7a7a&text=nopicture" alt="" width="40" height="40" class="person_img img-thumbnail" />'),
-        templatePostHolder : _.template('<div class="post userId<%= user_id %>" id="message<%= message_id %>" messageid="<%= message_id %>"><div class="timestamp"><%= time %></div><%= content %></div>'),
+        templatePostHolder : _.template('<div class="post userId<%= user_id %>" id="message<%= message_id %>" messageid="<%= message_id %>"><div class="timestamp"><%= deleteicon %> <%= unreadicon %> <%= time %></div><%= content %></div>'),
+        templateDeleteIcon : _.template('<button type="button" class="btn btn-link deleteIcon" data-toggle="tooltip" data-placement="left" title="<%= deletetime %>"><i class="fa fa-trash-o text-danger"></i></button>'),
+        templateUnreadIcon : _.template('<i class="fa fa-envelope-o"></i>'),
         templateTextPost : _.template('<div class="post_content" messageid="<%= _id %>"><%= body %></div>'),
         templatePicturePost : _.template('<div class="post_content" messageid="<%= _id %>"><a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg<%= _id  %>"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_thumb_file_id %>" height="120" width="120" /></a></div></div><div class="modal fade bs-example-modal-lg<%= _id %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" /></div></div>'),
         templateEmoticonPost : _.template('<div class="post_content" messageid="<%= _id %>"><img src="<%= emoticon_image_url %>" height="120" width="120" /></div>'),
@@ -691,18 +693,45 @@
                     postHtml = this.templateTextPost(row);
                 }
                 
-                userPostsHtml += this.templatePostHolder({content:postHtml,time:timeStr,user_id:row.from_user_id,message_id:row._id});
+                var deleteIconHtml = '';
+                
+                if(row.delete_at != 0){
+                    var deleteText = generateDeleteText(row.delete_at);
+                    deleteIconHtml = this.templateDeleteIcon({deletetime:deleteText});
+                }
+                
+                if(row.delete_after_shown != 0){
+                    var deleteText = "After read";
+                    deleteIconHtml = this.templateDeleteIcon({deletetime:deleteText});
+                }
+                
+                var unreadIcon = '';
+                
+                if(row.read_at == 0 && _spikaClient.currentUser._id == row.from_user_id){
+                    unreadIcon = this.templateUnreadIcon();
+                }
+                
+                userPostsHtml += this.templatePostHolder({
+                    content : postHtml,
+                    time : timeStr,
+                    user_id : row.from_user_id,
+                    message_id : row._id,
+                    deleteicon : deleteIconHtml,
+                    unreadicon : unreadIcon
+                });
                 
                 lastDateStr = dateStr;               
                 lastRow = _.clone(row);
                 lastFromUserId = fromuserId;
-
+                
             }
             
             userPostsHtml = this.templateUserInfo(lastRow) + userPostsHtml;
             html += this.templateChatBlockPerson({conversation:userPostsHtml});
 
             $('#conversation_block').html(html);
+            $('.deleteIcon').tooltip();
+
             
             var className = ".userId" + _spikaClient.currentUser._id;
             
@@ -732,12 +761,15 @@
                             }
                             
                         },
-                    });  
+                    }); 
+                    
+                    // change cursor of my messages 
+                    $(postRowSelector).css('cursor','pointer');
                     
                 }
                              
             }
-
+            
    
             $(".post").hover(function(){
                 $(this).css('background-color','#e5e5e5');

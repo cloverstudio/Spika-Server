@@ -63,7 +63,6 @@ body {
 	position: relative;
 	padding-left: 65px;
 	padding-bottom: 5px;
-	cursor : pointer;
 }
 
 .post .timestamp {
@@ -211,4 +210,9 @@ li.sticker-view{
 .col-lg-3{
     padding-left: 0px;
     padding-right: 0px;
+}
+
+.deleteIcon{
+    width: 60px;
+    text-align: right;
 }

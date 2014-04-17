@@ -98,6 +98,38 @@
     };
 })(jQuery, window);
 
+function generateDeleteText(deleteAt){
+    
+    deleteAt = parseInt(deleteAt);
+    var now = parseInt(new Date().getTime() / 1000);
+    var differenceInSec = deleteAt - now;
+    
+    var minutes = parseInt(differenceInSec / 60);
+    
+    if(minutes > 60)
+        minutes = parseInt(differenceInSec % 60);
+        
+    var hours = parseInt(differenceInSec / 60 / 60);
+    if(hours > 24)
+        hours = parseInt(hours % 24);
+    
+    var days = parseInt(differenceInSec / 60 / 60 / 24);
+    
+    var deleteText = "";
+
+    if(minutes > 0)
+        deleteText = "in " + minutes + " minutes";
+    
+    if(hours > 0)
+        deleteText = "in " + hours + " hours";
+
+    if(days > 0)
+        deleteText = "in " + days + " days";
+    
+    
+    return deleteText;
+}
+
 function dataURItoBlob(dataURI) {
   // convert base64 to raw binary data held in a string
   // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this

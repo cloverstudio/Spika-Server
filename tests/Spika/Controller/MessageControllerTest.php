@@ -80,15 +80,6 @@ class MessageControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/api/Emoticons');
         assertRegExp('/rows/', $client->getResponse()->getContent());
     }
-    
-    /** @test */
-    public function loadEmoticonTest()
-    {
-        $client = $this->createClient();
-        $crawler = $client->request('GET', '/api/Emoticon/test');
-        assertRegExp('/OK/', $client->getResponse()->getContent());
-    }
-
 
     /** @test */
     public function sendTextUserMessageTest()

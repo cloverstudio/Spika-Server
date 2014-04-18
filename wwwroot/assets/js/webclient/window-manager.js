@@ -14,12 +14,12 @@
         onResize : function(){
             var headerHeight = $('.navbar-static-top').outerHeight();
             var chatboxHeight =  $('#chat_block').outerHeight();
+            var submenuHeight =  $('#submenu').outerHeight();
             
-            console.log("chat box height" + chatboxHeight);
             $('body').height(window.innerHeight);
-            $('#main-view').height(window.innerHeight - headerHeight);
+            $('#main-view').height(window.innerHeight - headerHeight - submenuHeight);
             $('.sidebar-collapse .tab-content').height(window.innerHeight - headerHeight);
-            $('#conversation_block').height(window.innerHeight - headerHeight - chatboxHeight - 20);
+            $('#conversation_block').height(window.innerHeight - headerHeight - chatboxHeight - submenuHeight - 20);
         }  
         
     };

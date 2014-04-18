@@ -1,4 +1,5 @@
 (function() {
+
   var autoLink,
     __slice = [].slice;
 
@@ -31,6 +32,7 @@
   String.prototype['autoLink'] = autoLink;
 
 }).call(this);
+
 (function ($, window) {
 
     $.fn.contextMenu = function (settings) {
@@ -97,6 +99,23 @@
 
     };
 })(jQuery, window);
+
+function generateCommentTimeStr(createdAt){
+    
+    createdAt = parseInt(createdAt);
+    var createdDate = new Date(createdAt * 1000);
+    
+    
+    var str = "";
+    
+    str += (createdDate.getYear() + 1900) + ".";
+    str += (createdDate.getMonth() + 1) + ".";
+    str += createdDate.getDate() + " ";
+    str += createdDate.getHours() + ".";
+    str += createdDate.getMinutes();
+    
+    return str;
+}
 
 function generateDeleteText(deleteAt){
     

@@ -26,6 +26,7 @@
     
     <script type="text/javascript">
 
+        var _spikaApp = {};
         var _spikaClient = new SpikaClient('{{ROOT_URL}}/api');
         var _loginedUser = {{ loginedUser|json_encode()|raw }};
         var _lang = {{ lang|json_encode()|raw }};
@@ -52,11 +53,12 @@
     
     <!-- load spika web client -->
     <script src="{{ROOT_URL}}/assets/js/webclient/window-manager.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/webclient/navigationBar-manager.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/webclient/chat-manager.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/webclient/navigationbar.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/webclient/chat-view.js"></script>
     <script src="{{ROOT_URL}}/assets/js/webclient/alert-manager.js"></script>
     <script src="{{ROOT_URL}}/assets/js/webclient/file-uploader.js"></script>
-    <script src="{{ROOT_URL}}/assets/js/webclient/sticker-manager.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/webclient/stickes-view.js"></script>
+    <script src="{{ROOT_URL}}/assets/js/webclient/media-view.js"></script>
     <script src="{{ROOT_URL}}/assets/js/webclient/spika-client-app.js"></script>
 
 </head>
@@ -198,7 +200,58 @@
         <!-- /.navbar-static-side -->
 
         <div id="page-wrapper">
-            <div class="row">
+            
+            <div class="row" id="submenu">
+                
+                <a class="btn submenubutton first" id="tab-chat-view" onclick="javascript:_spikaApp.showChatView()">
+                    Chat
+                </a>
+                
+                <a class="btn submenubutton"  id="tab-media-view"onclick="javascript:_spikaApp.showMediaView()">
+                    Media
+                </a>
+                
+            </div>
+            
+            <div class="row" id="media-view" style="display: none">
+                
+                <div class="col-lg-6">
+                    
+                    <div id="media-content-holder">
+                    </div>
+                    
+                </div>   
+                
+                <div class="col-lg-6">
+
+                    <div id="comments-content-holder">
+                        
+                        
+                        
+                        
+                    </div>
+                    
+					<div id="chat_block-comment" >
+					  
+						<div class="panel panel-default">
+							<div class="panel-heading"><button class="btn btn-primary btn-sm" type="button" id="btn-chat-send-comment">Send</button>
+							<ul>
+								<li>
+								</li>
+							</ul>
+							</div>
+							<div class="panel-body">
+								<textarea class="chatpanel" id="textarea-comment" ></textarea>
+							</div>
+						</div>
+					</div>
+
+                    
+                </div>   
+                
+            </div>
+            
+            <div class="row" id="chat-view">
             
 				<div class="col-lg-9">
 				    

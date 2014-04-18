@@ -12,6 +12,7 @@
         templateUnreadIcon : _.template('<i class="fa fa-envelope-o"></i>'),
         templateTextPost : _.template('<div class="post_content" messageid="<%= _id %>"><%= body %></div>'),
         templatePicturePost : _.template('<div class="post_content" messageid="<%= _id %>"><a class="img-thumbnail" data-toggle="modal" data-target=".bs-example-modal-lg<%= _id  %>"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_thumb_file_id %>" height="120" width="120" /></a></div></div><div class="modal fade bs-example-modal-lg<%= _id %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" /></div></div>'),
+        templatePicturePostMediaView : _.template('<div class="post_content" messageid="<%= _id %>"><a href="javascript:_spikaApp.showMediaView(<%= _id %>)"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_thumb_file_id %>" height="120" width="120" /></a></div>'),
         templateEmoticonPost : _.template('<div class="post_content" messageid="<%= _id %>"><img src="<%= emoticon_image_url %>" height="120" width="120" /></div>'),
         templateVoicePost : _.template('<div class="fa fa-play-circle-o fa-4x post_fa"></div><div class="post_content post_media" messageid="<%= _id %>"><%= body %><br /><audio controls><source src="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>" width="50" type="audio/wav"><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>">' + _lang.listenVoice + '</a></audio></div>'),
         templateVideoPost : _.template('<div class="fa fa-video-camera fa-4x post_fa"></div><div class="post_content post_media" messageid="<%= _id %>"><%= body %><br /><a target="_blank" href="' + _consts.RootURL + '/api/filedownloader?file=<%= video_file_id %>">' + _lang.watchVideo + '</a></div>'),
@@ -27,6 +28,39 @@
             
             var self = this;
             this.chatContentPool = [];
+            
+            $('#btn-chat-send').click(function(){
+                
+                if(!_chatManager.isInConversation()){
+                    return;
+                }
+                
+                _chatManager.sendTextMessage($('#textarea').val());
+                $('#textarea').val('');
+                $('#btn-chat-send').html('<i class="fa fa-refresh fa-spin"></i> Sending');
+                $('#btn-chat-send').attr('disabled','disabled');
+                
+            });
+            
+            $('#btn_text').click(function(){
+                $('#textarea').css('display','block');
+                $('#sticker').css('display','none');
+                $('#fileupload').css('display','none');
+                 
+            });
+            $('#btn_sticker').click(function(){
+                $('#textarea').css('display','none');
+                $('#sticker').css('display','block');
+                $('#fileupload').css('display','none');
+                 
+            });
+            $('#btn_file').click(function(){
+                $('#textarea').css('display','none');
+                $('#sticker').css('display','none');
+                $('#fileupload').css('display','block');
+                $('#fileupload-box').css('display','block');
+                $('#fileuploading').css('display','none');
+            });
             
             $("#conversation_block").scroll(function() {
                 
@@ -109,6 +143,8 @@
         },
         startPrivateChat : function(userId){
             
+            _spikaApp.showChatView();
+            
             var self = this;
             
             alertManager.showLoading();
@@ -144,6 +180,8 @@
             
         },
         startGroupChat : function(groupId){
+            
+            _spikaApp.showChatView();
             
             var self = this;
             
@@ -340,7 +378,7 @@
                 }else if(messageType == 'emoticon'){
                     postHtml = this.templateEmoticonPost(row);
                 }else if(messageType == 'image'){
-                    postHtml = this.templatePicturePost(row);
+                    postHtml = this.templatePicturePostMediaView(row);
                 }else{
                     row.body = row.body.autoLink();
                     postHtml = this.templateTextPost(row);

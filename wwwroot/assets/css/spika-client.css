@@ -9,11 +9,35 @@ body {
     padding: 5px;
 }
 
+#submenu{
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e7e7e7;
+    height: 35px;
+    padding-left: 14px
+}
+
+.submenubutton.first{
+    border-left: 1px solid #e7e7e7;
+}
+
+
+.submenubutton{
+    background-color: #f8f8f8;
+    border: none;
+    height: 35px;
+    margin: 0px;
+    border-radius: 0px;
+    display: block;
+    float: left;
+    border-right: 1px solid #e7e7e7;
+    border-bottom: 1px solid #e7e7e7;
+}
+
 #main-view{
     position: relative;
 }
 
-#main-view #chat_block{
+#main-view #chat_block,#main-view #chat_block-comment{
     position: absolute;
     bottom: 0;
     left: 0;
@@ -21,7 +45,7 @@ body {
     height: 174px;
 }
 
-#chat_block .panel-heading {
+#chat_block .panel-heading,#chat_block-comment .panel-heading {
   padding: 5px 5px;
 }
 
@@ -111,47 +135,47 @@ audio {
 .profile-panel{
     margin: 10px 25px 10px 10px;
 }
-#chat_block {
+#chat_block,#chat_block-comment {
 	padding: 5px;
 	background-color: #EEEEEE;
 }
 
-#chat_block .panel{
+#chat_block .panel,#chat_block-comment .panel{
 	margin-bottom: 0px;
 }
 
 
-#chat_block .panel-heading {
+#chat_block .panel-heading,#chat_block-comment .panel-heading{
 	line-height: 27px;
 }
 
-#chat_block .panel-heading .btn {
+#chat_block .panel-heading .btn,#chat_block-comment .panel-heading .btn{
 	float: right;
 }
 
-#chat_block  textarea {
+#chat_block  textarea,#chat_block-comment textarea {
 	width: 100%;
 	border: none;
 	min-height: 100px;
 }
 
-#chat_block  div.chatpanel {
+#chat_block  div.chatpanel,#chat_block-comment div.chatpanel{
 	width: 100%;
 	min-height: 100px;
 }
 
 
-#chat_block .panel-body {
+#chat_block .panel-body,#chat_block-comment .panel-body{
 	padding: 3px;
 }
 
-#chat_block .panel-heading ul {
+#chat_block .panel-heading ul,#chat_block-comment  .panel-heading ul{
 	padding-left: 0px;
 	margin-bottom: 0;
 	height: 35px;
 }
 
-#chat_block .panel-heading ul li {
+#chat_block .panel-heading ul li,#chat_block-comment .panel-heading ul li{
 	display: inline-block;
 	font-size: 20px;
 	padding-right: 10px;
@@ -215,4 +239,20 @@ li.sticker-view{
 .deleteIcon{
     width: 60px;
     text-align: right;
+}
+
+#media-content-holder{
+    margin: 10px;
+}
+
+#comments-content-holder{
+    margin: 10px;
+}
+
+.post.comment .timestamp{
+    top: 17px;
+}
+
+.post.comment {
+    padding-left: 0px;
 }

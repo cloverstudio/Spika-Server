@@ -418,3 +418,72 @@ SpikaClient.prototype.setDelete = function(messageId,deleteType,succeessListener
 
 }
 
+SpikaClient.prototype.getMessage = function(messageId,succeessListener,failedListener)
+{
+
+    var request = $.ajax({
+        url: this.apiEndPointUrl + '/findMessageById/' + messageId,
+        type: 'GET',
+        type: "GET",
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    request.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    request.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+
+SpikaClient.prototype.getMediaComments = function(messageId,succeessListener,failedListener)
+{
+
+    var request = $.ajax({
+        url: this.apiEndPointUrl + '/comments/' + messageId + "/30/0",
+        type: 'GET',
+        type: "GET",
+        dataType:'json',
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    request.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    request.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+
+SpikaClient.prototype.postComment = function(messageId,comment,succeessListener,failedListener)
+{
+    
+    if(this.currentUser == null)
+        return null;
+    
+    var postData = {'message_id':messageId,'comment':comment};
+    var url = this.apiEndPointUrl + '/sendComment';
+    
+    var request = $.ajax({
+        url: url,
+        type: 'POST',
+        dataType:'json',
+        data:JSON.stringify(postData),
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    request.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    request.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}
+

@@ -3,10 +3,12 @@
         
         messageId : 0,
         templatePicture : _.template('<a data-toggle="modal" data-target=".bs-example-modal-lg<%= _id  %>"><img class="img-rounded" src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" width="480" /></a></div></div><div class="modal fade bs-example-modal-lg<%= _id %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" /></div>'), 
+        templateVoice : _.template('<audio controls><source src="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>" width="50" type="audio/wav"></audio>'), 
+        templateVideo : _.template('<video controls><source src="' + _consts.RootURL + '/api/filedownloader?file=<%= video_file_id %>" ></video>'), 
         templateUserInfo : _.template(''),
 
         templatePostHolder : _.template('<div class="post userId<%= user_id %>" id="message<%= message_id %>" messageid="<%= message_id %>"><div class="timestamp"><%= deleteicon %> <%= unreadicon %> <%= time %></div><%= content %></div>'),
-        templateCommentRow : _.template('<div class="post comment"><div class="timestamp"><%= created_str %></div><div class="person_info"><h5><img class="img-thumbnail" src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" width="48" /><a target="_blank" href="' + _consts.RootURL + '/admin/user/view/<%= avatar_thumb_file_id %>"></a> <%= comment %></h5><div class="clear"></div></div><div class="post_content" messageid="<%= _id %>"></div></div>'),
+        templateCommentRow : _.template('<div class="post comment"><div class="timestamp"><%= created_str %></div><div class="person_info"><h5><img class="img-thumbnail" src="' + _consts.RootURL + '/api/filedownloader?file=<%= avatar_thumb_file_id %>" width="48" /><a target="_blank" href="' + _consts.RootURL + '/admin/user/view/<%= user_id %>"> <%= user_name %></a></h5><div class="clear"></div></div><div class="post_content" messageid="<%= _id %>"> <%= comment %></div></div>'),
         
         init: function(){
             
@@ -64,6 +66,35 @@
                     
                 }
                 
+                console.log(messageType);
+                
+                if(messageType == 'voice'){
+                    
+                    var fileId = data.picture_file_id;
+                    
+                    var html = '';
+                    html = self.templateVoice(data);
+
+                    $('#media-content-holder').html(html);
+
+                    self.loadComments(self.messageId);
+                    
+                }
+
+                
+                if(messageType == 'video'){
+                    
+                    var fileId = data.picture_file_id;
+                    
+                    var html = '';
+                    html = self.templateVideo(data);
+
+                    $('#media-content-holder').html(html);
+
+                    self.loadComments(self.messageId);
+                    
+                }
+
             },function(errorString){
             
                 
@@ -88,9 +119,17 @@
                     return;
                 }
                 
+
+                data.rows = _.sortBy(data.rows, function(row){ 
+                    return row.value.created;
+                });
+
+
                 _.each(data.rows, function(row){
                     
                     var value = row.value;
+                    
+                    console.log(value);
                     
                     if(_.isUndefined(value)){
                         return;

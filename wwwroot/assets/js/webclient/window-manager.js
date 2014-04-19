@@ -18,8 +18,10 @@
             
             $('body').height(window.innerHeight);
             $('#main-view').height(window.innerHeight - headerHeight - submenuHeight);
+            $('#media-view').height(window.innerHeight - headerHeight - submenuHeight);
             $('.sidebar-collapse .tab-content').height(window.innerHeight - headerHeight);
             $('#conversation_block').height(window.innerHeight - headerHeight - chatboxHeight - submenuHeight - 20);
+            
         }  
         
     };

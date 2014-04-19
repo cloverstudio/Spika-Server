@@ -443,7 +443,7 @@ SpikaClient.prototype.getMediaComments = function(messageId,succeessListener,fai
 {
 
     var request = $.ajax({
-        url: this.apiEndPointUrl + '/comments/' + messageId + "/30/0",
+        url: this.apiEndPointUrl + '/comments/' + messageId + "/1000/0",
         type: 'GET',
         type: "GET",
         dataType:'json',

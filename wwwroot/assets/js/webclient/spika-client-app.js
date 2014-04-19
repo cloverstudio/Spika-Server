@@ -53,6 +53,9 @@ var _spikaApp = {
         
         $('#tab-media-view').css('background-color','#e7e7e7');
         
+        // allow scrolling
+        $('#media-view').css('overflow-y','auto');
+        
         mediaViewManager.loadMedia(messageId);
         
     },
@@ -66,6 +69,10 @@ var _spikaApp = {
         });  
         
         $('#tab-chat-view').css('background-color','#e7e7e7');
+        
+        // disable scrolling
+        $('#media-view').css('overflow-y','hidden');
+
     },
     
 };

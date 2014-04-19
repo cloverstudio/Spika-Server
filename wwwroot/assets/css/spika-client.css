@@ -3,7 +3,8 @@
 }
 body {
 	background-color: #ffffff;
-	overflow: hidden;
+	overflow-y: hidden;
+	overflow-x: hidden;
 }
 .row #main-row{
     padding: 5px;
@@ -241,6 +242,11 @@ li.sticker-view{
     text-align: right;
 }
 
+#media-view{
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 #media-content-holder{
     margin: 10px;
 }
@@ -250,9 +256,12 @@ li.sticker-view{
 }
 
 .post.comment .timestamp{
-    top: 17px;
+    top: 15px;
 }
 
 .post.comment {
     padding-left: 0px;
 }
+
+
+

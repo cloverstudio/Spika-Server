@@ -263,5 +263,7 @@ li.sticker-view{
     padding-left: 0px;
 }
 
-
+.timestamp .btn{
+    padding-right: 0px;
+}
 

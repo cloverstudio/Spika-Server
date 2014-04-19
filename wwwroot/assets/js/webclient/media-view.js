@@ -3,8 +3,8 @@
         
         messageId : 0,
         templatePicture : _.template('<a data-toggle="modal" data-target=".bs-example-modal-lg<%= _id  %>"><img class="img-rounded" src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" width="480" /></a></div></div><div class="modal fade bs-example-modal-lg<%= _id %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg"><div class="modal-content"><img src="' + _consts.RootURL + '/api/filedownloader?file=<%= picture_file_id %>" /></div>'), 
-        templateVoice : _.template('<audio controls><source src="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>" width="50" type="audio/wav"></audio>'), 
-        templateVideo : _.template('<video controls><source src="' + _consts.RootURL + '/api/filedownloader?file=<%= video_file_id %>" ></video>'), 
+        templateVoice : _.template('<audio controls style="width:100%"><source src="' + _consts.RootURL + '/api/filedownloader?file=<%= voice_file_id %>" width="50" type="audio/wav"></audio>'), 
+        templateVideo : _.template('<video controls style="width:100%"><source src="' + _consts.RootURL + '/api/filedownloader?file=<%= video_file_id %>" ></video>'), 
         templateUserInfo : _.template(''),
 
         templatePostHolder : _.template('<div class="post userId<%= user_id %>" id="message<%= message_id %>" messageid="<%= message_id %>"><div class="timestamp"><%= deleteicon %> <%= unreadicon %> <%= time %></div><%= content %></div>'),

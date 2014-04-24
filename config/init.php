@@ -20,9 +20,9 @@ define('MySQL_USERNAME', 'root');
 define('MySQL_PASSWORD', 'yourpassword');
 /* end change here */
 
-define('AdministratorEmail', isset($_ENV['SPIKA_AdministratorEmail']) ? $_ENV['SPIKA_AdministratorEmail'] : "admin@spikaapp.com");
+define('AdministratorEmail', "admin@spikaapp.com");
 
-define('ENABLE_LOGGING', isset($_ENV['SPIKA_ENABLE_LOGGING']) ? $_ENV['SPIKA_ENABLE_LOGGING'] : true);
+define('ENABLE_LOGGING',true);
 
 define('SUPPORT_USER_ID', 1);
 define('ADMIN_LISTCOUNT', 10);
@@ -30,8 +30,8 @@ define("DEFAULT_LANGUAGE","en");
 
 define('HTTP_PORT', 80);
 
-define('TOKEN_VALID_TIME', isset($_ENV['SPIKA_TOKEN_VALID_TIME']) ? $_ENV['SPIKA_TOKEN_VALID_TIME'] : 60*60*24);
-define('PW_RESET_CODE_VALID_TIME', isset($_ENV['SPIKA_PW_RESET_CODE_VALID_TIME']) ? $_ENV['SPIKA_PW_RESET_CODE_VALID_TIME'] : 60*5);
+define('TOKEN_VALID_TIME',60*60*24);
+define('PW_RESET_CODE_VALID_TIME',60*5);
 
 define("DIRECTMESSAGE_NOTIFICATION_MESSAGE", "You got message from %s");
 define("GROUPMESSAGE_NOTIFICATION_MESSAGE", "%s posted message to group %s");

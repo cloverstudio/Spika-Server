@@ -131,13 +131,13 @@
                     <h3>To finish setup</h3>
                     <p>Add database connection settings to <strong>init.php</strong>.</p>
                         <pre>
-define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "{{ROOT_URL}}");
-define('LOCAL_ROOT_URL', isset($_ENV['SPIKA_LOCAL_ROOT_URL']) ? $_ENV['SPIKA_LOCAL_ROOT_URL'] : "{{ROOT_URL}}");
+define('ROOT_URL','{{ROOT_URL}}');
+define('LOCAL_ROOT_URL', '{{LOCAL_ROOT_URL}}');
 
-define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "{{DbParams.host}}");
-define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "{{DbParams.dbname}}");
-define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "{{DbParams.user}}");
-define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "{{DbParams.password}}");
+define("MySQL_HOST", '{{DbParams.host}}');
+define('MySQL_DBNAME', '{{DbParams.dbname}}');
+define('MySQL_USERNAME', '{{DbParams.user}}');
+define('MySQL_PASSWORD', '{{DbParams.password}}');
                         </pre>
 
 

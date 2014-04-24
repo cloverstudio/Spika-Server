@@ -22,6 +22,11 @@ use Spika\Controller\FileController;
 class InstallerController implements ControllerProviderInterface
 {
 
+    public function curPageURLLocal() {
+        $pageURL = "http://localhost".$_SERVER["REQUEST_URI"];
+        return $pageURL;
+    }
+    
     public function curPageURL() {
     
         $pageURL = 'http';
@@ -56,6 +61,8 @@ class InstallerController implements ControllerProviderInterface
 
         // connect to DB
         $controllers->post('/installer/step1', function (Request $request) use ($app,$self) {
+            
+            
             
             $app['monolog']->addDebug("step1");
             
@@ -165,7 +172,8 @@ class InstallerController implements ControllerProviderInterface
             $app['monolog']->addDebug("step3");
             
             $rootUrl = str_replace("/installer/step3","",$self->curPageURL());
-            
+            $localRootUrl = str_replace("/installer/step3","",$self->curPageURLLocal());
+                    
             $config = new \Doctrine\DBAL\Configuration();
             $connectionParams = $app['session']->get('databaseConfiguration');
             
@@ -309,6 +317,7 @@ class InstallerController implements ControllerProviderInterface
                 
             return $app['twig']->render('installer/installerStep3.twig', array(
                 'ROOT_URL' => $rootUrl,
+                'LOCAL_ROOT_URL' => $localRootUrl,
                 'ConnectionSucceed' => $connectionResult,
                 'DbParams' => $connectionParams,
                 'SupportUserId' => $conn->lastInsertId("_id"),

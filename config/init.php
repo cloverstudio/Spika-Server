@@ -11,12 +11,13 @@
  
  
 /* change here */
-define('ROOT_URL', isset($_ENV['SPIKA_ROOT_URL']) ? $_ENV['SPIKA_ROOT_URL'] : "http://localhost:8080/wwwroot");
-define('LOCAL_ROOT_URL', isset($_ENV['SPIKA_LOCAL_ROOT_URL']) ? $_ENV['SPIKA_LOCAL_ROOT_URL'] : "http://localhost/wwwroot");
-define("MySQL_HOST", isset($_ENV['MySQL_HOST']) ? $_ENV['MySQL_HOST'] : "localhost");
-define('MySQL_DBNAME', isset($_ENV['MySQL_DBNAME']) ? $_ENV['MySQL_DBNAME'] : "spikadb");
-define('MySQL_USERNAME', isset($_ENV['MySQL_USERNAME']) ? $_ENV['MySQL_USERNAME'] : "root");
-define('MySQL_PASSWORD', isset($_ENV['MySQL_PASSWORD']) ? $_ENV['MySQL_PASSWORD'] : "yourpassword");
+define('ROOT_URL','http://localhost:8080/wwwroot');
+define('LOCAL_ROOT_URL', 'http://localhost/wwwroot');
+
+define("MySQL_HOST", 'localhost');
+define('MySQL_DBNAME', 'spikadb');
+define('MySQL_USERNAME', 'root');
+define('MySQL_PASSWORD', 'yourpassword');
 /* end change here */
 
 define('AdministratorEmail', isset($_ENV['SPIKA_AdministratorEmail']) ? $_ENV['SPIKA_AdministratorEmail'] : "admin@spikaapp.com");

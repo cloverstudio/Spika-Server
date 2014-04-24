@@ -36,6 +36,7 @@
                             
                         </div>
 
+{% if isAdmin %}
                         <div class="panel-heading">
                             <div id="morris-area-chart"><i class="glyphicon glyphicon-resize-small"></i> {{lang.labelDashboardEndpoint}}</div>
                         </div>
@@ -48,11 +49,13 @@
                                     </tr>
                                     <tr>
                                         <td>
+                                        
 <code>
-#define DatabaseURL             @"{{ROOT_URL}}/api"<br />
-#define HttpRootURL             @"{{ROOT_URL}}/api"<br />
-#define PageRootURL             @"{{ROOT_URL}}/page"<br />
-#define InformationPageTopURL   @"{{ROOT_URL}}/page/information"<br />
+/* change here */<br />
+#define ServerListAPIURL        @"{{ROOT_URL}}/api/servers"<br />
+#define DefaultAPIEndPoint      @"{{ROOT_URL}}"<br />
+#define DefaultPageUrl          @"{{ROOT_URL}}/page"<br />
+/* end change here */<br />
 </code>
                                         </td>
                                     </tr>
@@ -62,8 +65,9 @@
                                     <tr>
                                         <td>
 <code>
-public static final String BASE_URL                	= "{{ROOT_URL}}/api/";<br />
+public static final String BASE_URL                	= "{{ROOT_URL}}";<br />
 public static final String INFORMATION_URL			= "{{ROOT_URL}}/page/information/";<br />
+public static final String LIST_SERVERS_URL         = BASE_URL + "/" + Const.API_FOLDER + "servers";
 </code>
 
                                         </td>
@@ -74,6 +78,7 @@ public static final String INFORMATION_URL			= "{{ROOT_URL}}/page/information/";
                             
                         </div>
 
+{% endif %}
 
                     </div>
 

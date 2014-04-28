@@ -78,7 +78,7 @@
             this.unreadMessageNumPerGroup = {};   
             
             _spikaClient.getActivitySummary(function(data){
-
+                
                 var html = '';
                 var totalUnreadMessage = 0;
                 
@@ -136,6 +136,11 @@
                 usersId = _.uniq(usersId);
                 groupsId = _.uniq(groupsId);
                 
+                if(usersId.length == 0){
+                    //console.log('abort no user');
+                    return;
+                }
+                    
                 _spikaClient.getUser(usersId.join(','),function(data){
                     
                     if(usersId.length == 1){
@@ -148,6 +153,13 @@
                         
                     }
                     
+                    if(groupsId.length == 0){
+                        //console.log('abort no group');
+                        self.groupList = [];
+                        self.renderRecentActivityNext();
+                        return;
+                    }
+
                     _spikaClient.getGroup(groupsId.join(','),function(data){
                         
                         if(groupsId.length == 1){
@@ -186,25 +198,26 @@
         renderRecentActivityNext : function(){
             
             if(_.isEmpty(this.userList)){
-                return;
+                this.userList = [];
             }
             
             if(_.isEmpty(this.groupList)){
-                return;
+                this.groupList = [];
             }
             
             if(_.isEmpty(this.unreadMessageNumPerUser)){
-                return;
+                this.unreadMessageNumPerUser = [];
             }
             
             if(_.isEmpty(this.unreadMessageNumPerGroup)){
-                return;
+                this.unreadMessageNumPerGroup = [];
             }
             
             var html = '';
             
             var keys = _.keys(this.unreadMessageNumPerUser);
             keys = keys.reverse();
+            
             for(var i = 0 ; i < keys.length ; i++){
                 
                 var key = keys[i];
@@ -232,6 +245,7 @@
             
             var keys = _.keys(this.unreadMessageNumPerGroup);
             keys = keys.reverse();
+            
             for(var i = 0 ; i < keys.length ; i++){
                 
                 var key = keys[i];

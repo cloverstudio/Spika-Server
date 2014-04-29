@@ -37,7 +37,13 @@ SpikaClient.prototype.login = function(userName,password,succeessListener,failed
     });
     
     requestLogin.done(function( data ) {
-        succeessListener(data);
+        
+        if(data.error != null && data.error != ''){
+            failedListener(data);
+        } else {
+            succeessListener(data);
+        }
+        
     });
     
     requestLogin.fail(function( jqXHR, textStatus ) {
@@ -241,7 +247,9 @@ SpikaClient.prototype.getActivitySummary = function(succeessListener,failedListe
     });
     
     requestLogin.fail(function( jqXHR, textStatus ) {
+        
         failedListener(jqXHR.responseText);
+        
     });
 
 }

@@ -3,10 +3,14 @@
     var stickerViewManager = {
         templateSticker : _.template('<li class="sticker-view" stickerId="<%= identifier %>"><img src="<%= stickerUrl %>" alt="" width="120" height="120" /></li>'),    
         sending : false,
+        isLoaded : false,
         render : function(){
             
             var self = this;
             
+            if(this.isLoaded)
+                return;
+                
             _spikaClient.loadStickers(function(data){
 
                 if(!_.isArray(data.rows))
@@ -57,11 +61,12 @@
                     }
                     
                 });
-                               
+                     
+                this.isLoaded = true;          
 
             },function(errorString){
                 
-                
+                _spikaApp.handleError(errorString,"loadStickers");
             });
             
         }

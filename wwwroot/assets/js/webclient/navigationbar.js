@@ -36,8 +36,8 @@
                 
             },function(errorMessage){
             
-                alertManager.showError(_lang.messageGeneralError);
-                
+                _spikaApp.handleError(errorString,"getContacts");
+
             });
             
         },
@@ -63,7 +63,7 @@
                 
             },function(errorMessage){
             
-                alertManager.showError(_lang.messageGeneralError);
+                _spikaApp.handleError(errorString,"getFavoriteGroups");
                 
             });
             
@@ -178,19 +178,21 @@
                     },function(errorString){
                         
                         alertManager.hideLoading();
+                        _spikaApp.handleError(errorString,"getGroup");
                         
                     });
                 
                 },function(errorString){
                     
                     alertManager.hideLoading();
+                    _spikaApp.handleError(errorString,"getUser");
                     
                 });
                 
             },function(errorMessage){
-            
-                alertManager.showError(_lang.messageGeneralError);
+                
                 alertManager.hideLoading();
+                _spikaApp.handleError(errorMessage,"getActivitySummary");
                 
             });
             

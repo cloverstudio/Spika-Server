@@ -4,19 +4,18 @@ var _spikaApp = {
     
         alertManager.showLoading();
         
-        windowManager.init(window);
-        _chatManager.init();
-        mediaViewManager.init();
-        
         // login
         _spikaClient.login(_loginedUser.email,_loginedUser.password,function(data){
-            
+
             _loginedUser = data;
             _spikaClient.setCurrentUser(_loginedUser);
                         
+            windowManager.init(window);
+            _chatManager.init();
+            mediaViewManager.init();
+        
             navigationBarManager.renderContacts();
             navigationBarManager.renderGroups();
-            
             newMessageChecker.startUpdating();
             
             if(_targetUserId != 0){
@@ -25,13 +24,10 @@ var _spikaApp = {
                 _chatManager.startGroupChat(_targetGroupId);                
             }
             
-            stickerViewManager.render();
-
         },function(errorString){
-        
-            alertManager.showAlert(_lang.labelErrorDialogTitle,_lang.messageTokenError,_lang.labelCloseButton,function(){
-                location.href = "login";
-            });
+            
+            alertManager.hideLoading();
+            _spikaApp.handleError(errorString,"login");
             
         });
 
@@ -74,6 +70,28 @@ var _spikaApp = {
         $('#media-view').css('overflow-y','hidden');
 
     },
+    handleError : function(response,from){    
+        
+        console.log( " error from " + from + " respnse " + response );
+        console.log(response );
+        
+        // strting to object
+        
+        if(!_.isObject(response))
+            eval("var response = " + response);
+                
+        if(!_.isNull(response.error) && response.error == 'logout'){
+
+            alertManager.showAlert(_lang.labelErrorDialogTitle,_lang.messageTokenError,_lang.labelCloseButton,function(){
+                location.href = "login";
+            });
+            
+        } else{
+            
+            alertManager.showError(_lang.messageGeneralError);
+            
+        }
+    }
     
 };
 

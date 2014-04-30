@@ -22,7 +22,7 @@ define('MySQL_PASSWORD', 'yourpassword');
 
 define('AdministratorEmail', "admin@spikaapp.com");
 
-define('ENABLE_LOGGING',true);
+define('ENABLE_LOGGING',false);
 
 define('SUPPORT_USER_ID', 1);
 define('ADMIN_LISTCOUNT', 10);

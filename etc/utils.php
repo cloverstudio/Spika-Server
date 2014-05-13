@@ -2,6 +2,8 @@
 
 namespace Spika;
 
+use google\appengine\api\cloud_storage\CloudStorageTools;
+
 class Utils{
 	
 	static public function randString($min = 5, $max = 8)
@@ -27,6 +29,16 @@ class Utils{
 	    return preg_match($regex, $password);
 	}
 
+	static public function getGCSPath($path)
+	{
+	    $basePath = 'gs://';
+	    
+	    if(GCS_BUCKET_NAME != '')
+    	     return $basePath . GCS_BUCKET_NAME . '/' . $path;
+        else 
+    	     return $basePath . CloudStorageTools::getDefaultGoogleStorageBucketName() . '/' . $path;
+        
+	}
 
 	
 }

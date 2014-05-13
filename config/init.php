@@ -11,13 +11,32 @@
  
  
 /* change here */
-define('ROOT_URL','http://localhost:8080/wwwroot');
-define('LOCAL_ROOT_URL', 'http://localhost/wwwroot');
 
-define("MySQL_HOST", 'localhost');
-define('MySQL_DBNAME', 'spikadb');
-define('MySQL_USERNAME', 'root');
-define('MySQL_PASSWORD', 'yourpassword');
+if (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
+    define('ROOT_URL','');
+    define('ROOT_URL_WITHOUT_HOST', '/wwwroot');
+    define('LOCAL_ROOT_URL', 'http://localhost/wwwroot');
+    define("MySQL_HOST", '');
+    define("MySQL_SOCKET", '');
+    define('MySQL_DBNAME', '');
+    define('MySQL_USERNAME', 'root');
+    define('MySQL_PASSWORD', '');
+    define('GCS_BUCKET_NAME', '');
+ 
+} else {
+    define('ROOT_URL','http://localhost:8080/wwwroot');
+    define('ROOT_URL_WITHOUT_HOST', '/wwwroot');
+    define('LOCAL_ROOT_URL', 'http://localhost/wwwroot');
+    define('ROOT_URL_WITHOUT_HOST','/wwwroot');
+    define("MySQL_HOST", '');
+    define("MySQL_SOCKET", '');
+    define('MySQL_DBNAME', '');
+    define('MySQL_USERNAME', '');
+    define('MySQL_PASSWORD', '');
+    define('GCS_BUCKET_NAME','');
+}
+  
+
 /* end change here */
 
 define('AdministratorEmail', "admin@spikaapp.com");
@@ -40,7 +59,7 @@ define("ACTIVITY_SUMMARY_GROUP_MESSAGE", "group_posts");
 
 define("APN_DEV_CERT_PATH", "files/apns-dev.pem");
 define("APN_PROD_CERT_PATH", "files/apns-prod.pem");
-define("GCM_API_KEY","AIzaSyDOkqeO0MZ_igwH_zGyy95DO1ahM8-Ebrw");
+define("GCM_API_KEY","AIzaSyCEvnSSPg7zq5tMIz0zXLVK9ytwQTgjPEE");
 
 define("SEND_EMAIL_METHOD",1); // 0: dont send 1:local smtp 2:gmail
 define("GMAIL_USER",""); 

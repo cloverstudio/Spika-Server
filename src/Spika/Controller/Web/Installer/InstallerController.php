@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Doctrine\DBAL\DriverManager;
 use Spika\Controller\FileController;
 
+use google\appengine\api\cloud_storage\CloudStorageTools;
+
 class InstallerController implements ControllerProviderInterface
 {
 
@@ -62,14 +64,13 @@ class InstallerController implements ControllerProviderInterface
         // connect to DB
         $controllers->post('/installer/step1', function (Request $request) use ($app,$self) {
             
-            
-            
             $app['monolog']->addDebug("step1");
             
             $rootUrl = str_replace("/installer/step1","",$self->curPageURL());
             
             $host = $request->get('host');
             $database = $request->get('database');
+            $socket = $request->get('socket');
             $userName = $request->get('username');
             $password = $request->get('password');
             
@@ -79,17 +80,26 @@ class InstallerController implements ControllerProviderInterface
                 'dbname' => $database,
                 'user' => $userName,
                 'password' => $password,
-                'host' => $host,
                 'driver' => 'pdo_mysql',
             );
             
+            if(!empty($host)){
+                $connectionParams['host'] = $host;
+                $connectionParams['unix_socket'] = '';
+            }else if(!empty($socket)){
+                $connectionParams['host'] = '';
+                $connectionParams['unix_socket'] = $socket;
+            }    
             $app['session']->set('databaseConfiguration', $connectionParams);
+            
+            $connectionParams['dbname'] = null;
             
             $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
             
             try{
                 $connectionResult = $conn->connect();           
             }catch(\PDOException $e){
+                print $e->getMessage();
                 $connectionResult = false;
                 $app['monolog']->addDebug("Failed to connect DB");
             }
@@ -117,6 +127,9 @@ class InstallerController implements ControllerProviderInterface
             $config = new \Doctrine\DBAL\Configuration();
             $connectionParams = $app['session']->get('databaseConfiguration');
             
+            $dbname = $connectionParams['dbname'];
+            $connectionParams['dbname'] = null;
+            
             $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
             
             try{
@@ -136,6 +149,26 @@ class InstallerController implements ControllerProviderInterface
             $schemacontent = file_get_contents($pathToSchemaFile);
             
             $queries = explode(";",$schemacontent);
+            
+            
+            $connectionParams = $app['session']->get('databaseConfiguration');
+            $conn->beginTransaction();
+
+            try{
+                $conn->executeQuery("create database {$dbname}");
+                $conn->commit();         
+            } catch(\Exception $e){
+                $app['monolog']->addDebug($e->getMessage());
+                
+                $conn->rollback();      
+                return $app['twig']->render('installer/installerError.twig', array(
+                    'ROOT_URL' => $rootUrl
+                ));
+                
+            }
+            
+            $connectionParams['dbname'] = $dbname;
+            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
             
             $conn->beginTransaction();
             
@@ -187,13 +220,7 @@ class InstallerController implements ControllerProviderInterface
                 $app->redirect('/installer');
             }
             
-            $fileDir = __DIR__.'/../../../../../'.FileController::$fileDirName;
-            if(!is_writable($fileDir)){
-                $app['monolog']->addDebug("{$fileDir} is not writable.");
-                return $app['twig']->render('installer/installerError.twig', array(
-                    'ROOT_URL' => $rootUrl
-                ));
-            }
+            $fileDir = \Spika\Utils::getGCSPath(FileController::$fileDirName);
             
             $conn->beginTransaction();
             
@@ -224,7 +251,11 @@ class InstallerController implements ControllerProviderInterface
                 
                 $fileName = \Spika\Utils::randString(20, 20) . time();
                 $newFilePath = $fileDir."/".$fileName;
-                copy($path,$newFilePath);
+                
+                $options = ['gs' => ['acl' => 'public-read']];
+                $ctx = stream_context_create($options);
+
+                copy($path,$newFilePath,$ctx);
                 
                 // create data
                 $data = array(
@@ -315,12 +346,20 @@ class InstallerController implements ControllerProviderInterface
             $conn->insert('user',$userData);            
             $conn->commit();    
                 
+
+            
+            $tmp = explode("/",$rootUrl);
+            $hostUrl = $tmp[0] . "//" . $tmp[2];
+            $rootUrlWithoutHost = str_replace($hostUrl,"",$rootUrl);
+            
             return $app['twig']->render('installer/installerStep3.twig', array(
                 'ROOT_URL' => $rootUrl,
+                'ROOT_URL_WITHOUT_HOST' => $rootUrlWithoutHost,
                 'LOCAL_ROOT_URL' => $localRootUrl,
                 'ConnectionSucceed' => $connectionResult,
                 'DbParams' => $connectionParams,
                 'SupportUserId' => $conn->lastInsertId("_id"),
+                'BucketName' => CloudStorageTools::getDefaultGoogleStorageBucketName(),
             ));     
             
         });

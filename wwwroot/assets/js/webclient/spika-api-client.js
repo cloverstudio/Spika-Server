@@ -360,26 +360,46 @@ SpikaClient.prototype.checkUpdate = function(succeessListener,failedListener)
 
 SpikaClient.prototype.fileUpload = function(file,succeessListener,failedListener)
 {
-    // login
-    var formData = new FormData();
-    formData.append('file', file);
-       
+    //get upload url first
+    
     var request = $.ajax({
-        url: this.apiEndPointUrl + '/fileuploader',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false
+        url: this.apiEndPointUrl + '/createuploadurl',
+        type: 'GET',
+        type: "GET",
+        headers: { 'token': this.currentUser.token }
     });
     
     request.done(function( data ) {
-        succeessListener(data);
+        
+        console.log(data);
+        
+        // upload
+        var formData = new FormData();
+        formData.append('file', file);
+           
+        var request = $.ajax({
+            url: data,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false
+        });
+        
+        request.done(function( data ) {
+            succeessListener(data);
+        });
+        
+        request.fail(function( jqXHR, textStatus ) {
+            failedListener(jqXHR.responseText);
+        });
+
+
     });
     
     request.fail(function( jqXHR, textStatus ) {
         failedListener(jqXHR.responseText);
     });
-
+    
 }
 
 SpikaClient.prototype.loadStickers = function(succeessListener,failedListener)
@@ -495,3 +515,22 @@ SpikaClient.prototype.postComment = function(messageId,comment,succeessListener,
 
 }
 
+SpikaClient.prototype.createUploadUrl = function(succeessListener,failedListener)
+{
+
+    var request = $.ajax({
+        url: this.apiEndPointUrl + '/createuploadurl',
+        type: 'GET',
+        type: "GET",
+        headers: { 'token': this.currentUser.token }
+    });
+    
+    request.done(function( data ) {
+        succeessListener(data);
+    });
+    
+    request.fail(function( jqXHR, textStatus ) {
+        failedListener(jqXHR.responseText);
+    });
+
+}

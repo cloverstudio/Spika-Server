@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+use google\appengine\api\cloud_storage\CloudStorageTools;
+
 class MessageController extends SpikaBaseController
 {
     public function connect(Application $app)
@@ -66,25 +68,9 @@ class MessageController extends SpikaBaseController
                     return $self->returnErrorResponse("load emoticon error");
                 }
                 
-                $filePath = $filePath = __DIR__.'/../../../'.FileController::$fileDirName."/".basename($fileID);
-                $response = new Response();
-                $lastModified = new \DateTime();
-                $file = new \SplFileInfo($filePath);
+                $filePath = \Spika\Utils::getGCSPath(FileController::$fileDirName."/".basename($fileID));
                 
-                $lastModified = new \DateTime();
-                $lastModified->setTimestamp($file->getMTime());
-                $response->setLastModified($lastModified);
-                                    
-                if ($response->isNotModified($request)) {
-                    $response->prepare($request)->send();
-                    return $response;
-                }
-
-                $response = $app->sendFile($filePath);
-                $currentDate = new \DateTime(null, new \DateTimeZone('UTC'));
-                $response->setDate($currentDate)->prepare($request)->send();
-                
-                return $response;
+                return $app->redirect(CloudStorageTools::getImageServingUrl($filePath));
 
 
             }

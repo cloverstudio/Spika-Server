@@ -52,7 +52,7 @@
         
                 
       <div class="jumbotron">
-        <h1>Welcome to Spika server installer</h1>
+        <h1>Spika server installer for Google App Engine</h1>
         <p class="lead">
             Spika is opensource mobile messenger system. Please follow this setup to install Spika backend to your server.
         </p>
@@ -117,11 +117,14 @@
               
               <form class="form-database" method="post" action="{{ROOT_URL}}/installer/step1">
                 
-                <input type="text" name="host" class="form-control" placeholder="Host address" required autofocus>
+                <input type="text" name="host" class="form-control" placeholder="Host address">
+                <input type="text" name="socket" class="form-control" placeholder="ex) /cloudsql/advance-verve-000:spika-gae-test">
+                <p class="help-block">If you fill both host and socket, host value will be used.</p>
                 <input type="text" name="database" class="form-control" placeholder="Database name" required autofocus>
                 <input type="text" name="username" class="form-control" placeholder="User name" required autofocus>
-                <input type="text" name="password" class="form-control" placeholder="Password" required>
-                
+                <input type="text" name="password" class="form-control" placeholder="Password">
+                <p class="help-block">If you use socket no need to fill password.</p>
+                                
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Connect to Database</button>
               </form>
 

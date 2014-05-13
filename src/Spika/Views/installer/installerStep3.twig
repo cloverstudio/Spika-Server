@@ -55,7 +55,7 @@
         
                 
       <div class="jumbotron">
-        <h1>Welcome to Spika server installer</h1>
+        <h1>Spika server installer for Google App Engine</h1>
         <p class="lead">
             Spika is opensource mobile messenger system. Please follow this setup to install Spika backend to your server.
         </p>
@@ -132,12 +132,14 @@
                     <p>Add database connection settings to <strong>init.php</strong>.</p>
                         <pre>
 define('ROOT_URL','{{ROOT_URL}}');
+define('ROOT_URL_WITHOUT_HOST', '{{ROOT_URL_WITHOUT_HOST}}');
 define('LOCAL_ROOT_URL', '{{LOCAL_ROOT_URL}}');
-
 define("MySQL_HOST", '{{DbParams.host}}');
+define("MySQL_SOCKET", '{{DbParams.unix_socket}}');
 define('MySQL_DBNAME', '{{DbParams.dbname}}');
 define('MySQL_USERNAME', '{{DbParams.user}}');
 define('MySQL_PASSWORD', '{{DbParams.password}}');
+define('GCS_BUCKET_NAME', '{{BucketName}}');
                         </pre>
 
 

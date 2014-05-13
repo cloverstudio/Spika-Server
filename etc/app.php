@@ -25,6 +25,7 @@ use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\SwiftmailerServiceProvider;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\NullHandler;
+use Monolog\Handler\SyslogHandler;
 
 $app = new Silex\Application(isset($dependencies) ? $dependencies : array());
 $app['debug'] = true;
@@ -38,19 +39,26 @@ $app->register(new MonologServiceProvider(), array(
 
 if(!ENABLE_LOGGING){
     $app['monolog.handler'] = function () use ($app) {
-        return new NullHandler();
+        return new SyslogHandler('spikaapp');
     };
 }
-   
-$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
-    'db.options' => array (
+
+$DatabaseOptions = array(
             'driver'    => 'pdo_mysql',
-            'host'      => MySQL_HOST,
             'dbname'    => MySQL_DBNAME,
             'user'      => MySQL_USERNAME,
             'password'  => MySQL_PASSWORD,
             'charset'   => 'utf8'
-    )
+);
+
+if(MySQL_HOST != ''){
+    $DatabaseOptions['host'] = MySQL_HOST;
+}else if(MySQL_SOCKET != ''){
+    $DatabaseOptions['unix_socket'] = MySQL_SOCKET;
+}
+
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => $DatabaseOptions
 ));
 
 
@@ -65,6 +73,9 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app->register(new Silex\Provider\SessionServiceProvider(), array(
 ));
+$app['session.storage.handler'] = $app->share(function ($app) {
+    return new Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler(new Memcached());
+});
 
 $app->register(new Spika\Provider\PushNotificationProvider(), array(
     'pushnotification.options' => array (
@@ -105,7 +116,6 @@ $app->mount('/api/', new Spika\Controller\AsyncTaskController());
 $app->mount('/api/', new Spika\Controller\WebViewController());
 $app->mount('/page/', new Spika\Controller\PasswordResetController());
 $app->mount('/page/', new Spika\Controller\Web\StaticPageController());
-
 $app->mount('/', new Spika\Controller\Web\Installer\InstallerController());
 $app->mount('/admin', new Spika\Controller\Web\Admin\LoginController());
 $app->mount('/admin/', new Spika\Controller\Web\Admin\GroupController());
@@ -114,9 +124,5 @@ $app->mount('/admin/', new Spika\Controller\Web\Admin\UserController());
 $app->mount('/admin/', new Spika\Controller\Web\Admin\GroupCategoryController());
 $app->mount('/admin/', new Spika\Controller\Web\Admin\EmoticonController());
 $app->mount('/admin/', new Spika\Controller\Web\Admin\ServerController());
-
 $app->mount('/client/', new Spika\Controller\Web\Client\LoginController());
 $app->mount('/client/', new Spika\Controller\Web\Client\MainController());
-
-
-

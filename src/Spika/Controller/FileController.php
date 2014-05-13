@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+use google\appengine\api\cloud_storage\CloudStorageTools;
 
 class FileController extends SpikaBaseController
 {
@@ -35,53 +36,33 @@ class FileController extends SpikaBaseController
         $controllers->get('/filedownloader', function (Request $request) use ($app,$self) {
                 
             $fileID = $request->get('file');
-            $filePath = __DIR__.'/../../../'.FileController::$fileDirName."/".basename($fileID);
-            
-            $app['logger']->addDebug($filePath);
-            
-            if(file_exists($filePath)){
+            $filePath = \Spika\Utils::getGCSPath(FileController::$fileDirName)."/".basename($fileID);
+            return $app->redirect(CloudStorageTools::getPublicUrl($filePath,false));
                     
-                    $response = new Response();
-                    $lastModified = new \DateTime();
-                    $file = new \SplFileInfo($filePath);
-                    
-                    $lastModified = new \DateTime();
-                    $lastModified->setTimestamp($file->getMTime());
-                    $response->setLastModified($lastModified);
-                                        
-                    if ($response->isNotModified($request)) {
-                        $response->prepare($request)->send();
-                        return $response;
-                    }
-
-                    $response = $app->sendFile($filePath);
-                    $currentDate = new \DateTime(null, new \DateTimeZone('UTC'));
-                    $response->setDate($currentDate)->prepare($request)->send();
-                    
-                    return $response;
-                    
-            }else{
-                    return $self->returnErrorResponse("file doesn't exists.");
-            }
         });
-                
-        //})->before($app['beforeTokenChecker']);
         
         // ToDo: Add token check
         $controllers->post('/fileuploader', function (Request $request) use ($app,$self) {
-                
-            $file = $request->files->get(FileController::$paramName); 
-            $fineName = \Spika\Utils::randString(20, 20) . time();
+             
+            $fileName = \Spika\Utils::randString(20, 20) . time();
+            $tmpName = \Spika\Utils::randString(20, 20) . time();
             
-            if(!is_writable(__DIR__.'/../../../'.FileController::$fileDirName))
-                    return $self->returnErrorResponse(FileController::$fileDirName ." dir is not writable.");
-                    
-            $file->move(__DIR__.'/../../../'.FileController::$fileDirName, $fineName); 
-            return $fineName; 
+            $tmpFilePath = \Spika\Utils::getGCSPath(FileController::$fileDirName . "/" . $tmpName);
+            $filePath = \Spika\Utils::getGCSPath(FileController::$fileDirName . "/" . $fileName);
+            
+            move_uploaded_file($_FILES['file']['tmp_name'], $tmpFilePath);
+            $ctx = stream_context_create(['gs'=>['acl'=>'public-read']]);
+            rename($tmpFilePath, $filePath, $ctx);
+            
+            return $fileName; 
                                 
         })->before($app['beforeApiGeneral']);
         
-        //})->before($app['beforeTokenChecker']);
+        $controllers->get('/createuploadurl', function (Request $request) use ($app,$self) {
+             
+            return CloudStorageTools::createUploadUrl(ROOT_URL . '/api/fileuploader',  [ 'gs_bucket_name' => GCS_BUCKET_NAME ]);
+            
+        })->before($app['beforeApiGeneral']);
         
         return $controllers;
     }

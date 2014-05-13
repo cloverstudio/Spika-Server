@@ -28,22 +28,14 @@ class AsyncTaskController extends SpikaBaseController
 
         $controllers->post('/notifyNewDirectMessage', function (Request $request) use ($self,$app) {
             
-            set_time_limit(60 * 10);
-            
-            $host = $request->getHttpHost();
-            if($host != "localhost"){
-                return $self->returnErrorResponse("invalid access to internal API");
-            }
+            $app['monolog']->addDebug('AAAAAAAAAAAAAAAA');
 
-            $requestBody = $request->getContent();
-            $requestData = json_decode($requestBody,true);
-
-            if(empty($requestData['messageId']))
-                return $self->returnErrorResponse("insufficient params");
-
-            $messageId = $requestData['messageId'];
+            $messageId = $request->get('messageId');
             $message = $app['spikadb']->findMessageById($messageId);
 
+            if(empty($message['_id']))
+                return $self->returnErrorResponse("insufficient params");
+                
             // send push notification
             $fromUserId = $message['from_user_id'];
             $toUserId = $message['to_user_id'];
@@ -57,6 +49,7 @@ class AsyncTaskController extends SpikaBaseController
 
             // send iOS push notification
             if(!empty($toUser['ios_push_token'])){
+                
                 $body = array();
                 $body['aps'] = array('alert' => $pushnotificationMessage, 'badge' => 0, 'sound' => 'default', 'value' => "");
                 $body['data'] =array('from' => $fromUserId);
@@ -64,6 +57,7 @@ class AsyncTaskController extends SpikaBaseController
 
                 $app['sendProdAPN'](array($toUser['ios_push_token']),$payload);
                 $app['sendDevAPN'](array($toUser['ios_push_token']),$payload);
+                
             }
 
             // send Android push notification
@@ -92,21 +86,13 @@ class AsyncTaskController extends SpikaBaseController
 
         $controllers->post('/notifyNewGroupMessage', function (Request $request) use ($self,$app) {
 
-            set_time_limit(60 * 10);
+            $app['monolog']->addDebug('AAAAAAAAAAAAAAAA');
 
-            $host = $request->getHttpHost();
-            if($host != "localhost"){
-                return $self->returnErrorResponse("invalid access to internal API");
-            }
-
-            $requestBody = $request->getContent();
-            $requestData = json_decode($requestBody,true);
-
-            if(empty($requestData['messageId']))
-                return $self->returnErrorResponse("insufficient params");
-
-            $messageId = $requestData['messageId'];
+            $messageId = $request->get('messageId');
             $message = $app['spikadb']->findMessageById($messageId);
+
+            if(empty($message['_id']))
+                return $self->returnErrorResponse("insufficient params");
             
             $app['spikadb']->updateActivitySummaryByGroupMessage($message['to_group_id'],$message['from_user_id']);
             

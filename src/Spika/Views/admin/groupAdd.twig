@@ -40,7 +40,7 @@
                     
                     {% include "admin/alerts.twig" %}
                     
-                    <form role="form" method="post" action="{{ROOT_URL}}/admin/group/add" enctype="multipart/form-data">
+                    <form role="form" method="post" action="{{uploadUrl}}" enctype="multipart/form-data">
                     <div class="form-group">
                         <label>{{lang.formGroupCategory}}</label>
                         <select class="form-control" name="category_id">

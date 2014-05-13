@@ -21,6 +21,7 @@ use Doctrine\DBAL\DriverManager;
 use Spika\Controller\Web\SpikaWebBaseController;
 use Spika\Controller\FileController;
 use Symfony\Component\HttpFoundation\Cookie;
+use google\appengine\api\cloud_storage\CloudStorageTools;
 
 class GroupCategoryController extends SpikaWebBaseController
 {
@@ -82,6 +83,7 @@ class GroupCategoryController extends SpikaWebBaseController
             return $self->render('admin/categoryForm.twig', array(
                 'mode' => 'new',
                 'formValues' => $self->getEmptyFormData(),
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/groupcategory/add', [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
                         
         })->before($app['adminBeforeTokenChecker']);        
@@ -129,7 +131,8 @@ class GroupCategoryController extends SpikaWebBaseController
             
             return $self->render('admin/categoryForm.twig', array(
                 'mode' => 'new',
-                'formValues' => $formValues
+                'formValues' => $formValues,
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/groupcategory/add', [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
                         
         })->before($app['adminBeforeTokenChecker']);        
@@ -171,7 +174,8 @@ class GroupCategoryController extends SpikaWebBaseController
             return $self->render('admin/categoryForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
-                'formValues' => $category
+                'formValues' => $category,
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/groupcategory/edit/' . $id, [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
             
         })->before($app['adminBeforeTokenChecker']);
@@ -224,7 +228,8 @@ class GroupCategoryController extends SpikaWebBaseController
             return $self->render('admin/categoryForm.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
-                'formValues' => $category
+                'formValues' => $category,
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/groupcategory/edit/' . $id, [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
                         
         })->before($app['adminBeforeTokenChecker']);    

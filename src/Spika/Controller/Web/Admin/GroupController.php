@@ -21,6 +21,7 @@ use Doctrine\DBAL\DriverManager;
 use Spika\Controller\Web\SpikaWebBaseController;
 use Spika\Controller\FileController;
 use Symfony\Component\HttpFoundation\Cookie;
+use google\appengine\api\cloud_storage\CloudStorageTools;
 
 class GroupController extends SpikaWebBaseController
 {
@@ -109,6 +110,7 @@ class GroupController extends SpikaWebBaseController
                 'mode' => 'new',
                 'categoryList' => $self->getGroupCategoryList(),
                 'formValues' => $self->getEmptyFormData(),
+                 'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/group/add', [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
                         
         })->before($app['adminBeforeTokenChecker']);        
@@ -188,7 +190,8 @@ class GroupController extends SpikaWebBaseController
             return $self->render('admin/groupAdd.twig', array(
                 'mode' => 'new',
                 'categoryList' => $self->getGroupCategoryList(),
-                'formValues' => $formValues
+                'formValues' => $formValues,
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/group/add', [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
                         
         })->before($app['adminBeforeTokenChecker']);        
@@ -342,7 +345,8 @@ class GroupController extends SpikaWebBaseController
                 ),
                 'searchCriteria' => array(
                     'userName' => $searchUsernameCriteria
-                )
+                ),
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/group/edit/' . $id, [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
 
             ));
             
@@ -477,7 +481,8 @@ class GroupController extends SpikaWebBaseController
                 ),
                 'searchCriteria' => array(
                     'userName' => $searchUsernameCriteria
-                )
+                ),
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/group/edit/' . $id, [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
 
             ));
                         

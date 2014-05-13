@@ -44,7 +44,6 @@ class SpikaWebBaseController implements ControllerProviderInterface
     
     public function connect(Application $app)
     {
-
         $this->app = $app;
         $controllers = $app['controllers_factory'];
         return $controllers;        
@@ -129,8 +128,9 @@ class SpikaWebBaseController implements ControllerProviderInterface
     }
     
     public function savePicture($file){
-    
-        $uploadDirPath = __DIR__.'/../../../../' . FileController::$fileDirName . '/';
+        
+        $uploadDirPath = \Spika\Utils::getGCSPath(FileController::$fileDirName)."/";
+        $tmpFileName = \Spika\Utils::randString(20, 20) . time();
         $fileName = \Spika\Utils::randString(20, 20) . time();
 
         // resize and save file
@@ -147,15 +147,19 @@ class SpikaWebBaseController implements ControllerProviderInterface
         
         $image->crop(new Point($originX,$originY), new Box($targetSize,$targetSize))
                 ->resize(new Box(640, 640))
-                ->save($uploadDirPath.$fileName,array('format'=>'jpg'));
+                ->save($uploadDirPath.$tmpFileName,array('format'=>'jpg'));
 
+        $ctx = stream_context_create(['gs'=>['acl'=>'public-read']]);
+        rename($uploadDirPath.$tmpFileName, $uploadDirPath.$fileName, $ctx);
+        
         return $fileName;
         
     }
     
     public function saveThumb($file){
-    
-        $uploadDirPath = __DIR__.'/../../../../' . FileController::$fileDirName . '/';
+        
+        $uploadDirPath = \Spika\Utils::getGCSPath(FileController::$fileDirName)."/";
+        $tmpFileName = \Spika\Utils::randString(20, 20) . time();
         $fileName = \Spika\Utils::randString(20, 20) . time();
 
         // resize and save file
@@ -172,7 +176,10 @@ class SpikaWebBaseController implements ControllerProviderInterface
         
         $image->crop(new Point($originX,$originY), new Box($targetSize,$targetSize))
                 ->resize(new Box(120, 120))
-                ->save($uploadDirPath.$fileName,array('format'=>'jpg'));
+                ->save($uploadDirPath.$tmpFileName,array('format'=>'jpg'));
+        
+        $ctx = stream_context_create(['gs'=>['acl'=>'public-read']]);
+        rename($uploadDirPath.$tmpFileName, $uploadDirPath.$fileName, $ctx);
 
         return $fileName;
 

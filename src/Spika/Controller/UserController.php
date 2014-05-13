@@ -145,6 +145,7 @@ class UserController extends SpikaBaseController
             }
             
         )->before($app['beforeApiGeneral'])->before($app['beforeTokenChecker']);
+        
     }
 
     private function setupFindUserMethod($self,$app,$controllers){

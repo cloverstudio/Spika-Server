@@ -22,9 +22,9 @@
                     {% include "admin/alerts.twig" %}
                     
                     {% if mode == 'edit' %}
-                        <form role="form" method="post" action="{{ROOT_URL}}/admin/groupcategory/edit/{{id}}" enctype="multipart/form-data">
+                        <form role="form" method="post" action="{{uploadUrl}}" enctype="multipart/form-data">
                     {% else %}
-                        <form role="form" method="post" action="{{ROOT_URL}}/admin/groupcategory/add" enctype="multipart/form-data">
+                        <form role="form" method="post" action="{{uploadUrl}}" enctype="multipart/form-data">
                     {% endif %}
 
                         {% if mode == 'view' or mode == 'edit' %}

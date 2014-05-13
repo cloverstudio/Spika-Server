@@ -1,0 +1,14 @@
+application: advance-verve-574
+version: 1
+runtime: php
+api_version: 1
+threadsafe: yes
+
+handlers:
+
+- url: /wwwroot/assets
+  static_dir: wwwroot/assets
+
+- url: .*
+  script: wwwroot/index.php
+

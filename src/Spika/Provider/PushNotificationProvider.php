@@ -156,30 +156,24 @@ class PushNotificationProvider implements ServiceProviderInterface
 
         // Set POST variables
         $url = 'https://android.googleapis.com/gcm/send';
-
-        $headers = array( 
-                        'Authorization: key=' . $apiKey,
-                        'Content-Type: application/json'
-                        );
-        // Open connection
-        $ch = curl_init();
-
-        // Set the url, number of POST vars, POST data
-        curl_setopt( $ch, CURLOPT_URL, $url );
-        curl_setopt( $ch, CURLOPT_POST, true );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch, CURLOPT_POSTFIELDS,$json);
-        curl_setopt( $ch, CURLOPT_TIMEOUT,SP_TIMEOUT);
-
-        // Execute post
-        $result = curl_exec($ch);
-
-        curl_close($ch);
+        
+        $context = [
+          'http' => [
+            'method' => 'POST',
+            'header' => "Authorization: key={$apiKey}\r\n" .
+                        "Content-Type: application/json\r\n",
+            'content' => $json
+          ]
+        ];
+        
+        $app['monolog']->addDebug(print_r($context,true));
+        
+        $context = stream_context_create($context);
+        $result = file_get_contents($url, false, $context);
+        
         
         $app['monolog']->addDebug($result);
-
-
+        
         return $result;
 
     }

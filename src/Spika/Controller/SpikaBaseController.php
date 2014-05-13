@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Guzzle\Http\Client;
 use Guzzle\Plugin\Async\AsyncPlugin;
 
+use google\appengine\api\taskqueue\PushTask;
+
 class SpikaBaseController implements ControllerProviderInterface
 {
     
@@ -53,22 +55,12 @@ class SpikaBaseController implements ControllerProviderInterface
     }
     
     public function doAsyncRequest($app,$request,$apiName,$params = null){
-    
-        $client = new Client();
-        $client->addSubscriber(new AsyncPlugin());
         
-        $requestURL = LOCAL_ROOT_URL . "/api/{$apiName}";
+        $requestURL = ROOT_URL_WITHOUT_HOST . "/api/{$apiName}";
         
-        $app['monolog']->addDebug($requestURL);
-
-
-        $request = $client->post($requestURL,array(),array('timeout'=>0,'connect_timeout'=>0));
+        $task = new PushTask($requestURL,$params);
+        $task_name = $task->add();
                 
-        $json = json_encode($params);
-        $request->setBody($json,'application/json');
-        
-        $request->send();
-        
     }   
 
 }

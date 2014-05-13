@@ -22,6 +22,8 @@ use Spika\Controller\Web\SpikaWebBaseController;
 use Spika\Controller\FileController;
 use Symfony\Component\HttpFoundation\Cookie;
 
+use google\appengine\api\cloud_storage\CloudStorageTools;
+
 class UserController extends SpikaWebBaseController
 {
 
@@ -41,6 +43,7 @@ class UserController extends SpikaWebBaseController
     
     public function connect(Application $app)
     {
+        
         parent::connect($app);
         
         $controllers = $app['controllers_factory'];
@@ -129,6 +132,7 @@ class UserController extends SpikaWebBaseController
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
                 'formValues' => $self->getEmptyFormData(),
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/user/add', [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
                         
         })->before($app['adminBeforeTokenChecker']);        
@@ -188,7 +192,8 @@ class UserController extends SpikaWebBaseController
                 'mode' => 'new',
                 'statusList' => $self->userStatusList,
                 'genderList' => $self->userGenderList,
-                'formValues' => $formValues
+                'formValues' => $formValues,
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/user/add', [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
                         
         })->before($app['adminBeforeTokenChecker']);        
@@ -242,7 +247,7 @@ class UserController extends SpikaWebBaseController
         //
 
         $controllers->get('user/edit/{id}', function (Request $request,$id) use ($app,$self) {
-            
+                        
             $tab = 'profile';
             
             $self->setVariables();
@@ -282,7 +287,6 @@ class UserController extends SpikaWebBaseController
             $contact = $self->app['spikadb']->getContactsByUserId($id);
             $group = $self->app['spikadb']->getGroupsByUserId($id);
 
-
             return $self->render('admin/userEdit.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
@@ -295,12 +299,13 @@ class UserController extends SpikaWebBaseController
                 'contacts' => $contact,
                 'groups' => $group,
                 'tab' => $tab,
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/user/edit/' . $id, [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
             
         })->before($app['adminBeforeTokenChecker']);
 
         $controllers->post('user/edit/{id}', function (Request $request,$id) use ($app,$self) {
-            
+
             $self->setVariables();
 
             if(!$self->checkPermission() && $self->loginedUser['_id'] != $id){
@@ -375,7 +380,7 @@ class UserController extends SpikaWebBaseController
             $group = $self->app['spikadb']->getGroupsByUserId($id);
 
             $user['birthday'] = date('Y-m-d',$user['birthday']);
-
+            
             return $self->render('admin/userEdit.twig', array(
                 'id' => $id,
                 'mode' => 'edit',
@@ -386,6 +391,7 @@ class UserController extends SpikaWebBaseController
                 'groups' => $group,
                 'formValues' => $user,
                 'tab' => 'profile',
+                'uploadUrl' => CloudStorageTools::createUploadUrl(ROOT_URL . '/admin/user/edit/' . $id, [ 'gs_bucket_name' => GCS_BUCKET_NAME ]),
             ));
                         
         })->before($app['adminBeforeTokenChecker']);    

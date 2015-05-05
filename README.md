@@ -1,13 +1,17 @@
 Spika-Server
 ============
 
-[![Build Status](https://api.travis-ci.org/cloverstudio/Spika-Server.png?branch=master,develop)](https://travis-ci.org/cloverstudio/Spika-Server)
-[![Coverage Status](https://coveralls.io/repos/cloverstudio/Spika-Server/badge.png?branch=develop)](https://coveralls.io/r/cloverstudio/Spika-Server?branch=develop)
+# We've stopped matain this version of Spika.
 
-Spika is a full-fledged messenger app under MIT license.  
-For any detail please refer our web site.
+But we are developing new version of Spika right now.
+Please visit http://www.spikaapp.com and add your email address to our mailing list.
+We will launch new version in August 2015.
 
-http://spikaapp.com/
+## About new version of Spika
 
-# Development setup
-http://www.spikaapp.com/install-backend.php
+- Easy to setup backend.
+- Easy to integrate to your existing app/web.
+- Focused on only chat feature
+- Easy to customise
+
+If you are looking for messenger for companies or for any size of organisation, please visit https://www.spikaent.com
